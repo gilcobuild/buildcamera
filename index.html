@@ -290,6 +290,14 @@ a{color:var(--accent)}
 .media img,.media video{display:inline-block;max-width:100%;max-height:60vh;width:auto;height:auto;margin:0 auto}
 .acts{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
 .tagrow{display:flex;flex-wrap:wrap;gap:6px}
+.strip{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:thin}
+.strip .st{position:relative;flex:none;width:84px;height:84px;border:0;padding:0;border-radius:8px;overflow:hidden;background:var(--sunk);cursor:pointer}
+.strip .st img{width:100%;height:100%;object-fit:cover}
+.strip .st .ph{display:grid;place-items:center;width:100%;height:100%;color:var(--muted)}
+.strip .st i{position:absolute;font-style:normal;font-family:var(--f-mono);font-size:10px;border-radius:4px;padding:1px 4px}
+.strip .st .tg{left:4px;bottom:4px;background:rgba(0,0,0,.65);color:#fff}
+.strip .st .up{right:4px;top:4px;background:var(--warn);color:#fff}
+.strip .st:first-child{outline:3px solid var(--stamp);outline-offset:-3px}
 .tagrow .chip{min-height:34px;padding:5px 10px}
 .cmt{display:grid;gap:2px;padding:10px 0;border-top:1px solid var(--line)}
 .cmt:first-child{border-top:0}
@@ -579,7 +587,7 @@ async function processFile(file,ctx){
   if(kind==='photo'||kind==='doc'){const r=await stampImage(file,{takenAt,project:pr?.name,jobNumber:pr?.jobNumber,address:pr?.address,lat,lng,gpsSource,zone:ctx.zone,trade:ctx.trade,code,company:coName(pid),logo:await getLogo()},kind==='doc');blob=r.blob;qual=r.q&&(r.q.blurry||r.q.dark)?r.q:null}
   const id=uid();
   const doc=clean({projectId:pid||null,kind,takenAt,createdAt:Date.now(),lat,lng,gpsSource,code,tags:ctx.tags||[],zone:ctx.zone||'',trade:ctx.trade||'',note:ctx.note||'',by:ME.id,byName:ME.name,beforeOf:ctx.beforeOf||null,markupOf:ctx.markupOf||null,portfolio:(ctx.tags||[]).includes('Portfolio'),tpTask:ctx.tpTask||'',contentType:blob.type||file.type,quality:qual});
-  PEND[id]={...doc,id,url:URL.createObjectURL(blob),pending:true}; scheduleRender();
+  PEND[id]={...doc,id,url:URL.createObjectURL(blob),pending:true}; scheduleRender(); if(ctx.onAdd)ctx.onAdd(id);
   if(AS){
     try{const up=await AS.upload(blob);await put('photos',{...doc,id,url:up.url,assetId:up.id});delete PEND[id];if(kind==='photo')aiTag(id,blob)}
     catch(e){await qSave({id,blob,doc});toast('No signal. Photo saved on this phone and will upload when you\'re back online.',3800)}
@@ -740,7 +748,6 @@ function ptDocs(p){
 }
 function ptInfo(p){
   const lastGps=allPhotos().filter(x=>x.projectId===p.id&&x.gpsSource==='photo').sort(byNew)[0];
-  const review=reviewText(p);
   return `<form class="stack card" data-sub="saveProject" data-id="${p.id}">
    <div class="two"><label class="f">Project Name<input type="text" id="pi-name" name="name" value="${esc(p.name)}" autocapitalize="words" required></label><label class="f">Job Number<input type="text" id="pi-num" name="jobNumber" value="${esc(p.jobNumber||'')}" placeholder="2611"></label></div>
    <div class="two"><label class="f">Group<input type="text" id="pi-group" name="group" value="${esc(p.group||'')}" placeholder="E.g. Ochsner Clinics" autocapitalize="words"></label>
@@ -751,10 +758,8 @@ function ptInfo(p){
    <label class="f">Auto-File Distance<select id="pi-rad" name="radius">${[[150,'500 ft'],[300,'1,000 ft'],[600,'2,000 ft'],[1200,'3/4 mile (default)'],[2500,'1.5 miles']].map(([v,l])=>`<option value="${v}" ${(p.radius||1200)==v?'selected':''}>${l}</option>`).join('')}</select></label>${p.boundary&&p.boundary.length>=3?'<p class="note">This job has a drawn boundary, so only photos inside it file here.</p>':''}
    <label class="f">Trade Planner Project<input type="text" id="pi-tp" name="tpProject" value="${esc(p.tpProject||'')}" autocapitalize="words" placeholder="Name as it appears in Trade Planner"></label>
    <div class="two"><label class="f">Customer<input type="text" id="pi-cust" name="customer" value="${esc(p.customer||'')}" autocapitalize="words"></label><label class="f">Customer Phone<input type="tel" id="pi-phone" name="phone" value="${esc(p.phone||'')}"></label></div>
-   <label class="f">Google Review Link<input type="url" id="pi-review" name="reviewUrl" value="${esc(p.reviewUrl||'')}" placeholder="https://g.page/r/..."></label>
    <button class="btn pri" type="submit">Save Job Info</button></form>
-   ${contactsCard(p)}${boundaryCard(p)}
-   <div class="card stack"><h2>Review Request</h2><p class="note">Send this to the customer when the job wraps up. Copy it into a text message.</p><textarea id="rv-text" readonly>${esc(review)}</textarea>${p.phone?`<p class="mono">Text to: ${esc(p.phone)}</p>`:''}<button class="btn" data-a="copy" data-src="#rv-text">${I('copy')} Copy Message</button></div>`;
+   ${contactsCard(p)}${boundaryCard(p)}`;
 }
 function contactsCard(p){
   const cs=p.contacts||[];
@@ -920,7 +925,7 @@ function scrPortfolio(){
 }
 function scrAbout(){
   return `<button class="btn sm" data-a="tab" data-t="more">${I('back')} More</button><h1 style="margin-top:10px">About This Version</h1><p class="sub">Build Camera preview, built ${fmtDay(Date.now())}.</p>
-  <div class="card stack"><h2>Working Now</h2><p>Stamped photos with proof codes, GPS filing, offline upload queue, video, voice notes, document scans, Work Zone and Trade Partner tags, search, live feed, timeline, site map, markup with measuring, comments with @mentions, before and after, branded PDF reports with templates, AI daily summaries, checklists with required photos, tasks and punch list, team roles, time clock, portfolio and review requests.</p></div>
+  <div class="card stack"><h2>Working Now</h2><p>Stamped photos with proof codes, GPS filing, offline upload queue, video, voice notes, document scans, Work Zone and Trade Partner tags, search, live feed, timeline, site map, markup with measuring, comments with @mentions, before and after, branded PDF reports with templates, AI daily summaries, checklists with required photos, tasks and punch list, team roles, time clock, and portfolio.</p></div>
   <div class="card stack"><h2>Comes With Your Own Domain</h2><ul style="margin:0;padding-left:18px;display:grid;gap:6px">
    <li><b>Live GPS from the phone</b>, including the I'm Here button. Right now GPS comes from the photo file (often removed by iPhones), the address search, the map pin or the job's GPS spot.</li><li><b>One-tap camera.</b> Shooting without the phone's Retake / Use Photo screen needs Build Camera's own camera.</li><li><b>Satellite map under the pin and boundary.</b> Today it's a measured site grid.</li><li><b>Texting photos in one tap and posting straight to Facebook and Instagram.</b> Today you save the photos, then attach them.</li><li><b>Text and push alerts.</b> Alerts show inside Build Camera now.</li>
    <li><b>Ghost overlay for before and after.</b> Needs the live camera on screen. Pairing and the slider work now.</li>
@@ -960,6 +965,7 @@ function renderModal(){
 }
 function liveModal(){
   if(!M)return;
+  if(M.kind==='capture')capStrip();
   if(M.kind==='photo'){const c=$('#cmts');if(c)c.innerHTML=commentsHtml(M.id);const p=PH(M.id);if(!p)closeModal()}
 }
 /* capture */
@@ -973,10 +979,14 @@ function captureBody(){
   <div><span class="note">Tags</span><div class="tagrow" style="margin-top:6px">${TAGS.map(t=>`<button class="chip" data-a="capTag" data-t="${t}" aria-pressed="${c.tags.includes(t)}">${t}</button>`).join('')}</div></div>
   ${c.zone||c.trade?'<p class="note" style="margin-top:-6px">Work Zone and Trade Partner carry over from your last photo on this job. Change them any time.</p>':''}
   <label class="f">Note<input type="text" id="cap-note" value="${esc(c.note)}" data-ch="capF" data-k="note" placeholder="What does this show?"></label>
+  <div id="cap-strip" class="strip" ${(M.shot||[]).length?'':'hidden'} aria-label="Photos taken this round">${(M.shot||[]).map(capThumb).join('')}</div>
   ${M.count?`<p class="callout info" id="cap-count"><b>${M.count} saved</b> this round. Keep going, or close when you're done. You can delete any photo later.</p>`:'<p id="cap-count" hidden></p>'}
   <div class="big-act"><button class="btn stamp" data-a="shoot" data-src="photo" id="cap-shoot">${I('camera')} ${M.count?'Take Next Photo':'Take Photo'}</button><button class="btn" data-a="shoot" data-src="lib">${I('img')} From Phone</button>${M.lockProject?'':`<button class="btn" data-a="shoot" data-src="video">${I('video')} Video</button><button class="btn" data-a="shoot" data-src="doc">${I('doc')} Scan Document</button>`}</div>
   <p class="note">Each photo saves right away with the company, job, date, time and GPS stamped on it. Your phone may still show its own Retake / Use Photo screen after each shot.</p>${datalists()}`;
 }
+function capThumb(id){const p=PH(id);if(!p)return '';const tg=(p.tags||[]).length,mk=allPhotos().some(x=>x.markupOf===id);
+  return `<button class="st" data-a="capPhoto" data-id="${id}" aria-label="Open photo to add tags or markup">${p.kind==='video'?`<span class="ph">${I('video')}</span>`:`<img src="${esc(p.url)}" alt="">`}${p.pending?'<i class="up">…</i>':''}${tg||mk?`<i class="tg">${mk?'Marked':tg+' tag'+(tg>1?'s':'')}</i>`:''}</button>`}
+function capStrip(){const el=$('#cap-strip');if(!el||!M||M.kind!=='capture')return;el.innerHTML=(M.shot||[]).map(capThumb).join('');el.hidden=!(M.shot||[]).length}
 /* photo viewer */
 function photoSheet(){
   const p=PH(M.id); if(!p)return sheet('Photo','<p>That photo was removed.</p>');
@@ -998,7 +1008,7 @@ function photoSheet(){
    <label class="f">Move to Project<select id="ph-proj" data-ch="phMove" data-id="${p.id}">${S.projects.map(x=>`<option value="${x.id}" ${x.id===p.projectId?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label></div>
   <div class="card"><h2>Comments</h2><div id="cmts">${commentsHtml(p.id)}</div>
    <form data-sub="comment" data-id="${p.id}" class="stack" style="margin-top:8px"><input type="text" id="cm-text" name="text" placeholder="Add a comment. Type @ to mention." autocomplete="off">${S.members.length?`<div class="tagrow">${S.members.slice(0,12).map(m=>`<button type="button" class="chip" data-a="mention" data-n="${esc(m.name)}">@${esc(m.name)}</button>`).join('')}</div>`:''}<button class="btn pri" type="submit">Post Comment</button></form></div>
-  <button class="btn bad" data-a="delPhoto" data-id="${p.id}">${I('trash')} Delete Photo</button>${datalists()}`);
+  <button class="btn bad" data-a="delPhoto" data-id="${p.id}">${I('trash')} Delete Photo</button>${datalists()}`,M.back?`<button class="btn sm stamp" data-a="backCam">${I('camera')} Back to Camera</button>`:'');
 }
 function commentsHtml(pid){
   const cs=S.comments.filter(c=>c.photoId===pid).sort((a,b)=>a.at-b.at);
@@ -1461,14 +1471,16 @@ const ACT={
   mention:el=>{const i=$('#cm-text');i.value=(i.value&&!i.value.endsWith(' ')?i.value+' ':i.value)+'@'+el.dataset.n+' ';i.focus()},
   delPhoto:el=>{if(!el.classList.contains('armed')){el.classList.add('armed');el.innerHTML=I('trash')+' Tap Again to Delete';setTimeout(()=>{el.classList.remove('armed');el.innerHTML=I('trash')+' Delete Photo'},3000);return}
     const p=PH(el.dataset.id);closeModal();if(p.pending){delete PEND[p.id];qDrop(p.id);scheduleRender();return}del('photos',p.id);if(AS&&p.assetId&&!allPhotos().some(x=>x.assetId===p.assetId&&x.id!==p.id))AS.delete(p.assetId).catch(()=>{});toast('Photo deleted')},
-  markup:el=>{const p=PH(el.dataset.id);if(p.pending){toast('Wait for the upload to finish, then mark it up.');return}openModal({kind:'markup',id:p.id})},
+  markup:el=>{const p=PH(el.dataset.id);if(p.pending){toast('Wait for the upload to finish, then mark it up.');return}openModal({kind:'markup',id:p.id,back:M&&M.back})},
+  capPhoto:el=>{const back=M;openModal({kind:'photo',id:el.dataset.id,back})},
+  backCam:()=>{const b=M&&M.back;if(b){M=b;renderModal()}else closeModal()},
   mkTool:el=>{MK.tool=el.dataset.t;document.querySelectorAll('.tool').forEach(b=>b.setAttribute('aria-pressed',b===el));mkOpt();if(MK.tool==='text')setTimeout(()=>$('#mk-text')?.focus(),30)},
   mkCol:el=>{MK.color=el.dataset.c;document.querySelectorAll('.sw').forEach(b=>b.setAttribute('aria-pressed',b===el))},
   mkUndo:()=>{const s=MK.shapes.pop();if(s&&s.t==='scale')MK.scale=null;mkDraw()},
   mkScale:()=>{const s=MK.shapes.find(x=>x.t==='scale');const inch=(+($('#mk-ft').value||0))*12+(+($('#mk-in').value||0));if(!s){toast('Draw the scale line first.');return}if(!inch){toast('Enter the length of that line.');return}s.inches=inch;MK.scale=Math.hypot(s.b[0]-s.a[0],s.b[1]-s.a[1])/inch;mkDraw();mkOpt('scale');toast('Scale set. Pick Measure and drag across anything.')},
   mkSave:async el=>{const p=PH(M.id);el.disabled=true;el.textContent='Saving…';const blob=await new Promise(r=>MK.c.toBlob(r,'image/jpeg',.88));const id=uid();
     const doc=clean({projectId:p.projectId,kind:'photo',takenAt:p.takenAt,createdAt:Date.now(),lat:p.lat,lng:p.lng,gpsSource:p.gpsSource,code:p.code,tags:p.tags||[],zone:p.zone,trade:p.trade,note:p.note,by:ME.id,byName:ME.name,markupOf:p.id,contentType:'image/jpeg'});
-    try{if(AS){const up=await AS.upload(blob);await put('photos',{...doc,id,url:up.url,assetId:up.id})}else await put('photos',{...doc,id,url:URL.createObjectURL(blob),localOnly:true});openModal({kind:'photo',id});toast('Saved a marked-up copy. The original is kept.')}
+    try{if(AS){const up=await AS.upload(blob);await put('photos',{...doc,id,url:up.url,assetId:up.id})}else await put('photos',{...doc,id,url:URL.createObjectURL(blob),localOnly:true});const bk=M&&M.back;if(bk&&bk.shot)bk.shot=bk.shot.map(x=>x===p.id?id:x);openModal({kind:'photo',id,back:bk});toast('Saved a marked-up copy. The original is kept.')}
     catch(e){el.disabled=false;el.textContent='Save Copy';toast('Couldn\'t save. Check your signal and try again.')}},
   takeAfter:el=>{const b=PH(el.dataset.id);afterShot=null;openModal({kind:'capture',pid:b.projectId,lockProject:true,single:true,title:'After Photo',why:'Stand where the before photo was taken and match the angle. The two will pair up for a side-by-side.',beforeOf:b.id,ctx:{tags:['After'],zone:b.zone||'',trade:b.trade||'',note:''}})},
   compare:el=>openModal({kind:'compare',a:el.dataset.a2,b:el.dataset.b2}),
@@ -1581,7 +1593,7 @@ document.addEventListener('change',e=>{const el=e.target,k=el.dataset.ch;if(!k)r
 document.addEventListener('submit',async e=>{const f=e.target,k=f.dataset.sub;if(!k)return;e.preventDefault();if(k!=='makeReport')f.querySelectorAll('[data-dirty]').forEach(x=>delete x.dataset.dirty);const v=Object.fromEntries(new FormData(f));
   const num=x=>x===''||x==null?null:(isFinite(+x)?+x:null);
   if(k==='createProject'){if(MW.np)MW.np.open=false;const id=await put('projects',{companyName:(v.companyName||'').trim(),name:titleCase(v.name.trim()),jobNumber:(v.jobNumber||'').trim(),address:v.address.trim(),group:v.group.trim(),lat:num(v.lat),lng:num(v.lng),status:'Active',createdAt:Date.now()});closeModal();V.pid=id;V.tab='project';V.ptab='photos';V.lastProject=id;saveView();render();toast('Project created')}
-  else if(k==='saveProject'){upd('projects',f.dataset.id,{name:v.name.trim(),address:v.address.trim(),group:v.group.trim(),status:v.status==='Done'?'Done':'Active',lat:num(v.lat),lng:num(v.lng),tpProject:v.tpProject.trim(),companyName:(v.companyName||'').trim(),jobNumber:(v.jobNumber||'').trim(),radius:+v.radius||1200,customer:v.customer.trim(),phone:v.phone.trim(),reviewUrl:v.reviewUrl.trim()});toast('Job info saved')}
+  else if(k==='saveProject'){upd('projects',f.dataset.id,{name:v.name.trim(),address:v.address.trim(),group:v.group.trim(),status:v.status==='Done'?'Done':'Active',lat:num(v.lat),lng:num(v.lng),tpProject:v.tpProject.trim(),companyName:(v.companyName||'').trim(),jobNumber:(v.jobNumber||'').trim(),radius:+v.radius||1200,customer:v.customer.trim(),phone:v.phone.trim()});toast('Job info saved')}
   else if(k==='comment'){const t=v.text.trim();if(!t)return;await put('comments',{photoId:f.dataset.id,projectId:PH(f.dataset.id)?.projectId,text:t,by:ME.id,byName:ME.name,at:Date.now()});S.members.filter(m=>m.name&&t.includes('@'+m.name)).forEach(m=>alertFor(m.id,`${ME.name} mentioned you: "${t.slice(0,120)}"`,{photoId:f.dataset.id,projectId:PH(f.dataset.id)?.projectId}));f.reset();$('#cmts').innerHTML=commentsHtml(f.dataset.id)}
   else if(k==='saveTask'){const t=M.task;const tid=await put('tasks',{projectId:v.pid,title:v.title.trim(),type:v.type,assignee:v.assignee||null,assigneeText:v.assigneeText.trim(),due:v.due||'',photoId:t.photoId||null,done:false,createdAt:Date.now(),by:ME.name});if(v.assignee)alertFor(v.assignee,`${ME.name} assigned you a ${v.type==='punch'?'punch item':'task'}: ${v.title.trim()} (${P(v.pid)?.name||''})`,{taskId:tid,photoId:t.photoId||null,projectId:v.pid});closeModal();toast(v.type==='punch'?'Punch item added':'Task added')}
   else if(k==='saveMember'){const m=M.m||{};await put('members',{...(m.id?{id:m.id}:{}),name:v.name.trim(),role:v.role,phone:v.phone.trim(),company:v.company.trim(),trade:v.trade.trim()});closeModal()}
@@ -1603,6 +1615,7 @@ async function handleFiles(files,kind){
   if(ctx.projectId&&kind!=='doc')setLastZT(ctx.projectId,ctx.zone,ctx.trade);
   const cb=afterShot; afterShot=null;
   const keepOpen=M&&M.kind==='capture'&&!M.single&&!M.hidden;
+  if(keepOpen){const cm=M;ctx.onAdd=id=>{cm.shot=[id,...(cm.shot||[])];if(M===cm)capStrip()}}
   if(!keepOpen)closeModal();
   toast(files.length>1?`Stamping ${files.length} photos…`:'Stamping photo…');
   let last=null; for(const f of files){try{last=await processFile(f,ctx)}catch(e){toast('Couldn\'t read that file. Try another photo.')}}

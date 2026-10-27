@@ -527,6 +527,11 @@ nav.side{display:none}
 .pfr .seg{white-space:nowrap}
 .tav{position:absolute;left:5px;bottom:5px;z-index:1;width:24px;height:24px;border-radius:50%;background:var(--avc,#2b5d86);color:#fff;border:2px solid #fff;display:grid;place-items:center;font-size:9.5px;font-weight:700;letter-spacing:0;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.45)}
 .tav img{width:100%;height:100%;object-fit:cover}
+.ib:disabled{opacity:.3;cursor:default}
+.ib svg.up{transform:rotate(90deg)}.ib svg.down{transform:rotate(-90deg)}
+.fg2{display:grid;gap:8px}
+.linkb{border:0;background:transparent;color:var(--accent);font:inherit;font-size:12px;font-weight:600;text-transform:none;letter-spacing:0;padding:2px 0;cursor:pointer}
+.pvsec .sp{flex:1}
 .avbig{width:72px;height:72px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:24px;font-weight:700;overflow:hidden;flex:none}
 .avbig img,.av img{width:100%;height:100%;object-fit:cover}
 .av{overflow:hidden}
@@ -569,9 +574,11 @@ nav.side{display:none}
 .pdhd2 h1{font-size:28px;margin:0}
 .pdhd2 a.ad{color:var(--muted);font-size:14px}
 .psrch{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:4px 0 8px}
-.psrch .sbox{flex:1;min-width:200px;position:relative}
-.psrch .sbox svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--muted);pointer-events:none}
-.psrch .sbox input{padding-left:36px}
+.sbox{display:block;position:relative}
+.psrch{flex-wrap:nowrap}.psrch .seg{margin-left:auto}.psrch .btn{white-space:nowrap}
+@media (max-width:999px){.psup{display:none}}
+.sbox svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--muted);pointer-events:none}
+.sbox input{padding-left:36px}
 .fbtn[aria-expanded="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
 .fbtn .fn{font-family:var(--f-mono);font-size:11px;background:var(--stamp);color:var(--stamp-ink);border-radius:999px;padding:0 6px;margin-left:2px}
 .fpanel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px 12px;display:grid;gap:10px;margin-bottom:8px}
@@ -651,7 +658,8 @@ const COLS=['projects','photos','comments','tasks','checklists','logs','members'
 const S={}; COLS.forEach(c=>S[c]=[]);
 const PEND={}; // photos still uploading
 let DB=null, AS=null, USER=null, SAMPLE=null, DL=null, ME={id:null,name:'Me'}, READY=false;
-const TAGS=['Progress','Rough-In','Inspection','Damage','Safety','Delivery','Before','After','Closeout','Start of Day','End of Day','Portfolio'];
+const TAGS_DEF=['Progress','Rough-In','Inspection','Damage','Safety','Delivery','Before','After','Closeout','Start of Day','End of Day','Portfolio'];
+const tagList=()=>{const t=(typeof S!=='undefined'&&S.settings||[]).find(x=>x.id==='tags');return t&&Array.isArray(t.list)&&t.list.length?t.list:TAGS_DEF};
 const ROLES=['Owner','Office','Super','Crew','Trade Partner'];
 const TRADES=['General','Site Work','Concrete','Framing','Roofing','Plumbing','Electrical','HVAC','Insulation','Drywall','Paint','Flooring','Fence','Patio Cover','Cleanup'];
 const CK_TPL={
@@ -1017,11 +1025,11 @@ function ptPhotos(p){
   if(q){const hit=v=>String(v||'').toLowerCase().includes(q);const cm=new Set(S.comments.filter(c=>hit(c.text)).map(c=>c.photoId));ps=ps.filter(x=>hit(x.note)||hit(x.zone)||hit(x.trade)||hit(x.byName)||hit(x.code)||hit(x.tpTask)||(x.tags||[]).some(hit)||cm.has(x.id)||hit(fmtDay(x.takenAt)))}
   if(f.zone)ps=ps.filter(x=>x.zone===f.zone); if(f.trade)ps=ps.filter(x=>x.trade===f.trade); if(f.by)ps=ps.filter(x=>x.byName===f.by);
   if(f.tags.length)ps=ps.filter(x=>f.tags.every(t=>(x.tags||[]).includes(t)||(t==='Portfolio'&&x.portfolio)));
-  const nOn=f.tags.length+(f.zone?1:0)+(f.trade?1:0)+(f.by?1:0);
+  const nOn=f.tags.length+(f.zone?1:0)+(f.trade?1:0)+(f.by?1:0)+(q?1:0);
   const grp=(k,l,opts)=>opts.length?`<div class="fg"><span>${l}</span><div class="tagrow">${opts.map(o=>{const on=k==='tags'?f.tags.includes(o):f[k]===o;return `<button class="chip" data-a="pfPick" data-k="${k}" data-v="${esc(o)}" aria-pressed="${on}">${esc(o)}</button>`}).join('')}</div></div>`:'';
-  const active=[...f.tags.map(t=>['tags',t,t]),...['zone','trade','by'].filter(k=>f[k]).map(k=>[k,f[k],f[k]])];
-  const panel=V.pfOpen?`<div class="fpanel" id="pf-panel">${grp('tags','Tags',tags)}${grp('zone','Work Zone',zones)}${grp('trade','Trade Partner',trades)}${users.length>1?grp('by','Taken By',users):''}${!tags.length&&!zones.length&&!trades.length?'<p class="note" style="margin:0">No tags, zones or trades on this job\'s photos yet. Add them when you take a photo or open one.</p>':''}${nOn?`<div class="row"><button class="btn sm" data-a="pfClear">Clear All</button></div>`:''}</div>`:'';
-  return `<div class="psrch"><label class="sbox">${I('search')}<input type="search" id="phq" data-in="phq" value="${esc(f.q||'')}" placeholder="Search photos: notes, tags, zone, trade, who" autocomplete="off" aria-label="Search this job's photos"></label><button class="btn sm fbtn" data-a="pfToggle" aria-expanded="${!!V.pfOpen}" aria-controls="pf-panel">${I('tag')} Filters${nOn?`<span class="fn">${nOn}</span>`:''}</button><div class="seg sm" role="group" aria-label="View"><button data-a="ptab" data-t="photos" aria-pressed="true" aria-label="Photo grid">${I('feed')}</button><button data-a="ptab" data-t="map" aria-pressed="false" aria-label="Photo map">${I('map')}</button></div><button class="btn sm" data-a="selMode" aria-pressed="${!!V.selMode}">${V.selMode?'Cancel Select':'Select'}</button><button class="btn sm pri" data-a="pickLib" data-pid="${p.id}">${I('plus')} Upload</button></div>
+  const active=[...(q?[['q','',`“${f.q.trim()}”`]]:[]),...f.tags.map(t=>['tags',t,t]),...['zone','trade','by'].filter(k=>f[k]).map(k=>[k,f[k],f[k]])];
+  const panel=V.pfOpen?`<div class="fpanel" id="pf-panel"><div class="fg"><span>Search</span><label class="sbox">${I('search')}<input type="search" id="phq" data-in="phq" value="${esc(f.q||'')}" placeholder="Notes, tags, zone, trade, who, date" autocomplete="off" aria-label="Search this job's photos"></label></div>${grp('tags','Tags',tags)}${grp('zone','Work Zone',zones)}${grp('trade','Trade Partner',trades)}${users.length>1?grp('by','Taken By',users):''}${!tags.length&&!zones.length&&!trades.length?'<p class="note" style="margin:0">No tags, zones or trades on this job\'s photos yet. Add them when you take a photo or open one.</p>':''}${nOn?`<div class="row"><button class="btn sm" data-a="pfClear">Clear All</button></div>`:''}</div>`:'';
+  return `<div class="psrch"><button class="btn sm fbtn" data-a="pfToggle" aria-expanded="${!!V.pfOpen}" aria-controls="pf-panel">${I('search')} Filter${nOn?`<span class="fn">${nOn}</span>`:''}</button><div class="seg sm" role="group" aria-label="View"><button data-a="ptab" data-t="photos" aria-pressed="true" aria-label="Photo grid">${I('feed')}</button><button data-a="ptab" data-t="map" aria-pressed="false" aria-label="Photo map">${I('map')}</button></div><button class="btn sm" data-a="selMode" aria-pressed="${!!V.selMode}">${V.selMode?'Cancel Select':'Select'}</button><button class="btn sm pri psup" data-a="pickLib" data-pid="${p.id}">${I('plus')} Upload</button></div>
   ${panel}${!V.pfOpen&&active.length?`<div class="factive">${active.map(([k,v,l])=>`<button class="chip" data-a="pfPick" data-k="${k}" data-v="${esc(v)}" aria-label="Remove filter ${esc(l)}">${esc(l)} ✕</button>`).join('')}<button class="btn sm" data-a="pfClear">Clear</button></div>`:''}
   ${V.selMode?'<p class="callout info">Tap photos, or the box by a date to pick that whole day. Then Send in Text.</p>':''}
   ${q||nOn?`<p class="note" style="margin:0 0 4px">${ps.length} photo${ps.length===1?'':'s'} match</p>`:''}
@@ -1338,7 +1346,7 @@ function captureBody(){
   if(!ps.length&&!M.lockProject)return `<div class="empty">${I('folder')}<b>Add a Project first</b><span>Photos need a job to file into.</span><button class="btn pri" data-a="newProject">${I('plus')} New Project</button></div>`;
   return `${M.lockProject?`<p class="callout info">${esc(M.why||'')}</p>`:`<label class="f">Project<select id="cap-p" data-ch="capP">${ps.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><p class="note">If the photo has its own GPS and it's near a different job, it files to that job instead.</p>`}
   <div class="two"><label class="f">Work Zone<input type="text" id="cap-zone" list="dl-zones" value="${esc(c.zone)}" data-ch="capF" data-k="zone" placeholder="Building B, Level 2" autocapitalize="words"></label><label class="f">Trade Partner<input type="text" id="cap-trade" list="dl-trades" value="${esc(c.trade)}" data-ch="capF" data-k="trade" placeholder="Drywall" autocapitalize="words"></label></div>
-  <label class="f">Tag<select id="cap-tag" data-ch="capTagSel"><option value="">No tag</option>${TAGS.map(t=>`<option ${c.tags[0]===t?'selected':''}>${t}</option>`).join('')}</select></label>
+  <label class="f"><span class="row" style="justify-content:space-between">Tag<button type="button" class="linkb" data-a="editTags">Edit list</button></span><select id="cap-tag" data-ch="capTagSel"><option value="">No tag</option>${tagList().map(t=>`<option ${c.tags[0]===t?'selected':''}>${t}</option>`).join('')}</select></label>
   ${c.zone||c.trade||c.tags.length?'<p class="note" style="margin-top:-6px">Work Zone, Trade Partner and Tag carry over from your last photo on this job. Change them any time.</p>':''}
   <label class="f">Note<input type="text" id="cap-note" value="${esc(c.note)}" data-ch="capF" data-k="note" placeholder="What does this show?"></label>
   <div id="cap-strip" class="strip" ${(M.shot||[]).length?'':'hidden'} aria-label="Photos taken this round">${(M.shot||[]).map(capThumb).join('')}</div>
@@ -1355,8 +1363,8 @@ function openCam(){if(!M||M.kind!=='capture')return;['zone','trade','note'].forE
   const cap=M;M={kind:'cam',cap,back:cap};renderModal()}
 function camHtml(){const c=M.cap,pr=P(c.pid),last=c.shot&&c.shot[0]&&PH(c.shot[0]);
   return `<div class="cam" role="dialog" aria-modal="true" aria-label="Camera"><video id="camv" playsinline autoplay muted></video><div class="camflash" id="camflash"></div>
-  <div class="camtop"><button class="ib" data-a="camDone" aria-label="Close camera">${I('x')}</button><div class="camjob"><b>${esc(pr?pr.name:'')}</b><span>${esc([c.ctx.zone,c.ctx.trade].filter(Boolean).join(' · ')||'Tap Done to set zone and trade')}</span></div><span class="camgps" id="camgps">GPS…</span><button class="ib" data-a="camSnd" aria-pressed="${sndOn()}" aria-label="Shutter sound ${sndOn()?'on':'off'}">${I(sndOn()?'snd':'mute')}</button><button class="ib" data-a="camFlip" aria-label="Switch camera">${I('cmp')}</button></div><div class="camtoast" id="camtoast" aria-live="polite">${I('check')}<span>Saved</span></div>
-  <div class="camtags"><label class="camsel"><span>Tag</span><select id="cam-tag" data-ch="camTagSel" aria-label="Tag for the next photos"><option value="">No tag</option>${TAGS.map(t=>`<option ${c.ctx.tags[0]===t?'selected':''}>${t}</option>`).join('')}</select></label></div>
+  <div class="camtop"><button class="ib" data-a="camDone" aria-label="Close camera">${I('x')}</button><div class="camjob"><b>${esc(pr?pr.name:'')}</b><span>${esc([c.ctx.zone,c.ctx.trade].filter(Boolean).join(' · ')||'Tap Details to set zone and trade')}</span></div><span class="camgps" id="camgps">GPS…</span><button class="ib" data-a="camDetails" aria-label="Photo details: work zone, trade partner, note" title="Details">${I('pen')}</button><button class="ib" data-a="camSnd" aria-pressed="${sndOn()}" aria-label="Shutter sound ${sndOn()?'on':'off'}">${I(sndOn()?'snd':'mute')}</button><button class="ib" data-a="camFlip" aria-label="Switch camera">${I('cmp')}</button></div><div class="camtoast" id="camtoast" aria-live="polite">${I('check')}<span>Saved</span></div>
+  <div class="camtags"><label class="camsel"><span>Tag</span><select id="cam-tag" data-ch="camTagSel" aria-label="Tag for the next photos"><option value="">No tag</option>${tagList().map(t=>`<option ${c.ctx.tags[0]===t?'selected':''}>${t}</option>`).join('')}</select></label></div>
   <div class="cambot"><button class="camlast" data-a="camLast" aria-label="Open last photo">${last?`<img src="${esc(last.url)}" alt="">`:''}</button><button class="camshut" data-a="camShutter" aria-label="Take photo"><span></span></button><button class="camdone" data-a="camDone"><b id="camcount">${c.count||0}</b><span>Done</span></button></div>
   <p class="camerr" id="camerr" hidden></p></div>`}
 async function camStart(){const v=$('#camv');if(!v)return;
@@ -1370,6 +1378,7 @@ function shutterSound(){if(!sndOn())return;try{ACX=ACX||new (window.AudioContext
   const burst=(at,dur,gain,hz)=>{const len=Math.max(1,Math.floor(sr*dur)),buf=ACX.createBuffer(1,len,sr),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,4);
     const src=ACX.createBufferSource();src.buffer=buf;const f=ACX.createBiquadFilter();f.type='bandpass';f.frequency.value=hz;f.Q.value=.8;const g=ACX.createGain();g.gain.value=gain;src.connect(f);f.connect(g);g.connect(ACX.destination);src.start(t+at)};
   burst(0,.035,1.4,3200);burst(.065,.055,1,2200)}catch(e){}}
+function goJob(pid){if(pid&&P(pid)){V.selMode=false;V.sel=new Set();V.pid=pid;V.tab='project';V.ptab='photos';V.lastProject=pid;saveView();render();scrollTo(0,0)}}
 async function camShoot(){const v=$('#camv');if(!v||!v.videoWidth||CAM.busy)return;CAM.busy=true;
   const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);
   shutterSound();const f=$('#camflash');if(f){f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}
@@ -1389,6 +1398,7 @@ function photoSheet(){
   const tb=`<div class="pvtb" role="toolbar" aria-label="Photo tools">${p.kind==='photo'||p.kind==='doc'?`<button class="ib" data-a="markup" data-id="${p.id}" aria-label="Mark up" title="Mark up">${I('pen')}</button>`:''}<button class="ib" data-a="pvFull" aria-label="Full screen" title="Full screen">${I('expand')}</button>${p.kind==='photo'||p.kind==='doc'?`<button class="ib" data-a="pvZoom" data-z="-1" aria-label="Zoom out" title="Zoom out">${I('zoomout')}</button><button class="ib" data-a="pvZoom" data-z="1" aria-label="Zoom in" title="Zoom in">${I('zoomin')}</button>`:''}<a class="ib" href="${esc(p.url)}" target="_blank" rel="noopener" download aria-label="Download" title="Download">${I('download')}</a><button class="ib" data-a="delPhoto" data-id="${p.id}" aria-label="Delete photo" title="Delete">${I('trash')}</button></div>`;
   const nav=`${prev?`<button class="pvnav l" data-a="pvNav" data-id="${prev.id}" aria-label="Newer photo">${I('back')}</button>`:''}${next?`<button class="pvnav r" data-a="pvNav" data-id="${next.id}" aria-label="Older photo">${I('fwd')}</button>`:''}`;
   const tks=S.tasks.filter(t=>t.photoId===p.id||t.fixPhotoId===p.id);
+  const ptags=[...new Set([...(p.tags||[]),...(p.portfolio?['Portfolio']:[])])];
   return sheet(pr?pr.name:'Photo',`<div class="pvimg" id="pvbox">${tb}${media}${nav}</div><div class="pvside">
   <div class="stack" style="gap:8px">${pr?`<div><b style="font-size:17px">${esc(pr.name)}</b>${pr.address?`<div class="note">${esc(pr.address)}</div>`:''}</div>`:''}
    <div class="pvwho">${avHtml(p.byName||'?','av',p.by)}<div style="flex:1;min-width:0"><b>${esc(p.byName||'Unknown')}</b><div class="note">${fmtFull(p.takenAt)}${list.length>1&&i>=0?` · ${i+1} of ${list.length}`:''}</div></div>${p.lat!=null?`<a class="btn sm" href="https://www.google.com/maps?q=${p.lat},${p.lng}" target="_blank" rel="noopener" aria-label="Show where it was taken">${I('map')}</a>`:''}</div>
@@ -1396,15 +1406,17 @@ function photoSheet(){
   ${p.pending?'<p class="callout">Waiting to upload. It\'s safe on this phone.</p>':''}
   ${p.quality?`<p class="callout">This photo ${p.quality.blurry?'might be blurry':'is very dark'}. It's saved either way; take another if you need a clearer one.</p>`:''}
   ${p.suggest&&!p.suggest.done&&(p.suggest.tags.length||p.suggest.trade||p.suggest.caption)?`<div class="callout info stack" style="gap:6px"><b>${I('sparkle')} AI suggests</b><span>${esc([p.suggest.tags.join(', '),p.suggest.trade&&'Trade: '+p.suggest.trade,p.suggest.caption&&'Note: '+p.suggest.caption].filter(Boolean).join(' · '))}</span><div class="row"><button class="btn sm pri" data-a="aiAccept" data-id="${p.id}">Accept</button><button class="btn sm" data-a="aiDismiss" data-id="${p.id}">Dismiss</button></div></div>`:''}
-  ${orig?`<button class="btn sm" data-a="openPhoto" data-id="${orig.id}">${I('back')} See Original (no markup)</button>`:''}
-  ${(before||after)?`<button class="btn pri" data-a="compare" data-a2="${before?before.id:p.id}" data-b2="${before?p.id:after.id}">${I('cmp')} Compare Before & After</button>`:''}
-  <div class="card stack" style="gap:8px"><span class="pvsec">${I('tag')} Tags</span><div class="tagrow">${TAGS.map(t=>`<button class="chip" data-a="phTag" data-id="${p.id}" data-t="${t}" aria-pressed="${(p.tags||[]).includes(t)||(t==='Portfolio'&&p.portfolio)}">${t}</button>`).join('')}</div></div>
-  <div class="card stack" style="gap:8px"><span class="pvsec">${I('check')} Tasks</span>${tks.length?tks.map(t=>`<div class="mtask"><span class="t">${esc(t.title)}<span>${t.type==='punch'?'Punch item':'Task'} · ${t.done?'Done':'Open'}${M_(t.assignee)?' · '+esc(M_(t.assignee).name):''}</span></span></div>`).join(''):''}<div class="row"><button class="btn sm" data-a="newTask" data-pid="${p.projectId}" data-photo="${p.id}">${I('plus')} New Task</button><button class="btn sm" data-a="newTask" data-pid="${p.projectId}" data-photo="${p.id}" data-type="punch">${I('flag')} Punch Item</button></div></div>
+  <div class="card stack" style="gap:10px"><div class="two"><label class="f">Work Zone<input type="text" id="ph-zone" list="dl-zones" value="${esc(p.zone||'')}" data-ch="phF" data-id="${p.id}" data-k="zone" placeholder="Building, area or level" autocapitalize="words"></label><label class="f">Trade Partner<input type="text" id="ph-trade" list="dl-trades" value="${esc(p.trade||'')}" data-ch="phF" data-id="${p.id}" data-k="trade" autocapitalize="words"></label></div>
+   <div class="fg2"><span class="pvsec">${I('tag')} Tags<span class="sp"></span><button type="button" class="linkb" data-a="editTags">Edit list</button></span>
+   ${ptags.map((t,i)=>`<div class="row" style="gap:6px;flex-wrap:nowrap"><select id="ph-tag-${i}" data-ch="phTagSel" data-id="${p.id}" data-i="${i}" aria-label="Tag ${i+1}" style="flex:1">${[...new Set([t,...tagList()])].map(o=>`<option ${o===t?'selected':''}>${esc(o)}</option>`).join('')}</select><button type="button" class="ib" data-a="phTagRm" data-id="${p.id}" data-i="${i}" aria-label="Remove tag ${esc(t)}">${I('x')}</button></div>`).join('')}
+   <select id="ph-tag-add" data-ch="phTagSel" data-id="${p.id}" data-i="-1" aria-label="Add a tag"><option value="">${ptags.length?'+ Add another tag':'+ Add a tag'}</option>${tagList().filter(o=>!ptags.includes(o)).map(o=>`<option>${esc(o)}</option>`).join('')}</select></div></div>
   <label class="f">Description<textarea id="ph-note" data-ch="phF" data-id="${p.id}" data-k="note" placeholder="Add a description…">${esc(p.note||'')}</textarea></label>
   <div class="card"><h2 style="font-size:17px">Comments</h2><div id="cmts">${commentsHtml(p.id)}</div>
    <form data-sub="comment" data-id="${p.id}" class="stack" style="margin-top:8px"><input type="text" id="cm-text" name="text" placeholder="Add a comment. Type @ to mention." autocomplete="off">${S.members.length?`<div class="tagrow">${S.members.slice(0,12).map(m=>`<button type="button" class="chip" data-a="mention" data-n="${esc(m.name)}">@${esc(m.name)}</button>`).join('')}</div>`:''}<button class="btn pri" type="submit">Post Comment</button></form></div>
-  <div class="card stack"><div class="two"><label class="f">Work Zone<input type="text" id="ph-zone" list="dl-zones" value="${esc(p.zone||'')}" data-ch="phF" data-id="${p.id}" data-k="zone" autocapitalize="words"></label><label class="f">Trade Partner<input type="text" id="ph-trade" list="dl-trades" value="${esc(p.trade||'')}" data-ch="phF" data-id="${p.id}" data-k="trade" autocapitalize="words"></label></div>
-   <label class="f">Trade Planner Task<input type="text" id="ph-tp" value="${esc(p.tpTask||'')}" data-ch="phF" data-id="${p.id}" data-k="tpTask" placeholder="Task this photo shows" autocapitalize="words"></label>
+  <div class="card stack" style="gap:8px"><span class="pvsec">${I('check')} Tasks</span>${tks.length?tks.map(t=>`<div class="mtask"><span class="t">${esc(t.title)}<span>${t.type==='punch'?'Punch item':'Task'} · ${t.done?'Done':'Open'}${M_(t.assignee)?' · '+esc(M_(t.assignee).name):''}</span></span></div>`).join(''):''}<div class="row"><button class="btn sm" data-a="newTask" data-pid="${p.projectId}" data-photo="${p.id}">${I('plus')} New Task</button><button class="btn sm" data-a="newTask" data-pid="${p.projectId}" data-photo="${p.id}" data-type="punch">${I('flag')} Punch Item</button></div></div>
+  ${orig?`<button class="btn sm" data-a="openPhoto" data-id="${orig.id}">${I('back')} See Original (no markup)</button>`:''}
+  ${(before||after)?`<button class="btn pri" data-a="compare" data-a2="${before?before.id:p.id}" data-b2="${before?p.id:after.id}">${I('cmp')} Compare Before & After</button>`:''}
+  <div class="card stack"><label class="f">Trade Planner Task<input type="text" id="ph-tp" value="${esc(p.tpTask||'')}" data-ch="phF" data-id="${p.id}" data-k="tpTask" placeholder="Task this photo shows" autocapitalize="words"></label>
    <label class="f">Move to Project<select id="ph-proj" data-ch="phMove" data-id="${p.id}">${S.projects.map(x=>`<option value="${x.id}" ${x.id===p.projectId?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label></div>
   <div class="acts">${p.kind==='photo'&&!p.beforeOf&&!after?`<button class="btn" data-a="takeAfter" data-id="${p.id}">${I('cmp')} Take After Photo</button>`:''}<button class="btn" data-a="voice" data-id="${p.id}">${I('mic')} ${p.voiceUrl?'Replace':'Add'} Voice Note</button><button class="btn" data-a="sendOne" data-id="${p.id}">${I('share')} Send in Text</button>${p.kind==='photo'&&!p.pending?`<button class="btn" data-a="aiSuggest" data-id="${p.id}" ${SAMPLE?'':'disabled'}>${I('sparkle')} Suggest Tags</button><button class="btn" data-a="social" data-id="${p.id}">${I('star')} Social Post</button>`:''}</div>
   ${p.voiceUrl?`<div class="card"><span class="note">Voice note</span><audio src="${esc(p.voiceUrl)}" controls style="width:100%;margin-top:6px"></audio></div>`:''}
@@ -1721,6 +1733,10 @@ function scrSettings(){
   return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Settings</h1>${window.BC?BC.accountCard():''}
   <div class="card stack" id="st-me"><h2>Your Photo</h2><div class="row" style="gap:14px"><span class="avbig">${my?`<img src="${esc(my)}" alt="Your photo">`:esc(ini(ME.name))}</span><div class="stack" style="gap:6px;flex:1;min-width:200px"><b>${esc(ME.name)}</b><span class="note">Shows in the corner of every photo you take, so the crew can see who took it.</span></div></div>
    <div class="row"><button class="btn pri" data-a="avPick" data-cap="user">${I('camera')} Take a Selfie</button><button class="btn" data-a="avPick">${I('img')} Choose a Photo</button>${my?`<button class="btn bad" data-a="avDel">${I('trash')} Remove</button>`:''}</div></div>
+  <div class="card stack" id="st-tags"><h2>Tag List</h2><p class="note" style="margin:0">These are the tags in the Tag drop-down when you take photos and on every photo. Renaming a tag here also renames it on photos that already have it. Removing a tag takes it off the list only; old photos keep it.</p>
+   <div class="list">${tagList().map((t,i,a)=>`<div class="ck" style="align-items:center;gap:6px"><input type="text" id="tg-${i}" value="${esc(t)}" data-ch="tagRen" data-i="${i}" ${t==='Portfolio'?'disabled title="Portfolio is built in"':''} autocapitalize="words" aria-label="Tag name" style="flex:1;min-width:0"><button class="ib" data-a="tagMove" data-i="${i}" data-d="-1" ${i?'':'disabled'} aria-label="Move ${esc(t)} up">${I('back','up')}</button><button class="ib" data-a="tagMove" data-i="${i}" data-d="1" ${i<a.length-1?'':'disabled'} aria-label="Move ${esc(t)} down">${I('back','down')}</button>${t==='Portfolio'?'<span class="ib" aria-hidden="true"></span>':`<button class="ib" data-a="tagDel" data-i="${i}" aria-label="Remove ${esc(t)}">${I('trash')}</button>`}</div>`).join('')}</div>
+   <form data-sub="tagAdd" class="row"><input type="text" id="tg-new" name="t" placeholder="New tag, e.g. Waterproofing" autocapitalize="words" style="flex:1;min-width:180px"><button class="btn pri" type="submit">${I('plus')} Add Tag</button></form>
+   <div class="row"><button class="btn sm" data-a="tagReset">Reset to the Original List</button></div></div>
   <div class="card stack"><h2>Company</h2><label class="f">Default Company Name<input type="text" id="st-name" value="${esc(coName())}" data-ch="setName" autocapitalize="words"></label>
    <div class="row">${s.logoUrl?`<img src="${esc(s.logoUrl)}" alt="Company logo" style="height:56px;width:auto;background:#fff;border-radius:8px;padding:6px;border:1px solid var(--line)">`:'<span class="note">No logo yet. Photos and PDFs use the company name.</span>'}</div>
    <div class="row"><button class="btn pri" data-a="logoPick" ${AS?'':'disabled'}>${I('img')} ${s.logoUrl?'Replace':'Upload'} Logo</button>${s.logoUrl?'<button class="btn" data-a="logoClear">Remove Logo</button>':''}</div><p class="note">The logo goes on every new photo stamp, every PDF report and the before and after reel. A PNG with a clear background looks best.</p></div>
@@ -1734,8 +1750,8 @@ async function aiTag(id,src,force){
   if(!SAMPLE||(!force&&!aiAutoTag()))return false;
   try{const lim=await SAMPLE.limits();if(!lim||!lim.images){if(force)toast('AI can\'t look at photos in this view.');return false}
     const small=await shrinkBlob(src);
-    const r=await SAMPLE.json(`You label jobsite photos for a construction company. The image has a stamp band at the bottom; ignore it. Pick 0 to 4 tags from this list only: ${TAGS.filter(t=>t!=='Portfolio').join(', ')}. Pick the one trade most visible from: ${TRADES.join(', ')}, or "" if unclear. Write one short plain caption of the work shown (under 14 words), or "" if unclear. Reply as JSON: {"tags":[],"trade":"","caption":""}`,{images:[small],modelTier:'quick'});
-    const tags=(Array.isArray(r?.tags)?r.tags:[]).filter(t=>TAGS.includes(t)).slice(0,4),trade=TRADES.includes(r?.trade)?r.trade:'',caption=String(r?.caption||'').slice(0,160);
+    const r=await SAMPLE.json(`You label jobsite photos for a construction company. The image has a stamp band at the bottom; ignore it. Pick 0 to 4 tags from this list only: ${tagList().filter(t=>t!=='Portfolio').join(', ')}. Pick the one trade most visible from: ${TRADES.join(', ')}, or "" if unclear. Write one short plain caption of the work shown (under 14 words), or "" if unclear. Reply as JSON: {"tags":[],"trade":"","caption":""}`,{images:[small],modelTier:'quick'});
+    const tags=(Array.isArray(r?.tags)?r.tags:[]).filter(t=>tagList().includes(t)).slice(0,4),trade=TRADES.includes(r?.trade)?r.trade:'',caption=String(r?.caption||'').slice(0,160);
     if(S.photos.some(p=>p.id===id))await upd('photos',id,{suggest:{tags,trade,caption}});if(M&&M.kind==='photo'&&M.id===id)renderModal();return true;
   }catch(e){if(force)toast(e&&e.code==='rate_limited'?'AI is busy. Try again in a minute.':'Couldn\'t get suggestions. Try again.');return false}
 }
@@ -1837,7 +1853,7 @@ function bulkSheet(){
    <div class="two"><label class="f">Work Zone (area or building)<input type="text" id="bk-zone" name="zone" list="dl-zones" placeholder="${esc(now('zone'))}" autocapitalize="words"></label>
    <label class="f">Trade Partner<input type="text" id="bk-trade" name="trade" list="dl-trades" placeholder="${esc(now('trade'))}" autocapitalize="words"></label></div>
    <div class="row" style="gap:16px"><label class="row note"><input type="checkbox" name="zoneClear" style="width:20px;height:20px"> Clear Work Zone</label><label class="row note"><input type="checkbox" name="tradeClear" style="width:20px;height:20px"> Clear Trade Partner</label></div>
-   <div class="two"><label class="f">Add Tag<select id="bk-tadd" name="tagAdd">${opt('','No change')}${TAGS.filter(t=>t!=='Portfolio').map(t=>opt(t,t)).join('')}</select></label>
+   <div class="two"><label class="f">Add Tag<select id="bk-tadd" name="tagAdd">${opt('','No change')}${tagList().filter(t=>t!=='Portfolio').map(t=>opt(t,t)).join('')}</select></label>
    <label class="f">Remove Tag<select id="bk-trem" name="tagRem">${opt('','No change')}${have.filter(t=>t!=='Portfolio').map(t=>opt(t,t)).join('')}</select></label></div>
    <div class="two"><label class="f">Portfolio<select id="bk-port" name="port">${opt('','No change')}${opt('on','Add to Portfolio')}${opt('off','Take out of Portfolio')}</select></label>
    <label class="f">Move to Project<select id="bk-proj" name="proj">${opt('','No change')}${S.projects.map(x=>opt(x.id,x.name)).join('')}</select></label></div>
@@ -1897,12 +1913,12 @@ const ACT={
   pvFull:()=>{const b=$('#pvbox');if(!b)return;try{document.fullscreenElement?document.exitFullscreen():(b.requestFullscreen||b.webkitRequestFullscreen).call(b)}catch(e){const p=PH(M.id);if(p)window.open(p.url,'_blank','noopener')}},
   star:el=>{const p=P(el.dataset.id);if(!p)return;upd('projects',p.id,{starred:!p.starred})},
   pfilt:el=>{V.pfilt=el.dataset.f;render()},
-  pfToggle:()=>{V.pfOpen=!V.pfOpen;render()},
-  pfPick:el=>{const f=V.pf,k=el.dataset.k,v=el.dataset.v;f.tags=f.tags||[];if(k==='tags')f.tags=f.tags.includes(v)?f.tags.filter(x=>x!==v):[...f.tags,v];else f[k]=f[k]===v?'':v;render()},
+  pfToggle:()=>{V.pfOpen=!V.pfOpen;render();if(V.pfOpen)setTimeout(()=>{const q=$('#phq');if(q&&!DESK())return;q&&q.focus()},30)},
+  pfPick:el=>{const f=V.pf,k=el.dataset.k,v=el.dataset.v;f.tags=f.tags||[];if(k==='q'){f.q='';render();return}if(k==='tags')f.tags=f.tags.includes(v)?f.tags.filter(x=>x!==v):[...f.tags,v];else f[k]=f[k]===v?'':v;render()},
   pfClear:()=>{V.pf={zone:'',trade:'',tag:'',by:'',tags:[],q:''};render()},
   ckF:el=>{V.ckF=el.dataset.f;render()},
   daySel:el=>{const d=el.dataset.d,ids=allPhotos().filter(x=>x.projectId===V.pid&&x.kind!=='doc'&&!x.pending&&dayKey(x.takenAt)===d).map(x=>x.id);const all=V.selMode&&ids.every(i=>V.sel.has(i));if(!V.selMode){V.selMode=true;V.sel=new Set()}ids.forEach(i=>all?V.sel.delete(i):V.sel.add(i));render()},
-  close:()=>closeModal(),
+  close:()=>{const m=M;closeModal();if(m&&m.kind==='photo'&&m.back&&m.back.kind==='cam')goJob(m.back.cap.pid)},
   phTag:el=>{const p=PH(el.dataset.id),t=el.dataset.t;if(!p||p.pending)return;if(t==='Portfolio'){const on=!p.portfolio;upd('photos',p.id,{portfolio:on,tags:on?[...new Set([...(p.tags||[]),'Portfolio'])]:(p.tags||[]).filter(x=>x!=='Portfolio')});el.setAttribute('aria-pressed',on);return}const tags=(p.tags||[]).includes(t)?(p.tags||[]).filter(x=>x!==t):[...(p.tags||[]),t];upd('photos',p.id,{tags});el.setAttribute('aria-pressed',tags.includes(t))},
   mention:el=>{const i=$('#cm-text');i.value=(i.value&&!i.value.endsWith(' ')?i.value+' ':i.value)+'@'+el.dataset.n+' ';i.focus()},
   delPhoto:el=>{if(!el.classList.contains('armed')){const h=el.innerHTML;el.classList.add('armed');el.innerHTML=I('trash')+' Tap Again to Delete';setTimeout(()=>{el.classList.remove('armed');el.innerHTML=h},3000);return}
@@ -1914,7 +1930,8 @@ const ACT={
   camSnd:el=>{const on=!sndOn();try{localStorage.setItem('pc-snd',on?'on':'off')}catch(e){}el.setAttribute('aria-pressed',on);el.setAttribute('aria-label','Shutter sound '+(on?'on':'off'));el.innerHTML=I(on?'snd':'mute');if(on)shutterSound();toast(on?'Shutter sound on':'Shutter sound off')},
   camFallback:()=>{const b=M&&M.back;camStop();CAM.ok=false;if(b){M=b;renderModal()}$('#in-photo').click()},
   camFlip:()=>{CAM.facing=CAM.facing==='environment'?'user':'environment';camStop();camStart()},
-  camDone:()=>{const b=M&&M.back;camStop();if(b){M=b;renderModal()}else closeModal()},
+  camDone:()=>{const cap=M&&M.cap;camStop();closeModal();goJob(cap&&cap.pid)},
+  camDetails:()=>{const b=M&&M.back;camStop();if(b){M=b;renderModal()}else closeModal()},
   camLast:()=>{const id=M.cap.shot&&M.cap.shot[0];if(!id)return;camStop();const camM=M;openModal({kind:'photo',id,back:camM})},
   camTag:el=>{const c=M.cap.ctx,t=el.dataset.t;c.tags=c.tags.includes(t)?c.tags.filter(x=>x!==t):[...c.tags,t];el.setAttribute('aria-pressed',c.tags.includes(t))},
   mkTool:el=>{MK.tool=el.dataset.t;document.querySelectorAll('.tool').forEach(b=>b.setAttribute('aria-pressed',b===el));mkOpt();if(MK.tool==='text')setTimeout(()=>$('#mk-text')?.focus(),30)},
@@ -1991,6 +2008,11 @@ const ACT={
   sendOne:el=>openModal({kind:'sendText',ids:[el.dataset.id]}),
   sendMany:el=>openModal({kind:'sendText',ids:el.dataset.ids.split(',')}),
   sxShare:()=>sxShare(),
+  phTagRm:el=>{const p=PH(el.dataset.id);if(!p||p.pending)return;const tags=[...new Set([...(p.tags||[]),...(p.portfolio?['Portfolio']:[])])];tags.splice(+el.dataset.i,1);setPhotoTags(p,tags)},
+  editTags:()=>{const m=M;if(m&&m.kind==='cam')camStop();closeModal();V.tab='settings';render();setTimeout(()=>{const c=$('#st-tags');if(c)c.scrollIntoView({block:'start'})},60)},
+  tagMove:el=>{const l=[...tagList()],i=+el.dataset.i,j=i+(+el.dataset.d);if(j<0||j>=l.length)return;[l[i],l[j]]=[l[j],l[i]];saveTags(l)},
+  tagDel:el=>{const l=[...tagList()],i=+el.dataset.i,t=l[i];if(!el.classList.contains('armed')){el.classList.add('armed');el.style.color='var(--bad)';toast('Tap the trash again to remove "'+t+'" from the list');setTimeout(()=>{el.classList.remove('armed');el.style.color=''},3000);return}l.splice(i,1);saveTags(l);toast('"'+t+'" removed from the list. Old photos keep it.')},
+  tagReset:el=>{if(!el.classList.contains('armed')){el.classList.add('armed');el.textContent='Tap Again to Reset';setTimeout(()=>{el.classList.remove('armed');el.textContent='Reset to the Original List'},3000);return}saveTags([...TAGS_DEF]);toast('Tag list reset')},
   avPick:el=>{const i=$('#in-avatar');if(el.dataset.cap)i.setAttribute('capture',el.dataset.cap);else i.removeAttribute('capture');i.click()},
   avDel:()=>{const cur=S.settings.find(x=>x.id==='avatars');if(!cur)return;const map={...(cur.map||{})};delete map['id:'+ME.id];delete map['n:'+ME.name];put('settings',{id:'avatars',map});toast('Photo removed')},
   sxDrop:el=>{if(!M||M.kind!=='sendText')return;const m=$('#sx-msg');if(m)M.msg=m.value;M.ids=M.ids.filter(i=>i!==el.dataset.id);renderModal()},
@@ -2041,6 +2063,13 @@ document.addEventListener('change',e=>{const el=e.target,k=el.dataset.ch;if(!k)r
   else if(k==='setAI'){put('settings',{...SET(),id:'company',autoTag:el.checked})}
   else if(k==='ct'){const p=P(el.dataset.pid),i=+el.dataset.i;upd('projects',p.id,{contacts:(p.contacts||[]).map((c,j)=>j===i?{...c,[el.dataset.k]:el.value.trim()}:c)})}
   else if(k==='sxTo'){}
+  else if(k==='tagRen'){delete el.dataset.dirty;const l=[...tagList()],i=+el.dataset.i,old=l[i],nw=titleCase(el.value.trim());
+    if(!nw){el.value=old;toast('A tag needs a name. Use the trash to remove it.');return}
+    if(nw!==old&&l.some((t,j)=>j!==i&&t.toLowerCase()===nw.toLowerCase())){el.value=old;toast('"'+nw+'" is already on the list.');return}
+    if(nw===old)return;l[i]=nw;saveTags(l);const ps=S.photos.filter(p=>(p.tags||[]).includes(old));ps.forEach(p=>upd('photos',p.id,{tags:p.tags.map(t=>t===old?nw:t)}));toast(`Renamed to "${nw}"${ps.length?` on ${ps.length} photo${ps.length===1?'':'s'}`:''}`)}
+  else if(k==='phTagSel'){const p=PH(el.dataset.id);if(!p||p.pending)return;const i=+el.dataset.i,v=el.value;let tags=[...new Set([...(p.tags||[]),...(p.portfolio?['Portfolio']:[])])];
+    if(i<0){if(!v)return;if(!tags.includes(v))tags.push(v)}else{if(!v)tags.splice(i,1);else if(tags.includes(v)&&tags[i]!==v)tags.splice(i,1);else tags[i]=v}
+    setPhotoTags(p,tags)}
   else if(k==='pDesc'){upd('projects',el.dataset.id,{description:el.value.trim()})}
   else if(k==='mapDone'){V.mapDone=el.checked;render()}
 });
@@ -2060,6 +2089,7 @@ document.addEventListener('submit',async e=>{const f=e.target,k=f.dataset.sub;if
       const t=v.note.trim();if(t)ch.note=v.noteAppend&&p.note?p.note.trim()+' '+t:t;
       if(Object.keys(ch).length){await upd('photos',p.id,ch);n++}}
     closeModal();V.selMode=false;V.sel=new Set();render();toast(n?`Saved changes to ${n} photo${n===1?'':'s'}`:'Nothing to change');}
+  else if(k==='tagAdd'){const t=titleCase((v.t||'').trim());if(!t)return;if(tagList().some(x=>x.toLowerCase()===t.toLowerCase())){toast('"'+t+'" is already on the list.');return}const l=[...tagList()];const pi=l.indexOf('Portfolio');if(pi>=0)l.splice(pi,0,t);else l.push(t);await saveTags(l);f.reset();toast('"'+t+'" added');setTimeout(()=>$('#tg-new')?.focus(),30)}
   else if(k==='pcomment'){const t=v.text.trim();if(!t)return;const pid=f.dataset.id;await put('comments',{photoId:null,projectId:pid,text:t,by:ME.id,byName:ME.name,at:Date.now()});S.members.filter(m=>m.name&&t.includes('@'+m.name)).forEach(m=>alertFor(m.id,`${ME.name} mentioned you on ${P(pid)?.name||'a job'}: "${t.slice(0,120)}"`,{projectId:pid}));f.reset();const c=$('#pconv');if(c)c.innerHTML=pconvHtml(pid)}
   else if(k==='saveTask'){const t=M.task;const tid=await put('tasks',{projectId:v.pid,title:v.title.trim(),type:v.type,assignee:v.assignee||null,assigneeText:v.assigneeText.trim(),due:v.due||'',photoId:t.photoId||null,done:false,createdAt:Date.now(),by:ME.name});if(v.assignee)alertFor(v.assignee,`${ME.name} assigned you a ${v.type==='punch'?'punch item':'task'}: ${v.title.trim()} (${P(v.pid)?.name||''})`,{taskId:tid,photoId:t.photoId||null,projectId:v.pid});closeModal();toast(v.type==='punch'?'Punch item added':'Task added')}
   else if(k==='saveMember'){const m=M.m||{};await put('members',{...(m.id?{id:m.id}:{}),name:v.name.trim(),role:v.role,phone:v.phone.trim(),company:v.company.trim(),trade:v.trade.trim()});closeModal()}
@@ -2094,6 +2124,9 @@ async function handleFiles(files,kind){
 }
 [['#in-avatar','avatar'],['#in-photo','photo'],['#in-lib','lib'],['#in-video','video'],['#in-doc','doc'],['#in-audio','audio'],['#in-logo','logo'],['#in-csv','csv']].forEach(([s,k])=>$(s).addEventListener('change',e=>{const fs=[...e.target.files];e.target.value='';handleFiles(fs,k)}));
 
+function setPhotoTags(p,tags){const q=['#modal .pvside','#modal .sb'],ys=q.map(x=>document.querySelector(x)?.scrollTop||0);
+  upd('photos',p.id,{tags,portfolio:tags.includes('Portfolio')});if(M&&M.kind==='photo'&&M.id===p.id){renderModal();q.forEach((x,i)=>{const e=document.querySelector(x);if(e)e.scrollTop=ys[i]})}}
+function saveTags(list){const l=[...new Set(list.map(t=>String(t).trim()).filter(Boolean))];if(!l.includes('Portfolio'))l.push('Portfolio');return put('settings',{id:'tags',list:l})}
 async function avCrop(file){const url=URL.createObjectURL(file);try{const img=await new Promise((r,j)=>{const i=new Image();i.onload=()=>r(i);i.onerror=j;i.src=url});
   const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d'),m=Math.min(img.naturalWidth,img.naturalHeight);
   x.drawImage(img,(img.naturalWidth-m)/2,(img.naturalHeight-m)/2,m,m,0,0,256,256);return await new Promise(r=>c.toBlob(r,'image/jpeg',.85))}finally{URL.revokeObjectURL(url)}}

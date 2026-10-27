@@ -386,8 +386,234 @@ a{color:var(--accent)}
 .pacts button,.pacts a{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:600;color:var(--ink);text-decoration:none;min-height:56px;justify-content:center;border-radius:8px}
 .pacts svg{width:24px;height:24px;color:var(--accent)}
 .pacts button:first-child svg{color:var(--stamp-ink);background:var(--stamp);border-radius:50%;padding:5px;width:32px;height:32px}
+div.cam{position:fixed;inset:0;background:#000;z-index:55;display:flex;flex-direction:column;color:#fff}
+.cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.camflash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.camflash.go{animation:cf .25s ease-out}@keyframes cf{0%{opacity:.85}100%{opacity:0}}
+.camtop{position:relative;display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 8px) max(10px,env(safe-area-inset-right,0px)) 8px max(10px,env(safe-area-inset-left,0px));background:linear-gradient(rgba(0,0,0,.6),transparent)}
+.cam .ib{color:#fff;background:rgba(0,0,0,.35);border-radius:50%}
+.camjob{flex:1;min-width:0;display:grid;line-height:1.2}.camjob b{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.camjob span{font-size:12px;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.camgps{font-family:var(--f-mono);font-size:11px;padding:3px 7px;border-radius:999px;background:rgba(0,0,0,.45)}.camgps.ok{color:#7fe0a8}.camgps.bad{color:#ffb4a8}
+.camtags{position:relative;margin-top:auto;display:flex;gap:6px;overflow-x:auto;padding:8px max(10px,env(safe-area-inset-left,0px));scrollbar-width:none}
+.camtags .chip{background:rgba(0,0,0,.45);color:#fff;border-color:rgba(255,255,255,.4)}.camtags .chip[aria-pressed="true"]{background:var(--stamp);color:var(--stamp-ink);border-color:var(--stamp)}
+.cambot{position:relative;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:14px max(20px,env(safe-area-inset-left,0px)) calc(env(safe-area-inset-bottom,0px) + 18px);background:linear-gradient(transparent,rgba(0,0,0,.7))}
+.camshut{width:78px;height:78px;border-radius:50%;border:4px solid #fff;background:transparent;display:grid;place-items:center;padding:0}
+.camshut span{width:62px;height:62px;border-radius:50%;background:#fff;transition:transform .08s}.camshut:active span{transform:scale(.88)}
+.camlast{justify-self:start;width:56px;height:56px;border-radius:10px;border:2px solid #fff;background:rgba(255,255,255,.12);padding:0;overflow:hidden}.camlast img{width:100%;height:100%;object-fit:cover}
+.camdone{justify-self:end;border:0;background:rgba(0,0,0,.45);color:#fff;border-radius:12px;padding:6px 14px;display:grid;justify-items:center;min-width:64px;min-height:56px}.camdone b{font-size:20px;line-height:1}.camdone span{font-size:12px;font-weight:600}
+.camerr{position:absolute;left:16px;right:16px;top:40%;background:rgba(0,0,0,.8);border-radius:12px;padding:14px;font-size:15px;text-align:center}
 #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--ink);color:var(--panel);padding:10px 16px;border-radius:999px;font-size:14px;max-width:calc(100% - 32px);text-align:center}
 @media (prefers-reduced-motion:no-preference){.sheet{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}}
+
+/* ---------- CompanyCam-style layout: desktop sidebar, project table, split photo viewer ---------- */
+.empty>svg{width:40px;height:40px;color:var(--muted)}
+a.btn{text-decoration:none;color:inherit}a.btn.pri{color:var(--accent-ink)}
+.badge{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--stamp);color:var(--stamp-ink);white-space:nowrap;line-height:1.5}
+.badge.done{background:var(--sunk);color:var(--muted);box-shadow:inset 0 0 0 1px var(--line)}
+.starb{border:0;background:transparent;color:var(--muted);width:36px;height:36px;display:grid;place-items:center;border-radius:8px;flex:none;padding:0}
+.starb svg{width:19px;height:19px}.starb[aria-pressed="true"]{color:#d49a00}.starb[aria-pressed="true"] svg{fill:var(--stamp)}
+.seg.sm button{min-height:38px;padding:0 12px;font-size:13.5px}
+.seg button svg{width:18px;height:18px;display:block}
+.av{width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:inline-grid;place-items:center;font-size:10px;font-weight:700;flex:none;letter-spacing:0}
+.ptool{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin:4px 0 6px}
+.ptool .f{min-width:130px;flex:1;max-width:200px}
+.ptool .sp{min-width:0}
+/* projects table (rows on phone, columns on desktop) */
+.ptable{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.pthead{display:none}
+.prow{display:block;padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+.prow:last-child{border-bottom:0}
+.prow:hover{background:var(--sunk)}
+.prow:focus-visible{outline-offset:-2px}
+.c-name{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;align-items:center}
+.c-name .cv{width:76px;height:76px;border-radius:8px;overflow:hidden;background:var(--sunk);display:grid;place-items:center;color:var(--muted)}
+.c-name .cv img{width:100%;height:100%;object-fit:cover}.c-name .cv svg{width:26px;height:26px}
+.c-name .tx{display:grid;gap:3px;min-width:0}
+.nmr{display:flex;align-items:center;gap:2px;min-width:0}
+.nmr b{font-size:16.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nmr .starb{width:30px;height:30px}
+.c-name .ad{font-size:13.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.c-name .mt{font-size:12.5px;color:var(--muted)}
+.c-upd,.c-stats,.c-rec{display:none}
+/* home */
+.hgreet{font-size:32px;margin:4px 0 16px}
+.hsec{font-family:var(--f-display);font-size:17px;font-weight:700;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.hsec span{flex:1}
+.jb{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(200px,1fr);gap:12px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;margin-bottom:16px}
+.jbc{border:1px solid var(--line);background:var(--panel);border-radius:12px;overflow:hidden;text-align:left;padding:0;display:grid;grid-template-rows:116px auto}
+.jbc .im{background:var(--sunk);display:grid;place-items:center;color:var(--muted)}.jbc .im img{width:100%;height:116px;object-fit:cover}.jbc .im svg{width:28px;height:28px}
+.jbc .tx{padding:10px 12px;display:grid;gap:2px;min-width:0}
+.jbc b{font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jbc .tx span{font-size:12.5px;color:var(--muted)}
+.hcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
+.lf{display:grid;grid-auto-flow:column;grid-auto-columns:118px;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.lf .tcap{display:flex}.lf .tile .lab{display:none}
+.hgrid{display:grid;gap:14px;margin-top:14px}
+.mini{display:flex;align-items:center;gap:12px;padding:9px 0;border:0;border-top:1px solid var(--line);background:transparent;width:100%;text-align:left;min-height:56px}
+.mini:first-child{border-top:0}
+.mini img,.mini .ph0{width:48px;height:48px;border-radius:8px;object-fit:cover;background:var(--sunk);flex:none;display:grid;place-items:center;color:var(--muted)}
+.mini .ph0 svg{width:20px;height:20px}
+.mini .t{flex:1;min-width:0;display:grid}
+.mini .t b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini .t span{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini .w{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.mtask{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.mtask:first-child{border-top:0}
+.mtask input{width:20px;height:20px;accent-color:var(--good);margin:1px 0 0;flex:none}
+.mtask .t{flex:1;min-width:0;display:grid}.mtask .t span{font-size:12.5px;color:var(--muted)}
+/* photo tiles with caption (desktop) */
+.tw{display:grid;gap:5px;min-width:0;align-content:start}
+.tcap{display:none;align-items:center;gap:6px;font-size:12px;color:var(--muted);min-width:0}
+.tcap .tl{display:grid;min-width:0;line-height:1.3}
+.tcap .tl b,.tcap .tl span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tcap .tl b{color:var(--ink);font-weight:600}
+.dayck{width:22px;height:22px;border-radius:5px;border:2px solid var(--muted);background:var(--panel);display:grid;place-items:center;padding:0;color:var(--accent-ink);font-size:13px;font-weight:700;line-height:1}
+.dayck[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
+h3.day{align-items:center}
+/* checklists table */
+.ckrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:transparent;width:100%;text-align:left}
+.ckrow:last-child{border-bottom:0}.ckrow:hover{background:var(--sunk)}
+.ckrow b{font-weight:600}.ckrow .pj{color:var(--muted);font-size:13px}
+.prog{display:grid;gap:4px;min-width:120px;font-size:12.5px;color:var(--muted)}
+.prog i{display:block;height:6px;border-radius:3px;background:var(--sunk);box-shadow:inset 0 0 0 1px var(--line);overflow:hidden}
+.prog i span{display:block;height:100%;background:var(--ink)}
+.ckhead{display:none}
+/* project desktop header + side column */
+.pdesk{display:none}
+.paside{display:grid;gap:12px;align-content:start}
+.acard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px 16px}
+.acard .ar{display:flex;align-items:center;gap:8px;min-height:48px;border-top:1px solid var(--line)}
+.acard .ar:first-child{border-top:0}
+.acard .ar b{flex:1;font-size:15px}
+.acard .ar .ib{width:36px;height:36px;color:var(--accent)}
+.acard .ar .ib svg{width:20px;height:20px}
+.acard .body{padding:0 0 12px}
+.avs{display:flex;gap:6px;flex-wrap:wrap;padding:0 0 12px}.avs .av{width:32px;height:32px;font-size:12px}
+.pcm{padding:8px 0;border-top:1px solid var(--line);font-size:14px}.pcm:first-child{border-top:0}
+.pcm .who{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--muted)}.pcm .who b{color:var(--ink)}
+.cnt{color:var(--muted);font-weight:500}
+/* photo viewer: dark image with toolbar, details beside it on desktop */
+.pvimg{position:relative;background:#000;border-radius:10px;overflow:hidden;display:grid;place-items:center;min-height:220px}
+.pvimg img,.pvimg video{max-width:100%;max-height:62vh;width:auto;height:auto;margin:0 auto;transition:transform .15s ease-out;transform-origin:center}
+.pvtb{position:absolute;top:10px;left:10px;display:flex;gap:2px;background:var(--panel);border-radius:10px;padding:3px;z-index:2;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.pvtb .ib{width:38px;height:38px;color:var(--ink);text-decoration:none}
+.pvtb .ib svg{width:19px;height:19px}
+.pvtb .ib.armed{width:auto;padding:0 10px;color:var(--bad);font-weight:600;font-size:13px;gap:4px;display:flex}
+.pvnav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#111;display:grid;place-items:center;z-index:2;box-shadow:0 1px 6px rgba(0,0,0,.3)}
+.pvnav.l{left:10px}.pvnav.r{right:10px}.pvnav svg{width:22px;height:22px}
+.pvside{display:grid;gap:14px;align-content:start;min-width:0}
+.pvwho{display:flex;align-items:center;gap:10px}.pvwho .av{width:38px;height:38px;font-size:13px}
+.pvsec{display:flex;align-items:center;gap:8px;font-weight:600}.pvsec svg{width:18px;height:18px;color:var(--accent)}
+.pvimg:fullscreen{border-radius:0}.pvimg:fullscreen img{max-height:100vh}
+/* desktop sidebar */
+nav.side{display:none}
+.sdh{display:flex;align-items:center;gap:8px;padding:2px 4px 12px}
+.slogo{width:34px;height:34px;border-radius:9px;background:var(--stamp);color:var(--stamp-ink);display:grid;place-items:center;flex:none}.slogo svg{width:20px;height:20px}
+.sname{font-family:var(--f-display);font-weight:700;font-size:19px;color:#fff;flex:1;line-height:1;white-space:nowrap}
+.sib{width:34px;height:34px;border-radius:8px;border:0;background:transparent;color:#c9d3dc;display:grid;place-items:center;padding:0}
+.sib:hover{background:rgba(255,255,255,.08)}.sib svg{width:20px;height:20px}
+.scam{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--stamp);color:var(--stamp-ink);border:0;border-radius:9px;min-height:42px;font-weight:600;margin-bottom:10px;font-size:14.5px}.scam svg{width:20px;height:20px}
+.ssearch{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:0 10px;min-height:38px;color:#aab6c1;margin-bottom:10px;width:100%;text-align:left;font-size:14px}
+.ssearch svg{width:16px;height:16px}
+.sco{font-size:12.5px;font-weight:600;color:#fff;padding:4px 10px 6px;line-height:1.25}
+.si{display:flex;align-items:center;gap:10px;border:0;background:transparent;color:#c9d3dc;text-align:left;padding:7px 10px;border-radius:8px;font-size:14px;min-height:36px;width:100%}
+.si svg{width:18px;height:18px;flex:none;opacity:.85}
+.si:hover{background:rgba(255,255,255,.06);color:#fff}
+.si[aria-current="page"]{background:rgba(255,255,255,.13);color:#fff;font-weight:600}
+.si .n{margin-left:auto;font-family:var(--f-mono);font-size:11px;background:var(--bad);color:#fff;border-radius:999px;padding:0 6px}
+.sfoot{margin-top:auto;padding-top:10px;border-top:1px solid rgba(255,255,255,.1);display:grid;gap:2px}
+.sfoot .sync{justify-self:start;margin:8px 10px 2px;background:transparent}
+.ptop2{display:grid;gap:8px;margin:8px 0 12px}
+.pfr{display:flex;align-items:center;gap:6px;min-width:0}
+.pfr .seg{white-space:nowrap}
+.tav{position:absolute;left:5px;bottom:5px;z-index:1;width:24px;height:24px;border-radius:50%;background:var(--avc,#2b5d86);color:#fff;border:2px solid #fff;display:grid;place-items:center;font-size:9.5px;font-weight:700;letter-spacing:0;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.45)}
+.tav img{width:100%;height:100%;object-fit:cover}
+.avbig{width:72px;height:72px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:24px;font-weight:700;overflow:hidden;flex:none}
+.avbig img,.av img{width:100%;height:100%;object-fit:cover}
+.av{overflow:hidden}
+.sxcar{display:grid;grid-auto-flow:column;grid-auto-columns:86%;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.sxcar:has(.sxit:only-child){grid-auto-columns:100%}
+.sxit{margin:0;position:relative;scroll-snap-align:center;display:grid;gap:4px}
+.sxit img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;background:#000}
+.sxit figcaption{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+.sxdrop{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;display:grid;place-items:center;padding:0}.sxdrop svg{width:18px;height:18px}
+@media (min-width:1000px){.sxcar{grid-auto-columns:48%}}
+.camsel{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:0 6px 0 14px;color:#fff;font-size:13px;font-weight:600}
+.camsel select{width:auto;min-height:38px;border:0;background:transparent;color:#fff;padding:6px 8px;font-weight:600}
+.camsel select option{color:#111}
+.tile .tav~.lab{padding-left:33px}
+@media (min-width:1000px){.grid .tav,.lf .tav{width:28px;height:28px;font-size:10.5px;left:6px;bottom:6px}}
+@media (max-width:999px){.dk-create{display:none}}
+@media (max-width:999px){.pfr .seg button{padding:0 8px;font-size:13px}}
+@media (min-width:1000px){.ptop2{grid-template-columns:minmax(200px,380px) minmax(0,1fr);align-items:center;gap:10px}}
+.mapsplit{display:grid;gap:14px}
+.phc{display:flex;align-items:center;gap:8px;margin:0 0 10px}
+.phc .bk{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ink);display:grid;place-items:center;flex:none;padding:0}.phc .bk svg{width:20px;height:20px}
+.phc .nm{flex:1;min-width:0}
+.phc h1{font-size:22px;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.phc .ad{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.pdhd2{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 6px}
+.pdhd2 h1{font-size:28px;margin:0}
+.pdhd2 a.ad{color:var(--muted);font-size:14px}
+.psrch{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:4px 0 8px}
+.psrch .sbox{flex:1;min-width:200px;position:relative}
+.psrch .sbox svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--muted);pointer-events:none}
+.psrch .sbox input{padding-left:36px}
+.fbtn[aria-expanded="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.fbtn .fn{font-family:var(--f-mono);font-size:11px;background:var(--stamp);color:var(--stamp-ink);border-radius:999px;padding:0 6px;margin-left:2px}
+.fpanel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px 12px;display:grid;gap:10px;margin-bottom:8px}
+.fpanel .fg{display:grid;gap:6px}
+.fpanel .fg>span{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fpanel .tagrow .chip{min-height:34px;padding:5px 11px}
+.factive{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 6px}
+.factive .chip{min-height:32px;padding:4px 10px;background:var(--accent-soft);border-color:transparent}
+@media (min-width:1000px){
+  body{padding-left:240px}
+  body::before{display:none}
+  nav.side{display:flex;flex-direction:column;gap:1px;position:fixed;left:0;top:0;bottom:0;width:240px;background:#18222c;color:#c9d3dc;z-index:25;overflow-y:auto;padding:16px 12px 12px;scrollbar-width:thin}
+  .top,nav.bot,.bkm{display:none}
+  main{max-width:1360px;padding:28px 36px 60px}
+  .selbar{left:240px;bottom:0}
+  #toast{bottom:28px;left:calc(50% + 120px)}
+  h1{font-size:34px}
+  .hgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .ptable{border:0;background:transparent;border-radius:0;overflow:visible}
+  .pthead,.prow{display:grid;grid-template-columns:minmax(300px,2.2fr) minmax(140px,1fr) minmax(210px,1.3fr) minmax(240px,1.5fr);gap:18px;align-items:center}
+  .pthead{padding:8px 14px;font-size:12.5px;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line)}
+  .prow{background:transparent;border-radius:0}
+  .prow:last-child{border-bottom:1px solid var(--line)}
+  .c-upd{display:block;font-size:13.5px}
+  .c-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:13px}
+  .c-stats span{display:flex;align-items:center;gap:5px;color:var(--muted);white-space:nowrap}.c-stats b{color:var(--ink);font-weight:600}.c-stats svg{width:15px;height:15px;flex:none}
+  .c-rec{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .c-rec img,.c-rec i{aspect-ratio:1;width:100%;object-fit:cover;border-radius:6px;background:var(--sunk);display:block}
+  .ph-only{display:none!important}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px 10px;margin-inline:0}
+  .grid .tile{border-radius:6px}
+  .grid .tile .lab{display:none}
+  .grid .tcap{display:flex}
+  .phead,.pacts,.ph-only2{display:none}
+  .pdesk{display:block}
+  .pwrap{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:26px;align-items:start}
+  .pwrap>.paside{position:sticky;top:20px}
+  .pdtop{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+  .pdtop .bkl{border:0;background:transparent;color:var(--muted);display:flex;align-items:center;gap:4px;font-size:14.5px;padding:6px 0;font-weight:500}
+  .pdtop .bkl svg{width:18px;height:18px}
+  .pdhd{display:flex;gap:22px;align-items:center;margin-bottom:10px}
+  .pdcv{width:150px;height:150px;border-radius:10px;overflow:hidden;background:var(--sunk);flex:none;display:grid;place-items:center;color:var(--muted)}
+  .pdcv img{width:100%;height:100%;object-fit:cover}.pdcv svg{width:36px;height:36px}
+  .pdhd h1{font-size:40px;margin:0 0 6px}
+  .pdhd a.ad{color:var(--ink);font-size:15px}
+  .ptabs{margin-top:4px}
+  .ckhead{display:grid}
+  .ckhead,.ckrow{grid-template-columns:minmax(0,1.4fr) minmax(0,1.2fr) minmax(140px,.9fr) minmax(130px,.8fr);gap:16px}
+  .ckhead{padding:8px 14px;font-size:12.5px;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line)}
+  .mapsplit{grid-template-columns:340px minmax(0,1fr);align-items:start}
+  .sheet.pv{max-width:1440px;width:calc(100% - 48px)}
+  .sheet.pv .sb{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:0;padding:0;overflow:hidden;grid-auto-rows:auto;align-content:stretch;min-height:0}
+  .sheet.pv .pvimg{border-radius:0;height:100%;min-height:0}
+  .sheet.pv .pvimg img,.sheet.pv .pvimg video{max-height:100%}
+  .sheet.pv .pvside{overflow:auto;padding:16px 18px 30px;border-left:1px solid var(--line);background:var(--panel);min-height:0}
+}
 </style>
 
 <div id="app"></div>
@@ -398,6 +624,7 @@ a{color:var(--accent)}
 <input type="file" id="in-video" accept="video/*" capture="environment" hidden>
 <input type="file" id="in-audio" accept="audio/*" capture hidden>
 <input type="file" id="in-doc" accept="image/*" capture="environment" hidden>
+<input type="file" id="in-avatar" accept="image/*" hidden>
 <input type="file" id="in-logo" accept="image/png,image/jpeg,image/svg+xml" hidden>
 <input type="file" id="in-csv" accept=".csv,.txt,text/csv,text/plain" hidden>
 
@@ -453,7 +680,10 @@ const ICON={
  sparkle:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',
  share:'<path d="M12 3v12M7.5 7.5L12 3l4.5 4.5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>',
  here:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>',
- link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'
+ link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+ home:'<path d="M3.5 11L12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5h4v5"/>', fwd:'<path d="M9 5l7 7-7 7"/>',
+ expand:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>', zoomin:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5M8.5 11h5M11 8.5v5"/>', zoomout:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5M8.5 11h5"/>',
+ download:'<path d="M12 4v11M7.5 10.5L12 15l4.5-4.5"/><path d="M5 19h14"/>', tag:'<path d="M3.5 12.5V4h8.5l9 9-8.5 8.5z"/><circle cx="8" cy="8.5" r="1.5"/>'
 };
 const I=(n,cls='')=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="${cls}">${ICON[n]||''}</svg>`;
 const pad=n=>String(n).padStart(2,'0');
@@ -576,6 +806,7 @@ async function processFile(file,ctx){
   const kind=ctx.kind||(file.type.startsWith('video')?'video':file.type.startsWith('audio')?'audio':'photo');
   let lat=null,lng=null,gpsSource=null,takenAt=Date.now();
   if(kind==='photo'||kind==='doc'){const ex=await readExif(file);if(ex){if(ex.lat!=null){lat=ex.lat;lng=ex.lng;gpsSource='photo'}if(ex.taken&&Math.abs(Date.now()-ex.taken)<1000*86400*400)takenAt=ex.taken}}
+  if(lat==null&&ctx.gps&&Date.now()-ctx.gps.t<120000){lat=ctx.gps.lat;lng=ctx.gps.lng;gpsSource='photo'}
   if(!ctx.fromCamera&&file.lastModified&&!gpsSource&&Math.abs(Date.now()-file.lastModified)<1000*86400*400)takenAt=file.lastModified;
   let pid=ctx.projectId, moved=null;
   if(lat!=null&&!ctx.lockProject){const n=matchProject(lat,lng);if(n&&n.id!==pid){pid=n.id;moved=n.name}}
@@ -597,10 +828,14 @@ async function processFile(file,ctx){
 }
 
 /* ---------- view state ---------- */
-const V={sel:new Set(),selMode:false,tab:'projects',pq:'',pview:'list',pid:null,ptab:'photos',feedF:'all',pf:{zone:'',trade:'',tag:''},taskF:'open',q:'',logDate:dayKey(Date.now())};
+const DESK=()=>matchMedia('(min-width:1000px)').matches;
+const V={sel:new Set(),selMode:false,tab:DESK()?'home':'projects',pfilt:'all',ckF:'all',pq:'',pview:'list',pid:null,ptab:'photos',feedF:'all',pf:{zone:'',trade:'',tag:'',by:'',tags:[],q:''},taskF:'open',q:'',logDate:dayKey(Date.now())};
 try{const s=JSON.parse(localStorage.getItem('pc-view')||'{}');if(s.viewAs)V.viewAs=s.viewAs;if(s.lastProject)V.lastProject=s.lastProject}catch(e){}
-function lastZT(pid){try{const m=JSON.parse(localStorage.getItem('pc-lastzt')||'{}');return m[pid]||{zone:'',trade:''}}catch(e){return {zone:'',trade:''}}}
-function setLastZT(pid,zone,trade){if(!pid)return;try{const m=JSON.parse(localStorage.getItem('pc-lastzt')||'{}');m[pid]={zone:zone||'',trade:trade||''};localStorage.setItem('pc-lastzt',JSON.stringify(m))}catch(e){}}
+function lastZT(pid){try{const m=JSON.parse(localStorage.getItem('pc-lastzt')||'{}');const r=m[pid]||{};return {zone:r.zone||'',trade:r.trade||'',tag:r.tag||''}}catch(e){return {zone:'',trade:'',tag:''}}}
+function ctxFor(pid){const d=lastZT(pid);return {tags:d.tag?[d.tag]:[],zone:d.zone,trade:d.trade,note:''}}
+function setLastZT(pid,zone,trade,tag){if(!pid)return;try{const m=JSON.parse(localStorage.getItem('pc-lastzt')||'{}');m[pid]={zone:zone||'',trade:trade||'',tag:tag||''};localStorage.setItem('pc-lastzt',JSON.stringify(m))}catch(e){}}
+try{const sc=JSON.parse(localStorage.getItem('pc-screen')||'null');if(sc&&sc.tab){V.tab=sc.tab;V.pid=sc.pid||null;V.ptab=sc.ptab||'photos'}}catch(e){}
+function saveScreen(){try{localStorage.setItem('pc-screen',JSON.stringify({tab:V.tab,pid:V.pid,ptab:V.ptab}))}catch(e){}}
 function saveView(){try{localStorage.setItem('pc-view',JSON.stringify({viewAs:V.viewAs||'',lastProject:V.lastProject||''}))}catch(e){}}
 let M=null; let rq=false, dirty=false;
 function scheduleRender(){if(rq)return;rq=true;requestAnimationFrame(()=>{rq=false;render()})}
@@ -609,22 +844,41 @@ function render(){
   if(typing()){dirty=true;renderTop();return}
   dirty=false; const y=scrollY;
   const keep={};document.querySelectorAll('#main [data-dirty="1"][id]').forEach(e=>{keep[e.id]=e.value});
-  $('#app').innerHTML=`<header class="top"><div class="in" id="topin"></div></header><main id="main">${screen()}</main>${selBar()}${navHtml()}`;
+  $('#app').innerHTML=`<header class="top"><div class="in" id="topin"></div></header>${sideHtml()}<main id="main">${screen()}</main>${selBar()}${navHtml()}`;
   Object.entries(keep).forEach(([id,v])=>{const e=document.getElementById(id);if(e){e.value=v;e.dataset.dirty='1'}});
-  renderTop(); scrollTo(0,y); liveModal(); mwDrawAll();
+  renderTop(); scrollTo(0,y); liveModal(); mwDrawAll(); saveScreen();
 }
 document.addEventListener('focusout',()=>setTimeout(()=>{if(dirty&&!typing())render()},50));
 function renderTop(){
   const t=$('#topin');if(!t)return;
   const n=Q.items.length;
-  const s=!READY?['','Connecting…']:!DB?['off','Preview: not saving']:n?['wait',n+' waiting to upload']:['ok','Saved'];
+  const s=syncState();const ss=document.querySelector('.side .sync');if(ss){ss.className='sync '+s[0];ss.textContent=s[1]}
   const va=V.viewAs&&M_(V.viewAs);
   t.innerHTML=`<div class="brand"><b>Build Camera</b><small>Gilco Construction</small></div><span class="sp"></span>${va?`<span class="sync wait">Viewing as ${esc(va.company||va.name)}</span>`:''}${(()=>{const me=myMember();const n=me?S.alerts.filter(a=>a.to===me&&!a.read).length:0;return n?`<button class="sync wait" data-a="tab" data-t="alerts" style="background:transparent;cursor:pointer">${n} alert${n>1?'s':''}</button>`:''})()}<span class="sync ${s[0]}">${esc(s[1])}</span>`;
 }
+function syncState(){const n=Q.items.length;return !READY?['','Connecting…']:!DB?['off','Preview: not saving']:n?['wait',n+' waiting to upload']:['ok','Saved']}
+const NAV=[['home','home','Home','Recent jobs, live photo feed, your to-dos'],['projects','folder','Projects','Every job with its photos'],['feed','feed','Photos','Every photo from every job'],['checklists','check','Checklists','All checklists and their progress'],['tasks','flag','Tasks & Punch','Open tasks and punch items'],['reports','report','Reports','Branded PDF reports for any job'],['docs','doc','Documents','Scanned tickets, cards and change orders'],['map','map','Map','Every job on a map'],['team','users','Team','People, roles and Trade Partners'],['time','clock','Time Tracking','Clock in and out at a job'],['portfolio','star','Portfolio','Photos for the website and ads'],['onsite','here','On Site Today','Who is clocked in where'],['alerts','flag','Alerts','@mentions and assigned punch items'],['verify','shield','Verify a Photo','Check a photo\'s proof code']];
+function sideHtml(){
+  const cur=V.tab==='project'?'projects':V.tab, me=myMember(), al=me?S.alerts.filter(a=>a.to===me&&!a.read).length:0, s=syncState();
+  const it=([k,ic,l])=>`<button class="si" data-a="tab" data-t="${k}" ${cur===k?'aria-current="page"':''}>${I(ic)}<span>${l}</span>${k==='alerts'&&al?`<span class="n">${al}</span>`:''}</button>`;
+  return `<nav class="side" aria-label="Main"><div class="sdh"><span class="slogo">${I('camera')}</span><span class="sname">Build Camera</span><button class="sib" data-a="newProject" aria-label="New Project">${I('plus')}</button></div>
+  <button class="scam" data-a="capture">${I('camera')} Take Photos</button>
+  <button class="ssearch" data-a="tab" data-t="search">${I('search')}<span>Search</span></button>
+  <div class="sco">${esc(coName())}</div>${NAV.map(it).join('')}
+  <div class="sfoot"><button class="si" data-a="tab" data-t="settings">${avHtml(ME.name,'av',ME.id)}<span>${esc(ME.name)}</span></button>${it(['settings','info','Settings'])}${it(['about','info','About This Version'])}<span class="sync ${s[0]}">${esc(s[1])}</span></div></nav>`;
+}
+const AVS=()=>(S.settings.find(x=>x.id==='avatars')||{}).map||{};
+const avUrl=(by,name)=>{const a=AVS();return (by&&a['id:'+by])||(name&&a['n:'+name])||(S.members.find(x=>x.name===name)||{}).photoUrl||''};
+function avHtml(name,cls,by){if(!name)return '';const u=avUrl(by,name);let h=0;for(const c of name)h=(h*31+c.charCodeAt(0))%360;
+  return `<span class="${cls}" title="${esc(name)}" aria-label="Taken by ${esc(name)}" style="--avc:hsl(${h} 45% 38%)">${u?`<img src="${esc(u)}" alt="">`:esc(ini(name))}</span>`}
+const ini=n=>{const w=String(n||'').trim().split(/\s+/).filter(Boolean);return w.length?(w[0][0]+(w.length>1?w[w.length-1][0]:'')).toUpperCase():'?'};
+const ago=ts=>{if(!ts)return '';const m=Math.round((Date.now()-ts)/6e4);if(m<1)return 'just now';if(m<60)return m+' min ago';const h=Math.round(m/60);if(h<24)return 'about '+h+' hour'+(h>1?'s':'')+' ago';const d=Math.round(h/24);if(d<31)return d+' day'+(d>1?'s':'')+' ago';return fmtDay(ts)};
+const pstat=p=>p.status==='Done'?'<span class="badge done">Done</span>':'<span class="badge">In Progress</span>';
+const starBtn=p=>`<button class="starb" data-a="star" data-id="${p.id}" aria-pressed="${!!p.starred}" aria-label="${p.starred?'Unstar':'Star'} ${esc(p.name)}">${I('star')}</button>`;
 function navHtml(){
-  const cur=['feed','projects','tasks'].includes(V.tab)?V.tab:(V.tab==='project'?'projects':'more');
+  const cur=['feed','projects'].includes(V.tab)?V.tab:(V.tab==='project'?'projects':'more');
   const b=(k,ic,l)=>`<button class="nb" data-a="tab" data-t="${k}" ${cur===k?'aria-current="page"':''}>${I(ic)}<span>${l}</span></button>`;
-  return `<nav class="bot" aria-label="Main"><div class="in">${b('projects','folder','Projects')}${b('feed','feed','Photos')}<button class="nb cam" data-a="capture" aria-label="Take photo"><span class="ring">${I('camera')}</span><span>Camera</span></button>${b('tasks','check','Tasks')}${b('more','more','More')}</div></nav>`;
+  return `<nav class="bot" aria-label="Main"><div class="in">${b('projects','folder','Projects')}${b('feed','feed','Photos')}<button class="nb cam" data-a="capture" aria-label="Take photo"><span class="ring">${I('camera')}</span><span>Camera</span></button><button class="nb" data-a="newProject">${I('plus')}<span>New Project</span></button>${b('more','more','Menu')}</div></nav>`;
 }
 
 /* viewing as a Trade Partner */
@@ -638,6 +892,7 @@ function visProjects(){const m=V.viewAs&&M_(V.viewAs);let ps=[...S.projects];if(
 /* ---------- screens ---------- */
 function screen(){
   switch(V.tab){
+    case 'home':return scrHome(); case 'checklists':return scrChecklists(); case 'docs':return scrDocs(); case 'reports':return scrReportsAll(); case 'map':return scrMapAll();
     case 'feed':return scrFeed(); case 'projects':return scrProjects(); case 'project':return scrProject();
     case 'tasks':return scrTasks(); case 'more':return scrMore(); case 'search':return scrSearch(); case 'verify':return scrVerify();
     case 'team':return scrTeam(); case 'time':return scrTime(); case 'portfolio':return scrPortfolio(); case 'about':return scrAbout(); case 'alerts':return scrAlerts(); case 'onsite':return scrOnsite(); case 'settings':return scrSettings();
@@ -650,11 +905,12 @@ function tile(p,showProj){
   if(S.comments.some(c=>c.photoId===p.id))b.push('<i>'+S.comments.filter(c=>c.photoId===p.id).length+'</i>');
   const media=p.kind==='video'?`<span class="ph">${I('video')}</span>`:p.kind==='audio'?`<span class="ph">${I('mic')}</span>`:`<img src="${esc(p.url)}" alt="${esc(p.note||'Jobsite photo')}" loading="lazy">`;
   const sm=V.selMode&&V.tab==='project'&&!p.pending,on=sm&&V.sel.has(p.id);
-  return `<button class="tile${p.pending?' pend':''}${on?' on':''}" data-a="${sm?'selPhoto':'openPhoto'}" data-id="${p.id}" ${sm?`aria-pressed="${on}"`:''}>${sm?`<span class="selck" aria-hidden="true">${on?'✓':''}</span>`:''}${media}${b.length?`<span class="bdg">${b.join('')}</span>`:''}<span class="lab">${showProj&&pr?esc(pr.name)+' · ':''}${fmtTime(p.takenAt)}</span></button>`;
+  return `<div class="tw"><button class="tile${p.pending?' pend':''}${on?' on':''}" data-a="${sm?'selPhoto':'openPhoto'}" data-id="${p.id}" ${sm?`aria-pressed="${on}"`:''}>${sm?`<span class="selck" aria-hidden="true">${on?'✓':''}</span>`:''}${media}${b.length?`<span class="bdg">${b.join('')}</span>`:''}${avHtml(p.byName,'tav',p.by)}<span class="lab">${showProj&&pr?esc(pr.name)+' · ':''}${fmtTime(p.takenAt)}</span></button><span class="tcap"><span class="tl">${showProj&&pr?`<b>${esc(pr.name)}</b>`:''}<span>${fmtTime(p.takenAt)}${p.byName?' • '+esc(p.byName):''}</span></span></span></div>`;
 }
 function grouped(ps,showProj){
   const g={};ps.sort(byNew).forEach(p=>{const k=dayKey(p.takenAt);(g[k]=g[k]||[]).push(p)});
-  return Object.keys(g).sort().reverse().map(k=>`<h3 class="day"><span>${fmtDay(g[k][0].takenAt)}</span><span>· ${g[k].length} item${g[k].length>1?'s':''}</span></h3><div class="grid">${g[k].map(p=>tile(p,showProj)).join('')}</div>`).join('');
+  const ds=V.tab==='project';
+  return Object.keys(g).sort().reverse().map(k=>{const ids=g[k].filter(p=>!p.pending).map(p=>p.id),all=V.selMode&&ids.length&&ids.every(i=>V.sel.has(i));return `<h3 class="day">${ds?`<button class="dayck" data-a="daySel" data-d="${k}" aria-pressed="${!!all}" aria-label="Select all photos from ${esc(fmtDay(g[k][0].takenAt))}">${all?'✓':''}</button>`:''}<span>${fmtDay(g[k][0].takenAt)}</span><span>· ${g[k].length} item${g[k].length>1?'s':''}</span></h3><div class="grid">${g[k].map(p=>tile(p,showProj)).join('')}</div>`}).join('');
 }
 function scrFeed(){
   let ps=vis(allPhotos()).filter(p=>p.kind!=='doc');
@@ -672,18 +928,34 @@ function scrFeed(){
 function lastPhoto(pid){return allPhotos().filter(x=>x.projectId===pid&&x.kind==='photo').sort(byNew)[0]}
 function lastAct(pid){const ph=lastPhoto(pid);return ph?ph.takenAt:(P(pid)?.createdAt||0)}
 function scrProjects(){
-  const q=(V.pq||'').trim().toLowerCase();
+  const q=(V.pq||'').trim().toLowerCase(), f=V.pfilt||'all';
   let ps=visProjects();
+  if(f==='starred')ps=ps.filter(p=>p.starred);
+  else if(f==='mine')ps=ps.filter(p=>allPhotos().some(x=>x.projectId===p.id&&((ME.id&&x.by===ME.id)||x.byName===ME.name)));
+  else if(f==='archived')ps=ps.filter(p=>p.status==='Done');
+  else ps=ps.filter(p=>p.status!=='Done');
   if(q)ps=ps.filter(p=>[p.name,p.address,p.jobNumber,p.customer,p.companyName,p.group].some(v=>String(v||'').toLowerCase().includes(q)));
-  ps.sort((a,b)=>(a.status==='Done')-(b.status==='Done')||lastAct(b.id)-lastAct(a.id));
-  const tog=`<div class="seg" role="group" aria-label="View"><button data-a="pview" data-v="list" aria-pressed="${V.pview!=='map'}">List</button><button data-a="pview" data-v="map" aria-pressed="${V.pview==='map'}">Map</button></div>`;
-  let h=`<div class="row"><h1 style="flex:1">Projects</h1><button class="ib" data-a="importOpen" aria-label="Import Projects">${I('doc')}</button><button class="btn pri" data-a="newProject">${I('plus')} New</button></div>
-  <div class="row" style="margin:6px 0 12px"><input type="search" id="pq" value="${esc(V.pq||'')}" data-in="pq" placeholder="Search name, address, job #" autocomplete="off" style="flex:1;min-width:0">${tog}</div>`;
+  ps.sort((a,b)=>lastAct(b.id)-lastAct(a.id));
+  const fb=(k,l)=>`<button data-a="pfilt" data-f="${k}" aria-pressed="${f===k}">${l}</button>`;
+  const tog=`<div class="seg sm" role="group" aria-label="View"><button data-a="pview" data-v="list" aria-pressed="${V.pview!=='map'}" aria-label="List">${I('feed')}</button><button data-a="pview" data-v="map" aria-pressed="${V.pview==='map'}" aria-label="Map">${I('map')}</button></div>`;
+  let h=`<div class="row"><h1 style="flex:1">Projects</h1><button class="ib" data-a="importOpen" aria-label="Import Projects">${I('doc')}</button><button class="btn pri dk-create" data-a="newProject">${I('plus')} Create</button></div>
+  <div class="ptop2"><input type="search" id="pq" value="${esc(V.pq||'')}" data-in="pq" placeholder="Find a project…" autocomplete="off"><div class="pfr"><div class="seg sm" role="group" aria-label="Show">${fb('all','All')}${fb('starred','Starred')}${fb('mine','My Projects')}${fb('archived','Archived')}</div><span class="sp"></span>${tog}</div></div>`;
   if(!visProjects().length)return h+`<div class="empty">${I('folder')}<b>No Projects yet</b><span>Add your first job. Give it an address so crew photos file themselves.</span><button class="btn pri" data-a="newProject">${I('plus')} New Project</button></div>`;
-  if(!ps.length)return h+`<div class="empty"><b>No Projects match "${esc(V.pq)}"</b></div>`;
+  if(!ps.length)return h+`<div class="empty"><b>${q?`No Projects match "${esc(V.pq)}"`:f==='starred'?'No starred Projects':f==='archived'?'No archived Projects':f==='mine'?'You haven\'t taken photos on any Project yet':'No active Projects'}</b>${f==='starred'?'<span>Tap the star next to a Project to keep it here.</span>':''}</div>`;
   if(V.pview==='map')return h+projMap(ps);
-  const act=ps.filter(p=>p.status!=='Done'),done=ps.filter(p=>p.status==='Done');
-  return h+`<div class="plist">${act.map(pcard).join('')}</div>${done.length?`<h3 class="day">Done · ${done.length}</h3><div class="plist">${done.map(pcard).join('')}</div>`:''}`;
+  return h+`<div class="ptable"><div class="pthead"><span>Project Name</span><span>Last Updated</span><span>Stats</span><span>Recent Photos</span></div>${ps.map(prow).join('')}</div>`;
+}
+function prow(p){
+  const ph=allPhotos().filter(x=>x.projectId===p.id&&x.kind==='photo').sort(byNew),n=ph.length,cover=ph[0];
+  const docs=allPhotos().filter(x=>x.projectId===p.id&&x.kind==='doc').length,cks=S.checklists.filter(c=>c.projectId===p.id).length,open=S.tasks.filter(t=>t.projectId===p.id&&!t.done).length;
+  const la=lastAct(p.id),today=ph.filter(x=>dayKey(x.takenAt)===dayKey(Date.now())).length;
+  const when=cover?(dayKey(cover.takenAt)===dayKey(Date.now())?'Today '+fmtTime(cover.takenAt):fmtDay(cover.takenAt)):'No photos yet';
+  const rec=ph.slice(0,3).map(x=>`<img src="${esc(x.url)}" alt="" loading="lazy">`).join('')+'<i></i>'.repeat(Math.max(0,3-Math.min(3,n)));
+  return `<div class="prow" data-a="openProject" data-id="${p.id}" role="link" tabindex="0" aria-label="Open ${esc(p.name)}">
+   <div class="c-name"><span class="cv">${cover?`<img src="${esc(cover.url)}" alt="" loading="lazy">`:I('camera')}</span><span class="tx"><span class="nmr"><b>${esc(p.name)}</b>${starBtn(p)}</span><span class="ad">${esc(p.address||'No address')}</span><span class="row" style="gap:6px">${pstat(p)}${today?`<span class="badge" style="background:var(--accent);color:var(--accent-ink)">${today} new today</span>`:''}${p.companyName&&p.companyName!==(SET().name||'Gilco Construction')?`<span class="mt">${esc(p.companyName)}</span>`:''}</span><span class="mt ph-only">${n} photo${n===1?'':'s'} · ${when}${open?` · ${open} open`:''}</span></span></div>
+   <div class="c-upd">${la?esc(fmtDay(la))+'<br><span class="note">'+fmtTime(la)+'</span>':'—'}</div>
+   <div class="c-stats"><span>${I('img')}<b>${n}</b> Photos</span><span>${I('doc')}<b>${docs}</b> Documents</span><span>${I('check')}<b>${cks}</b> Checklists</span><span>${I('flag')}<b>${open}</b> Open Tasks</span></div>
+   <div class="c-rec">${rec}</div></div>`;
 }
 function projMap(ps){
   const g=ps.filter(p=>p.lat!=null);
@@ -708,23 +980,37 @@ function pcard(p){
    <span class="go" aria-hidden="true">›</span></button>`;
 }
 function scrProject(){
-  const p=P(V.pid); if(!p){V.tab='projects';return scrProjects()}
-  const tabs=[['photos','Photos'],['map','Map'],['checklists','Checklists'],['tasks','Tasks'],['log','Daily Log'],['docs','Documents'],['reports','Reports'],['info','Job Info']];
+  const p=P(V.pid); if(!p){if(!S.projects.length&&V.pid)return '<p class="note" style="padding:20px 0">Opening the job…</p>';V.tab='projects';return scrProjects()}
+  const tabs=[['photos','Photos'],['docs','Documents'],['checklists','Checklists'],['tasks','Tasks'],['log','Daily Log'],['reports','Reports'],['map','Map'],['info','Job Info']];
   let body='';
   switch(V.ptab){case 'photos':body=ptPhotos(p);break;case 'map':body=ptMap(p);break;case 'checklists':body=ptChecklists(p);break;case 'tasks':body=ptTasks(p);break;case 'log':body=ptLog(p);break;case 'docs':body=ptDocs(p);break;case 'reports':body=ptReports(p);break;case 'info':body=ptInfo(p);break}
   const cv=lastPhoto(p.id),n=allPhotos().filter(x=>x.projectId===p.id&&x.kind!=='doc').length;
-  return `<div class="phead">${cv?`<img src="${esc(cv.url)}" alt="">`:''}<div class="ov"><button class="bk" data-a="tab" data-t="projects" aria-label="Back to Projects">${I('back')}</button><div class="nm"><h1>${esc(p.name)}</h1><p>${esc(p.address||'')}</p><p class="mono">${n} photo${n===1?'':'s'}${p.companyName?' · '+esc(p.companyName):''}</p></div></div></div>
+  const cnt={photos:n,docs:allPhotos().filter(x=>x.projectId===p.id&&x.kind==='doc').length,checklists:S.checklists.filter(c=>c.projectId===p.id).length,tasks:S.tasks.filter(t=>t.projectId===p.id&&!t.done).length};
+  const dir=p.lat!=null?`<a class="btn sm" href="https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}" target="_blank" rel="noopener">${I('pin')} Directions</a>`:'';
+  const desk=DESK()?`<div class="pdesk"><div class="pdtop"><button class="bkl" data-a="tab" data-t="projects">${I('back')} Projects</button><span class="sp"></span>${starBtn(p)}<button class="btn sm" data-a="pSel" data-id="${p.id}">${I('share')} Share</button><button class="btn sm" data-a="ptab" data-t="reports">${I('report')} Report</button>${dir}<button class="btn sm stamp" data-a="capture" data-pid="${p.id}">${I('camera')} Take Photos</button></div>
+   <div class="pdhd2"><h1>${esc(p.name)}</h1>${p.address?`<a class="ad" href="${gmSearch(p.address)}" target="_blank" rel="noopener">${esc(p.address)}</a>`:'<span class="note">No address yet</span>'}</div><div class="row" style="margin-bottom:8px">${pstat(p)}${p.companyName?`<span class="note">${esc(p.companyName)}</span>`:''}${p.jobNumber?`<span class="note">Job ${esc(p.jobNumber)}</span>`:''}<button class="btn sm" data-a="ptab" data-t="info">${I('pen')} Edit Job Info</button></div></div>`:'';
+  return `<div class="phc ph-only2"><button class="bk" data-a="tab" data-t="projects" aria-label="Back to Projects">${I('back')}</button><div class="nm"><h1>${esc(p.name)}</h1><span class="ad">${esc(p.address||'No address yet')}</span></div>${pstat(p)}${starBtn(p)}</div>
   <div class="pacts"><button data-a="capture" data-pid="${p.id}">${I('camera')}<span>Camera</span></button><button data-a="pickLib" data-pid="${p.id}">${I('img')}<span>Upload</span></button><button data-a="pSel" data-id="${p.id}">${I('share')}<span>Share</span></button><button data-a="ptab" data-t="reports">${I('report')}<span>Report</span></button>${p.lat!=null?`<a href="https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}" target="_blank" rel="noopener">${I('pin')}<span>Directions</span></a>`:`<button data-a="ptab" data-t="info">${I('pin')}<span>Add GPS</span></button>`}</div>
-  <div class="ptabs" role="tablist">${tabs.map(([k,l])=>`<button class="ptab" role="tab" data-a="ptab" data-t="${k}" aria-selected="${V.ptab===k}">${l}</button>`).join('')}</div>${body}`;
+  ${desk}<div class="pwrap"><div class="pmain" style="min-width:0"><div class="ptabs" role="tablist">${tabs.map(([k,l])=>`<button class="ptab" role="tab" data-a="ptab" data-t="${k}" aria-selected="${V.ptab===k}">${l}${cnt[k]!=null?` <span class="cnt">(${cnt[k]})</span>`:''}</button>`).join('')}</div>${body}</div>${DESK()?`<aside class="paside" aria-label="Project details">${asideHtml(p)}</aside>`:''}</div>`;
 }
 function ptPhotos(p){
   let ps=vis(allPhotos()).filter(x=>x.projectId===p.id&&x.kind!=='doc');
-  const zones=[...new Set(ps.map(x=>x.zone).filter(Boolean))].sort(), trades=[...new Set(ps.map(x=>x.trade).filter(Boolean))].sort(), tags=[...new Set(ps.flatMap(x=>x.tags||[]))].sort();
-  const f=V.pf; if(f.zone)ps=ps.filter(x=>x.zone===f.zone); if(f.trade)ps=ps.filter(x=>x.trade===f.trade); if(f.tag)ps=ps.filter(x=>(x.tags||[]).includes(f.tag));
-  const sel=(k,l,opts)=>`<label class="f">${l}<select id="pf-${k}" data-ch="pf" data-k="${k}"><option value="">All</option>${opts.map(o=>`<option ${f[k]===o?'selected':''}>${esc(o)}</option>`).join('')}</select></label>`;
-  return `<div class="row" style="margin-bottom:6px;justify-content:flex-end"><button class="btn sm" data-a="selMode" aria-pressed="${!!V.selMode}">${V.selMode?'Cancel Select':'Select'}</button></div>${V.selMode?'<p class="callout info">Tap photos to select them, then Send in Text.</p>':''}
-  <div class="two r" style="grid-template-columns:repeat(3,minmax(0,1fr))">${sel('zone','Work Zone',zones)}${sel('trade','Trade Partner',trades)}${sel('tag','Tag',tags)}</div>
-  ${ps.length?grouped(ps,false):`<div class="empty" style="margin-top:12px">${I('camera')}<b>No photos match</b><span>Take one, or clear the filters above.</span></div>`}`;
+  const zones=[...new Set(ps.map(x=>x.zone).filter(Boolean))].sort(), trades=[...new Set(ps.map(x=>x.trade).filter(Boolean))].sort(), tags=[...new Set([...ps.flatMap(x=>x.tags||[]),...ps.filter(x=>x.portfolio).map(()=>'Portfolio')])].sort();
+  const users=[...new Set(ps.map(x=>x.byName).filter(Boolean))].sort();
+  const f=V.pf; f.tags=f.tags||[];
+  const q=(f.q||'').trim().toLowerCase();
+  if(q){const hit=v=>String(v||'').toLowerCase().includes(q);const cm=new Set(S.comments.filter(c=>hit(c.text)).map(c=>c.photoId));ps=ps.filter(x=>hit(x.note)||hit(x.zone)||hit(x.trade)||hit(x.byName)||hit(x.code)||hit(x.tpTask)||(x.tags||[]).some(hit)||cm.has(x.id)||hit(fmtDay(x.takenAt)))}
+  if(f.zone)ps=ps.filter(x=>x.zone===f.zone); if(f.trade)ps=ps.filter(x=>x.trade===f.trade); if(f.by)ps=ps.filter(x=>x.byName===f.by);
+  if(f.tags.length)ps=ps.filter(x=>f.tags.every(t=>(x.tags||[]).includes(t)||(t==='Portfolio'&&x.portfolio)));
+  const nOn=f.tags.length+(f.zone?1:0)+(f.trade?1:0)+(f.by?1:0);
+  const grp=(k,l,opts)=>opts.length?`<div class="fg"><span>${l}</span><div class="tagrow">${opts.map(o=>{const on=k==='tags'?f.tags.includes(o):f[k]===o;return `<button class="chip" data-a="pfPick" data-k="${k}" data-v="${esc(o)}" aria-pressed="${on}">${esc(o)}</button>`}).join('')}</div></div>`:'';
+  const active=[...f.tags.map(t=>['tags',t,t]),...['zone','trade','by'].filter(k=>f[k]).map(k=>[k,f[k],f[k]])];
+  const panel=V.pfOpen?`<div class="fpanel" id="pf-panel">${grp('tags','Tags',tags)}${grp('zone','Work Zone',zones)}${grp('trade','Trade Partner',trades)}${users.length>1?grp('by','Taken By',users):''}${!tags.length&&!zones.length&&!trades.length?'<p class="note" style="margin:0">No tags, zones or trades on this job\'s photos yet. Add them when you take a photo or open one.</p>':''}${nOn?`<div class="row"><button class="btn sm" data-a="pfClear">Clear All</button></div>`:''}</div>`:'';
+  return `<div class="psrch"><label class="sbox">${I('search')}<input type="search" id="phq" data-in="phq" value="${esc(f.q||'')}" placeholder="Search photos: notes, tags, zone, trade, who" autocomplete="off" aria-label="Search this job's photos"></label><button class="btn sm fbtn" data-a="pfToggle" aria-expanded="${!!V.pfOpen}" aria-controls="pf-panel">${I('tag')} Filters${nOn?`<span class="fn">${nOn}</span>`:''}</button><div class="seg sm" role="group" aria-label="View"><button data-a="ptab" data-t="photos" aria-pressed="true" aria-label="Photo grid">${I('feed')}</button><button data-a="ptab" data-t="map" aria-pressed="false" aria-label="Photo map">${I('map')}</button></div><button class="btn sm" data-a="selMode" aria-pressed="${!!V.selMode}">${V.selMode?'Cancel Select':'Select'}</button><button class="btn sm pri" data-a="pickLib" data-pid="${p.id}">${I('plus')} Upload</button></div>
+  ${panel}${!V.pfOpen&&active.length?`<div class="factive">${active.map(([k,v,l])=>`<button class="chip" data-a="pfPick" data-k="${k}" data-v="${esc(v)}" aria-label="Remove filter ${esc(l)}">${esc(l)} ✕</button>`).join('')}<button class="btn sm" data-a="pfClear">Clear</button></div>`:''}
+  ${V.selMode?'<p class="callout info">Tap photos, or the box by a date to pick that whole day. Then Send in Text.</p>':''}
+  ${q||nOn?`<p class="note" style="margin:0 0 4px">${ps.length} photo${ps.length===1?'':'s'} match</p>`:''}
+  ${ps.length?grouped(ps,false):`<div class="empty" style="margin-top:12px">${I('search')}<b>No photos match</b><span>Try a different word, or clear the filters.</span>${q||nOn?'<button class="btn" data-a="pfClear">Clear Search & Filters</button>':''}</div>`}`;
 }
 function ptMap(p){
   const ps=allPhotos().filter(x=>x.projectId===p.id&&x.lat!=null&&x.gpsSource==='photo');
@@ -746,9 +1032,25 @@ function ptDocs(p){
   const ds=allPhotos().filter(x=>x.projectId===p.id&&x.kind==='doc').sort(byNew);
   return `<div class="row"><button class="btn pri" data-a="scanDoc" data-pid="${p.id}">${I('doc')} Scan a Document</button></div><p class="note">Delivery tickets, inspection cards, signed change orders. Scans are cleaned up to black and white and stamped.</p>${ds.length?`<div class="grid">${ds.map(d=>tile(d,false)).join('')}</div>`:`<div class="empty">${I('doc')}<b>No documents yet</b></div>`}`;
 }
+function asideHtml(p){
+  const users=[...new Set(allPhotos().filter(x=>x.projectId===p.id).map(x=>x.byName).filter(Boolean))];
+  const open=vis(S.tasks.filter(t=>t.projectId===p.id&&!t.done),'tasks').sort((a,b)=>(a.due||'9')<(b.due||'9')?-1:1);
+  const cs=p.contacts||[];
+  return `<div class="acard"><div class="ar"><b>Customer</b><button class="ib" data-a="ptab" data-t="info" aria-label="${p.customer?'Edit':'Add'} customer">${I(p.customer?'pen':'plus')}</button></div>${p.customer?`<div class="body">${esc(p.customer)}${p.phone?`<br><a href="tel:${esc(p.phone)}">${esc(p.phone)}</a>`:''}</div>`:''}</div>
+  <div class="acard"><div class="ar"><b>Project Users (${users.length})</b></div>${users.length?`<div class="avs">${users.map(u=>`<span class="av" title="${esc(u)}" aria-label="${esc(u)}">${esc(ini(u))}</span>`).join('')}</div>`:''}
+   <div class="ar"><b>Contacts (${cs.length})</b><button class="ib" data-a="ptab" data-t="info" aria-label="Add contact">${I('plus')}</button></div>${cs.length?`<div class="body">${cs.map(c=>`<div>${esc(c.name||'')}${c.role?` <span class="note">· ${esc(c.role)}</span>`:''}${c.phone?` <a href="tel:${esc(c.phone)}">${esc(c.phone)}</a>`:''}</div>`).join('')}</div>`:''}
+   <div class="ar"><b>Description</b></div><div class="body"><textarea id="pd-desc" data-ch="pDesc" data-id="${p.id}" placeholder="Add a description…" style="min-height:70px">${esc(p.description||'')}</textarea></div></div>
+  <div class="acard"><div class="ar"><b>Tasks</b><button class="ib" data-a="newTask" data-pid="${p.id}" aria-label="New task">${I('plus')}</button></div><div class="body">${open.length?open.slice(0,6).map(t=>`<label class="mtask"><input type="checkbox" data-ch="taskDone" data-id="${t.id}"><span class="t">${esc(t.title)}<span>${t.type==='punch'?'Punch item':'Task'}${t.due?' · due '+esc(t.due):''}${M_(t.assignee)?' · '+esc(M_(t.assignee).name):''}</span></span></label>`).join('')+(open.length>6?`<button class="btn sm" data-a="ptab" data-t="tasks">See all ${open.length}</button>`:''):`<button class="btn sm" data-a="newTask" data-pid="${p.id}">${I('plus')} New Task</button><p class="note" style="margin:6px 0 0">Add to-dos to keep the job on track.</p>`}</div></div>
+  <div class="acard"><div class="ar"><b>Project Conversation</b></div><div class="body"><div id="pconv">${pconvHtml(p.id)}</div><form data-sub="pcomment" data-id="${p.id}" class="stack" style="gap:8px;margin-top:8px"><input type="text" id="pc-text" name="text" placeholder="Add a comment… type @ to mention" autocomplete="off"><button class="btn sm pri" type="submit">Post</button></form></div></div>`;
+}
+function pconvHtml(pid){
+  const cs=S.comments.filter(c=>c.projectId===pid&&!c.photoId).sort((a,b)=>a.at-b.at);
+  if(!cs.length)return '<p class="note" style="margin:0">No messages yet. Notes for everyone on this job go here.</p>';
+  return cs.slice(-20).map(c=>`<div class="pcm"><div class="who"><span class="av">${esc(ini(c.byName))}</span><b>${esc(c.byName||'')}</b><span>${fmtDay(c.at)} ${fmtTime(c.at)}</span></div><div style="margin-top:4px">${esc(c.text)}</div></div>`).join('');
+}
 function ptInfo(p){
   const lastGps=allPhotos().filter(x=>x.projectId===p.id&&x.gpsSource==='photo').sort(byNew)[0];
-  return `<form class="stack card" data-sub="saveProject" data-id="${p.id}">
+  return `${DESK()?'':`<div class="paside" style="margin-bottom:14px">${asideHtml(p)}</div>`}<form class="stack card" data-sub="saveProject" data-id="${p.id}">
    <div class="two"><label class="f">Project Name<input type="text" id="pi-name" name="name" value="${esc(p.name)}" autocapitalize="words" required></label><label class="f">Job Number<input type="text" id="pi-num" name="jobNumber" value="${esc(p.jobNumber||'')}" placeholder="2611"></label></div>
    <div class="two"><label class="f">Group<input type="text" id="pi-group" name="group" value="${esc(p.group||'')}" placeholder="E.g. Ochsner Clinics" autocapitalize="words"></label>
    <label class="f">Status<select id="pi-status" name="status"><option ${p.status!=='Done'?'selected':''}>Active</option><option ${p.status==='Done'?'selected':''}>Done</option></select></label></div>
@@ -813,6 +1115,45 @@ function showSuggest(pre){
   box._list=list; box.hidden=false;if(tt.length)box.insertAdjacentHTML('beforeend','<span class="note" style="display:block;padding:6px 12px;font-size:11px">Address results by TomTom</span>'); inp.setAttribute('aria-expanded','true');
 }
 document.addEventListener('click',e=>{if(!e.target.closest('.ac'))document.querySelectorAll('.acl').forEach(b=>{b.hidden=true})},true);
+
+/* home, checklists, documents, reports, map */
+function scrHome(){
+  const h=new Date().getHours(),g=h<12?'Good morning':h<17?'Good afternoon':'Good evening',nm=ME.name&&ME.name!=='Me'?', '+esc(ME.name.split(' ')[0]):'';
+  const ps=visProjects().filter(p=>p.status!=='Done').sort((a,b)=>lastAct(b.id)-lastAct(a.id));
+  const feed=vis(allPhotos()).filter(p=>p.kind==='photo').sort(byNew).slice(0,16);
+  const me=myMember(),todos=vis(S.tasks,'tasks').filter(t=>!t.done&&(!me||t.assignee===me||!t.assignee)).sort((a,b)=>(a.due||'9')<(b.due||'9')?-1:1);
+  if(!S.projects.length)return `<h1 class="hgreet">${g}${nm}</h1><div class="empty">${I('folder')}<b>Start with your first Project</b><span>Add a job with its address so photos file themselves to it by GPS.</span><button class="btn pri" data-a="newProject">${I('plus')} New Project</button></div>`;
+  return `<h1 class="hgreet">${g}${nm}</h1>
+  <h2 class="hsec"><span>Jump Back In</span></h2><div class="jb">${ps.slice(0,8).map(p=>{const cv=lastPhoto(p.id);return `<button class="jbc" data-a="openProject" data-id="${p.id}"><span class="im">${cv?`<img src="${esc(cv.url)}" alt="" loading="lazy">`:I('camera')}</span><span class="tx"><b>${esc(p.name)}</b><span>${esc(ago(lastAct(p.id))||'No photos yet')}</span></span></button>`}).join('')}</div>
+  <div class="hcard"><h2 class="hsec"><span>Live Photo Feed</span><button class="btn sm" data-a="tab" data-t="feed">View All</button></h2>${feed.length?`<div class="lf">${feed.map(p=>tile(p,true)).join('')}</div>`:`<p class="note">No photos yet. Tap the yellow camera to take one.</p>`}</div>
+  <div class="hgrid"><div class="hcard"><h2 class="hsec"><span>Projects</span><button class="btn sm" data-a="newProject">${I('plus')} Create Project</button></h2><div>${ps.slice(0,6).map(p=>{const cv=lastPhoto(p.id);return `<button class="mini" data-a="openProject" data-id="${p.id}">${cv?`<img src="${esc(cv.url)}" alt="" loading="lazy">`:`<span class="ph0">${I('camera')}</span>`}<span class="t"><b>${esc(p.name)}</b><span>${esc(p.address||'No address')}</span></span><span class="w">${esc(ago(lastAct(p.id)))}</span></button>`}).join('')||'<p class="note">No active Projects.</p>'}</div>${ps.length>6?`<button class="btn sm" data-a="tab" data-t="projects" style="margin-top:8px">All ${ps.length} Projects</button>`:''}</div>
+  <div class="hcard"><h2 class="hsec"><span>My To-Dos</span><button class="btn sm" data-a="newTask">${I('plus')} Add Task</button></h2><div>${todos.length?todos.slice(0,8).map(t=>`<label class="mtask"><input type="checkbox" data-ch="taskDone" data-id="${t.id}"><span class="t">${esc(t.title)}<span>${esc(P(t.projectId)?.name||'')}${t.type==='punch'?' · Punch item':''}${t.due?' · due '+esc(t.due):''}</span></span></label>`).join('')+(todos.length>8?`<button class="btn sm" data-a="tab" data-t="tasks" style="margin-top:8px">All ${todos.length}</button>`:''):'<p class="note">Tasks assigned to you that aren\'t done show here.</p>'}</div></div></div>`;
+}
+function scrChecklists(){
+  const f=V.ckF||'all',ids=new Set(visProjects().map(p=>p.id));
+  const fin=c=>c.items.length>0&&c.items.every(i=>i.done),last=c=>Math.max(c.createdAt||0,...c.items.map(i=>i.doneAt||0));
+  let cs=S.checklists.filter(c=>ids.has(c.projectId));
+  if(f==='done')cs=cs.filter(fin);else if(f==='open')cs=cs.filter(c=>!fin(c));
+  cs.sort((a,b)=>last(b)-last(a));
+  const fb=(k,l)=>`<button data-a="ckF" data-f="${k}" aria-pressed="${f===k}">${l}</button>`;
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:6px">Checklists</h1><div class="row" style="margin:8px 0 12px"><div class="seg sm" role="group" aria-label="Show">${fb('all','All')}${fb('done','Finished')}${fb('open','Unfinished')}</div><span class="note">Start a checklist from a Project's Checklists tab.</span></div>
+  ${cs.length?`<div class="ptable"><div class="ckhead"><span>Checklist</span><span>Project</span><span>Progress</span><span>Latest Activity</span></div>${cs.map(c=>{const d=c.items.filter(i=>i.done).length,n=c.items.length,l=last(c);return `<button class="ckrow" data-a="openProjTab" data-id="${c.projectId}" data-t="checklists"><span style="min-width:0"><b>${esc(c.title)}</b>${DESK()?'':`<br><span class="pj">${esc(P(c.projectId)?.name||'')}</span>`}</span>${DESK()?`<span class="pj">${esc(P(c.projectId)?.name||'')}</span>`:''}<span class="prog">${d}/${n} completed<i><span style="width:${n?Math.round(d/n*100):0}%"></span></i></span>${DESK()?`<span class="note">${l?esc(fmtDay(l)):'—'}</span>`:''}</button>`}).join('')}</div>`:`<div class="empty">${I('check')}<b>No checklists${f!=='all'?' here':' yet'}</b><span>Open a Project, go to Checklists, and start one from a template.</span></div>`}`;
+}
+function scrDocs(){
+  const ds=allPhotos().filter(x=>x.kind==='doc').sort(byNew),by={};ds.forEach(d=>{(by[d.projectId]=by[d.projectId]||[]).push(d)});
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:6px">Documents</h1><p class="sub">Delivery tickets, inspection cards and signed change orders scanned on every job.</p>
+  ${ds.length?Object.keys(by).map(pid=>`<h3 class="day"><span>${esc(P(pid)?.name||'No Project')}</span><span>· ${by[pid].length}</span><span class="sp"></span><button class="btn sm" data-a="scanDoc" data-pid="${pid}">${I('doc')} Scan</button></h3><div class="grid">${by[pid].map(d=>tile(d,false)).join('')}</div>`).join(''):`<div class="empty">${I('doc')}<b>No documents yet</b><span>Open a Project, go to Documents, and tap Scan a Document.</span></div>`}`;
+}
+function scrReportsAll(){
+  const ps=visProjects().sort((a,b)=>(a.status==='Done')-(b.status==='Done')||lastAct(b.id)-lastAct(a.id));
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:6px">Reports</h1><p class="sub">Pick a job to make a branded PDF: Daily, Inspection, Damage, Closeout, Before & After, Weekly Update or Insurance Claim.</p>
+  <div class="hcard" style="margin-top:12px">${ps.map(p=>{const cv=lastPhoto(p.id),n=allPhotos().filter(x=>x.projectId===p.id&&x.kind==='photo').length;return `<button class="mini" data-a="openProjTab" data-id="${p.id}" data-t="reports">${cv?`<img src="${esc(cv.url)}" alt="" loading="lazy">`:`<span class="ph0">${I('camera')}</span>`}<span class="t"><b>${esc(p.name)}</b><span>${n} photo${n===1?'':'s'} · ${esc(ago(lastAct(p.id))||'no photos yet')}</span></span><span class="btn sm">${I('report')} Make Report</span></button>`}).join('')||'<p class="note">Add a Project first.</p>'}</div>`;
+}
+function scrMapAll(){
+  const ps=visProjects().filter(p=>V.mapDone||p.status!=='Done').sort((a,b)=>lastAct(b.id)-lastAct(a.id));
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><div class="row" style="margin-top:6px"><h1 style="flex:1">Map</h1><label class="row note"><input type="checkbox" data-ch="mapDone" ${V.mapDone?'checked':''} style="width:20px;height:20px;accent-color:var(--accent)"> Show Done jobs</label></div>
+  <div class="mapsplit" style="margin-top:10px"><div class="hcard" style="max-height:72vh;overflow:auto">${ps.map(p=>{const cv=lastPhoto(p.id);return `<button class="mini" data-a="openProject" data-id="${p.id}">${cv?`<img src="${esc(cv.url)}" alt="" loading="lazy">`:`<span class="ph0">${I('camera')}</span>`}<span class="t"><b>${esc(p.name)}</b><span>${esc(p.address||'No address')}${p.lat==null?' · no GPS':''}</span></span></button>`}).join('')||'<p class="note">No Projects.</p>'}</div><div>${ps.length?projMap(ps):''}</div></div>`;
+}
 
 /* tasks & punch */
 function taskCard(t){
@@ -884,6 +1225,10 @@ function ptReports(p){
 /* more */
 function scrMore(){
   const it=(t,ic,l,s)=>`<button class="li" data-a="tab" data-t="${t}">${I(ic)}<span class="t"><b>${l}</b><span>${s}</span></span></button>`;
+  return `<h1>Menu</h1><div class="list">${it('search','search','Search','Projects, photos, notes, codes, tasks')}${NAV.filter(n=>!['projects','feed'].includes(n[0])).map(n=>it(...n)).join('')}${it('settings','info','Settings','Company name, logo, AI help, address search')}${it('about','info','About This Version','What works now and what comes next')}</div>`;
+}
+function scrMoreOld(){
+  const it=(t,ic,l,s)=>`<button class="li" data-a="tab" data-t="${t}">${I(ic)}<span class="t"><b>${l}</b><span>${s}</span></span></button>`;
   return `<h1>More</h1><div class="list">${it('search','search','Search','Projects, photos, notes, codes, tasks')}${it('verify','shield','Verify a Photo','Check a proof code from a stamped photo')}${it('time','clock','Time Clock','Clock in and out at a job')}${it('team','users','Team & Trade Partners','People, roles and who sees what')}${it('portfolio','star','Portfolio','Photos tagged for the website and ads')}${it('alerts','flag','Alerts','@mentions and assigned punch items')}${it('onsite','users','On Site Today','Who is clocked in where, with their latest photo')}${it('settings','info','Settings','Company name, logo, AI help, address search')}${it('about','info','About This Version','What works now and what comes next')}</div>`;
 }
 function scrSearch(){
@@ -896,35 +1241,35 @@ function scrSearch(){
     const tk=vis(S.tasks,'tasks').filter(t=>hit(t.title)||hit(M_(t.assignee)?.name)||hit(t.assigneeText));
     res=`${pr.length?`<h3 class="day">Projects · ${pr.length}</h3><div class="stack">${pr.map(pcard).join('')}</div>`:''}${ph.length?`<h3 class="day">Photos · ${ph.length}</h3><div class="grid">${ph.sort(byNew).slice(0,60).map(p=>tile(p,true)).join('')}</div>`:''}${tk.length?`<h3 class="day">Tasks · ${tk.length}</h3><div class="stack">${tk.map(taskCard).join('')}</div>`:''}${!pr.length&&!ph.length&&!tk.length?`<div class="empty"><b>No matches for "${esc(V.q)}"</b><span>Try a Work Zone, a trade, a tag or a proof code.</span></div>`:''}`;
   }
-  return `<button class="btn sm" data-a="tab" data-t="more">${I('back')} More</button><h1 style="margin-top:10px">Search</h1><input type="search" id="q" value="${esc(V.q)}" data-in="q" placeholder="Try Drywall, Building B, Damage, PC-..." autocomplete="off" style="margin:6px 0 4px">${res}`;
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Search</h1><input type="search" id="q" value="${esc(V.q)}" data-in="q" placeholder="Try Drywall, Building B, Damage, PC-..." autocomplete="off" style="margin:6px 0 4px">${res}`;
 }
 function scrVerify(){
   const c=(V.vcode||'').trim().toUpperCase(); let r='';
   if(c){const p=allPhotos().find(x=>x.code===c||x.code===('PC-'+c.replace(/^PC-?/,'').replace(/(.{4})(.{4})/,'$1-$2')));
     r=p?`<div class="card stack" style="border-color:var(--good)"><div class="row"><span class="pill good">Matches our record</span><span class="code">${esc(p.code)}</span></div>${p.kind==='photo'||p.kind==='doc'?`<img src="${esc(p.url)}" alt="Verified photo" style="border-radius:8px">`:''}<dl class="kv"><dt>Taken</dt><dd>${fmtFull(p.takenAt)}</dd><dt>Where</dt><dd>${p.lat!=null?fmtGps(p.lat,p.lng)+(p.gpsSource==='project'?' (job location)':' (from the phone)'):'No GPS'}</dd><dt>Project</dt><dd>${esc(P(p.projectId)?.name||'')}</dd><dt>By</dt><dd>${esc(p.byName||'')}</dd></dl><p class="note">If the stamp on someone's copy shows a different time or place than this record, the copy was changed.</p></div>`
      :`<div class="card" style="border-color:var(--bad)"><span class="pill bad">No photo with that code</span><p class="note">Check the code for typos. Codes look like PC-7F3K-92QD.</p></div>`}
-  return `<button class="btn sm" data-a="tab" data-t="more">${I('back')} More</button><h1 style="margin-top:10px">Verify a Photo</h1><p class="sub">Each photo's proof code is kept in its record (open the photo to see it). Type a code here to see the original record.</p><form data-sub="verify" class="row" style="margin:10px 0"><input type="text" id="vcode" name="code" value="${esc(V.vcode||'')}" placeholder="PC-XXXX-XXXX" autocapitalize="characters" style="flex:1;min-width:200px"><button class="btn pri" type="submit">${I('shield')} Verify</button></form>${r}`;
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Verify a Photo</h1><p class="sub">Each photo's proof code is kept in its record (open the photo to see it). Type a code here to see the original record.</p><form data-sub="verify" class="row" style="margin:10px 0"><input type="text" id="vcode" name="code" value="${esc(V.vcode||'')}" placeholder="PC-XXXX-XXXX" autocapitalize="characters" style="flex:1;min-width:200px"><button class="btn pri" type="submit">${I('shield')} Verify</button></form>${r}`;
 }
 function scrTeam(){
   const ms=[...S.members].sort((a,b)=>ROLES.indexOf(a.role)-ROLES.indexOf(b.role)||(a.name||'').localeCompare(b.name||''));
-  return `<button class="btn sm" data-a="tab" data-t="more">${I('back')} More</button><div class="row" style="margin-top:10px"><h1 style="flex:1">Team & Trade Partners</h1><button class="btn pri" data-a="editMember">${I('plus')} Add</button></div>${window.BC?BC.teamCard():''}
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><div class="row" style="margin-top:10px"><h1 style="flex:1">Team & Trade Partners</h1><button class="btn pri" data-a="editMember">${I('plus')} Add</button></div>${window.BC?BC.teamCard():''}
   <div class="card stack"><label class="f">View the App As<select id="viewas" data-ch="viewAs"><option value="">Owner (sees everything)</option>${S.members.filter(m=>m.role==='Trade Partner').map(m=>`<option value="${m.id}" ${V.viewAs===m.id?'selected':''}>${esc(m.company||m.name)} (Trade Partner)</option>`).join('')}</select></label><p class="note">A Trade Partner sees only photos for their trade and tasks assigned to them. Use this to check what they'll see.</p></div>
   ${ms.length?`<div class="list" style="margin-top:12px">${ms.map(m=>`<button class="li" data-a="editMember" data-id="${m.id}">${I('users')}<span class="t"><b>${esc(m.name)}</b><span>${esc([m.role,m.company,m.trade,m.phone].filter(Boolean).join(' · '))}</span></span></button>`).join('')}</div>`:`<div class="empty" style="margin-top:12px">${I('users')}<b>No one added yet</b><span>Add supers, crew and Trade Partners so you can assign tasks and @mention them.</span></div>`}`;
 }
 function scrTime(){
   const open=S.time.filter(t=>!t.out), today=S.time.filter(t=>dayKey(t.in)===dayKey(Date.now())).sort((a,b)=>b.in-a.in);
   const ps=visProjects().filter(p=>p.status!=='Done');
-  return `<button class="btn sm" data-a="tab" data-t="more">${I('back')} More</button><h1 style="margin-top:10px">Time Clock</h1>
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Time Clock</h1>
   <form class="card stack" data-sub="clockIn"><div class="two r"><label class="f">Project<select id="tc-p" name="pid">${ps.map(p=>`<option value="${p.id}" ${V.lastProject===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><label class="f">Who<input type="text" id="tc-who" name="who" list="dl-people" value="${esc(ME.name)}" autocapitalize="words"></label></div><button class="btn pri" type="submit" ${ps.length?'':'disabled'}>${I('clock')} Clock In</button>${ps.length?'':'<p class="note">Add a Project first.</p>'}</form>
   ${open.length?`<h3 class="day">On the clock · ${open.length}</h3><div class="list">${open.map(t=>`<div class="li"><span class="t"><b>${esc(t.who)}</b><span>${esc(P(t.projectId)?.name||'')} · since ${fmtTime(t.in)}</span></span><button class="btn sm" data-a="clockOut" data-id="${t.id}">Clock Out</button></div>`).join('')}</div>`:''}
   <h3 class="day">Today</h3>${today.length?`<div class="list">${today.map(t=>`<div class="li"><span class="t"><b>${esc(t.who)}</b><span>${esc(P(t.projectId)?.name||'')} · ${fmtTime(t.in)} to ${t.out?fmtTime(t.out):'now'}</span></span><span class="mono">${(((t.out||Date.now())-t.in)/36e5).toFixed(1)} h</span></div>`).join('')}</div>`:'<p class="note">No time clocked today.</p>'}${datalists()}`;
 }
 function scrPortfolio(){
   const ps=allPhotos().filter(p=>p.portfolio).sort(byNew);
-  return `<button class="btn sm" data-a="tab" data-t="more">${I('back')} More</button><h1 style="margin-top:10px">Portfolio</h1><p class="sub">Photos tagged Portfolio. These are the ones headed for the Gilco Home Services website and Facebook and Instagram ads.</p>${ps.length?grouped(ps,true):`<div class="empty">${I('star')}<b>Nothing tagged yet</b><span>Open any photo and turn on Portfolio.</span></div>`}`;
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Portfolio</h1><p class="sub">Photos tagged Portfolio. These are the ones headed for the Gilco Home Services website and Facebook and Instagram ads.</p>${ps.length?grouped(ps,true):`<div class="empty">${I('star')}<b>Nothing tagged yet</b><span>Open any photo and turn on Portfolio.</span></div>`}`;
 }
 function scrAbout(){
-  return `<button class="btn sm" data-a="tab" data-t="more">${I('back')} More</button><h1 style="margin-top:10px">About This Version</h1><p class="sub">Build Camera preview, built ${fmtDay(Date.now())}.</p>
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">About This Version</h1><p class="sub">Build Camera preview, built ${fmtDay(Date.now())}.</p>
   <div class="card stack"><h2>Working Now</h2><p>Stamped photos with proof codes, GPS filing, offline upload queue, video, voice notes, document scans, Work Zone and Trade Partner tags, search, live feed, timeline, site map, markup with measuring, comments with @mentions, before and after, branded PDF reports with templates, AI daily summaries, checklists with required photos, tasks and punch list, team roles, time clock, and portfolio.</p></div>
   <div class="card stack"><h2>Comes With Your Own Domain</h2><ul style="margin:0;padding-left:18px;display:grid;gap:6px">
    <li><b>Live GPS from the phone</b>, including the I'm Here button. Right now GPS comes from the photo file (often removed by iPhones), the address search, the map pin or the job's GPS spot.</li><li><b>One-tap camera.</b> Shooting without the phone's Retake / Use Photo screen needs Build Camera's own camera.</li><li><b>Satellite map under the pin and boundary.</b> Today it's a measured site grid.</li><li><b>Texting photos in one tap and posting straight to Facebook and Instagram.</b> Today you save the photos, then attach them.</li><li><b>Text and push alerts.</b> Alerts show inside Build Camera now.</li>
@@ -939,8 +1284,8 @@ function datalists(){return `<datalist id="dl-people">${S.members.map(m=>`<optio
 
 /* ---------- modals ---------- */
 function openModal(m){M=m;renderModal()}
-function closeModal(){M=null;$('#modal').hidden=true;$('#modal').innerHTML='';document.body.style.overflow=''}
-function sheet(title,body,extra=''){return `<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="sh"><button class="ib" data-a="close" aria-label="Close">${I('x')}</button><b>${esc(title)}</b>${extra}</div><div class="sb">${body}</div></div>`}
+function closeModal(){camStop();M=null;$('#modal').hidden=true;$('#modal').innerHTML='';document.body.style.overflow=''}
+function sheet(title,body,extra='',cls=''){return `<div class="sheet${cls?' '+cls:''}" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="sh"><button class="ib" data-a="close" aria-label="Close">${I('x')}</button><b>${esc(title)}</b>${extra}</div><div class="sb">${body}</div></div>`}
 function renderModal(){
   if(!M){closeModal();return}
   const el=$('#modal'); el.hidden=false; document.body.style.overflow='hidden';
@@ -957,6 +1302,8 @@ function renderModal(){
   else if(M.kind==='import')h=importSheet();
   else if(M.kind==='social')h=socialSheet();
   else if(M.kind==='sendText')h=sendSheet();
+  else if(M.kind==='bulk')h=bulkSheet();
+  else if(M.kind==='cam'){el.innerHTML=camHtml();el.hidden=false;document.body.style.overflow='hidden';camStart();return}
   else if(M.kind==='busy')h=sheet(M.title,`<div class="empty"><b>${esc(M.msg)}</b><span id="busymsg"></span></div>`);
   el.innerHTML=h;
   if(M.kind==='markup')mkInit();
@@ -972,12 +1319,12 @@ function liveModal(){
 function captureBody(){
   const ps=visProjects().filter(p=>p.status!=='Done'), pid=M.pid||V.lastProject||(ps[0]&&ps[0].id)||'';
   M.pid=pid; const c=M.ctx||(M.ctx={tags:[],zone:'',trade:'',note:''});
-  if(!M.ztInit){const d=lastZT(pid);if(!c.zone)c.zone=d.zone;if(!c.trade)c.trade=d.trade;M.ztInit=true}
+  if(!M.ztInit){const d=lastZT(pid);if(!c.zone)c.zone=d.zone;if(!c.trade)c.trade=d.trade;if(!c.tags.length&&d.tag)c.tags=[d.tag];M.ztInit=true}
   if(!ps.length&&!M.lockProject)return `<div class="empty">${I('folder')}<b>Add a Project first</b><span>Photos need a job to file into.</span><button class="btn pri" data-a="newProject">${I('plus')} New Project</button></div>`;
   return `${M.lockProject?`<p class="callout info">${esc(M.why||'')}</p>`:`<label class="f">Project<select id="cap-p" data-ch="capP">${ps.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><p class="note">If the photo has its own GPS and it's near a different job, it files to that job instead.</p>`}
   <div class="two"><label class="f">Work Zone<input type="text" id="cap-zone" list="dl-zones" value="${esc(c.zone)}" data-ch="capF" data-k="zone" placeholder="Building B, Level 2" autocapitalize="words"></label><label class="f">Trade Partner<input type="text" id="cap-trade" list="dl-trades" value="${esc(c.trade)}" data-ch="capF" data-k="trade" placeholder="Drywall" autocapitalize="words"></label></div>
-  <div><span class="note">Tags</span><div class="tagrow" style="margin-top:6px">${TAGS.map(t=>`<button class="chip" data-a="capTag" data-t="${t}" aria-pressed="${c.tags.includes(t)}">${t}</button>`).join('')}</div></div>
-  ${c.zone||c.trade?'<p class="note" style="margin-top:-6px">Work Zone and Trade Partner carry over from your last photo on this job. Change them any time.</p>':''}
+  <label class="f">Tag<select id="cap-tag" data-ch="capTagSel"><option value="">No tag</option>${TAGS.map(t=>`<option ${c.tags[0]===t?'selected':''}>${t}</option>`).join('')}</select></label>
+  ${c.zone||c.trade||c.tags.length?'<p class="note" style="margin-top:-6px">Work Zone, Trade Partner and Tag carry over from your last photo on this job. Change them any time.</p>':''}
   <label class="f">Note<input type="text" id="cap-note" value="${esc(c.note)}" data-ch="capF" data-k="note" placeholder="What does this show?"></label>
   <div id="cap-strip" class="strip" ${(M.shot||[]).length?'':'hidden'} aria-label="Photos taken this round">${(M.shot||[]).map(capThumb).join('')}</div>
   ${M.count?`<p class="callout info" id="cap-count"><b>${M.count} saved</b> this round. Keep going, or close when you're done. You can delete any photo later.</p>`:'<p id="cap-count" hidden></p>'}
@@ -987,28 +1334,60 @@ function captureBody(){
 function capThumb(id){const p=PH(id);if(!p)return '';const tg=(p.tags||[]).length,mk=allPhotos().some(x=>x.markupOf===id);
   return `<button class="st" data-a="capPhoto" data-id="${id}" aria-label="Open photo to add tags or markup">${p.kind==='video'?`<span class="ph">${I('video')}</span>`:`<img src="${esc(p.url)}" alt="">`}${p.pending?'<i class="up">…</i>':''}${tg||mk?`<i class="tg">${mk?'Marked':tg+' tag'+(tg>1?'s':'')}</i>`:''}</button>`}
 function capStrip(){const el=$('#cap-strip');if(!el||!M||M.kind!=='capture')return;el.innerHTML=(M.shot||[]).map(capThumb).join('');el.hidden=!(M.shot||[]).length}
+/* in-app camera: live view, one tap per photo, no retake step */
+const CAM={stream:null,facing:'environment',gps:null,watch:null,busy:false,ok:!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)&&!/claudeusercontent|claude\.ai/.test(location.host)&&window.isSecureContext};
+function openCam(){if(!M||M.kind!=='capture')return;['zone','trade','note'].forEach(k=>{const i=$('#cap-'+k);if(i)M.ctx[k]=i.value});const sp=$('#cap-p');if(sp)M.pid=sp.value;
+  const cap=M;M={kind:'cam',cap,back:cap};renderModal()}
+function camHtml(){const c=M.cap,pr=P(c.pid),last=c.shot&&c.shot[0]&&PH(c.shot[0]);
+  return `<div class="cam" role="dialog" aria-modal="true" aria-label="Camera"><video id="camv" playsinline autoplay muted></video><div class="camflash" id="camflash"></div>
+  <div class="camtop"><button class="ib" data-a="camDone" aria-label="Close camera">${I('x')}</button><div class="camjob"><b>${esc(pr?pr.name:'')}</b><span>${esc([c.ctx.zone,c.ctx.trade].filter(Boolean).join(' · ')||'Tap Done to set zone and trade')}</span></div><span class="camgps" id="camgps">GPS…</span><button class="ib" data-a="camFlip" aria-label="Switch camera">${I('cmp')}</button></div>
+  <div class="camtags"><label class="camsel"><span>Tag</span><select id="cam-tag" data-ch="camTagSel" aria-label="Tag for the next photos"><option value="">No tag</option>${TAGS.map(t=>`<option ${c.ctx.tags[0]===t?'selected':''}>${t}</option>`).join('')}</select></label></div>
+  <div class="cambot"><button class="camlast" data-a="camLast" aria-label="Open last photo">${last?`<img src="${esc(last.url)}" alt="">`:''}</button><button class="camshut" data-a="camShutter" aria-label="Take photo"><span></span></button><button class="camdone" data-a="camDone"><b id="camcount">${c.count||0}</b><span>Done</span></button></div>
+  <p class="camerr" id="camerr" hidden></p></div>`}
+async function camStart(){const v=$('#camv');if(!v)return;
+  try{try{CAM.stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:CAM.facing},width:{ideal:3840},height:{ideal:2160}}})}catch(e1){CAM.stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:CAM.facing}})}v.srcObject=CAM.stream;await v.play().catch(()=>{})}
+  catch(e){const er=$('#camerr');if(er){er.hidden=false;er.innerHTML='Camera access was blocked. Allow camera for buildcamera.com in Settings → Safari → Camera, or <button class="btn sm" data-a="camFallback">Use the phone camera</button>'}}
+  if(navigator.geolocation&&CAM.watch==null){CAM.watch=navigator.geolocation.watchPosition(p=>{CAM.gps={lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy,t:Date.now()};const g=$('#camgps');if(g){g.textContent='GPS ±'+Math.round(p.coords.accuracy*3.28)+' ft';g.className='camgps ok'}},()=>{const g=$('#camgps');if(g){g.textContent='No GPS';g.className='camgps bad'}},{enableHighAccuracy:true,maximumAge:10000,timeout:20000})}}
+function camStop(){if(CAM.stream){CAM.stream.getTracks().forEach(t=>t.stop());CAM.stream=null}if(CAM.watch!=null&&navigator.geolocation){navigator.geolocation.clearWatch(CAM.watch);CAM.watch=null}}
+async function camShoot(){const v=$('#camv');if(!v||!v.videoWidth||CAM.busy)return;CAM.busy=true;
+  const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);
+  const f=$('#camflash');if(f){f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}
+  const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));CAM.busy=false;
+  const cap=M.cap,ctx={...cap.ctx,projectId:cap.pid,lockProject:false,fromCamera:true,gps:CAM.gps};
+  ctx.onAdd=id=>{cap.shot=[id,...(cap.shot||[])];cap.count=(cap.count||0)+1;const n=$('#camcount');if(n)n.textContent=cap.count;const l=document.querySelector('.camlast');const p=PH(id);if(l&&p)l.innerHTML=`<img src="${esc(p.url)}" alt="">`};
+  processFile(blob,ctx).then(id=>{if(id)setLastZT(cap.pid,cap.ctx.zone,cap.ctx.trade,(cap.ctx.tags||[])[0])}).catch(()=>toast('Couldn\'t save that photo. Try again.'));
+}
 /* photo viewer */
+function phList(p){return allPhotos().filter(x=>x.projectId===p.projectId&&x.kind!=='doc'&&x.kind!=='audio').sort(byNew)}
 function photoSheet(){
   const p=PH(M.id); if(!p)return sheet('Photo','<p>That photo was removed.</p>');
   const pr=P(p.projectId), before=p.beforeOf&&PH(p.beforeOf), after=allPhotos().find(x=>x.beforeOf===p.id), orig=p.markupOf&&PH(p.markupOf);
-  const media=p.kind==='video'?`<video src="${esc(p.url)}" controls playsinline></video>`:p.kind==='audio'?`<audio src="${esc(p.url)}" controls style="width:100%;margin:20px"></audio>`:`<img src="${esc(p.url)}" alt="${esc(p.note||'Jobsite photo')}">`;
-  return sheet(pr?pr.name:'Photo',`<div class="media">${media}</div>
+  const list=p.kind==='doc'?[p]:phList(p),i=list.findIndex(x=>x.id===p.id),prev=i>0&&list[i-1],next=i>=0&&list[i+1];
+  const z=M.zoom||1;
+  const media=p.kind==='video'?`<video src="${esc(p.url)}" controls playsinline></video>`:p.kind==='audio'?`<audio src="${esc(p.url)}" controls style="width:90%;margin:20px"></audio>`:`<img id="pvim" src="${esc(p.url)}" alt="${esc(p.note||'Jobsite photo')}" style="transform:scale(${z})">`;
+  const tb=`<div class="pvtb" role="toolbar" aria-label="Photo tools">${p.kind==='photo'||p.kind==='doc'?`<button class="ib" data-a="markup" data-id="${p.id}" aria-label="Mark up" title="Mark up">${I('pen')}</button>`:''}<button class="ib" data-a="pvFull" aria-label="Full screen" title="Full screen">${I('expand')}</button>${p.kind==='photo'||p.kind==='doc'?`<button class="ib" data-a="pvZoom" data-z="-1" aria-label="Zoom out" title="Zoom out">${I('zoomout')}</button><button class="ib" data-a="pvZoom" data-z="1" aria-label="Zoom in" title="Zoom in">${I('zoomin')}</button>`:''}<a class="ib" href="${esc(p.url)}" target="_blank" rel="noopener" download aria-label="Download" title="Download">${I('download')}</a><button class="ib" data-a="delPhoto" data-id="${p.id}" aria-label="Delete photo" title="Delete">${I('trash')}</button></div>`;
+  const nav=`${prev?`<button class="pvnav l" data-a="pvNav" data-id="${prev.id}" aria-label="Newer photo">${I('back')}</button>`:''}${next?`<button class="pvnav r" data-a="pvNav" data-id="${next.id}" aria-label="Older photo">${I('fwd')}</button>`:''}`;
+  const tks=S.tasks.filter(t=>t.photoId===p.id||t.fixPhotoId===p.id);
+  return sheet(pr?pr.name:'Photo',`<div class="pvimg" id="pvbox">${tb}${media}${nav}</div><div class="pvside">
+  <div class="stack" style="gap:8px">${pr?`<div><b style="font-size:17px">${esc(pr.name)}</b>${pr.address?`<div class="note">${esc(pr.address)}</div>`:''}</div>`:''}
+   <div class="pvwho">${avHtml(p.byName||'?','av',p.by)}<div style="flex:1;min-width:0"><b>${esc(p.byName||'Unknown')}</b><div class="note">${fmtFull(p.takenAt)}${list.length>1&&i>=0?` · ${i+1} of ${list.length}`:''}</div></div>${p.lat!=null?`<a class="btn sm" href="https://www.google.com/maps?q=${p.lat},${p.lng}" target="_blank" rel="noopener" aria-label="Show where it was taken">${I('map')}</a>`:''}</div>
+   <div class="note mono">${p.lat!=null?`${fmtGps(p.lat,p.lng)} ${p.gpsSource==='project'?'(job location)':'(from the phone)'}`:'No GPS'}${p.code?` · <span class="code">${esc(p.code)}</span>`:''}</div></div>
   ${p.pending?'<p class="callout">Waiting to upload. It\'s safe on this phone.</p>':''}
   ${p.quality?`<p class="callout">This photo ${p.quality.blurry?'might be blurry':'is very dark'}. It's saved either way; take another if you need a clearer one.</p>`:''}
   ${p.suggest&&!p.suggest.done&&(p.suggest.tags.length||p.suggest.trade||p.suggest.caption)?`<div class="callout info stack" style="gap:6px"><b>${I('sparkle')} AI suggests</b><span>${esc([p.suggest.tags.join(', '),p.suggest.trade&&'Trade: '+p.suggest.trade,p.suggest.caption&&'Note: '+p.suggest.caption].filter(Boolean).join(' · '))}</span><div class="row"><button class="btn sm pri" data-a="aiAccept" data-id="${p.id}">Accept</button><button class="btn sm" data-a="aiDismiss" data-id="${p.id}">Dismiss</button></div></div>`:''}
-  <dl class="kv"><dt>Taken</dt><dd>${fmtFull(p.takenAt)}</dd><dt>GPS</dt><dd>${p.lat!=null?`${fmtGps(p.lat,p.lng)} <span class="note">${p.gpsSource==='project'?'(job location)':'(from the phone)'}</span> <a href="https://www.google.com/maps?q=${p.lat},${p.lng}" target="_blank" rel="noopener">Map</a>`:'Not available'}</dd><dt>Code</dt><dd><span class="code">${esc(p.code||'')}</span></dd><dt>By</dt><dd>${esc(p.byName||'')}</dd></dl>
   ${orig?`<button class="btn sm" data-a="openPhoto" data-id="${orig.id}">${I('back')} See Original (no markup)</button>`:''}
   ${(before||after)?`<button class="btn pri" data-a="compare" data-a2="${before?before.id:p.id}" data-b2="${before?p.id:after.id}">${I('cmp')} Compare Before & After</button>`:''}
-  <div class="acts">${p.kind==='photo'||p.kind==='doc'?`<button class="btn" data-a="markup" data-id="${p.id}">${I('pen')} Mark Up</button>`:''}${p.kind==='photo'&&!p.beforeOf&&!after?`<button class="btn" data-a="takeAfter" data-id="${p.id}">${I('cmp')} Take After Photo</button>`:''}<button class="btn" data-a="newTask" data-pid="${p.projectId}" data-photo="${p.id}" data-type="punch">${I('flag')} Punch Item</button><button class="btn" data-a="voice" data-id="${p.id}">${I('mic')} ${p.voiceUrl?'Replace':'Add'} Voice Note</button><button class="btn" data-a="sendOne" data-id="${p.id}">${I('share')} Send in Text</button>${p.kind==='photo'&&!p.pending?`<button class="btn" data-a="aiSuggest" data-id="${p.id}" ${SAMPLE?'':'disabled'}>${I('sparkle')} Suggest Tags</button><button class="btn" data-a="social" data-id="${p.id}">${I('star')} Social Post</button>`:''}</div>
-  ${p.voiceUrl?`<div class="card"><span class="note">Voice note</span><audio src="${esc(p.voiceUrl)}" controls style="width:100%;margin-top:6px"></audio></div>`:''}
-  <div class="card stack"><div><span class="note">Tags</span><div class="tagrow" style="margin-top:6px">${TAGS.map(t=>`<button class="chip" data-a="phTag" data-id="${p.id}" data-t="${t}" aria-pressed="${(p.tags||[]).includes(t)||(t==='Portfolio'&&p.portfolio)}">${t}</button>`).join('')}</div></div>
-   <div class="two"><label class="f">Work Zone<input type="text" id="ph-zone" list="dl-zones" value="${esc(p.zone||'')}" data-ch="phF" data-id="${p.id}" data-k="zone" autocapitalize="words"></label><label class="f">Trade Partner<input type="text" id="ph-trade" list="dl-trades" value="${esc(p.trade||'')}" data-ch="phF" data-id="${p.id}" data-k="trade" autocapitalize="words"></label></div>
-   <label class="f">Note<textarea id="ph-note" data-ch="phF" data-id="${p.id}" data-k="note">${esc(p.note||'')}</textarea></label>
+  <div class="card stack" style="gap:8px"><span class="pvsec">${I('tag')} Tags</span><div class="tagrow">${TAGS.map(t=>`<button class="chip" data-a="phTag" data-id="${p.id}" data-t="${t}" aria-pressed="${(p.tags||[]).includes(t)||(t==='Portfolio'&&p.portfolio)}">${t}</button>`).join('')}</div></div>
+  <div class="card stack" style="gap:8px"><span class="pvsec">${I('check')} Tasks</span>${tks.length?tks.map(t=>`<div class="mtask"><span class="t">${esc(t.title)}<span>${t.type==='punch'?'Punch item':'Task'} · ${t.done?'Done':'Open'}${M_(t.assignee)?' · '+esc(M_(t.assignee).name):''}</span></span></div>`).join(''):''}<div class="row"><button class="btn sm" data-a="newTask" data-pid="${p.projectId}" data-photo="${p.id}">${I('plus')} New Task</button><button class="btn sm" data-a="newTask" data-pid="${p.projectId}" data-photo="${p.id}" data-type="punch">${I('flag')} Punch Item</button></div></div>
+  <label class="f">Description<textarea id="ph-note" data-ch="phF" data-id="${p.id}" data-k="note" placeholder="Add a description…">${esc(p.note||'')}</textarea></label>
+  <div class="card"><h2 style="font-size:17px">Comments</h2><div id="cmts">${commentsHtml(p.id)}</div>
+   <form data-sub="comment" data-id="${p.id}" class="stack" style="margin-top:8px"><input type="text" id="cm-text" name="text" placeholder="Add a comment. Type @ to mention." autocomplete="off">${S.members.length?`<div class="tagrow">${S.members.slice(0,12).map(m=>`<button type="button" class="chip" data-a="mention" data-n="${esc(m.name)}">@${esc(m.name)}</button>`).join('')}</div>`:''}<button class="btn pri" type="submit">Post Comment</button></form></div>
+  <div class="card stack"><div class="two"><label class="f">Work Zone<input type="text" id="ph-zone" list="dl-zones" value="${esc(p.zone||'')}" data-ch="phF" data-id="${p.id}" data-k="zone" autocapitalize="words"></label><label class="f">Trade Partner<input type="text" id="ph-trade" list="dl-trades" value="${esc(p.trade||'')}" data-ch="phF" data-id="${p.id}" data-k="trade" autocapitalize="words"></label></div>
    <label class="f">Trade Planner Task<input type="text" id="ph-tp" value="${esc(p.tpTask||'')}" data-ch="phF" data-id="${p.id}" data-k="tpTask" placeholder="Task this photo shows" autocapitalize="words"></label>
    <label class="f">Move to Project<select id="ph-proj" data-ch="phMove" data-id="${p.id}">${S.projects.map(x=>`<option value="${x.id}" ${x.id===p.projectId?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label></div>
-  <div class="card"><h2>Comments</h2><div id="cmts">${commentsHtml(p.id)}</div>
-   <form data-sub="comment" data-id="${p.id}" class="stack" style="margin-top:8px"><input type="text" id="cm-text" name="text" placeholder="Add a comment. Type @ to mention." autocomplete="off">${S.members.length?`<div class="tagrow">${S.members.slice(0,12).map(m=>`<button type="button" class="chip" data-a="mention" data-n="${esc(m.name)}">@${esc(m.name)}</button>`).join('')}</div>`:''}<button class="btn pri" type="submit">Post Comment</button></form></div>
-  <button class="btn bad" data-a="delPhoto" data-id="${p.id}">${I('trash')} Delete Photo</button>${datalists()}`,M.back?`<button class="btn sm stamp" data-a="backCam">${I('camera')} Back to Camera</button>`:'');
+  <div class="acts">${p.kind==='photo'&&!p.beforeOf&&!after?`<button class="btn" data-a="takeAfter" data-id="${p.id}">${I('cmp')} Take After Photo</button>`:''}<button class="btn" data-a="voice" data-id="${p.id}">${I('mic')} ${p.voiceUrl?'Replace':'Add'} Voice Note</button><button class="btn" data-a="sendOne" data-id="${p.id}">${I('share')} Send in Text</button>${p.kind==='photo'&&!p.pending?`<button class="btn" data-a="aiSuggest" data-id="${p.id}" ${SAMPLE?'':'disabled'}>${I('sparkle')} Suggest Tags</button><button class="btn" data-a="social" data-id="${p.id}">${I('star')} Social Post</button>`:''}</div>
+  ${p.voiceUrl?`<div class="card"><span class="note">Voice note</span><audio src="${esc(p.voiceUrl)}" controls style="width:100%;margin-top:6px"></audio></div>`:''}
+  </div>${datalists()}`,M.back?`<button class="btn sm stamp" data-a="backCam">${I('camera')} Back to Camera</button>`:'','pv');
 }
 function commentsHtml(pid){
   const cs=S.comments.filter(c=>c.photoId===pid).sort((a,b)=>a.at-b.at);
@@ -1300,7 +1679,7 @@ function alertFor(to,text,ref){if(!to)return;put('alerts',{to,text,...ref,at:Dat
 const myAlerts=()=>{const me=myMember();return S.alerts.filter(a=>!me||a.to===me).sort((a,b)=>b.at-a.at)};
 function scrAlerts(){
   const me=myMember(),list=myAlerts();
-  return `<button class="btn sm" data-a="tab" data-t="more">${I('back')} More</button><h1 style="margin-top:10px">Alerts</h1>
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Alerts</h1>
   <div class="card stack"><label class="f">This Phone Belongs To<select id="al-me" data-ch="myMember"><option value="">Everyone's alerts</option>${S.members.map(m=>`<option value="${m.id}" ${me===m.id?'selected':''}>${esc(m.name)}</option>`).join('')}</select></label><p class="note">People get an alert here when they're @mentioned or assigned a task or punch item. Text alerts to their phone come with your own domain; until then use Copy as Text.</p></div>
   ${list.length?`<div class="list" style="margin-top:12px">${list.map(a=>{const m=M_(a.to);return `<div class="li"><span class="t" style="${a.read?'opacity:.6':''}"><b>${esc(a.text)}</b><span>To ${esc(m?.name||'someone')} · ${fmtDay(a.at)} ${fmtTime(a.at)}</span></span>${a.photoId?`<button class="btn sm" data-a="openPhoto" data-id="${a.photoId}">Open</button>`:''}<button class="btn sm" data-a="alCopy" data-id="${a.id}">${I('copy')}</button>${a.read?'':`<button class="btn sm" data-a="alRead" data-id="${a.id}">Read</button>`}</div>`}).join('')}</div>`:`<div class="empty" style="margin-top:12px">${I('flag')}<b>No alerts</b><span>@mention someone in a comment or assign them a punch item.</span></div>`}<textarea id="al-copy" hidden></textarea>`;
 }
@@ -1310,14 +1689,17 @@ function scrOnsite(){
   const today=dayKey(Date.now()),ts=S.time.filter(t=>dayKey(t.in)===today);
   const by={};ts.forEach(t=>{(by[t.projectId]=by[t.projectId]||[]).push(t)});
   const ids=Object.keys(by);
-  return `<button class="btn sm" data-a="tab" data-t="more">${I('back')} More</button><h1 style="margin-top:10px">On Site Today</h1><p class="sub">${fmtDay(Date.now())} · ${ts.filter(t=>!t.out).length} on the clock now</p>
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">On Site Today</h1><p class="sub">${fmtDay(Date.now())} · ${ts.filter(t=>!t.out).length} on the clock now</p>
   ${ids.length?ids.map(pid=>{const p=P(pid);return `<h3 class="day">${esc(p?.name||'Unknown job')}</h3><div class="list">${by[pid].map(t=>{const ph=allPhotos().filter(x=>x.projectId===pid&&x.byName===t.who&&dayKey(x.takenAt)===today&&x.kind==='photo').sort(byNew)[0];return `<div class="li">${ph?`<button class="tile" style="width:52px;flex:none" data-a="openPhoto" data-id="${ph.id}"><img src="${esc(ph.url)}" alt=""></button>`:I('users')}<span class="t"><b>${esc(t.who)}</b><span>${fmtTime(t.in)} to ${t.out?fmtTime(t.out):'now'} · ${(((t.out||Date.now())-t.in)/36e5).toFixed(1)} hrs${ph?' · last photo '+fmtTime(ph.takenAt):' · no photos yet'}</span></span>${t.out?'<span class="pill mut">Left</span>':'<span class="pill good">On site</span>'}</div>`}).join('')}</div>`}).join(''):`<div class="empty">${I('clock')}<b>No one clocked in today</b><button class="btn pri" data-a="tab" data-t="time">Open Time Clock</button></div>`}`;
 }
 
 /* settings */
 function scrSettings(){
   const s=SET();
-  return `<button class="btn sm" data-a="tab" data-t="more">${I('back')} More</button><h1 style="margin-top:10px">Settings</h1>${window.BC?BC.accountCard():''}
+  const my=avUrl(ME.id,ME.name);
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Settings</h1>${window.BC?BC.accountCard():''}
+  <div class="card stack" id="st-me"><h2>Your Photo</h2><div class="row" style="gap:14px"><span class="avbig">${my?`<img src="${esc(my)}" alt="Your photo">`:esc(ini(ME.name))}</span><div class="stack" style="gap:6px;flex:1;min-width:200px"><b>${esc(ME.name)}</b><span class="note">Shows in the corner of every photo you take, so the crew can see who took it.</span></div></div>
+   <div class="row"><button class="btn pri" data-a="avPick" data-cap="user">${I('camera')} Take a Selfie</button><button class="btn" data-a="avPick">${I('img')} Choose a Photo</button>${my?`<button class="btn bad" data-a="avDel">${I('trash')} Remove</button>`:''}</div></div>
   <div class="card stack"><h2>Company</h2><label class="f">Default Company Name<input type="text" id="st-name" value="${esc(coName())}" data-ch="setName" autocapitalize="words"></label>
    <div class="row">${s.logoUrl?`<img src="${esc(s.logoUrl)}" alt="Company logo" style="height:56px;width:auto;background:#fff;border-radius:8px;padding:6px;border:1px solid var(--line)">`:'<span class="note">No logo yet. Photos and PDFs use the company name.</span>'}</div>
    <div class="row"><button class="btn pri" data-a="logoPick" ${AS?'':'disabled'}>${I('img')} ${s.logoUrl?'Replace':'Upload'} Logo</button>${s.logoUrl?'<button class="btn" data-a="logoClear">Remove Logo</button>':''}</div><p class="note">The logo goes on every new photo stamp, every PDF report and the before and after reel. A PNG with a clear background looks best.</p></div>
@@ -1422,14 +1804,34 @@ async function makeReel(a,b,msg){
 /* select photos and send in a text */
 function selBar(){
   if(!V.selMode||V.tab!=='project')return '';const n=V.sel.size;
-  return `<style>main{padding-bottom:calc(180px + env(safe-area-inset-bottom,0px))!important}</style><div class="selbar"><div class="in"><b>${n} selected</b><span class="sp"></span><button class="btn sm" data-a="selAll">All</button><button class="btn sm stamp" data-a="sendText" ${n?'':'disabled'}>${I('share')} Send in Text</button><button class="btn sm" data-a="selPdf" ${n&&DL?'':'disabled'}>${I('report')} PDF</button><button class="btn sm bad" data-a="selDel" ${n?'':'disabled'}>${I('trash')}</button><button class="btn sm" data-a="selDone">Done</button></div></div>`;
+  return `<style>main{padding-bottom:calc(180px + env(safe-area-inset-bottom,0px))!important}</style><div class="selbar"><div class="in"><b>${n} selected</b><span class="sp"></span><button class="btn sm" data-a="selAll">All</button><button class="btn sm pri" data-a="bulkOpen" ${n?'':'disabled'}>${I('pen')} Edit</button><button class="btn sm stamp" data-a="sendText" ${n?'':'disabled'}>${I('share')} Send in Text</button><button class="btn sm" data-a="selPdf" ${n&&DL?'':'disabled'}>${I('report')} PDF</button><button class="btn sm bad" data-a="selDel" ${n?'':'disabled'}>${I('trash')}</button><button class="btn sm" data-a="selDone">Done</button></div></div>`;
+}
+function bulkSheet(){
+  const ps=M.ids.map(PH).filter(p=>p&&!p.pending),n=ps.length;
+  const now=k=>{const v=[...new Set(ps.map(p=>p[k]||''))];return v.length===1?(v[0]?'Now: '+v[0]:'Now: none'):'Now: mixed'};
+  const have=[...new Set(ps.flatMap(p=>p.tags||[]))].sort();
+  const opt=(v,l)=>`<option value="${esc(v)}">${esc(l)}</option>`;
+  return sheet(`Edit ${n} Photo${n===1?'':'s'}`,`<form class="stack" data-sub="bulkSave">
+   <p class="note" style="margin:0">Only the fields you fill in change. Anything left on "No change" stays as it is on each photo.</p>
+   <div class="two"><label class="f">Work Zone (area or building)<input type="text" id="bk-zone" name="zone" list="dl-zones" placeholder="${esc(now('zone'))}" autocapitalize="words"></label>
+   <label class="f">Trade Partner<input type="text" id="bk-trade" name="trade" list="dl-trades" placeholder="${esc(now('trade'))}" autocapitalize="words"></label></div>
+   <div class="row" style="gap:16px"><label class="row note"><input type="checkbox" name="zoneClear" style="width:20px;height:20px"> Clear Work Zone</label><label class="row note"><input type="checkbox" name="tradeClear" style="width:20px;height:20px"> Clear Trade Partner</label></div>
+   <div class="two"><label class="f">Add Tag<select id="bk-tadd" name="tagAdd">${opt('','No change')}${TAGS.filter(t=>t!=='Portfolio').map(t=>opt(t,t)).join('')}</select></label>
+   <label class="f">Remove Tag<select id="bk-trem" name="tagRem">${opt('','No change')}${have.filter(t=>t!=='Portfolio').map(t=>opt(t,t)).join('')}</select></label></div>
+   <div class="two"><label class="f">Portfolio<select id="bk-port" name="port">${opt('','No change')}${opt('on','Add to Portfolio')}${opt('off','Take out of Portfolio')}</select></label>
+   <label class="f">Move to Project<select id="bk-proj" name="proj">${opt('','No change')}${S.projects.map(x=>opt(x.id,x.name)).join('')}</select></label></div>
+   <label class="f">Description<textarea id="bk-note" name="note" placeholder="Leave blank to keep each photo's own description"></textarea></label>
+   <label class="row note"><input type="checkbox" name="noteAppend" checked style="width:20px;height:20px"> Add to the end of each description instead of replacing it</label>
+   <div class="row"><button class="btn pri" type="submit">${I('check')} Save Changes to ${n} Photo${n===1?'':'s'}</button><button class="btn" type="button" data-a="close">Cancel</button></div>
+  </form>${datalists()}`);
 }
 function phonesFor(pid){const p=P(pid);const out=[];if(p?.phone)out.push({name:p.customer||'Customer',phone:p.phone});(p?.contacts||[]).forEach(c=>{if(c.phone)out.push({name:(c.name||c.role||'Contact')+(c.role?' ('+c.role+')':''),phone:c.phone})});S.members.forEach(m=>{if(m.phone)out.push({name:m.name+(m.company?' ('+m.company+')':''),phone:m.phone})});return out}
 function sendMsgText(ids){const ps=ids.map(PH).filter(Boolean).sort((a,b)=>a.takenAt-b.takenAt);const pr=P(ps[0]?.projectId);const days=[...new Set(ps.map(p=>fmtDay(p.takenAt)))];
   const notes=ps.map(p=>p.note).filter(Boolean);return `${pr?pr.name+': ':''}${ps.length} photo${ps.length>1?'s':''} from ${days.join(', ')}.${notes.length?'\n'+notes.slice(0,6).map(n=>'- '+n).join('\n'):''}\n- ${ME.name}, ${coName(pr?.id)}`}
 function sendSheet(){
-  const ids=M.ids,ps=ids.map(PH).filter(Boolean),phones=phonesFor(ps[0]?.projectId);
-  return sheet('Send in Text',`<div class="grid">${ps.map(p=>`<span class="tile"><img src="${esc(p.url)}" alt=""></span>`).join('')}</div>
+  const ps=M.ids.map(PH).filter(Boolean).sort((a,b)=>(a.takenAt||0)-(b.takenAt||0)),phones=phonesFor(ps[0]?.projectId);M.ids=ps.map(p=>p.id);const ids=M.ids,n=ps.length;
+  return sheet('Send in Text',`<div class="sxcar" id="sxcar" aria-label="Photos to send, swipe to see them">${ps.map((p,i)=>`<figure class="sxit"><img src="${esc(p.url)}" alt="Photo ${i+1} of ${n}">${n>1?`<button type="button" class="sxdrop" data-a="sxDrop" data-id="${p.id}" aria-label="Leave photo ${i+1} out">${I('x')}</button>`:''}<figcaption>${i+1} of ${n} · ${fmtDay(p.takenAt)} ${fmtTime(p.takenAt)}</figcaption></figure>`).join('')}</div>
+  ${n>1?`<p class="note" style="margin:-4px 0 0">${n} photos go out together as one group, oldest first, so they show as a stack in Messages you can swipe through. Swipe here to check them.</p>`:''}
   ${phones.length?`<label class="f">Send To<select id="sx-to" data-ch="sxTo"><option value="">Pick someone</option>${phones.map(x=>`<option value="${esc(x.phone)}">${esc(x.name)} · ${esc(x.phone)}</option>`).join('')}</select></label>`:'<p class="note">Add phone numbers in Job Info or Team to pick who to send to.</p>'}
   <label class="f">Message<textarea id="sx-msg">${esc(M.msg||sendMsgText(ids))}</textarea></label>
   <button class="btn stamp wide" data-a="sxShare">${I('share')} Open in Messages</button>
@@ -1438,8 +1840,10 @@ function sendSheet(){
 }
 async function sxShare(){
   const ids=M.ids,msg=$('#sx-msg').value,to=$('#sx-to')?.value||'';
-  try{if(navigator.canShare){const files=[];for(const id of ids){const p=PH(id);const b=await (await fetch(p.url)).blob();files.push(new File([b],(p.code||p.id)+'.jpg',{type:b.type||'image/jpeg'}))}
-    if(navigator.canShare({files})){await navigator.share({files,text:msg});toast('Sent to the share sheet');return}}}catch(e){if(e&&e.name==='AbortError')return}
+  try{if(navigator.canShare){toast(ids.length>1?'Getting '+ids.length+' photos ready…':'Getting the photo ready…');const files=[];
+    for(const [i,id] of ids.entries()){const p=PH(id);const raw=await (await fetch(p.url)).blob();const ty=/^image\/(jpeg|png|heic|webp)/.test(raw.type)?raw.type.split(';')[0]:'image/jpeg';const ext=ty==='image/png'?'png':ty==='image/webp'?'webp':ty==='image/heic'?'heic':'jpg';
+      files.push(new File([raw],`${(P(p.projectId)?.name||'Photo').replace(/[^\w]+/g,'-').slice(0,40)}-${String(i+1).padStart(2,'0')}.${ext}`,{type:ty,lastModified:p.takenAt||Date.now()}))}
+    if(navigator.canShare({files})){try{await navigator.clipboard.writeText(msg)}catch(e){}await navigator.share({files,text:msg});toast(files.length>1?files.length+' photos sent as one group':'Sent to the share sheet');return}}}catch(e){if(e&&e.name==='AbortError')return}
   const body=encodeURIComponent(msg);const href=`sms:${to.replace(/[^\d+]/g,'')}${/iPhone|iPad|Mac/.test(navigator.userAgent)?'&':'?'}body=${body}`;
   const a=document.createElement('a');a.href=href;a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
   const n=$('#sx-note');if(n)n.innerHTML=`Photos can't be attached from this preview yet. Tap <b>Save to Phone</b>, then in Messages attach them from your camera roll${to?' and send to <b>'+esc(to)+'</b>':''}. The message is copied for you.`;
@@ -1458,22 +1862,39 @@ const ACT={
   feedF:el=>{V.feedF=el.dataset.f;render()},
   taskF:el=>{V.taskF=el.dataset.f;render()},
   ptab:el=>{V.ptab=el.dataset.t;render()},
-  openProject:el=>{V.selMode=false;V.sel=new Set();V.pid=el.dataset.id;V.tab='project';V.ptab='photos';V.pf={zone:'',trade:'',tag:''};V.lastProject=V.pid;saveView();render();scrollTo(0,0)},
+  openProject:el=>{V.selMode=false;V.sel=new Set();V.pid=el.dataset.id;V.tab='project';V.ptab='photos';V.pf={zone:'',trade:'',tag:'',by:'',tags:[],q:''};V.pfOpen=false;V.lastProject=V.pid;saveView();render();scrollTo(0,0)},
+  openProjTab:el=>{V.selMode=false;V.sel=new Set();V.pid=el.dataset.id;V.tab='project';V.ptab=el.dataset.t||'photos';V.pf={zone:'',trade:'',tag:'',by:'',tags:[],q:''};V.pfOpen=false;V.lastProject=V.pid;saveView();render();scrollTo(0,0)},
   newProject:()=>openModal({kind:'newProject'}),
-  capture:el=>{afterShot=null;openModal({kind:'capture',pid:el.dataset.pid||(V.tab==='project'?V.pid:'')});if(visProjects().some(p=>p.status!=='Done'))$('#in-photo').click()},
-  pickLib:el=>{afterShot=null;M={kind:'capture',pid:el.dataset.pid,ctx:{tags:[],...lastZT(el.dataset.pid),note:''},hidden:true};$('#in-lib').click()},
-  scanDoc:el=>{afterShot=null;M={kind:'capture',pid:el.dataset.pid,ctx:{tags:[],...lastZT(el.dataset.pid),note:''},hidden:true};$('#in-doc').click()},
+  capture:el=>{afterShot=null;openModal({kind:'capture',pid:el.dataset.pid||(V.tab==='project'?V.pid:'')});if(visProjects().some(p=>p.status!=='Done')){if(CAM.ok)openCam();else $('#in-photo').click()}},
+  pickLib:el=>{afterShot=null;M={kind:'capture',pid:el.dataset.pid,ctx:ctxFor(el.dataset.pid),hidden:true};$('#in-lib').click()},
+  scanDoc:el=>{afterShot=null;M={kind:'capture',pid:el.dataset.pid,ctx:ctxFor(el.dataset.pid),hidden:true};$('#in-doc').click()},
   capTag:el=>{const t=el.dataset.t,c=M.ctx;c.tags=c.tags.includes(t)?c.tags.filter(x=>x!==t):[...c.tags,t];el.setAttribute('aria-pressed',c.tags.includes(t))},
-  shoot:el=>{if(M&&M.ctx){['zone','trade','note'].forEach(k=>{const i=$('#cap-'+k);if(i)M.ctx[k]=i.value});const sp=$('#cap-p');if(sp)M.pid=sp.value}const s=el.dataset.src;({photo:'#in-photo',lib:'#in-lib',video:'#in-video',doc:'#in-doc'})[s]&&$(({photo:'#in-photo',lib:'#in-lib',video:'#in-video',doc:'#in-doc'})[s]).click()},
+  shoot:el=>{if(M&&M.ctx){['zone','trade','note'].forEach(k=>{const i=$('#cap-'+k);if(i)M.ctx[k]=i.value});const sp=$('#cap-p');if(sp)M.pid=sp.value}const s=el.dataset.src;if(s==='photo'&&CAM.ok&&M&&M.kind==='capture'&&!M.single){openCam();return}({photo:'#in-photo',lib:'#in-lib',video:'#in-video',doc:'#in-doc'})[s]&&$(({photo:'#in-photo',lib:'#in-lib',video:'#in-video',doc:'#in-doc'})[s]).click()},
   openPhoto:el=>openModal({kind:'photo',id:el.dataset.id}),
+  pvNav:el=>{if(!M||M.kind!=='photo')return;M.id=el.dataset.id;M.zoom=1;renderModal()},
+  pvZoom:el=>{if(!M)return;M.zoom=Math.min(4,Math.max(1,(M.zoom||1)*(+el.dataset.z>0?1.5:1/1.5)));const im=$('#pvim');if(im)im.style.transform=`scale(${M.zoom})`},
+  pvFull:()=>{const b=$('#pvbox');if(!b)return;try{document.fullscreenElement?document.exitFullscreen():(b.requestFullscreen||b.webkitRequestFullscreen).call(b)}catch(e){const p=PH(M.id);if(p)window.open(p.url,'_blank','noopener')}},
+  star:el=>{const p=P(el.dataset.id);if(!p)return;upd('projects',p.id,{starred:!p.starred})},
+  pfilt:el=>{V.pfilt=el.dataset.f;render()},
+  pfToggle:()=>{V.pfOpen=!V.pfOpen;render()},
+  pfPick:el=>{const f=V.pf,k=el.dataset.k,v=el.dataset.v;f.tags=f.tags||[];if(k==='tags')f.tags=f.tags.includes(v)?f.tags.filter(x=>x!==v):[...f.tags,v];else f[k]=f[k]===v?'':v;render()},
+  pfClear:()=>{V.pf={zone:'',trade:'',tag:'',by:'',tags:[],q:''};render()},
+  ckF:el=>{V.ckF=el.dataset.f;render()},
+  daySel:el=>{const d=el.dataset.d,ids=allPhotos().filter(x=>x.projectId===V.pid&&x.kind!=='doc'&&!x.pending&&dayKey(x.takenAt)===d).map(x=>x.id);const all=V.selMode&&ids.every(i=>V.sel.has(i));if(!V.selMode){V.selMode=true;V.sel=new Set()}ids.forEach(i=>all?V.sel.delete(i):V.sel.add(i));render()},
   close:()=>closeModal(),
   phTag:el=>{const p=PH(el.dataset.id),t=el.dataset.t;if(!p||p.pending)return;if(t==='Portfolio'){const on=!p.portfolio;upd('photos',p.id,{portfolio:on,tags:on?[...new Set([...(p.tags||[]),'Portfolio'])]:(p.tags||[]).filter(x=>x!=='Portfolio')});el.setAttribute('aria-pressed',on);return}const tags=(p.tags||[]).includes(t)?(p.tags||[]).filter(x=>x!==t):[...(p.tags||[]),t];upd('photos',p.id,{tags});el.setAttribute('aria-pressed',tags.includes(t))},
   mention:el=>{const i=$('#cm-text');i.value=(i.value&&!i.value.endsWith(' ')?i.value+' ':i.value)+'@'+el.dataset.n+' ';i.focus()},
-  delPhoto:el=>{if(!el.classList.contains('armed')){el.classList.add('armed');el.innerHTML=I('trash')+' Tap Again to Delete';setTimeout(()=>{el.classList.remove('armed');el.innerHTML=I('trash')+' Delete Photo'},3000);return}
+  delPhoto:el=>{if(!el.classList.contains('armed')){const h=el.innerHTML;el.classList.add('armed');el.innerHTML=I('trash')+' Tap Again to Delete';setTimeout(()=>{el.classList.remove('armed');el.innerHTML=h},3000);return}
     const p=PH(el.dataset.id);closeModal();if(p.pending){delete PEND[p.id];qDrop(p.id);scheduleRender();return}del('photos',p.id);if(AS&&p.assetId&&!allPhotos().some(x=>x.assetId===p.assetId&&x.id!==p.id))AS.delete(p.assetId).catch(()=>{});toast('Photo deleted')},
   markup:el=>{const p=PH(el.dataset.id);if(p.pending){toast('Wait for the upload to finish, then mark it up.');return}openModal({kind:'markup',id:p.id,back:M&&M.back})},
   capPhoto:el=>{const back=M;openModal({kind:'photo',id:el.dataset.id,back})},
   backCam:()=>{const b=M&&M.back;if(b){M=b;renderModal()}else closeModal()},
+  camShutter:()=>camShoot(),
+  camFallback:()=>{const b=M&&M.back;camStop();CAM.ok=false;if(b){M=b;renderModal()}$('#in-photo').click()},
+  camFlip:()=>{CAM.facing=CAM.facing==='environment'?'user':'environment';camStop();camStart()},
+  camDone:()=>{const b=M&&M.back;camStop();if(b){M=b;renderModal()}else closeModal()},
+  camLast:()=>{const id=M.cap.shot&&M.cap.shot[0];if(!id)return;camStop();const camM=M;openModal({kind:'photo',id,back:camM})},
+  camTag:el=>{const c=M.cap.ctx,t=el.dataset.t;c.tags=c.tags.includes(t)?c.tags.filter(x=>x!==t):[...c.tags,t];el.setAttribute('aria-pressed',c.tags.includes(t))},
   mkTool:el=>{MK.tool=el.dataset.t;document.querySelectorAll('.tool').forEach(b=>b.setAttribute('aria-pressed',b===el));mkOpt();if(MK.tool==='text')setTimeout(()=>$('#mk-text')?.focus(),30)},
   mkCol:el=>{MK.color=el.dataset.c;document.querySelectorAll('.sw').forEach(b=>b.setAttribute('aria-pressed',b===el))},
   mkUndo:()=>{const s=MK.shapes.pop();if(s&&s.t==='scale')MK.scale=null;mkDraw()},
@@ -1542,11 +1963,15 @@ const ACT={
   selMode:()=>{V.selMode=!V.selMode;V.sel=new Set();render()},
   selPhoto:el=>{const id=el.dataset.id;V.sel.has(id)?V.sel.delete(id):V.sel.add(id);render()},
   selAll:()=>{allPhotos().filter(x=>x.projectId===V.pid&&x.kind!=='doc'&&!x.pending).forEach(x=>V.sel.add(x.id));render()},
+  bulkOpen:()=>{const ids=[...V.sel];if(!ids.length){toast('Pick photos first.');return}openModal({kind:'bulk',ids})},
   selDone:()=>{V.selMode=false;V.sel=new Set();render()},
   sendText:()=>{const ids=[...V.sel].filter(id=>{const p=PH(id);return p&&(p.kind==='photo'||p.kind==='doc')});if(!ids.length){toast('Pick photos to send. Videos and voice notes can be saved from their own screen.');return}openModal({kind:'sendText',ids})},
   sendOne:el=>openModal({kind:'sendText',ids:[el.dataset.id]}),
   sendMany:el=>openModal({kind:'sendText',ids:el.dataset.ids.split(',')}),
   sxShare:()=>sxShare(),
+  avPick:el=>{const i=$('#in-avatar');if(el.dataset.cap)i.setAttribute('capture',el.dataset.cap);else i.removeAttribute('capture');i.click()},
+  avDel:()=>{const cur=S.settings.find(x=>x.id==='avatars');if(!cur)return;const map={...(cur.map||{})};delete map['id:'+ME.id];delete map['n:'+ME.name];put('settings',{id:'avatars',map});toast('Photo removed')},
+  sxDrop:el=>{if(!M||M.kind!=='sendText')return;const m=$('#sx-msg');if(m)M.msg=m.value;M.ids=M.ids.filter(i=>i!==el.dataset.id);renderModal()},
   sxSave:()=>sxSave(),
   selPdf:()=>{const ids=[...V.sel];const ps=ids.map(PH).filter(Boolean);if(!ps.length)return;const days=ps.map(x=>dayKey(x.takenAt)).sort();savePdf(P(V.pid),{tpl:'custom',from:days[0],to:days[days.length-1],per:ps.length>2?'4':'2',inc:'notes',only:ids})},
   selDel:el=>{if(!el.dataset.armed){el.dataset.armed=1;el.classList.add('armed');toast('Tap the trash again to delete '+V.sel.size+' photos');setTimeout(()=>{delete el.dataset.armed;el.classList.remove('armed')},3000);return}const ids=[...V.sel];ids.forEach(id=>{const p=PH(id);if(!p)return;del('photos',id);if(AS&&p.assetId&&!allPhotos().some(x=>x.assetId===p.assetId&&x.id!==id))AS.delete(p.assetId).catch(()=>{})});V.sel=new Set();V.selMode=false;toast(ids.length+' photos deleted')},
@@ -1554,9 +1979,12 @@ const ACT={
 };
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;const f=ACT[el.dataset.a];if(f){e.preventDefault();f(el,e)}});
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
-document.addEventListener('keydown',e=>{const open=[...document.querySelectorAll('.acl')].find(b=>!b.hidden);if(open&&e.key==='Escape'){open.hidden=true;return}if(open&&e.key==='ArrowDown'&&e.target.dataset.in==='addr'){e.preventDefault();open.querySelector('button')?.focus();return}if(e.key==='Escape'&&M)closeModal()});
+document.addEventListener('keydown',e=>{const t=e.target;if((e.key==='Enter'||e.key===' ')&&t&&t.getAttribute&&t.getAttribute('role')==='link'&&t.dataset.a){e.preventDefault();t.click();return}
+  if(M&&M.kind==='photo'&&(e.key==='ArrowLeft'||e.key==='ArrowRight')&&!/INPUT|TEXTAREA|SELECT/.test((document.activeElement||{}).tagName||'')){const b=document.querySelector(e.key==='ArrowLeft'?'.pvnav.l':'.pvnav.r');if(b){e.preventDefault();b.click()}return}
+  const open=[...document.querySelectorAll('.acl')].find(b=>!b.hidden);if(open&&e.key==='Escape'){open.hidden=true;return}if(open&&e.key==='ArrowDown'&&e.target.dataset.in==='addr'){e.preventDefault();open.querySelector('button')?.focus();return}if(e.key==='Escape'&&M)closeModal()});
 document.addEventListener('input',e=>{const el=e.target;if(el.closest&&el.closest('#main')&&(el.tagName==='TEXTAREA'||el.type==='text')&&el.id!=='q')el.dataset.dirty='1';
   if(el.dataset.in==='q'){V.q=el.value;const pos=el.selectionStart;dirty=false;$('#main').innerHTML=screen();const q=$('#q');q.focus();try{q.setSelectionRange(pos,pos)}catch(_){}}
+  if(el.dataset.in==='phq'){V.pf.q=el.value;const pos=el.selectionStart;dirty=false;$('#main').innerHTML=screen();const q=$('#phq');q.focus();try{q.setSelectionRange(pos,pos)}catch(_){}}
   if(el.dataset.in==='pq'){V.pq=el.value;const pos=el.selectionStart;dirty=false;$('#main').innerHTML=screen();const q=$('#pq');q.focus();try{q.setSelectionRange(pos,pos)}catch(_){}}
   if(el.dataset.in==='mkText')MK.text=el.value;
   if(el.dataset.in==='addr'){const pre=el.dataset.pre;const g=$('#'+pre+'-gm');if(g)g.href=gmSearch(el.value);const pg=parseGps(el.value);if(pg&&/^[-\d.\s,°NSEWnsew]+$/.test(el.value.trim())){$('#'+pre+'-lat').value=pg.lat;$('#'+pre+'-lng').value=pg.lng;el.value='';gpsMsg(pre,'Set from GPS','gpsok');return}setTimeout(()=>showSuggest(pre),0);acQuery(pre)}
@@ -1573,8 +2001,10 @@ document.addEventListener('input',e=>{const el=e.target;if(el.closest&&el.closes
 });
 document.addEventListener('change',e=>{const el=e.target,k=el.dataset.ch;if(!k)return;
   if(k==='pf'){V.pf[el.dataset.k]=el.value;render()}
-  else if(k==='capP'){M.pid=el.value;V.lastProject=el.value;saveView();const d=lastZT(el.value);M.ctx.zone=d.zone;M.ctx.trade=d.trade;const z=$('#cap-zone'),t=$('#cap-trade');if(z)z.value=d.zone;if(t)t.value=d.trade}
+  else if(k==='capP'){M.pid=el.value;V.lastProject=el.value;saveView();const d=lastZT(el.value);M.ctx.zone=d.zone;M.ctx.trade=d.trade;M.ctx.tags=d.tag?[d.tag]:[];const tg=$('#cap-tag');if(tg)tg.value=d.tag;const z=$('#cap-zone'),t=$('#cap-trade');if(z)z.value=d.zone;if(t)t.value=d.trade}
   else if(k==='capF'){M.ctx[el.dataset.k]=el.value}
+  else if(k==='capTagSel'){M.ctx.tags=el.value?[el.value]:[]}
+  else if(k==='camTagSel'){if(M&&M.cap){M.cap.ctx.tags=el.value?[el.value]:[];setLastZT(M.cap.pid,M.cap.ctx.zone,M.cap.ctx.trade,el.value)}}
   else if(k==='phF'){const p=PH(el.dataset.id);if(p&&!p.pending)upd('photos',p.id,{[el.dataset.k]:el.value})}
   else if(k==='phMove'){upd('photos',el.dataset.id,{projectId:el.value});toast('Moved to '+(P(el.value)?.name||''))}
   else if(k==='taskDone'){const t=S.tasks.find(x=>x.id===el.dataset.id);if(t.type==='punch'&&el.checked&&!t.fixPhotoId){el.checked=false;toast('Add a Fixed photo to close a punch item.',3200);return}upd('tasks',t.id,{done:el.checked,doneAt:el.checked?Date.now():null})}
@@ -1589,12 +2019,26 @@ document.addEventListener('change',e=>{const el=e.target,k=el.dataset.ch;if(!k)r
   else if(k==='setAI'){put('settings',{...SET(),id:'company',autoTag:el.checked})}
   else if(k==='ct'){const p=P(el.dataset.pid),i=+el.dataset.i;upd('projects',p.id,{contacts:(p.contacts||[]).map((c,j)=>j===i?{...c,[el.dataset.k]:el.value.trim()}:c)})}
   else if(k==='sxTo'){}
+  else if(k==='pDesc'){upd('projects',el.dataset.id,{description:el.value.trim()})}
+  else if(k==='mapDone'){V.mapDone=el.checked;render()}
 });
 document.addEventListener('submit',async e=>{const f=e.target,k=f.dataset.sub;if(!k)return;e.preventDefault();if(k!=='makeReport')f.querySelectorAll('[data-dirty]').forEach(x=>delete x.dataset.dirty);const v=Object.fromEntries(new FormData(f));
   const num=x=>x===''||x==null?null:(isFinite(+x)?+x:null);
   if(k==='createProject'){if(MW.np)MW.np.open=false;const id=await put('projects',{companyName:(v.companyName||'').trim(),name:titleCase(v.name.trim()),jobNumber:(v.jobNumber||'').trim(),address:v.address.trim(),group:v.group.trim(),lat:num(v.lat),lng:num(v.lng),status:'Active',createdAt:Date.now()});closeModal();V.pid=id;V.tab='project';V.ptab='photos';V.lastProject=id;saveView();render();toast('Project created')}
   else if(k==='saveProject'){upd('projects',f.dataset.id,{name:v.name.trim(),address:v.address.trim(),group:v.group.trim(),status:v.status==='Done'?'Done':'Active',lat:num(v.lat),lng:num(v.lng),tpProject:v.tpProject.trim(),companyName:(v.companyName||'').trim(),jobNumber:(v.jobNumber||'').trim(),radius:+v.radius||1200,customer:v.customer.trim(),phone:v.phone.trim()});toast('Job info saved')}
   else if(k==='comment'){const t=v.text.trim();if(!t)return;await put('comments',{photoId:f.dataset.id,projectId:PH(f.dataset.id)?.projectId,text:t,by:ME.id,byName:ME.name,at:Date.now()});S.members.filter(m=>m.name&&t.includes('@'+m.name)).forEach(m=>alertFor(m.id,`${ME.name} mentioned you: "${t.slice(0,120)}"`,{photoId:f.dataset.id,projectId:PH(f.dataset.id)?.projectId}));f.reset();$('#cmts').innerHTML=commentsHtml(f.dataset.id)}
+  else if(k==='bulkSave'){const ps=M.ids.map(PH).filter(p=>p&&!p.pending);let n=0;
+    for(const p of ps){const ch={};
+      if(v.zoneClear)ch.zone='';else if(v.zone.trim())ch.zone=titleCase(v.zone.trim());
+      if(v.tradeClear)ch.trade='';else if(v.trade.trim())ch.trade=titleCase(v.trade.trim());
+      let tags=[...(p.tags||[])];if(v.tagAdd&&!tags.includes(v.tagAdd))tags.push(v.tagAdd);if(v.tagRem)tags=tags.filter(t=>t!==v.tagRem);
+      if(v.port==='on'){ch.portfolio=true;if(!tags.includes('Portfolio'))tags.push('Portfolio')}else if(v.port==='off'){ch.portfolio=false;tags=tags.filter(t=>t!=='Portfolio')}
+      if(tags.join('|')!==(p.tags||[]).join('|'))ch.tags=tags;
+      if(v.proj&&v.proj!==p.projectId)ch.projectId=v.proj;
+      const t=v.note.trim();if(t)ch.note=v.noteAppend&&p.note?p.note.trim()+' '+t:t;
+      if(Object.keys(ch).length){await upd('photos',p.id,ch);n++}}
+    closeModal();V.selMode=false;V.sel=new Set();render();toast(n?`Saved changes to ${n} photo${n===1?'':'s'}`:'Nothing to change');}
+  else if(k==='pcomment'){const t=v.text.trim();if(!t)return;const pid=f.dataset.id;await put('comments',{photoId:null,projectId:pid,text:t,by:ME.id,byName:ME.name,at:Date.now()});S.members.filter(m=>m.name&&t.includes('@'+m.name)).forEach(m=>alertFor(m.id,`${ME.name} mentioned you on ${P(pid)?.name||'a job'}: "${t.slice(0,120)}"`,{projectId:pid}));f.reset();const c=$('#pconv');if(c)c.innerHTML=pconvHtml(pid)}
   else if(k==='saveTask'){const t=M.task;const tid=await put('tasks',{projectId:v.pid,title:v.title.trim(),type:v.type,assignee:v.assignee||null,assigneeText:v.assigneeText.trim(),due:v.due||'',photoId:t.photoId||null,done:false,createdAt:Date.now(),by:ME.name});if(v.assignee)alertFor(v.assignee,`${ME.name} assigned you a ${v.type==='punch'?'punch item':'task'}: ${v.title.trim()} (${P(v.pid)?.name||''})`,{taskId:tid,photoId:t.photoId||null,projectId:v.pid});closeModal();toast(v.type==='punch'?'Punch item added':'Task added')}
   else if(k==='saveMember'){const m=M.m||{};await put('members',{...(m.id?{id:m.id}:{}),name:v.name.trim(),role:v.role,phone:v.phone.trim(),company:v.company.trim(),trade:v.trade.trim()});closeModal()}
   else if(k==='ckAdd'){const c=S.checklists.find(x=>x.id===f.dataset.id);if(!v.t.trim())return;upd('checklists',c.id,{items:[...c.items,{t:v.t.trim(),needPhoto:false,done:false}]});renderModal();setTimeout(()=>$('#ce-new')?.focus(),30)}
@@ -1607,12 +2051,14 @@ document.addEventListener('submit',async e=>{const f=e.target,k=f.dataset.sub;if
 async function handleFiles(files,kind){
   if(!files.length)return;
   if(kind==='logo'){const f=files[0];if(!AS){toast('Uploads aren\'t available here.');return}toast('Uploading logo…');try{const up=await AS.upload(f);await put('settings',{...SET(),id:'company',logoUrl:up.url,logoAsset:up.id});LOGO.url=null;toast('Logo saved. New photos and PDFs will use it.')}catch(e){toast('Couldn\'t upload the logo. Try a PNG or JPG under 5 MB.')}return}
+  if(kind==='avatar'){try{toast('Saving your photo…');const blob=await avCrop(files[0]);let url;if(AS){const up=await AS.upload(blob);url=up.url}else url=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(blob)});
+    const cur=S.settings.find(x=>x.id==='avatars')||{id:'avatars',map:{}};const map={...(cur.map||{})};if(ME.id)map['id:'+ME.id]=url;map['n:'+ME.name]=url;await put('settings',{id:'avatars',map});toast('Your photo is set. It shows on the photos you take.')}catch(e){toast('Couldn\'t use that photo. Try another one.')}return}
   if(kind==='csv'){const t=await files[0].text();M={kind:'import',text:t,rows:mapRows(parseRows(t))};renderModal();return}
   if(kind==='audio'&&M&&M.voiceFor){const pid=M.voiceFor;const f=files[0];toast('Uploading voice note…');
     try{if(!AS)throw 0;const up=await AS.upload(f);upd('photos',pid,{voiceUrl:up.url,voiceAsset:up.id});renderModal();toast('Voice note added')}catch(e){toast('Couldn\'t upload the voice note. Try again with signal.')}return}
   const ctx={...(M&&M.ctx||{tags:[],zone:'',trade:'',note:''}),projectId:M&&M.pid||V.lastProject,lockProject:!!(M&&M.lockProject),beforeOf:M&&M.beforeOf,kind:kind==='doc'?'doc':undefined,fromCamera:kind==='photo'};
   if(!ctx.projectId&&!S.projects.length){toast('Add a Project first.');return}
-  if(ctx.projectId&&kind!=='doc')setLastZT(ctx.projectId,ctx.zone,ctx.trade);
+  if(ctx.projectId&&kind!=='doc')setLastZT(ctx.projectId,ctx.zone,ctx.trade,(ctx.tags||[])[0]);
   const cb=afterShot; afterShot=null;
   const keepOpen=M&&M.kind==='capture'&&!M.single&&!M.hidden;
   if(keepOpen){const cm=M;ctx.onAdd=id=>{cm.shot=[id,...(cm.shot||[])];if(M===cm)capStrip()}}
@@ -1624,11 +2070,15 @@ async function handleFiles(files,kind){
   else if(last&&!cb)toast(files.length>1?files.length+' saved':'Saved with stamp and proof code');
   if(keepOpen&&M&&M.kind==='capture'){M.ctx.note='';const n=$('#cap-note');if(n)n.value='';M.count=(M.count||0)+files.length;const c=$('#cap-count');if(c){c.hidden=false;c.className='callout info';c.innerHTML=`<b>${M.count} saved</b> this round. Keep going, or close when you're done. You can delete any photo later.`}const b=$('#cap-shoot');if(b)b.innerHTML=I('camera')+' Take Next Photo'}
 }
-[['#in-photo','photo'],['#in-lib','lib'],['#in-video','video'],['#in-doc','doc'],['#in-audio','audio'],['#in-logo','logo'],['#in-csv','csv']].forEach(([s,k])=>$(s).addEventListener('change',e=>{const fs=[...e.target.files];e.target.value='';handleFiles(fs,k)}));
+[['#in-avatar','avatar'],['#in-photo','photo'],['#in-lib','lib'],['#in-video','video'],['#in-doc','doc'],['#in-audio','audio'],['#in-logo','logo'],['#in-csv','csv']].forEach(([s,k])=>$(s).addEventListener('change',e=>{const fs=[...e.target.files];e.target.value='';handleFiles(fs,k)}));
 
+async function avCrop(file){const url=URL.createObjectURL(file);try{const img=await new Promise((r,j)=>{const i=new Image();i.onload=()=>r(i);i.onerror=j;i.src=url});
+  const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d'),m=Math.min(img.naturalWidth,img.naturalHeight);
+  x.drawImage(img,(img.naturalWidth-m)/2,(img.naturalHeight-m)/2,m,m,0,0,256,256);return await new Promise(r=>c.toBlob(r,'image/jpeg',.85))}finally{URL.revokeObjectURL(url)}}
 async function usage(){if(!AS)return;try{const r=await AS.list();const el=$('#usage');if(el)el.textContent=`Storage: ${r.usage.files} files, ${(r.usage.bytes/1048576).toFixed(1)} MB of ${(r.usage.maxBytes/1048576/1024).toFixed(1)} GB`}catch(e){}}
 
 /* ---------- start ---------- */
+try{matchMedia('(min-width:1000px)').addEventListener('change',()=>{render();if(M&&M.kind!=='cam')renderModal()})}catch(e){}
 render();
 (async()=>{
   const use=n=>window.claude?.use?.(n).catch(()=>null)||Promise.resolve(null);

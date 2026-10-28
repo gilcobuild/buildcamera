@@ -1,0 +1,46 @@
+name: iOS App
+on:
+  workflow_dispatch:
+  push:
+    branches: [ios]
+concurrency: { group: ios, cancel-in-progress: true }
+jobs:
+  build:
+    runs-on: macos-15
+    env:
+      HAS_KEYS: ${{ secrets.ASC_KEY_P8 != '' && secrets.ASC_KEY_ID != '' && secrets.ASC_ISSUER_ID != '' && secrets.APPLE_TEAM_ID != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm install --no-audit --no-fund
+      - run: bash scripts/setup-ios.sh
+      - name: Check that the app compiles (no signing)
+        run: |
+          set -o pipefail
+          xcodebuild $(bash scripts/xc.sh) -scheme App -configuration Debug -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build | tail -n 25
+      - name: Build, sign and send to TestFlight
+        if: env.HAS_KEYS == 'true'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -eo pipefail
+          KEY="$RUNNER_TEMP/AuthKey_${ASC_KEY_ID}.p8"
+          printf '%s\n' "$ASC_KEY_P8" > "$KEY"
+          AUTH=(-allowProvisioningUpdates -authenticationKeyPath "$KEY" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
+          xcodebuild $(bash scripts/xc.sh) -scheme App -configuration Release -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" archive "${AUTH[@]}" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic PRODUCT_BUNDLE_IDENTIFIER=com.gilcollc.buildcamera \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }} MARKETING_VERSION=1.0.${{ github.run_number }} | tail -n 25
+          sed "s/TEAM_ID/$APPLE_TEAM_ID/" ExportOptions.plist > "$RUNNER_TEMP/ExportOptions.plist"
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -exportPath "$RUNNER_TEMP/out" "${AUTH[@]}" | tail -n 25
+          rm -f "$KEY"
+          echo "Uploaded build ${{ github.run_number }} to App Store Connect. It shows in TestFlight after Apple finishes processing (usually 10 to 30 minutes)."
+      - name: Waiting on Apple keys
+        if: env.HAS_KEYS != 'true'
+        run: echo "The app compiles. Add the four App Store Connect secrets (see README) to sign it and send it to TestFlight."

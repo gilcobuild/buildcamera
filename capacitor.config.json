@@ -1,0 +1,15 @@
+{
+  "appId": "com.gilcollc.buildcamera",
+  "appName": "Build Camera",
+  "webDir": "www",
+  "server": {
+    "url": "https://buildcamera.com",
+    "cleartext": false,
+    "allowNavigation": ["buildcamera.com", "*.buildcamera.com", "*.supabase.co"]
+  },
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#1b2024",
+    "limitsNavigationsToAppBoundDomains": false
+  }
+}

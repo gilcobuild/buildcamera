@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-4NXX9h/I4fHVTaA7KZVd9wPoEncgGDXI270BEc5qpJo=' 'sha256-+QXsLdfT/oZFuntGMNwsFVuzXl5VOPHxSfi8g5Bdi08=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Q5CKZdETPcn+VQcPD6j1sCfp7L8z62ccEoEneQfpM+g=' 'sha256-+QXsLdfT/oZFuntGMNwsFVuzXl5VOPHxSfi8g5Bdi08=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -71,13 +71,18 @@ function showSignIn(mode){
   g.querySelector('#bcf').onsubmit=async e=>{e.preventDefault();const em=g.querySelector('#bc-email').value.trim(),pw=g.querySelector('#bc-pw')?.value,b=g.querySelector('#bcgo');lsSet('bc-email',em);say('');
     try{
       if(mode==='reset'){busy(b,true,'Sending…');const{error}=await sb.auth.resetPasswordForEmail(em,{redirectTo:location.origin+location.pathname});if(error)throw error;say('Check your email for the reset link.');busy(b,false,'Email Me a Reset Link');return}
-      if(mode==='up'){busy(b,true,'Creating…');const nm=g.querySelector('#bc-name').value.trim();lsSet('bc-name',nm);const{data,error}=await sb.auth.signUp({email:em,password:pw,options:{data:{name:nm},emailRedirectTo:location.origin+location.pathname}});if(error)throw error;
+      if(mode==='up'){busy(b,true,'Creating…');const nm=g.querySelector('#bc-name').value.trim();lsSet('bc-name',nm);if(await pwned(pw))throw{message:BREACHED};const{data,error}=await sb.auth.signUp({email:em,password:pw,options:{data:{name:nm},emailRedirectTo:location.origin+location.pathname}});if(error)throw error;
         if(!data.session){say('Almost done. Open the email we just sent and tap the link to confirm, then sign in here.');busy(b,false,'Create Account');return}}
       else{busy(b,true,'Signing in…');const{error}=await sb.auth.signInWithPassword({email:em,password:pw});if(error)throw error}
       await afterAuth();
     }catch(err){busy(b,false,mode==='up'?'Create Account':mode==='reset'?'Email Me a Reset Link':'Sign In');say(niceErr(err),true)}};
 }
-function niceErr(e){const m=String(e&&e.message||e||'');
+/* leaked-password check: only the first 5 letters of the password's fingerprint leave the phone (haveibeenpwned.com) */
+const BREACHED='That password has shown up in a data breach on another website, so hackers try it first. Pick a different one.';
+async function pwned(pw){try{const h=[...new Uint8Array(await crypto.subtle.digest('SHA-1',new TextEncoder().encode(pw)))].map(b=>b.toString(16).padStart(2,'0')).join('').toUpperCase();
+  const r=await fetch('https://api.pwnedpasswords.com/range/'+h.slice(0,5),{headers:{'Add-Padding':'true'},signal:AbortSignal.timeout?AbortSignal.timeout(5000):undefined});if(!r.ok)return false;
+  return (await r.text()).split('\n').some(l=>{const[x,n]=l.trim().split(':');return x===h.slice(5)&&+n>0})}catch(e){return false}}
+function niceErr(e){const m=String(e&&e.message||e||'');if(m===BREACHED)return m;
   if(/Invalid login/i.test(m))return 'That email and password don\'t match. Try again or reset your password.';
   if(/not confirmed/i.test(m))return 'Confirm your email first. Open the email we sent and tap the link, then sign in.';
   if(/already registered/i.test(m))return 'That email already has an account. Sign in instead.';
@@ -221,7 +226,7 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-bc]'
 new MutationObserver(()=>{const m=document.getElementById('bc-mem');if(m&&!m.dataset.l){m.dataset.l=1;BC.members()}}).observe(document.documentElement,{childList:true,subtree:true});
 
 /* ---------- start ---------- */
-sb.auth.onAuthStateChange((ev)=>{if(ev==='PASSWORD_RECOVERY'){const g=gate(`<h2>Set a New Password</h2><p id="bcmsg" class="msg" hidden></p><form id="bcr" class="fm"><label>New Password<input id="bc-np" type="password" minlength="8" autocomplete="new-password" required></label><button class="pri" type="submit">Save Password</button></form>`);g.querySelector('#bcr').onsubmit=async e2=>{e2.preventDefault();const{error}=await sb.auth.updateUser({password:g.querySelector('#bc-np').value});if(error){say(niceErr(error),true);return}afterAuth()}}});
+sb.auth.onAuthStateChange((ev)=>{if(ev==='PASSWORD_RECOVERY'){const g=gate(`<h2>Set a New Password</h2><p id="bcmsg" class="msg" hidden></p><form id="bcr" class="fm"><label>New Password<input id="bc-np" type="password" minlength="8" autocomplete="new-password" required></label><button class="pri" type="submit">Save Password</button></form>`);g.querySelector('#bcr').onsubmit=async e2=>{e2.preventDefault();const np=g.querySelector('#bc-np').value;if(await pwned(np)){say(BREACHED,true);return}const{error}=await sb.auth.updateUser({password:np});if(error){say(niceErr(error),true);return}afterAuth()}}});
 document.addEventListener('DOMContentLoaded',async()=>{const{data:{session}}=await sb.auth.getSession();if(session)afterAuth();else showSignIn()});
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 })();

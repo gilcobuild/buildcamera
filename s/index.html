@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Tw8MS/VDh9Dse0BvLIzwHQ5FVIIcZLAJhJeHqNiYMNw=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Shared Photos · Build Camera</title>
 <meta name="robots" content="noindex">
@@ -97,10 +99,12 @@ function fail(t,b){$('#co').textContent='Build Camera';$('#ttl').textContent=t;$
 async function load(){
   if(!tok){fail('No link found','This page needs the full link that was sent to you.');return}
   if(!sb){fail('Can\'t load right now','Check your connection and reload the page.');return}
-  const{data,error}=await sb.rpc('sc_share_get',{tok});
-  if(error){fail('Can\'t load right now','Check your connection and reload the page.');return}
+  let data=null;try{const r=await fetch(SB_URL+'/functions/v1/bc-share',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+SB_KEY},body:JSON.stringify({t:tok})});if(!r.ok)throw 0;data=await r.json()}
+  catch(e){fail('Can\'t load right now','Check your connection and reload the page.');return}
   if(!data){fail('This link has expired','Ask the person who sent it for a new link.');return}
-  D=data;PH=(data.photos||[]).filter(p=>p.url);render()}
+  D=data;PH=(data.photos||[]).filter(p=>typeof p.url==='string'&&/^https:\/\//.test(p.url));render();
+  /* photo links last an hour; quietly refresh them */
+  clearTimeout(window.__rf);window.__rf=setTimeout(()=>{if($('#vw').hidden)load()},50*60e3)}
 function cmFor(id){return (D.comments||[]).filter(c=>c.photoId===id)}
 function render(){
   $('#co').textContent=D.company||'';

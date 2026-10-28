@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Shared Photos · Build Camera</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--bg:#eef0ed;--panel:#fff;--sunk:#f6f7f5;--ink:#1b2024;--muted:#59626a;--line:#d7dbd5;--accent:#1d5c8f;--accent-ink:#fff;--stamp:#f2b705;--stamp-ink:#1b2024;--bad:#b3261e;
+ --f-display:"Archivo Narrow","Arial Narrow",Arial,sans-serif;--f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121619;--panel:#1b2125;--sunk:#161b1e;--ink:#e6eaed;--muted:#9ba6ae;--line:#2d363c;--accent:#6eaee6;--accent-ink:#0b1824;--bad:#f08b83;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121619;--panel:#1b2125;--sunk:#161b1e;--ink:#e6eaed;--muted:#9ba6ae;--line:#2d363c;--accent:#6eaee6;--accent-ink:#0b1824;--bad:#f08b83;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+[hidden]{display:none!important}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+header{background:#1b2024;color:#fff;padding:calc(env(safe-area-inset-top,0px) + 16px) max(16px,env(safe-area-inset-right,0px)) 18px max(16px,env(safe-area-inset-left,0px))}
+header .in{max-width:1100px;margin:0 auto;display:grid;gap:4px}
+.co{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--stamp)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,6vw,38px);line-height:1.05;margin:0}
+.ad{color:#cfd6db;font-size:14px}
+.meta{font-family:var(--f-mono);font-size:12px;color:#aab4bc}
+main{max-width:1100px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right,0px)) 60px max(16px,env(safe-area-inset-left,0px))}
+h2.day{font-family:var(--f-mono);font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:4px}
+@media (min-width:700px){.grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}}
+.t{position:relative;aspect-ratio:1;border:0;padding:0;background:var(--sunk);border-radius:4px;overflow:hidden;cursor:pointer}
+.t img{width:100%;height:100%;object-fit:cover;display:block}
+.t .b{position:absolute;left:4px;bottom:4px;font-family:var(--f-mono);font-size:10px;background:rgba(0,0,0,.6);color:#fff;border-radius:4px;padding:1px 5px}
+.t .c{position:absolute;right:4px;top:4px;font-size:10px;font-weight:700;background:var(--stamp);color:var(--stamp-ink);border-radius:999px;padding:1px 6px}
+.empty{background:var(--panel);border:1px dashed var(--line);border-radius:12px;padding:40px 18px;text-align:center;color:var(--muted);margin-top:24px}
+.empty b{display:block;color:var(--ink);font-size:18px;margin-bottom:6px}
+
+.foot{max-width:1100px;margin:0 auto;padding:0 16px 40px;font-size:12.5px;color:var(--muted)}
+/* viewer */
+#vw{position:fixed;inset:0;z-index:20;background:#000;display:flex;flex-direction:column}
+.vtop{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 8px) 10px 8px;color:#fff}
+.vtop b{flex:1;font-size:14px}
+.ib{width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0;text-decoration:none}
+.ib svg{width:22px;height:22px}
+.track{flex:1;display:grid;grid-auto-flow:column;grid-auto-columns:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;min-height:0}
+.track::-webkit-scrollbar{display:none}
+.slide{scroll-snap-align:center;overflow-y:auto;display:grid;align-content:start;min-height:0}
+.ph{display:grid;place-items:center;background:#000;min-height:40vh}
+.fig{position:relative;display:inline-block;line-height:0;max-width:100%}
+.fig img,.fig video{max-width:100%;max-height:68vh;display:block}
+.pin{position:absolute;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:var(--stamp);color:var(--stamp-ink);border:2px solid #fff;display:grid;place-items:center;font:700 12px/1 var(--f-body);box-shadow:0 1px 4px rgba(0,0,0,.6)}
+.info{background:var(--panel);color:var(--ink);padding:14px 16px calc(env(safe-area-inset-bottom,0px) + 24px);display:grid;gap:10px}
+.info .when{font-weight:600}
+.kv{font-size:13.5px;color:var(--muted);display:grid;gap:2px}
+.code{font-family:var(--f-mono);font-size:11.5px;background:var(--stamp);color:var(--stamp-ink);padding:1px 6px;border-radius:4px;justify-self:start}
+.pins{margin:0;padding-left:20px;font-size:14px}
+.cm{border-top:1px solid var(--line);padding-top:8px;display:grid;gap:8px}
+.cm .one{font-size:14px}.cm .one b{font-size:13px}.cm .one time{font-size:12px;color:var(--muted);margin-left:6px}
+.cf{display:grid;gap:8px}
+.cf input,.cf textarea{width:100%;border:1px solid var(--line);background:var(--panel);border-radius:9px;padding:10px 11px;min-height:44px}
+.cf textarea{min-height:70px;resize:vertical}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:10px 14px;font-weight:600;min-height:44px;cursor:pointer;justify-self:start}
+.msg{font-size:13px;color:var(--muted)}
+.nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:#111;display:none;place-items:center;cursor:pointer}
+.nav svg{width:22px;height:22px}
+@media (hover:hover) and (min-width:800px){.nav{display:grid}}
+.nav.l{left:12px}.nav.r{right:12px}
+</style>
+</head>
+<body>
+<header><div class="in"><span class="co" id="co">Loading…</span><h1 id="ttl">Shared Photos</h1><span class="ad" id="ad"></span><span class="meta" id="meta"></span></div></header>
+<main id="main"><p class="msg">Loading photos…</p></main>
+<div class="foot" id="foot"></div>
+<div id="vw" hidden role="dialog" aria-modal="true" aria-label="Photo viewer">
+ <div class="vtop"><button class="ib" id="vx" aria-label="Close">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><b id="vc"></b><a class="ib" id="vdl" href="#" target="_blank" rel="noopener" aria-label="Open the full-size photo">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19h14"/></svg></a></div>
+ <div style="position:relative;flex:1;display:flex;min-height:0"><div class="track" id="track"></div>
+  <button class="nav l" id="vl" aria-label="Previous photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button class="nav r" id="vr" aria-label="Next photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+const SB_URL='https://zrdgebzujpsatzxcvryi.supabase.co',SB_KEY='sb_publishable_VZXm4AVVTzMUzg_HFs_xug_F4ixJM5R';
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const dayKey=t=>{const d=new Date(t);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+const fDay=t=>new Date(t).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+const fTime=t=>new Date(t).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+const tok=new URLSearchParams(location.search).get('t')||'';
+let D=null,PH=[],cur=0;
+const sb=window.supabase?window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false}}):null;
+function fail(t,b){$('#co').textContent='Build Camera';$('#ttl').textContent=t;$('#ad').textContent='';$('#meta').textContent='';$('#main').innerHTML=`<div class="empty"><b>${esc(t)}</b>${esc(b)}</div>`}
+async function load(){
+  if(!tok){fail('No link found','This page needs the full link that was sent to you.');return}
+  if(!sb){fail('Can\'t load right now','Check your connection and reload the page.');return}
+  const{data,error}=await sb.rpc('sc_share_get',{tok});
+  if(error){fail('Can\'t load right now','Check your connection and reload the page.');return}
+  if(!data){fail('This link has expired','Ask the person who sent it for a new link.');return}
+  D=data;PH=(data.photos||[]).filter(p=>p.url);render()}
+function cmFor(id){return (D.comments||[]).filter(c=>c.photoId===id)}
+function render(){
+  $('#co').textContent=D.company||'';
+  $('#ttl').textContent=D.title||D.project?.name||'Shared Photos';
+  document.title=($('#ttl').textContent)+' · '+(D.company||'Build Camera');
+  $('#ad').textContent=[D.title&&D.project?.name&&D.title!==D.project.name?D.project.name:'',D.project?.address||''].filter(Boolean).join(' · ');
+  $('#meta').textContent=`${PH.length} photo${PH.length===1?'':'s'}${D.kind==='album'&&D.album?' · Album: '+D.album:''}${D.expiresAt?' · Link works until '+new Date(D.expiresAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):''}`;
+  if(!PH.length){$('#main').innerHTML='<div class="empty"><b>No photos yet</b>New photos show up here as they are added.</div>';return}
+  const g={};PH.forEach((p,i)=>{const k=dayKey(p.takenAt);(g[k]=g[k]||[]).push(i)});
+  $('#main').innerHTML=Object.keys(g).sort().reverse().map(k=>`<h2 class="day">${esc(fDay(PH[g[k][0]].takenAt))} · ${g[k].length}</h2><div class="grid">${g[k].slice().reverse().map(i=>{const p=PH[i],n=cmFor(p.id).length;return `<button class="t" data-i="${i}" aria-label="Open photo from ${esc(fTime(p.takenAt))}">${p.kind==='video'?'<span style="display:grid;place-items:center;height:100%;color:var(--muted)">Video</span>':`<img src="${esc(p.url)}" alt="" loading="lazy">`}<span class="b">${esc(fTime(p.takenAt))}</span>${n?`<span class="c">${n} comment${n>1?'s':''}</span>`:''}</button>`}).join('')}</div>`).join('');
+  $('#foot').innerHTML=`Shared from Build Camera by ${esc(D.company||'the job team')}. Each photo is stamped with its date, time and GPS when it was taken.${D.allowComments?' You can leave a comment on any photo.':''}`;
+}
+function slide(i){const p=PH[i],cs=cmFor(p.id),pins=p.pins||[];
+  const media=p.kind==='video'?`<video src="${esc(p.url)}" controls playsinline></video>`:`<img src="${esc(p.url)}" alt="Jobsite photo ${i+1}" loading="lazy">`;
+  const who=localStorage.getItem('bc-guest-name')||'';
+  return `<div class="slide" data-i="${i}"><div class="ph"><span class="fig">${media}${pins.map((q,j)=>`<span class="pin" style="left:${q.x*100}%;top:${q.y*100}%" aria-hidden="true">${j+1}</span>`).join('')}</span></div>
+  <div class="info"><span class="when">${esc(fDay(p.takenAt))} at ${esc(fTime(p.takenAt))}</span>
+   <div class="kv">${[p.zone&&'Work Zone: '+p.zone,p.trade&&'Trade: '+p.trade,(p.tags||[]).length&&'Tags: '+p.tags.join(', '),p.byName&&'Taken by '+p.byName,p.lat!=null&&p.lng!=null&&`GPS ${(+p.lat).toFixed(5)}, ${(+p.lng).toFixed(5)}${p.gpsSource==='project'?' (job location)':''}`].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')}</div>
+   ${p.note?`<div>${esc(p.note)}</div>`:''}
+   ${pins.length?`<ol class="pins">${pins.map(q=>`<li>${esc([q.tag,q.note].filter(Boolean).join(': ')||'Marked spot')}</li>`).join('')}</ol>`:''}
+   ${p.code?`<span class="code" title="Proof code">${esc(p.code)}</span>`:''}
+   ${D.allowComments?`<div class="cm">${cs.length?cs.map(c=>`<div class="one"><b>${esc(c.byName||'')}</b><time>${esc(fDay(c.at))} ${esc(fTime(c.at))}</time><div>${esc(c.text)}</div></div>`).join(''):'<span class="msg">No comments yet.</span>'}
+    <form class="cf" data-id="${esc(p.id)}"><input type="text" name="who" value="${esc(who)}" placeholder="Your name" maxlength="60" required aria-label="Your name"><textarea name="msg" placeholder="Add a comment for the team" maxlength="1000" required aria-label="Comment"></textarea><button class="btn" type="submit">Post Comment</button><span class="msg" role="status"></span></form></div>`:''}
+  </div></div>`}
+function openV(i){cur=i;$('#track').innerHTML=PH.map((_,j)=>slide(j)).join('');$('#vw').hidden=false;document.body.style.overflow='hidden';
+  requestAnimationFrame(()=>{const t=$('#track');t.scrollLeft=t.clientWidth*i;upd()})}
+function upd(){const t=$('#track');cur=Math.round(t.scrollLeft/Math.max(1,t.clientWidth));$('#vc').textContent=`${cur+1} of ${PH.length}`;$('#vdl').href=PH[cur]?.url||'#'}
+function closeV(){$('#vw').hidden=true;$('#track').innerHTML='';document.body.style.overflow=''}
+document.addEventListener('click',e=>{const t=e.target.closest('.t');if(t){openV(+t.dataset.i);return}
+  if(e.target.closest('#vx'))closeV();
+  if(e.target.closest('#vl')){const tr=$('#track');tr.scrollBy({left:-tr.clientWidth,behavior:'smooth'})}
+  if(e.target.closest('#vr')){const tr=$('#track');tr.scrollBy({left:tr.clientWidth,behavior:'smooth'})}});
+$('#track').addEventListener('scroll',()=>{clearTimeout(upd.t);upd.t=setTimeout(upd,60)},{passive:true});
+document.addEventListener('keydown',e=>{if($('#vw').hidden)return;if(e.key==='Escape')closeV();if(/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName||''))return;if(e.key==='ArrowRight')$('#vr').click();if(e.key==='ArrowLeft')$('#vl').click()});
+document.addEventListener('submit',async e=>{const f=e.target.closest('.cf');if(!f)return;e.preventDefault();const st=f.querySelector('.msg'),b=f.querySelector('button');
+  const who=f.who.value.trim(),msg=f.msg.value.trim();if(!who||!msg){st.textContent='Add your name and a comment.';return}
+  b.disabled=true;st.textContent='Posting…';try{localStorage.setItem('bc-guest-name',who)}catch(_){}
+  const{error}=await sb.rpc('sc_share_comment',{tok,photo:f.dataset.id,who,msg});b.disabled=false;
+  if(error){st.textContent=/not open|expired/i.test(error.message)?'Comments are closed on this link.':'Couldn\'t post. Check your connection and try again.';return}
+  D.comments=[...(D.comments||[]),{photoId:f.dataset.id,text:msg,byName:who+' (guest)',at:Date.now(),guest:true}];
+  const i=cur,t=$('#track'),y=t.children[i]?.scrollTop||0;t.children[i].outerHTML=slide(i);t.children[i].scrollTop=y;render();st.textContent='';
+  const ns=t.children[i].querySelector('.cm .msg[role=status]');if(ns)ns.textContent='Posted. The team will see it.'});
+load();
+})();
+</script>
+</body>
+</html>

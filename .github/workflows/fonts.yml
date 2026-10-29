@@ -1,0 +1,22 @@
+name: Fetch app fonts
+on:
+  push:
+    branches: [store-assets]
+    paths: [.github/workflows/fonts.yml]
+permissions:
+  contents: write
+jobs:
+  fonts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get Archivo Narrow, IBM Plex Sans and Plex Mono (SIL Open Font License)
+        run: |
+          git clone -q --depth 1 --filter=blob:none --sparse https://github.com/google/fonts gf
+          cd gf && git sparse-checkout set ofl/archivonarrow ofl/ibmplexsans ofl/ibmplexmono && cd ..
+          mkdir -p fonts && cp gf/ofl/archivonarrow/*.ttf gf/ofl/ibmplexsans/*.ttf gf/ofl/ibmplexmono/*.ttf fonts/ && ls fonts > fonts/list.txt
+          rm -rf gf
+      - name: Save
+        run: |
+          git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
+          git add fonts; git commit -m "App fonts" || exit 0; git push

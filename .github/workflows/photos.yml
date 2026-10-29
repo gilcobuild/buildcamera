@@ -19,7 +19,7 @@ jobs:
           while read -r id name; do
             [ -z "$id" ] && continue
             code=$(curl -sSL -A "$UA" -o "raw/$name.jpg" -w "%{http_code} %{url_effective}" "https://unsplash.com/photos/$id/download?force=true" || true)
-            echo "$name: $code $(stat -c %s raw/$name.jpg 2>/dev/null)"
+            echo "$name: $code $(stat -c %s raw/$name.jpg 2>/dev/null)" | tee -a fetch-log.txt; head -c 300 "raw/$name.jpg" | tr -cd "[:print:]" | head -c 200 >> fetch-log.txt; echo >> fetch-log.txt
           done < photos.txt
           python3 - <<'PY'
           import os
@@ -29,12 +29,12 @@ jobs:
                   im = ImageOps.exif_transpose(Image.open('raw/'+f)).convert('RGB')
                   im.thumbnail((1800, 1800))
                   im.save('photos/'+f, quality=82, optimize=True)
-                  print('ok', f, im.size)
+                  print('ok', f, im.size, file=open('fetch-log.txt','a'))
               except Exception as e:
-                  print('bad', f, e)
+                  print('bad', f, e, file=open('fetch-log.txt','a'))
           PY
           ls -la photos
       - name: Save
         run: |
           git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
-          git add photos; git commit -m "Sample photos from Unsplash" || exit 0; git push
+          git add photos fetch-log.txt; git commit -m "Sample photos from Unsplash" || exit 0; git push

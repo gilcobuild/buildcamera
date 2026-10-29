@@ -17,4 +17,6 @@ if [ -f "$ICON/AppIcon-512@2x.png" ]; then cp assets/AppIcon-1024.png "$ICON/App
   cp assets/AppIcon-1024.png "$ICON/AppIcon-1024.png"
   printf '{"images":[{"filename":"AppIcon-1024.png","idiom":"universal","platform":"ios","size":"1024x1024"}],"info":{"author":"xcode","version":1}}' > "$ICON/Contents.json"
 fi
+# iPhone only (no iPad version, so Apple doesn't require iPad screenshots)
+sed -i '' 's/TARGETED_DEVICE_FAMILY = "1,2";/TARGETED_DEVICE_FAMILY = 1;/g' ios/App/App.xcodeproj/project.pbxproj || true
 echo "iOS project ready"

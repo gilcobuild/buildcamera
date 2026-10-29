@@ -34,7 +34,7 @@ jobs:
           AUTH=(-allowProvisioningUpdates -authenticationKeyPath "$KEY" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
           xcodebuild $(bash scripts/xc.sh) -scheme App -configuration Release -destination 'generic/platform=iOS' \
             -archivePath "$RUNNER_TEMP/App.xcarchive" archive "${AUTH[@]}" \
-            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic PRODUCT_BUNDLE_IDENTIFIER=com.gilcollc.buildcamera \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" TARGETED_DEVICE_FAMILY=1 CODE_SIGN_STYLE=Automatic PRODUCT_BUNDLE_IDENTIFIER=com.gilcollc.buildcamera \
             CURRENT_PROJECT_VERSION=${{ github.run_number }} MARKETING_VERSION=1.0.${{ github.run_number }} | tail -n 25
           sed "s/TEAM_ID/$APPLE_TEAM_ID/" ExportOptions.plist > "$RUNNER_TEMP/ExportOptions.plist"
           xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \

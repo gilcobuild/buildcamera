@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Q5CKZdETPcn+VQcPD6j1sCfp7L8z62ccEoEneQfpM+g=' 'sha256-+QXsLdfT/oZFuntGMNwsFVuzXl5VOPHxSfi8g5Bdi08=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-bNbsPRbyf+BZjEQeV/xHs6FNwixdXeDSGeyjl2uvKOA=' 'sha256-+QXsLdfT/oZFuntGMNwsFVuzXl5VOPHxSfi8g5Bdi08=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -51,7 +51,7 @@ const css=`#bcgate{position:fixed;inset:0;z-index:100;background:var(--bg,#eef0e
 #bcgate .msg.bad{background:var(--bad-soft,#f9e3e1);color:var(--bad,#b3261e)}
 #bcgate .note{font-size:13px;color:var(--muted,#59626a)}`;
 function gate(html){let g=document.getElementById('bcgate');if(!g){const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);g=document.createElement('div');g.id='bcgate';g.setAttribute('role','dialog');g.setAttribute('aria-label','Sign in to Build Camera');document.body.appendChild(g)}
-  g.innerHTML=`<div class="bx"><div class="lg"><i aria-hidden="true"><b></b></i><h1>Build Camera<small>Jobsite photos</small></h1></div>${html}</div>`;g.hidden=false;return g}
+  g.innerHTML=`<div class="bx"><div class="lg"><i aria-hidden="true"><b></b></i><h1>Build Camera<small>Jobsite photos</small></h1></div>${html}<p class="note" style="text-align:center;margin-top:8px"><a href="/privacy/" target="_blank" rel="noopener" style="color:inherit">Privacy Policy</a></p></div>`;g.hidden=false;return g}
 function closeGate(){const g=document.getElementById('bcgate');if(g)g.remove()}
 function say(t,bad){const m=document.getElementById('bcmsg');if(m){m.textContent=t;m.className='msg'+(bad?' bad':'');m.hidden=!t}}
 function busy(b,on,txt){if(!b)return;b.disabled=on;if(txt)b.textContent=txt}
@@ -202,7 +202,10 @@ window.BC={
   teamCard(){return `<div class="card stack" id="bc-team"><h2>Who Can Sign In</h2><p class="note">${esc(TEAMNAME)} · you're signed in as ${esc(USR?.email||'')} (${esc(ROLE)}).</p>
    ${['Owner','Office'].includes(ROLE)?`<div class="row"><label class="f" style="flex:1;min-width:150px">New Person's Role<select id="bc-role"><option>Crew</option><option>Super</option><option>Office</option><option>Trade Partner</option></select></label><button class="btn pri" data-bc="invite" style="align-self:end">Make Invite Code</button></div><div id="bc-inv"></div>`:'<p class="note">Ask the owner or office for an invite code to add someone.</p>'}
    <div id="bc-mem" class="list"></div></div>`},
-  accountCard(){return `<div class="card stack"><h2>Account</h2><p class="note">Signed in as ${esc(USR?.email||'')} · ${esc(TEAMNAME)}</p><div class="row"><button class="btn" data-bc="install">Add to Home Screen</button><button class="btn bad" data-bc="signout">Sign Out</button></div></div>`},
+  accountCard(){return `<div class="card stack"><h2>Account</h2><p class="note">Signed in as ${esc(USR?.email||'')} · ${esc(TEAMNAME)}</p><div class="row"><button class="btn" data-bc="install">Add to Home Screen</button><button class="btn bad" data-bc="signout">Sign Out</button></div>
+   <details><summary class="note" style="cursor:pointer">Delete my account</summary><div class="stack" style="gap:8px;margin-top:8px"><p class="note" style="margin:0">This removes you from ${esc(TEAMNAME)} and deletes your sign-in. If you're the only person on the team, the whole team is deleted too, with every job and photo. This can't be undone.</p>
+   <label class="f">Type DELETE to confirm<input id="bc-delc" autocomplete="off" autocapitalize="characters"></label><button class="btn bad" data-bc="delacct">Delete My Account</button><p id="bc-delmsg" class="note" role="status"></p></div></details>
+   <p class="note" style="margin:0"><a href="/privacy/" target="_blank" rel="noopener">Privacy Policy</a></p></div>`},
   async signOut(){let n=0;try{n=window.BCqueued?await window.BCqueued():0}catch(e){}
     if(n&&!confirm(`${n} photo${n>1?'s haven\'t':' hasn\'t'} uploaded yet. Signing out deletes ${n>1?'them':'it'} from this phone. Sign out anyway?`))return;
     window.__bcOut=true;
@@ -221,6 +224,14 @@ window.BC={
 function alertBox(h){const t=document.getElementById('toast');if(t){t.innerHTML=h;t.hidden=false;clearTimeout(alertBox.t);alertBox.t=setTimeout(()=>t.hidden=true,7000)}}
 let deferredInstall=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e});
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-bc]');if(!b)return;e.preventDefault();const k=b.dataset.bc;
+  if(k==='delacct'){const c=document.getElementById('bc-delc'),msg=document.getElementById('bc-delmsg');if((c?.value||'').trim().toUpperCase()!=='DELETE'){msg.textContent='Type DELETE in the box first.';c?.focus();return}
+    b.disabled=true;msg.textContent='Deleting…';
+    (async()=>{try{const{data:{session}}=await sb.auth.getSession();const r=await fetch(SB_URL+'/functions/v1/bc-api',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+(session?.access_token||'')},body:JSON.stringify({action:'deleteAccount',confirm:'DELETE'})});const j=await r.json().catch(()=>({}));
+      if(!r.ok||!j.ok){b.disabled=false;msg.textContent=j.error||'Couldn\'t delete right now. Check your signal and try again.';return}
+      window.__bcOut=true;try{await sb.auth.signOut()}catch(_){}try{Object.keys(localStorage).filter(k=>/^(pc-|bc-|sb-)/.test(k)).forEach(k=>localStorage.removeItem(k))}catch(_){}try{sessionStorage.clear()}catch(_){}
+      try{await new Promise(r=>{const q=indexedDB.deleteDatabase('picturecam');q.onsuccess=q.onerror=q.onblocked=()=>r()})}catch(_){}
+      gate('<h2>Account deleted</h2><p class="msg">Your Build Camera account has been deleted. Thanks for using Build Camera.</p>')}
+    catch(err){b.disabled=false;msg.textContent='Couldn\'t delete right now. Check your signal and try again.'}})();return}
   if(k==='signout')BC.signOut();else if(k==='invite')BC.invite();else if(k==='install'){if(deferredInstall){deferredInstall.prompt();deferredInstall=null}else BC.installHelp()}
   else if(k==='shareinv'){const t=document.getElementById('bc-invmsg').value;try{await navigator.share({text:t})}catch(err){try{await navigator.clipboard.writeText(t);alertBox('Copied. Paste it into a text.')}catch(e2){}}}});
 new MutationObserver(()=>{const m=document.getElementById('bc-mem');if(m&&!m.dataset.l){m.dataset.l=1;BC.members()}}).observe(document.documentElement,{childList:true,subtree:true});

@@ -1,5 +1,5 @@
-// Build Camera offline shell, version 4388e0bc8f
-const C='bc-4388e0bc8f';const SHELL=['./','index.html','manifest.webmanifest','icon-192.png','apple-touch-icon.png'];
+// Build Camera offline shell, version 4f4ea4d498
+const C='bc-4f4ea4d498';const SHELL=['./','index.html','manifest.webmanifest','icon-192.png','apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET')return;

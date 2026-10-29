@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-bNbsPRbyf+BZjEQeV/xHs6FNwixdXeDSGeyjl2uvKOA=' 'sha256-4UKaGWT1b4lORQ0CdprtSrffy9ThD0V3YE98+p0AjbQ=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-+DGCW3ttXuZco2Xs8PM63leWIQmmUX+qHGTbd4TOVHc=' 'sha256-ADAtiG0JFuRl2pvwvfjnO5ZQY0hJUVatyu6NiwJEBjU=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -51,7 +51,7 @@ const css=`#bcgate{position:fixed;inset:0;z-index:100;background:var(--bg,#eef0e
 #bcgate .msg.bad{background:var(--bad-soft,#f9e3e1);color:var(--bad,#b3261e)}
 #bcgate .note{font-size:13px;color:var(--muted,#59626a)}`;
 function gate(html){let g=document.getElementById('bcgate');if(!g){const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);g=document.createElement('div');g.id='bcgate';g.setAttribute('role','dialog');g.setAttribute('aria-label','Sign in to Build Camera');document.body.appendChild(g)}
-  g.innerHTML=`<div class="bx"><div class="lg"><i aria-hidden="true"><b></b></i><h1>Build Camera<small>Jobsite photos</small></h1></div>${html}<p class="note" style="text-align:center;margin-top:8px"><a href="/privacy/" target="_blank" rel="noopener" style="color:inherit">Privacy Policy</a></p></div>`;g.hidden=false;return g}
+  g.innerHTML=`<div class="bx"><div class="lg"><i aria-hidden="true"><b></b></i><h1>Build Camera<small>Jobsite photos</small></h1></div>${html}<p class="note" style="text-align:center;margin-top:8px"><a href="/terms/" target="_blank" rel="noopener" style="color:inherit">Terms</a> · <a href="/privacy/" target="_blank" rel="noopener" style="color:inherit">Privacy Policy</a></p></div>`;g.hidden=false;return g}
 function closeGate(){const g=document.getElementById('bcgate');if(g)g.remove()}
 function say(t,bad){const m=document.getElementById('bcmsg');if(m){m.textContent=t;m.className='msg'+(bad?' bad':'');m.hidden=!t}}
 function busy(b,on,txt){if(!b)return;b.disabled=on;if(txt)b.textContent=txt}
@@ -65,6 +65,7 @@ function showSignIn(mode){
    <label>Email<input id="bc-email" type="email" autocomplete="email" inputmode="email" required value="${esc(lsGet('bc-email')||'')}"></label>
    ${mode!=='reset'?`<label>Password<input id="bc-pw" type="password" autocomplete="${mode==='up'?'new-password':'current-password'}" minlength="8" required></label>`:''}
    <button class="pri" type="submit" id="bcgo">${mode==='up'?'Create Account':mode==='reset'?'Email Me a Reset Link':'Sign In'}</button>
+   ${mode==='up'?'<p class="note" style="margin:0;text-align:center">By creating an account you agree to the <a href="/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>':''}
   </form>
   ${mode==='in'?'<button class="lnk" data-m="up">New here? Create an account</button><button class="lnk" data-m="reset">Forgot password?</button>':'<button class="lnk" data-m="in">Back to sign in</button>'}`);
   g.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>showSignIn(b.dataset.m));
@@ -92,7 +93,7 @@ function niceErr(e){const m=String(e&&e.message||e||'');if(m===BREACHED)return m
 
 function showTeamSetup(){
   const g=gate(`<h2>Set Up Your Company</h2><p class="note">Signed in as ${esc(USR.email)}.</p><p id="bcmsg" class="msg" hidden></p>
-   <form id="bct" class="fm"><label>Company Name<input id="bc-co" autocapitalize="words" value="Gilco Construction" required></label><button class="pri" type="submit">Create Company</button></form>
+   <form id="bct" class="fm"><label>Company Name<input id="bc-co" autocapitalize="words" placeholder="Your company name" required></label><button class="pri" type="submit">Create Company</button></form>
    <p class="note" style="text-align:center;margin:4px 0">or, if your boss sent you a code</p>
    <form id="bcj" class="fm"><label>Invite Code<input id="bc-code" autocapitalize="characters" autocomplete="off" placeholder="ABCDE-12345" required></label><button type="submit">Join a Company</button></form>
    <button class="lnk" id="bcout">Sign out</button>`);
@@ -181,6 +182,7 @@ const u8=b=>{const s=b.replace(/-/g,'+').replace(/_/g,'/');const p=s+'='.repeat(
 window.BC={
   role(){return ROLE},
   teamId(){return TEAM},
+  teamName(){return TEAMNAME},
   async inviteToJob(o){const code=mkCode();const{error}=await sb.from('sc_invites').insert({code,team_id:TEAM,role:o.role||'Crew',project_id:o.projectId,member_id:o.memberId||null});if(error)throw new Error(error.message);
     return{code,link:location.origin+'/?invite='+code}},
   shareUrl(tok){return location.origin+'/s/?t='+tok},
@@ -205,7 +207,7 @@ window.BC={
   accountCard(){return `<div class="card stack"><h2>Account</h2><p class="note">Signed in as ${esc(USR?.email||'')} · ${esc(TEAMNAME)}</p><div class="row"><button class="btn" data-bc="install">Add to Home Screen</button><button class="btn bad" data-bc="signout">Sign Out</button></div>
    <details><summary class="note" style="cursor:pointer">Delete my account</summary><div class="stack" style="gap:8px;margin-top:8px"><p class="note" style="margin:0">This removes you from ${esc(TEAMNAME)} and deletes your sign-in. If you're the only person on the team, the whole team is deleted too, with every job and photo. This can't be undone.</p>
    <label class="f">Type DELETE to confirm<input id="bc-delc" autocomplete="off" autocapitalize="characters"></label><button class="btn bad" data-bc="delacct">Delete My Account</button><p id="bc-delmsg" class="note" role="status"></p></div></details>
-   <p class="note" style="margin:0"><a href="/privacy/" target="_blank" rel="noopener">Privacy Policy</a></p></div>`},
+   <p class="note" style="margin:0"><a href="/terms/" target="_blank" rel="noopener">Terms of Service</a> · <a href="/privacy/" target="_blank" rel="noopener">Privacy Policy</a> · <a href="/legal/" target="_blank" rel="noopener">All legal documents</a></p></div>`},
   async signOut(){let n=0;try{n=window.BCqueued?await window.BCqueued():0}catch(e){}
     if(n&&!confirm(`${n} photo${n>1?'s haven\'t':' hasn\'t'} uploaded yet. Signing out deletes ${n>1?'them':'it'} from this phone. Sign out anyway?`))return;
     window.__bcOut=true;
@@ -1029,7 +1031,7 @@ function renderTop(){
   const n=Q.items.length;
   const s=syncState();const ss=document.querySelector('.side .sync');if(ss){ss.className='sync '+s[0];ss.textContent=s[1]}
   const va=V.viewAs&&M_(V.viewAs);
-  t.innerHTML=`<div class="brand"><b>Build Camera</b><small>Gilco Construction</small></div><span class="sp"></span>${va?`<span class="sync wait">Viewing as ${esc(va.company||va.name)}</span>`:''}${(()=>{const me=myMember();const n=me?S.alerts.filter(a=>a.to===me&&!a.read).length:0;return n?`<button class="sync wait" data-a="tab" data-t="alerts" style="background:transparent;cursor:pointer">${n} alert${n>1?'s':''}</button>`:''})()}<button class="sync ${s[0]}" data-a="tab" data-t="uploads" style="background:transparent;cursor:pointer">${esc(s[1])}</button>`;
+  t.innerHTML=`<div class="brand"><b>Build Camera</b><small>${esc(SET().name||DEFCO())}</small></div><span class="sp"></span>${va?`<span class="sync wait">Viewing as ${esc(va.company||va.name)}</span>`:''}${(()=>{const me=myMember();const n=me?S.alerts.filter(a=>a.to===me&&!a.read).length:0;return n?`<button class="sync wait" data-a="tab" data-t="alerts" style="background:transparent;cursor:pointer">${n} alert${n>1?'s':''}</button>`:''})()}<button class="sync ${s[0]}" data-a="tab" data-t="uploads" style="background:transparent;cursor:pointer">${esc(s[1])}</button>`;
 }
 function syncState(){const n=Q.items.length;if(OFFLINE())return ['wait',n?n+' saved on phone · No-signal mode':'No-signal mode on'];return !READY?['','Connecting…']:!DB?['off','Preview: not saving']:n?['wait',n+' waiting to upload']:['ok','Saved']}
 const NAV=[['home','home','Home','Recent jobs, live photo feed, your to-dos'],['projects','folder','Projects','Every job with its photos'],['feed','feed','Photos','Every photo from every job'],['checklists','check','Checklists','All checklists and their progress'],['tasks','flag','Tasks & Punch','Open tasks and punch items'],['reports','report','Reports','Branded PDF reports for any job'],['docs','doc','Documents','Scanned tickets, cards and change orders'],['map','map','Map','Every job on a map'],['team','users','Team','People, roles and Trade Partners'],['time','clock','Time Tracking','Clock in and out at a job'],['portfolio','star','Portfolio','Photos for the website and ads'],['dash','chart','Activity','Photos, punch items and who is posting'],['uploads','cloud','Uploads','Photos waiting to upload, no-signal mode'],['onsite','here','On Site Today','Who is clocked in where'],['alerts','flag','Alerts','@mentions and assigned punch items'],['verify','shield','Verify a Photo','Check a photo\'s proof code']];
@@ -1128,7 +1130,7 @@ function prow(p){
   const when=cover?(dayKey(cover.takenAt)===dayKey(Date.now())?'Today '+fmtTime(cover.takenAt):fmtDay(cover.takenAt)):'No photos yet';
   const rec=ph.slice(0,3).map(x=>`<img src="${esc(x.url)}" alt="" loading="lazy">`).join('')+'<i></i>'.repeat(Math.max(0,3-Math.min(3,n)));
   return `<div class="prow" data-a="openProject" data-id="${p.id}" role="link" tabindex="0" aria-label="Open ${esc(p.name)}">
-   <div class="c-name"><span class="cv">${cover?`<img src="${esc(cover.url)}" alt="" loading="lazy">`:I('camera')}</span><span class="tx"><span class="nmr"><b>${esc(p.name)}</b>${starBtn(p)}</span><span class="ad">${esc(p.address||'No address')}</span><span class="row" style="gap:6px">${pstat(p)}${today?`<span class="badge" style="background:var(--accent);color:var(--accent-ink)">${today} new today</span>`:''}${p.companyName&&p.companyName!==(SET().name||'Gilco Construction')?`<span class="mt">${esc(p.companyName)}</span>`:''}</span><span class="mt ph-only">${n} photo${n===1?'':'s'} · ${when}${open?` · ${open} open`:''}</span></span></div>
+   <div class="c-name"><span class="cv">${cover?`<img src="${esc(cover.url)}" alt="" loading="lazy">`:I('camera')}</span><span class="tx"><span class="nmr"><b>${esc(p.name)}</b>${starBtn(p)}</span><span class="ad">${esc(p.address||'No address')}</span><span class="row" style="gap:6px">${pstat(p)}${today?`<span class="badge" style="background:var(--accent);color:var(--accent-ink)">${today} new today</span>`:''}${p.companyName&&p.companyName!==(SET().name||DEFCO())?`<span class="mt">${esc(p.companyName)}</span>`:''}</span><span class="mt ph-only">${n} photo${n===1?'':'s'} · ${when}${open?` · ${open} open`:''}</span></span></div>
    <div class="c-upd">${la?esc(fmtDay(la))+'<br><span class="note">'+fmtTime(la)+'</span>':'—'}</div>
    <div class="c-stats"><span>${I('img')}<b>${n}</b> Photos</span><span>${I('doc')}<b>${docs}</b> Documents</span><span>${I('check')}<b>${cks}</b> Checklists</span><span>${I('flag')}<b>${open}</b> Open Tasks</span></div>
    <div class="c-rec">${rec}</div></div>`;
@@ -1152,7 +1154,7 @@ function pcard(p){
   const when=cover?(dayKey(cover.takenAt)===dayKey(Date.now())?'Today '+fmtTime(cover.takenAt):fmtDay(cover.takenAt)):'No photos yet';
   return `<button class="pc2" data-a="openProject" data-id="${p.id}">
    <span class="cv">${cover?`<img src="${esc(cover.url)}" alt="" loading="lazy">`:`<span class="nocv">${I('camera')}</span>`}${today?`<span class="nw">${today} new</span>`:''}</span>
-   <span class="tx"><b>${esc(p.name)}</b><span class="ad">${esc(p.address||'No address')}</span><span class="mt">${n} photo${n===1?'':'s'} · ${when}${open?` · ${open} open`:''}</span>${p.companyName&&p.companyName!==(SET().name||'Gilco Construction')?`<span class="mt">${esc(p.companyName)}</span>`:''}</span>
+   <span class="tx"><b>${esc(p.name)}</b><span class="ad">${esc(p.address||'No address')}</span><span class="mt">${n} photo${n===1?'':'s'} · ${when}${open?` · ${open} open`:''}</span>${p.companyName&&p.companyName!==(SET().name||DEFCO())?`<span class="mt">${esc(p.companyName)}</span>`:''}</span>
    <span class="go" aria-hidden="true">›</span></button>`;
 }
 function scrProject(){
@@ -1238,7 +1240,7 @@ function ptInfo(p){
    <label class="f">Status<select id="pi-status" name="status"><option ${p.status!=='Done'?'selected':''}>Active</option><option ${p.status==='Done'?'selected':''}>Done</option></select></label></div>
    ${addrBlock('pi',p)}
    ${lastGps?`<button type="button" class="btn sm" data-a="gpsFromPhoto" data-id="${p.id}">${I('pin')} Use GPS From Latest Photo</button>`:''}
-   <label class="f">Company Name on This Job<input type="text" id="pi-co" name="companyName" list="dl-co" value="${esc(p.companyName||'')}" placeholder="${esc(SET().name||'Gilco Construction')}" autocapitalize="words"><datalist id="dl-co">${companyNames().map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label><p class="note" style="margin-top:-6px">Shows on this job's photo stamps, PDF reports, review requests and social posts. Leave blank to use ${esc(SET().name||'Gilco Construction')}.</p>
+   <label class="f">Company Name on This Job<input type="text" id="pi-co" name="companyName" list="dl-co" value="${esc(p.companyName||'')}" placeholder="${esc(SET().name||DEFCO())}" autocapitalize="words"><datalist id="dl-co">${companyNames().map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label><p class="note" style="margin-top:-6px">Shows on this job's photo stamps, PDF reports, review requests and social posts. Leave blank to use ${esc(SET().name||DEFCO())}.</p>
    <label class="f">Auto-File Distance<select id="pi-rad" name="radius">${[[150,'500 ft'],[300,'1,000 ft'],[600,'2,000 ft'],[1200,'3/4 mile (default)'],[2500,'1.5 miles']].map(([v,l])=>`<option value="${v}" ${(p.radius||1200)==v?'selected':''}>${l}</option>`).join('')}</select></label>${p.boundary&&p.boundary.length>=3?'<p class="note">This job has a drawn boundary, so only photos inside it file here.</p>':''}
    <label class="f">Trade Planner Project<input type="text" id="pi-tp" name="tpProject" value="${esc(p.tpProject||'')}" autocapitalize="words" placeholder="Name as it appears in Trade Planner"></label>
    <div class="two"><label class="f">Customer<input type="text" id="pi-cust" name="customer" value="${esc(p.customer||'')}" autocapitalize="words"></label><label class="f">Customer Phone<input type="tel" id="pi-phone" name="phone" value="${esc(p.phone||'')}"></label></div>
@@ -1448,7 +1450,7 @@ function scrTime(){
 }
 function scrPortfolio(){
   const ps=allPhotos().filter(p=>p.portfolio).sort(byNew);
-  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Portfolio</h1><p class="sub">Photos tagged Portfolio. These are the ones headed for the Gilco Home Services website and Facebook and Instagram ads.</p>${ps.length?grouped(ps,true):`<div class="empty">${I('star')}<b>Nothing tagged yet</b><span>Open any photo and turn on Portfolio.</span></div>`}`;
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Portfolio</h1><p class="sub">Photos tagged Portfolio. Your best work, ready for your website and social media.</p>${ps.length?grouped(ps,true):`<div class="empty">${I('star')}<b>Nothing tagged yet</b><span>Open any photo and turn on Portfolio.</span></div>`}`;
 }
 function scrAbout(){
   return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">About This Version</h1><p class="sub">Build Camera preview, built ${fmtDay(Date.now())}.</p>
@@ -1472,7 +1474,7 @@ function renderModal(){
   if(!M){closeModal();return}
   const el=$('#modal'); el.hidden=false; document.body.style.overflow='hidden';
   let h='';
-  if(M.kind==='newProject'){const src=M.from&&P(M.from);h=sheet(src?'Copy as New Job':'New Project',`<form class="stack" data-sub="createProject" ${src?`data-from="${src.id}"`:''}>${src?`<p class="callout info">Starts a new job from <b>${esc(src.name)}</b>. Copies its checklists (unchecked), contacts, albums, company name, group and Trade Partners. Photos, tasks and the address stay with the old job.</p>`:''}<div class="two"><label class="f">Project Name<input type="text" id="np-name" name="name" required autocapitalize="words" placeholder="E.g. Smith Patio Cover"></label><label class="f">Job Number<input type="text" id="np-num" name="jobNumber" placeholder="Optional"></label></div><label class="f">Company Name on This Job<input type="text" id="np-co" name="companyName" list="dl-co2" value="${esc(src?src.companyName||'':'')}" placeholder="${esc(SET().name||'Gilco Construction')}" autocapitalize="words"><datalist id="dl-co2">${companyNames().map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>${addrBlock('np',{})}<label class="f">Group<input type="text" id="np-group" name="group" value="${esc(src?src.group||'':'')}" autocapitalize="words" placeholder="Optional, e.g. Ochsner Clinics"></label><button class="btn pri" type="submit">${src?'Create the Copy':'Create Project'}</button></form>`)}
+  if(M.kind==='newProject'){const src=M.from&&P(M.from);h=sheet(src?'Copy as New Job':'New Project',`<form class="stack" data-sub="createProject" ${src?`data-from="${src.id}"`:''}>${src?`<p class="callout info">Starts a new job from <b>${esc(src.name)}</b>. Copies its checklists (unchecked), contacts, albums, company name, group and Trade Partners. Photos, tasks and the address stay with the old job.</p>`:''}<div class="two"><label class="f">Project Name<input type="text" id="np-name" name="name" required autocapitalize="words" placeholder="E.g. Smith Patio Cover"></label><label class="f">Job Number<input type="text" id="np-num" name="jobNumber" placeholder="Optional"></label></div><label class="f">Company Name on This Job<input type="text" id="np-co" name="companyName" list="dl-co2" value="${esc(src?src.companyName||'':'')}" placeholder="${esc(SET().name||DEFCO())}" autocapitalize="words"><datalist id="dl-co2">${companyNames().map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>${addrBlock('np',{})}<label class="f">Group<input type="text" id="np-group" name="group" value="${esc(src?src.group||'':'')}" autocapitalize="words" placeholder="Optional, e.g. Ochsner Clinics"></label><button class="btn pri" type="submit">${src?'Create the Copy':'Create Project'}</button></form>`)}
   else if(M.kind==='capture')h=sheet(M.title||'New Photo',captureBody());
   else if(M.kind==='photo')h=photoSheet();
   else if(M.kind==='markup')h=markupSheet();
@@ -1835,8 +1837,9 @@ ${lines||'none'}${d.ps.length?'\nSome of the day\'s photos are attached; describ
 /* ===================== Round 2 ===================== */
 let MCP=null, TT_OFF=false;
 const SET=()=>S.settings.find(x=>x.id==='company')||{};
-const coName=pid=>{const p=pid&&P(pid);return (p&&p.companyName)||SET().name||'Gilco Construction'};
-const companyNames=()=>[...new Set([SET().name||'Gilco Construction',...S.projects.map(p=>p.companyName).filter(Boolean)])];
+const DEFCO=()=>(window.BC&&BC.teamName&&BC.teamName())||'Your Company';
+const coName=pid=>{const p=pid&&P(pid);return (p&&p.companyName)||SET().name||DEFCO()};
+const companyNames=()=>[...new Set([SET().name||DEFCO(),...S.projects.map(p=>p.companyName).filter(Boolean)])];
 const myMember=()=>{try{return localStorage.getItem('pc-me-member')||''}catch(e){return ''}};
 function setMyMember(id){try{localStorage.setItem('pc-me-member',id)}catch(e){}}
 const aiAutoTag=()=>SET().autoTag!==false;
@@ -2327,7 +2330,7 @@ document.addEventListener('change',async e=>{const el=e.target,k=el.dataset.ch;i
   else if(k==='viewAs'){V.viewAs=el.value;saveView();render()}
   else if(k==='imSel'){M.rows[+el.dataset.i].sel=el.checked;M.text=$('#im-text').value;renderModal()}
   else if(k==='myMember'){setMyMember(el.value);render()}
-  else if(k==='setName'){put('settings',{...SET(),id:'company',name:el.value.trim()||'Gilco Construction'})}
+  else if(k==='setName'){put('settings',{...SET(),id:'company',name:el.value.trim()||DEFCO()})}
   else if(k==='setAI'){put('settings',{...SET(),id:'company',autoTag:el.checked})}
   else if(k==='ct'){const p=P(el.dataset.pid),i=+el.dataset.i;upd('projects',p.id,{contacts:(p.contacts||[]).map((c,j)=>j===i?{...c,[el.dataset.k]:el.value.trim()}:c)})}
   else if(k==='sxTo'){}

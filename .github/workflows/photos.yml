@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download free Unsplash photos (Unsplash License: free for commercial use)
+      - name: Download free Unsplash photos (Unsplash License, free for commercial use)
         run: |
           mkdir -p photos
           while read -r id name; do

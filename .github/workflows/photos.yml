@@ -1,0 +1,27 @@
+name: Fetch sample photos
+on:
+  push:
+    branches: [store-assets]
+    paths: [photos.txt]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download free Unsplash photos (Unsplash License: free for commercial use)
+        run: |
+          mkdir -p photos
+          while read -r id name; do
+            [ -z "$id" ] && continue
+            curl -sSL --fail -o "raw_$id.jpg" "https://unsplash.com/photos/$id/download?force=true" || { echo "skip $id"; continue; }
+            convert "raw_$id.jpg" -auto-orient -resize '1800x1800>' -strip -quality 82 "photos/$name.jpg"
+            rm -f "raw_$id.jpg"
+          done < photos.txt
+          ls -la photos
+      - name: Save
+        run: |
+          git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
+          git add photos; git commit -m "Sample photos from Unsplash" || exit 0; git push

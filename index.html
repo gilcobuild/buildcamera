@@ -386,14 +386,14 @@ a{color:var(--accent)}
 .big-act .btn svg{width:26px;height:26px}
 /* markup */
 .mk{flex:1;display:flex;flex-direction:column;min-height:0;background:#0d1012}
-.mk .bar{display:flex;gap:6px;overflow-x:auto;padding:8px max(10px,env(safe-area-inset-left,0px));background:var(--panel);border-bottom:1px solid var(--line);align-items:center}
+.mk .bar{display:flex;gap:6px;overflow-x:auto;padding:8px max(10px,env(safe-area-inset-left,0px));background:var(--panel);border-bottom:1px solid var(--line);align-items:center;height:auto;flex:none;position:static}
 .tool{flex:none;border:1px solid var(--line);background:var(--panel);border-radius:9px;min-height:40px;padding:6px 10px;font-weight:600;font-size:13px}
 .tool[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
 .sw{flex:none;width:32px;height:32px;border-radius:50%;border:3px solid var(--panel);box-shadow:0 0 0 1px var(--line)}
 .sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--accent)}
-.mk .stage{flex:1;overflow:auto;display:grid;place-items:center;padding:10px}
+.mk .stage{flex:1;min-height:0;overflow:auto;display:grid;place-items:center;padding:10px}
 .mk canvas{max-width:100%;max-height:100%;touch-action:none;background:#222}
-.mk .opt{display:flex;gap:8px;align-items:center;padding:8px max(10px,env(safe-area-inset-left,0px));background:var(--panel);border-top:1px solid var(--line);flex-wrap:wrap}
+.mk .opt{flex:none;display:flex;gap:8px;align-items:center;padding:8px max(10px,env(safe-area-inset-left,0px));background:var(--panel);border-top:1px solid var(--line);flex-wrap:wrap}
 .mk .opt input{max-width:220px}
 /* compare */
 .cmp{position:relative;border-radius:10px;overflow:hidden;background:#000;max-width:100%}

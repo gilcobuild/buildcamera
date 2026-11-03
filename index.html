@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-09QVcI+Lq8RtUuz+xMzU24mznaAOWWhC0SydwH9qssI=' 'sha256-wUvGb5NrksOrvvf0zuoUFo+zqbsIHnyLA89g/s5M2fM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-c6C8RvU4shbVdynJxArxybalR0JsKNI/ZliHuo2I+gM=' 'sha256-wUvGb5NrksOrvvf0zuoUFo+zqbsIHnyLA89g/s5M2fM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -17,6 +17,7 @@
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<script>(function(){try{var u=new URL(location.href),p=u.searchParams;if(p.has('app')){localStorage.setItem('bc-app','1');if(p.has('signup'))sessionStorage.setItem('bc-signup','1');p.delete('app');p.delete('signup');var q=p.toString();history.replaceState(null,'',u.pathname+(q?'?'+q:'')+u.hash);return}if(u.pathname!=='/'||u.search||u.hash)return;if(matchMedia('(display-mode: standalone)').matches||navigator.standalone||window.Capacitor||/BuildCameraApp/.test(navigator.userAgent))return;if(localStorage.getItem('bc-app'))return;for(var i=0;i<localStorage.length;i++){if(/^(sb-|pc-|bc-)/.test(localStorage.key(i)||''))return}location.replace('/welcome/')}catch(e){}})();</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 /* Build Camera: runs the app on its own domain with Supabase for logins, data and photos */
@@ -57,7 +58,7 @@ function say(t,bad){const m=document.getElementById('bcmsg');if(m){m.textContent
 function busy(b,on,txt){if(!b)return;b.disabled=on;if(txt)b.textContent=txt}
 
 function showSignIn(mode){
-  mode=mode||(ssGet('bc-invite')?'up':'in');
+  mode=mode||(ssGet('bc-invite')||ssGet('bc-signup')?'up':'in');ssDel('bc-signup');
   const g=gate(`${ssGet('bc-invite')?'<p class="msg">You\'ve been invited to a job on Build Camera. Make your account below, or sign in if you already have one, and the job opens.</p>':''}<h2>${mode==='up'?'Create Your Account':mode==='reset'?'Reset Password':'Sign In'}</h2>
   <p id="bcmsg" class="msg" hidden></p>
   <form id="bcf" class="fm">

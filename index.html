@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="7c5cec14e9">
+<meta name="bc-ver" content="5618d5e228">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-sxz5PbVXB4Tx94Quw3uWu+zMu7KMISAmPekmKpnYTDE=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-p95VqrI7L/csyjp5I4NydzgjWcePhzG7lJVrYVrtxAY=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -619,7 +619,7 @@ h3.day{align-items:center}
 .pcm .who{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--muted)}.pcm .who b{color:var(--ink)}
 .cnt{color:var(--muted);font-weight:500}
 /* photo viewer: dark image with toolbar, details beside it on desktop */
-.pvimg{position:relative;background:#000;border-radius:10px;overflow:hidden;display:grid;place-items:center;min-height:220px;touch-action:pan-y}.pvimg.zoomed{touch-action:none;cursor:grab}.pvimg.zoomed.drag{cursor:grabbing}.pvimg img{-webkit-user-drag:none;user-select:none}
+.pvimg{position:relative;background:#000;border-radius:10px;overflow:hidden;display:grid;place-items:center;min-height:220px;touch-action:pan-y}.pvimg.zoomed{touch-action:none}.pvimg.zoomed{touch-action:none;cursor:grab}.pvimg.zoomed.drag{cursor:grabbing}.pvimg img{-webkit-user-drag:none;user-select:none}
 .pvimg img,.pvimg video{max-width:100%;max-height:62vh;width:auto;height:auto;margin:0 auto;transition:transform .15s ease-out;transform-origin:center}
 .pvtb{position:absolute;top:10px;left:10px;display:flex;gap:2px;background:var(--panel);border-radius:10px;padding:3px;z-index:2;box-shadow:0 2px 10px rgba(0,0,0,.3)}
 .pvtb .ib{width:38px;height:38px;color:var(--ink);text-decoration:none}
@@ -1869,9 +1869,20 @@ document.addEventListener('pointerdown',e=>{const box=e.target.closest&&e.target
   if(PVZ.pts.size===2){const[a,b]=[...PVZ.pts.values()];PVZ.d0=Math.hypot(a[0]-b[0],a[1]-b[1]);PVZ.z0=M.zoom||1}
   else if((M.zoom||1)>1){PVZ.last=[e.clientX,e.clientY];box.classList.add('drag')}});
 document.addEventListener('pointermove',e=>{if(!PVZ.pts.has(e.pointerId))return;const box=$('#pvbox');if(!box||!M)return;PVZ.pts.set(e.pointerId,[e.clientX,e.clientY]);
+  if(e.pointerType==='touch'&&(PVZ.pts.size>1||(M.zoom||1)>1.01))return;
   if(PVZ.pts.size===2&&PVZ.d0){const[a,b]=[...PVZ.pts.values()];const r=box.getBoundingClientRect();PVZ.moved=true;
     pvZoomAt(PVZ.z0*Math.hypot(a[0]-b[0],a[1]-b[1])/PVZ.d0,(a[0]+b[0])/2-(r.left+r.width/2),(a[1]+b[1])/2-(r.top+r.height/2),false);return}
   if(PVZ.last&&(M.zoom||1)>1){const dx=e.clientX-PVZ.last[0],dy=e.clientY-PVZ.last[1];if(Math.abs(dx)+Math.abs(dy)>3)PVZ.moved=true;M.px=(M.px||0)+dx;M.py=(M.py||0)+dy;PVZ.last=[e.clientX,e.clientY];pvApply(false)}});
+const PVT={d0:0,z0:1,last:null};
+document.addEventListener('touchstart',e=>{const box=e.target.closest&&e.target.closest('#pvbox');if(!box||!$('#pvim')||!M||M.pinMode)return;
+  if(e.touches.length===2){const[a,b]=[e.touches[0],e.touches[1]];PVT.d0=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);PVT.z0=M.zoom||1;PVT.last=null;PVZ.sw=null;PVZ.moved=true}
+  else if(e.touches.length===1&&(M.zoom||1)>1.01){PVT.last=[e.touches[0].clientX,e.touches[0].clientY]}},{passive:true});
+document.addEventListener('touchmove',e=>{const box=$('#pvbox');if(!box||!M||M.kind!=='photo')return;
+  if(e.touches.length===2&&PVT.d0){e.preventDefault();const[a,b]=[e.touches[0],e.touches[1]],r=box.getBoundingClientRect();
+    pvZoomAt(PVT.z0*Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)/PVT.d0,(a.clientX+b.clientX)/2-(r.left+r.width/2),(a.clientY+b.clientY)/2-(r.top+r.height/2),false);return}
+  if(e.touches.length===1&&PVT.last&&(M.zoom||1)>1.01){e.preventDefault();const t=e.touches[0];M.px=(M.px||0)+t.clientX-PVT.last[0];M.py=(M.py||0)+t.clientY-PVT.last[1];PVT.last=[t.clientX,t.clientY];PVZ.moved=true;pvApply(false)}},{passive:false});
+document.addEventListener('touchend',e=>{if(e.touches.length<2)PVT.d0=0;if(!e.touches.length){PVT.last=null;if(M&&(M.zoom||1)<1.03&&M.kind==='photo'){M.zoom=1;pvApply(true)}}},{passive:true});
+document.addEventListener('gesturestart',e=>{if(e.target.closest&&e.target.closest('#pvbox'))e.preventDefault()});
 const pvUp=e=>{if(!PVZ.pts.delete(e.pointerId))return;
   if(PVZ.sw&&!PVZ.pts.size&&e.type==='pointerup'&&(M&&(M.zoom||1)<=1.01)){const dx=e.clientX-PVZ.sw.x,dy=e.clientY-PVZ.sw.y;PVZ.sw=null;
     if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.4){const b=document.querySelector(dx<0?'.pvnav.r':'.pvnav.l');if(b&&M&&M.kind==='photo'){PVZ.moved=true;setTimeout(()=>{PVZ.moved=false},400);M.id=b.dataset.id;M.zoom=1;M.px=0;M.py=0;renderModal()}}}

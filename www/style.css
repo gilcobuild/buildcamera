@@ -118,3 +118,6 @@ footer{padding:34px 0 calc(env(safe-area-inset-bottom,0px) + 40px);color:var(--m
 footer .wrap{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center}
 footer a{color:var(--muted)}
 footer .sp{margin-right:auto}
+
+/* header logo uses the app icon */
+.lg i{background:url(/icon-192.png) center/cover no-repeat!important}.lg i b{display:none!important}

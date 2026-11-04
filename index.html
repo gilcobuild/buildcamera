@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-3aRkmW0sPEpwmQNvrECpTBoy9Ktsfud9jE7khmBFD5k=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-hhLsnBTFSWTG6kAFRhcaw039HxL3qAVLZTWLEcE7BEE=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -996,7 +996,7 @@ async function storeStatus(){const el=$('#st-store');if(!el||!window.BC||!BC.sto
     box.innerHTML=`<h2>Plan &amp; Storage</h2><p>${planLine}</p>${meter}${pick}${manage}`;
     if(back==='done'&&live)toast(r.status==='trialing'?'Your free trial has started.':'Your plan is updated.');
   }catch(e){const b=$('#st-store');if(b){const n=b.querySelector('.note');if(n)n.textContent='Couldn\'t check your plan right now.'}}}
-async function makeThumb(src){try{const w0=src.width||src.naturalWidth,h0=src.height||src.naturalHeight,sc=Math.min(1,640/Math.max(w0,h0));const c=document.createElement('canvas');c.width=Math.round(w0*sc);c.height=Math.round(h0*sc);c.getContext('2d').drawImage(src,0,0,c.width,c.height);return await new Promise(r=>c.toBlob(r,'image/jpeg',.8))}catch(e){return null}}
+async function makeThumb(src){try{const w0=src.width||src.naturalWidth,h0=src.height||src.naturalHeight,sc=Math.min(1,640/Math.max(w0,h0));const c=document.createElement('canvas');c.width=Math.round(w0*sc);c.height=Math.round(h0*sc);c.getContext('2d').drawImage(src,0,0,c.width,c.height);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.8));c.width=c.height=0;return b}catch(e){return null}}
 async function upMedia(blob,thumb){const up=await AS.upload(blob);let t=null;if(thumb){try{t=(await AS.upload(thumb)).id}catch(e){}}return t?{url:up.url,assetId:up.id,thumbId:t}:{url:up.url,assetId:up.id}}
 function delAsset(p){if(!p)return;if(p.assetId)AS.delete(p.assetId).catch(()=>{});if(p.thumbId)AS.delete(p.thumbId).catch(()=>{})}
 const bestQ=()=>{try{const v=localStorage.getItem('pc-camq');return v==='best'}catch(e){return false}};
@@ -1026,7 +1026,7 @@ async function stampImage(file,info,isDoc){
     x.fillStyle='#ffffff';x.fillText(tx,W-pad,yy)});
   x.shadowColor='transparent';x.shadowBlur=0;x.shadowOffsetY=0;
   if(info.logo){const lh=fs*2.6,lw=Math.min(W*.22,info.logo.naturalWidth*lh/info.logo.naturalHeight);x.globalAlpha=.92;x.fillStyle='#ffffff';x.fillRect(pad-fs*.25,H-pad-lh-fs*.25,lw+fs*.5,lh+fs*.5);x.globalAlpha=1;x.drawImage(info.logo,pad,H-pad-lh,lw,lh)}
-  const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.9));const thumb=await makeThumb(c);return {blob,thumb,w:W,h:H,q:qual};
+  const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.9));const thumb=await makeThumb(c);c.width=c.height=0;img.src='';return {blob,thumb,w:W,h:H,q:qual};
 }
 async function processFile(file,ctx){
   const kind=ctx.kind||(file.type.startsWith('video')?'video':file.type.startsWith('audio')?'audio':'photo');
@@ -1604,7 +1604,10 @@ function camHtml(){const c=M.cap,pr=P(c.pid),last=c.shot&&c.shot[0]&&PH(c.shot[0
   <div class="cambot"><button class="camlast" data-a="camLast" aria-label="Open last photo">${last?`<img src="${esc(last.thumb||last.url)}" alt="">`:''}</button><button class="camshut${CAM.mode==='video'?' vid':''}" data-a="camShutter" aria-label="${CAM.mode==='video'?'Start recording':'Take photo'}"><span></span></button><button class="camdone" data-a="camDone"><b id="camcount">${c.count||0}</b><span>Done</span></button></div>
   <p class="camerr" id="camerr" hidden></p></div>`}
 /* ask for the sharpest camera the phone allows. Some iPhones answer a too-big request with their tiniest size (192×144), so check what we got and step down until it's sharp */
-async function camOpenBest(){const fm={ideal:CAM.facing};const tries=[{width:{ideal:4032},height:{ideal:3024}},{width:{ideal:3264},height:{ideal:2448}},{width:{ideal:1920},height:{ideal:1440}},{width:{ideal:1920},height:{ideal:1080}},{}];
+function camIsBlack(c){try{const t=document.createElement('canvas');t.width=32;t.height=24;const x=t.getContext('2d');x.drawImage(c,0,0,32,24);const a=x.getImageData(0,0,32,24).data;let s=0;for(let i=0;i<a.length;i+=4)s+=a[i]+a[i+1]+a[i+2];return s/(a.length/4*3)<4}catch(e){return false}}
+async function camRestart(){if(!M||M.kind!=='cam')return;if(CAM.stream){CAM.stream.getTracks().forEach(t=>t.stop());CAM.stream=null}await new Promise(r=>setTimeout(r,250));if(M&&M.kind==='cam')camStart()}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible'||!M||M.kind!=='cam')return;const tr=CAM.stream&&CAM.stream.getVideoTracks()[0];if(!tr||tr.readyState==='ended'||tr.muted)camRestart();else{const v=$('#camv');if(v&&v.paused)v.play().catch(()=>{})}});
+async function camOpenBest(){const fm={ideal:CAM.facing};const tries=[{width:{ideal:3264},height:{ideal:2448}},{width:{ideal:1920},height:{ideal:1440}},{width:{ideal:1920},height:{ideal:1080}},{}];
   let best=null,bestPx=0;const px=s=>{const t=s.getVideoTracks()[0];const st=t&&t.getSettings?t.getSettings():{};return (st.width||0)*(st.height||0)};
   for(const t of tries){let s=null;try{s=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:fm,...t}})}catch(e){continue}
     const n=px(s);if(n>bestPx){if(best)best.getTracks().forEach(x=>x.stop());best=s;bestPx=n}else s.getTracks().forEach(x=>x.stop());
@@ -1612,7 +1615,8 @@ async function camOpenBest(){const fm={ideal:CAM.facing};const tries=[{width:{id
   if(!best)best=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:CAM.facing}});
   return best}
 async function camStart(){const v=$('#camv');if(!v)return;
-  try{CAM.stream=await camOpenBest();v.srcObject=CAM.stream;await v.play().catch(()=>{});zoomSetup()}
+  try{CAM.stream=await camOpenBest();v.srcObject=CAM.stream;await v.play().catch(()=>{});zoomSetup();
+    const tr=CAM.stream.getVideoTracks()[0];if(tr){const me=CAM.stream;tr.addEventListener('ended',()=>{if(CAM.stream===me)camRestart()})}}
   catch(e){const er=$('#camerr');if(er){er.hidden=false;er.innerHTML='Camera access was blocked. Allow camera for buildcamera.com in Settings → Safari → Camera, or <button class="btn sm" data-a="camFallback">Use the phone camera</button>'}}
   if(navigator.geolocation&&CAM.watch==null){CAM.watch=navigator.geolocation.watchPosition(p=>{CAM.gps={lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy,t:Date.now()};const g=$('#camgps');if(g){g.textContent='GPS ±'+Math.round(p.coords.accuracy*3.28)+' ft';g.className='camgps ok'}},()=>{const g=$('#camgps');if(g){g.textContent='No GPS';g.className='camgps bad'}},{enableHighAccuracy:true,maximumAge:10000,timeout:20000})}}
 /* zoom: real lens zoom when the phone allows it, otherwise a sharp center crop */
@@ -1684,10 +1688,11 @@ async function camShoot(){const v=$('#camv');if(!v||!v.videoWidth||CAM.busy)retu
   if(window.ImageCapture&&tr){try{const bm=await createImageBitmap(await new ImageCapture(tr).takePhoto());const z=!CAM.hwz&&CAM.zoom>1?CAM.zoom:1,sw=Math.round(bm.width/z),sh=Math.round(bm.height/z);c=document.createElement('canvas');c.width=sw;c.height=sh;c.getContext('2d').drawImage(bm,Math.round((bm.width-sw)/2),Math.round((bm.height-sh)/2),sw,sh,0,0,sw,sh)}catch(e){c=null}}
   if(!c){const zc=zoomCrop(v);c=document.createElement('canvas');c.width=zc.sw;c.height=zc.sh;c.getContext('2d').drawImage(v,zc.sx,zc.sy,zc.sw,zc.sh,0,0,zc.sw,zc.sh)}
   shutterSound();const f=$('#camflash');if(f){f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}
-  const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.95));CAM.busy=false;
+  if(camIsBlack(c)){c.width=c.height=0;CAM.busy=false;toast('The camera went dark. Restarting it, take that one again.',3500);camRestart();return}
+  const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));c.width=c.height=0;CAM.busy=false;
   const cap=M.cap,ctx={...cap.ctx,projectId:cap.pid,lockProject:false,fromCamera:true,gps:CAM.gps};
   ctx.onAdd=id=>{cap.shot=[id,...(cap.shot||[])];cap.count=(cap.count||0)+1;const n=$('#camcount');if(n){n.textContent=cap.count;n.classList.remove('bump');void n.offsetWidth;n.classList.add('bump')}const l=document.querySelector('.camlast');const p=PH(id);if(l&&p){l.innerHTML=`<img src="${esc(p.thumb||p.url)}" alt="">`;l.classList.remove('got');void l.offsetWidth;l.classList.add('got')}const ct=$('#camtoast');if(ct){ct.querySelector('span').textContent=cap.count>1?cap.count+' saved':'Saved';ct.classList.remove('go');void ct.offsetWidth;ct.classList.add('go')}};
-  processFile(blob,ctx).then(id=>{if(id)setLastZT(cap.pid,cap.ctx.zone,cap.ctx.trade,(cap.ctx.tags||[])[0])}).catch(()=>toast('Couldn\'t save that photo. Try again.'));
+  CAM.q=(CAM.q||Promise.resolve()).then(()=>processFile(blob,ctx)).then(id=>{if(id)setLastZT(cap.pid,cap.ctx.zone,cap.ctx.trade,(cap.ctx.tags||[])[0])}).catch(()=>toast('Couldn\'t save that photo. Try again.'));
 }
 /* photo viewer */
 function phList(p){return allPhotos().filter(x=>x.projectId===p.projectId&&x.kind!=='doc'&&x.kind!=='audio').sort(byNew)}

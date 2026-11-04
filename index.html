@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="423711acfd">
+<meta name="bc-ver" content="2306a2a4e6">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-Mg3fqCfjT1WTkSf97f0K5iNQO04Q5R5LAIRXHMa7sZo=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-feXiYzTRTJsESC2Mv8uKHMizdYMVXhMMC18/DEA7Y+I=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -631,6 +631,9 @@ h3.day{align-items:center}
 .pvnav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#111;display:grid;place-items:center;z-index:2;box-shadow:0 1px 6px rgba(0,0,0,.3)}
 .pvnav.l{left:10px}.pvnav.r{right:10px}.pvnav svg{width:22px;height:22px}
 .pvside{display:grid;gap:14px;align-content:start;min-width:0}
+.pstat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}.pstat button{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:10px;display:grid;gap:2px;text-align:left;color:var(--ink)}.pstat b{font:800 26px/1 var(--f-display)}.pstat span{font-size:12.5px;color:var(--muted)}.pstat button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.pgby{display:inline-flex;align-items:center;gap:6px}.pgby select{width:auto;min-height:38px}.pgrp{margin-top:14px}.pgh{display:flex;align-items:center;gap:8px;margin:0 0 6px}.pgh b{font-size:16px}
+.pcard{display:flex;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px}.pimg{display:flex;gap:4px;flex:none}.pimg .tile{width:76px;aspect-ratio:1;border-radius:8px}.pimg .ph0{width:76px;aspect-ratio:1;border-radius:8px;background:var(--sunk);display:grid;place-items:center;color:var(--muted)}.pbody{flex:1;min-width:0;display:grid;gap:2px}.pbody b{font-size:15px}
 @media (min-width:1000px){.sheet.pv .pvside .card{padding:10px 12px}.sheet.pv .pvside .card.stack{gap:6px!important}.sheet.pv .pvside textarea{min-height:52px}.sheet.pv .pvside .acts .btn{min-height:36px;padding:0 12px;font-size:14px}.sheet.pv .pvside .f{gap:4px}.sheet.pv .pvside input,.sheet.pv .pvside select{min-height:38px;padding-top:6px;padding-bottom:6px}.sheet.pv .pvside .btn.sm{min-height:34px}.sheet.pv .pvside .f>.row{flex-wrap:nowrap;gap:6px}.sheet.pv .pvside .f .linkb{font-size:11px;white-space:nowrap}.sheet.pv .pvside #cmts .note{margin:2px 0}.sheet.pv .pvside .chip{min-height:30px;padding:3px 10px}}
 .pvwho{display:flex;align-items:center;gap:10px}.pvwho .av{width:38px;height:38px;font-size:13px}
 .pvsec{display:flex;align-items:center;gap:8px;font-weight:600}.pvsec svg{width:18px;height:18px;color:var(--accent)}
@@ -856,7 +859,9 @@ let DB=null, AS=null, USER=null, SAMPLE=null, DL=null, ME={id:null,name:'Me'}, R
 const TAGS_DEF=['Progress','Rough-In','Inspection','Damage','Safety','Delivery','Before','After','Closeout','Start of Day','End of Day','Portfolio'];
 const zoneList=()=>{const t=(typeof S!=='undefined'&&S.settings||[]).find(x=>x.id==='zones');return t&&Array.isArray(t.list)?t.list:[...new Set(allPhotos().map(p=>p.zone).filter(Boolean))].sort()};
 const tradeList=()=>{const t=(typeof S!=='undefined'&&S.settings||[]).find(x=>x.id==='trades');return t&&Array.isArray(t.list)?t.list:TRADES};
-const LISTS={zones:{get:()=>zoneList(),name:'Work Zone',ph:'New zone, e.g. Building B, Level 2'},trades:{get:()=>tradeList(),name:'Trade Partner',ph:'New trade, e.g. Masonry'}};
+const PUNCH_DEF=['Drywall Ding','Drywall Crack','Nail Pop','Paint Touch-Up','Missing Outlet Cover','Missing Switch Plate','Outlet Not Working','Light Not Working','Missing Trim','Caulk Needed','Grout Missing','Cracked Tile','Door Sticks','Door Won\'t Latch','Missing Door Stop','Damaged Door','Cabinet Door Misaligned','Missing Cabinet Hardware','Countertop Chip','Scratched Window','Window Won\'t Lock','Screen Missing','Leaky Faucet','Toilet Runs','Missing Escutcheon','Floor Scratch','Carpet Seam','Baseboard Gap','Concrete Crack','Clean Up Debris','Touch Up Stain','Loose Handrail','Missing Smoke Detector','Thermostat Not Working','HVAC Register Missing','Fire Caulk Needed','Label Panel','Missing Fixture','Roof Leak','Gutter Loose'];
+const punchLib=()=>{const t=(typeof S!=='undefined'&&S.settings||[]).find(x=>x.id==='punchlib');return t&&Array.isArray(t.list)?t.list:PUNCH_DEF};
+const LISTS={punchlib:{get:()=>punchLib(),name:'Punch item',ph:'New common item, e.g. Missing Fire Caulk'},zones:{get:()=>zoneList(),name:'Work Zone',ph:'New zone, e.g. Building B, Level 2'},trades:{get:()=>tradeList(),name:'Trade Partner',ph:'New trade, e.g. Masonry'}};
 function saveList(k,list){return put('settings',{id:k,list:[...new Set(list.map(t=>String(t).trim()).filter(Boolean))]})}
 function listRowsHtml(k){const L=LISTS[k].get();return L.length?L.map((t,i)=>`<div class="ck" style="align-items:center;gap:6px"><input type="text" value="${esc(t)}" data-ch="lstRen" data-k="${k}" data-i="${i}" autocapitalize="words" aria-label="${LISTS[k].name} name" style="flex:1;min-width:0"><button class="ib" data-a="lstDel" data-k="${k}" data-i="${i}" aria-label="Remove ${esc(t)}">${I('trash')}</button></div>`).join(''):'<p class="note" style="margin:6px 0">Nothing on the list yet.</p>'}
 function listCard(k,title){return `<div class="card stack" id="st-${k}"><h2>${title}</h2><div class="list" id="ls-${k}">${listRowsHtml(k)}</div><form data-sub="lstAdd" data-k="${k}" class="row"><input type="text" name="t" placeholder="${esc(LISTS[k].ph)}" autocapitalize="words" style="flex:1;min-width:180px"><button class="btn pri" type="submit" data-keepfocus>${I('plus')} Add</button></form></div>`}
@@ -1111,7 +1116,7 @@ function renderTop(){
   t.innerHTML=`<div class="brand"><b>Build Camera</b><small>${esc(SET().name||DEFCO())}</small></div><span class="sp"></span>${va?`<span class="sync wait">Viewing as ${esc(va.company||va.name)}</span>`:''}${(()=>{const me=myMember();const n=me?S.alerts.filter(a=>a.to===me&&!a.read).length:0;return n?`<button class="sync wait" data-a="tab" data-t="alerts" style="background:transparent;cursor:pointer">${n} alert${n>1?'s':''}</button>`:''})()}<button class="sync ${s[0]}" data-a="tab" data-t="uploads" style="background:transparent;cursor:pointer">${esc(s[1])}</button>`;
 }
 function syncState(){const n=Q.items.length;if(OFFLINE())return ['wait',n?n+' saved on phone · No-signal mode':'No-signal mode on'];return !READY?['','Connecting…']:!DB?['off','Preview: not saving']:n?['wait',n+' waiting to upload']:['ok','Saved']}
-const NAV=[['home','home','Home','Recent jobs, live photo feed, your to-dos'],['projects','folder','Projects','Every job with its photos'],['feed','feed','Photos','Every photo from every job'],['checklists','check','Checklists','All checklists and their progress'],['tasks','flag','Tasks & Punch','Open tasks and punch items'],['reports','report','Reports','Branded PDF reports for any job'],['docs','doc','Documents','Scanned tickets, cards and change orders'],['map','map','Map','Every job on a map'],['team','users','Team','People, roles and Trade Partners'],['time','clock','Time Tracking','Clock in and out at a job'],['portfolio','star','Portfolio','Photos for the website and ads'],['dash','chart','Activity','Photos, punch items and who is posting'],['uploads','cloud','Uploads','Photos waiting to upload, no-signal mode'],['onsite','here','On Site Today','Who is clocked in where'],['alerts','flag','Alerts','@mentions and assigned punch items'],['verify','shield','Verify a Photo','Check a photo\'s proof code']];
+const NAV=[['home','home','Home','Recent jobs, live photo feed, your to-dos'],['projects','folder','Projects','Every job with its photos'],['feed','feed','Photos','Every photo from every job'],['checklists','check','Checklists','All checklists and their progress'],['punch','pin2','Punch List','Punch items by trade: open, ready to check, closed'],['tasks','flag','Tasks','Open tasks and to-dos'],['reports','report','Reports','Branded PDF reports for any job'],['docs','doc','Documents','Scanned tickets, cards and change orders'],['map','map','Map','Every job on a map'],['team','users','Team','People, roles and Trade Partners'],['time','clock','Time Tracking','Clock in and out at a job'],['portfolio','star','Portfolio','Photos for the website and ads'],['dash','chart','Activity','Photos, punch items and who is posting'],['uploads','cloud','Uploads','Photos waiting to upload, no-signal mode'],['onsite','here','On Site Today','Who is clocked in where'],['alerts','flag','Alerts','@mentions and assigned punch items'],['verify','shield','Verify a Photo','Check a photo\'s proof code']];
 function sideHtml(){
   const cur=V.tab==='project'?'projects':V.tab, me=myMember(), al=me?S.alerts.filter(a=>a.to===me&&!a.read).length:0, s=syncState();
   const it=([k,ic,l])=>`<button class="si" data-a="tab" data-t="${k}" ${cur===k?'aria-current="page"':''}>${I(ic)}<span>${l}</span>${k==='alerts'&&al?`<span class="n">${al}</span>`:''}</button>`;
@@ -1149,7 +1154,7 @@ function screen(){
     case 'dash':return scrDash(); case 'uploads':return scrUploads();
     case 'home':return scrHome(); case 'checklists':return scrChecklists(); case 'docs':return scrDocs(); case 'reports':return scrReportsAll(); case 'map':return scrMapAll();
     case 'feed':return scrFeed(); case 'projects':return scrProjects(); case 'project':return scrProject();
-    case 'tasks':return scrTasks(); case 'more':return scrMore(); case 'search':return scrSearch(); case 'verify':return scrVerify();
+    case 'tasks':return scrTasks(); case 'punch':return scrPunch(); case 'more':return scrMore(); case 'search':return scrSearch(); case 'verify':return scrVerify();
     case 'team':return scrTeam(); case 'time':return scrTime(); case 'portfolio':return scrPortfolio(); case 'about':return scrAbout(); case 'alerts':return scrAlerts(); case 'onsite':return scrOnsite(); case 'settings':return scrSettings();
   } return '';
 }
@@ -1268,11 +1273,11 @@ function pcard(p){
 }
 function scrProject(){
   const p=P(V.pid); if(!p){if(!S.projects.length&&V.pid)return '<p class="note" style="padding:20px 0">Opening the job…</p>';V.tab='projects';return scrProjects()}
-  const tabs=[['photos','Photos'],['docs','Documents'],['checklists','Checklists'],['tasks','Tasks'],['log','Daily Log'],['reports','Reports'],['map','Map'],['info','Job Info']];
+  const tabs=[['photos','Photos'],['punch','Punch List'],['docs','Documents'],['checklists','Checklists'],['tasks','Tasks'],['log','Daily Log'],['reports','Reports'],['map','Map'],['info','Job Info']];
   let body='';
-  switch(V.ptab){case 'photos':body=ptPhotos(p);break;case 'map':body=ptMap(p);break;case 'checklists':body=ptChecklists(p);break;case 'tasks':body=ptTasks(p);break;case 'log':body=ptLog(p);break;case 'docs':body=ptDocs(p);break;case 'reports':body=ptReports(p);break;case 'info':body=ptInfo(p);break}
+  switch(V.ptab){case 'photos':body=ptPhotos(p);break;case 'map':body=ptMap(p);break;case 'checklists':body=ptChecklists(p);break;case 'tasks':body=ptTasks(p);break;case 'punch':body=punchArea(p);break;case 'log':body=ptLog(p);break;case 'docs':body=ptDocs(p);break;case 'reports':body=ptReports(p);break;case 'info':body=ptInfo(p);break}
   const cv=lastPhoto(p.id),n=allPhotos().filter(x=>x.projectId===p.id&&x.kind!=='doc').length;
-  const cnt={photos:n,docs:allPhotos().filter(x=>x.projectId===p.id&&x.kind==='doc').length,checklists:S.checklists.filter(c=>c.projectId===p.id).length,tasks:S.tasks.filter(t=>t.projectId===p.id&&!t.done).length};
+  const cnt={photos:n,docs:allPhotos().filter(x=>x.projectId===p.id&&x.kind==='doc').length,checklists:S.checklists.filter(c=>c.projectId===p.id).length,tasks:S.tasks.filter(t=>t.projectId===p.id&&!t.done&&t.type!=='punch').length,punch:S.tasks.filter(t=>t.projectId===p.id&&t.type==='punch'&&!t.done).length};
   const dir=p.lat!=null?`<a class="btn sm" href="https://www.google.com/maps/dir/?api=1&destination=${+p.lat},${+p.lng}" target="_blank" rel="noopener">${I('pin')} Directions</a>`:'';
   const desk=DESK()?`<div class="pdesk"><div class="pdtop"><button class="bkl" data-a="tab" data-t="projects">${I('back')} Projects</button><span class="sp"></span>${starBtn(p)}<button class="btn sm" data-a="pSel" data-id="${p.id}">${I('share')} Share</button><button class="btn sm" data-a="shareJob" data-pid="${p.id}">${I('link')} Guest Link</button>${canInvite()?`<button class="btn sm" data-a="jobInvite" data-pid="${p.id}">${I('plus')} Invite</button>`:''}<button class="btn sm" data-a="ptab" data-t="reports">${I('report')} Report</button>${dir}<button class="btn sm stamp" data-a="capture" data-pid="${p.id}">${I('camera')} Take Photos</button></div>
    <div class="pdhd2"><h1>${esc(p.name)}</h1>${p.address?`<a class="ad" href="${gmSearch(p.address)}" target="_blank" rel="noopener">${esc(p.address)}</a>`:'<span class="note">No address yet</span>'}</div><div class="row" style="margin-bottom:8px">${pstat(p)}${p.companyName?`<span class="note">${esc(p.companyName)}</span>`:''}${p.jobNumber?`<span class="note">Job ${esc(p.jobNumber)}</span>`:''}<button class="btn sm" data-a="ptab" data-t="info">${I('pen')} Edit Job Info</button></div></div>`:'';
@@ -1457,10 +1462,36 @@ function taskCard(t){
 function taskList(ts){
   const f=V.taskF; const list=ts.filter(t=>f==='open'?!t.done:f==='done'?t.done:f==='punch'?t.type==='punch'&&!t.done:true).sort((a,b)=>(a.done-b.done)||((a.due||'9')<(b.due||'9')?-1:1));
   const chip=(k,l)=>`<button class="chip" data-a="taskF" data-f="${k}" aria-pressed="${f===k}">${l}</button>`;
-  return `<div class="chips">${chip('open','Open')}${chip('punch','Punch List')}${chip('done','Done')}${chip('all','All')}</div>${list.length?`<div class="stack">${list.map(taskCard).join('')}</div>`:`<div class="empty">${I('check')}<b>Nothing here</b><span>Add a task, or open a photo and tap Punch Item.</span></div>`}`;
+  return `<div class="chips">${chip('open','Open')}${chip('done','Done')}${chip('all','All')}</div>${list.length?`<div class="stack">${list.map(taskCard).join('')}</div>`:`<div class="empty">${I('check')}<b>Nothing here</b><span>Add a task, or open a photo and tap Punch Item.</span></div>`}`;
 }
-function ptTasks(p){return `<div class="row"><button class="btn pri" data-a="newTask" data-pid="${p.id}">${I('plus')} New Task</button><button class="btn" data-a="newTask" data-pid="${p.id}" data-type="punch">${I('flag')} New Punch Item</button></div>${taskList(vis(S.tasks.filter(t=>t.projectId===p.id),'tasks'))}`}
-function scrTasks(){return `<div class="row"><h1 style="flex:1">Tasks & Punch</h1><button class="btn pri" data-a="newTask">${I('plus')} New</button></div>${taskList(vis(S.tasks,'tasks'))}`}
+function ptTasks(p){return `<div class="row"><button class="btn pri" data-a="newTask" data-pid="${p.id}">${I('plus')} New Task</button></div>${taskList(vis(S.tasks.filter(t=>t.projectId===p.id&&t.type!=='punch'),'tasks'))}`}
+/* ---------- punch list: open -> ready to check -> closed, grouped by trade ---------- */
+const canVerify=()=>!(window.BC&&BC.role)||['Owner','Office','Super'].includes(BC.role());
+const pStatus=t=>t.done?'closed':t.status==='ready'?'ready':'open';
+const PST={open:['Open','bad'],ready:['Ready to Check','warn'],closed:['Closed','good']};
+function punchTrade(t){const as=M_(t.assignee);return t.trade||(as&&(as.trade||as.company))||t.assigneeText||'No trade set'}
+function scrPunch(){return `<div class="row"><h1 style="flex:1">Punch List</h1></div>${punchArea(null)}`}
+function punchArea(p){
+  const all=vis(S.tasks.filter(t=>t.type==='punch'&&(!p||t.projectId===p.id)),'tasks');
+  const n={open:0,ready:0,closed:0};all.forEach(t=>n[pStatus(t)]++);
+  const f=V.punchF||'open',g=V.punchG||'trade';
+  const list=all.filter(t=>f==='all'||pStatus(t)===f).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+  const key=t=>g==='zone'?(t.zone||'No zone set'):g==='person'?((M_(t.assignee)||{}).name||t.assigneeText||'Not assigned'):punchTrade(t);
+  const groups={};list.forEach(t=>{(groups[key(t)]=groups[key(t)]||[]).push(t)});
+  const chip=(k,l)=>`<button class="chip" data-a="punchF" data-f="${k}" aria-pressed="${f===k}">${l}</button>`;
+  const pid=p?p.id:'';
+  return `<div class="pstat"><button data-a="punchF" data-f="open" aria-pressed="${f==='open'}"><b>${n.open}</b><span>Open</span></button><button data-a="punchF" data-f="ready" aria-pressed="${f==='ready'}"><b>${n.ready}</b><span>Ready to Check</span></button><button data-a="punchF" data-f="closed" aria-pressed="${f==='closed'}"><b>${n.closed}</b><span>Closed</span></button></div>
+  <div class="row" style="margin:10px 0"><button class="btn pri" data-a="punchShot" data-pid="${pid}">${I('camera')} Punch Photo</button><button class="btn" data-a="newTask" data-pid="${pid}" data-type="punch">${I('plus')} Punch Item</button><span class="sp"></span>${chip('all','Show All')}<label class="pgby"><span class="note">Group by</span><select data-ch="punchG" aria-label="Group by">${[['trade','Trade'],['zone','Work Zone'],['person','Person']].map(([k,l])=>`<option value="${k}" ${g===k?'selected':''}>${l}</option>`).join('')}</select></label></div>
+  ${list.length?Object.keys(groups).sort().map(k=>`<div class="pgrp"><div class="pgh"><b>${esc(k)}</b><span class="note">${groups[k].length} item${groups[k].length===1?'':'s'}</span><span class="sp"></span>${f!=='closed'?`<button class="btn sm" data-a="punchText" data-g="${esc(k)}" data-pid="${pid}">${I('share')} Text List</button>`:''}</div><div class="stack">${groups[k].map(punchCard).join('')}</div></div>`).join(''):`<div class="empty">${I('pin2')}<b>${f==='open'?'No open punch items':'Nothing here'}</b><span>Tap Punch Photo to snap the problem and describe it, or drop a pin on any photo.</span></div>`}`;
+}
+function punchCard(t){
+  const ph=t.photoId&&PH(t.photoId),fx=t.fixPhotoId&&PH(t.fixPhotoId),as=M_(t.assignee),pr=P(t.projectId),st=pStatus(t),[sl,sc]=PST[st];
+  const due=t.due&&st!=='closed'?(t.due<dayKey(Date.now())?`<span class="pill bad">Late · ${esc(t.due)}</span>`:`<span class="pill mut">Due ${esc(t.due)}</span>`):'';
+  const act=st==='open'?`<button class="btn sm pri" data-a="fixPhoto" data-id="${t.id}">${I('camera')} Fixed: Add Photo</button>`:st==='ready'?(canVerify()?`<button class="btn sm pri" data-a="punchClose" data-id="${t.id}">${I('check')} Looks Good, Close</button><button class="btn sm" data-a="punchReopen" data-id="${t.id}">Not Fixed</button>`:'<span class="note">Waiting for the office or super to check it</span>'):(canVerify()?`<button class="btn sm" data-a="punchReopen" data-id="${t.id}">Reopen</button>`:'');
+  return `<div class="pcard"><div class="pimg">${ph?`<button class="tile" data-a="openPhoto" data-id="${ph.id}"><img src="${esc(ph.thumb||ph.url)}" alt="Problem photo" loading="lazy"></button>`:`<span class="ph0">${I('pin2')}</span>`}${fx?`<button class="tile" data-a="openPhoto" data-id="${fx.id}"><img src="${esc(fx.thumb||fx.url)}" alt="Fixed photo" loading="lazy"></button>`:''}</div>
+   <div class="pbody"><div class="row" style="gap:6px"><span class="pill ${sc}">${sl}</span>${due}</div><b>${esc(t.title)}</b><span class="note">${[t.zone,as?as.name+(as.company?' · '+as.company:''):t.assigneeText,V.tab!=='project'&&pr?pr.name:''].filter(Boolean).map(esc).join(' · ')}</span><div class="row" style="gap:6px;margin-top:4px">${act}<span class="sp"></span><button class="ib" data-a="delTask" data-id="${t.id}" aria-label="Remove punch item">${I('trash')}</button></div></div></div>`;
+}
+function scrTasks(){return `<div class="row"><h1 style="flex:1">Tasks</h1><button class="btn pri" data-a="newTask">${I('plus')} New Task</button></div>${taskList(vis(S.tasks.filter(t=>t.type!=='punch'),'tasks'))}`}
 
 /* checklists */
 function ptChecklists(p){
@@ -1802,7 +1833,7 @@ function photoSheet(){
   <div class="card"><span class="pvsec">Comments</span><div id="cmts">${commentsHtml(p.id)}</div>
    <form data-sub="comment" data-id="${p.id}" class="stack" style="margin-top:8px;gap:6px"><div class="row" style="gap:6px;flex-wrap:nowrap"><input type="text" id="cm-text" name="text" placeholder="Add a comment. Type @ to mention." autocomplete="off" style="flex:1;min-width:0"><button class="btn sm pri" type="submit">Post</button></div>${S.members.length?`<div class="tagrow">${S.members.slice(0,12).map(m=>`<button type="button" class="chip" data-a="mention" data-n="${esc(m.name)}">@${esc(m.name)}</button>`).join('')}</div>`:''}</form></div>
   <div class="card stack" style="gap:8px"><span class="pvsec">${I('check')} Tasks<span class="sp"></span><button class="btn sm" data-a="newTask" data-pid="${p.projectId}" data-photo="${p.id}">${I('plus')} Task</button><button class="btn sm" data-a="newTask" data-pid="${p.projectId}" data-photo="${p.id}" data-type="punch">${I('flag')} Punch</button></span>${tks.length?tks.map(t=>`<div class="mtask"><span class="t">${esc(t.title)}<span>${t.type==='punch'?'Punch item':'Task'} · ${t.done?'Done':'Open'}${M_(t.assignee)?' · '+esc(M_(t.assignee).name):''}</span></span></div>`).join(''):''}</div>
-  ${orig?`<button class="btn sm" data-a="openPhoto" data-id="${orig.id}">${I('back')} See Original (no markup)</button>`:''}
+  ${orig?`<div class="row" style="gap:6px"><button class="btn sm" data-a="openPhoto" data-id="${orig.id}">${I('back')} See Original (no markup)</button><button class="btn sm" data-a="mkRemove" data-id="${p.id}">${I('trash')} Remove Markup</button></div>`:''}
   ${(before||after)?`<button class="btn pri" data-a="compare" data-a2="${before?before.id:p.id}" data-b2="${before?p.id:after.id}">${I('cmp')} Compare Before & After</button>`:''}
   <div class="acts"><button class="btn" data-a="sendOne" data-id="${p.id}">${I('share')} Send in Text</button>${p.kind==='photo'&&!p.pending?`<button class="btn" data-a="aiSuggest" data-id="${p.id}" ${SAMPLE?'':'disabled'}>${I('sparkle')} Suggest Tags</button>`:''}</div>
   ${p.voiceUrl?`<div class="card"><span class="note">Voice note</span><audio src="${esc(p.voiceUrl)}" controls style="width:100%;margin-top:6px"></audio></div>`:''}
@@ -1819,13 +1850,15 @@ function commentsHtml(pid){
 function taskSheet(){
   const t=M.task, ps=visProjects();
   return sheet(t.type==='punch'?'New Punch Item':'New Task',`<form class="stack" data-sub="saveTask">
-   <label class="f">${t.type==='punch'?'What Needs Fixing':'Task'}<input type="text" id="tk-title" name="title" required autocapitalize="words" value="${esc(t.title||'')}" placeholder="${t.type==='punch'?'Drywall Ding At Hall Corner':'Order Trusses'}"></label>
+   <label class="f">${t.type==='punch'?`<span class="row" style="justify-content:space-between">What Needs Fixing<button type="button" class="linkb" data-a="editList" data-k="punchlib">Edit list</button></span>`:'Task'}<input type="text" id="tk-title" name="title" required autocapitalize="words" value="${esc(t.title||'')}" ${t.type==='punch'?'list="dl-punchlib"':''} placeholder="${t.type==='punch'?'Pick or type, e.g. Drywall Ding':'Order Trusses'}"></label>
+   ${t.type==='punch'?`<datalist id="dl-punchlib">${punchLib().map(x=>`<option value="${esc(x)}">`).join('')}</datalist><div class="tagrow" style="max-height:92px;overflow:auto">${punchLib().slice(0,40).map(x=>`<button type="button" class="chip" data-a="punchPick" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div>
+   <div class="two"><label class="f">Work Zone<input type="text" id="tk-zone" name="zone" list="dl-zones" value="${esc(t.zone||'')}" autocapitalize="words" placeholder="Building B, Level 2"></label><label class="f">Trade Partner<input type="text" id="tk-trade" name="trade" list="dl-trades" value="${esc(t.trade||'')}" autocapitalize="words" placeholder="Drywall"></label></div>`:''}
    <label class="f">Project<select id="tk-p" name="pid">${ps.map(p=>`<option value="${p.id}" ${p.id===t.projectId?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label>
    <div class="two"><label class="f">Assign To<select id="tk-as" name="assignee"><option value="">Pick a person</option>${S.members.map(m=>`<option value="${m.id}">${esc(m.name)}${m.company?' ('+esc(m.company)+')':''}</option>`).join('')}</select></label><label class="f">Due<input type="date" id="tk-due" name="due"></label></div>
    <label class="f">Or Type a Name<input type="text" id="tk-ast" name="assigneeText" autocapitalize="words" placeholder="If they're not on the team list"></label>
    <label class="f">Type<select id="tk-type" name="type"><option value="task" ${t.type!=='punch'?'selected':''}>Task</option><option value="punch" ${t.type==='punch'?'selected':''}>Punch Item</option></select></label>
-   ${t.photoId&&PH(t.photoId)?`<img src="${esc(PH(t.photoId).url)}" alt="Problem photo" style="border-radius:8px;max-height:220px;object-fit:cover">`:''}
-   <button class="btn pri" type="submit">Save</button>${!ps.length?'<p class="note">Add a Project first.</p>':''}</form>`);
+   ${t.photoId&&PH(t.photoId)?`<img src="${esc(PH(t.photoId).thumb||PH(t.photoId).url)}" alt="Problem photo" style="border-radius:8px;max-height:220px;object-fit:cover">`:''}
+   <button class="btn pri" type="submit">Save</button>${datalists()}${!ps.length?'<p class="note">Add a Project first.</p>':''}</form>`);
 }
 function memberSheet(){
   const m=M.m||{};
@@ -1912,9 +1945,12 @@ function markupSheet(){
 async function mkInit(){
   Object.assign(MK,{tool:'arrow',color:'#ff3b30',shapes:[],cur:null,scale:null,text:'',sel:null,drag:null});try{MK.defW=+localStorage.getItem('pc-mk-w')||1;MK.defK=+localStorage.getItem('pc-mk-k')||1}catch(e){MK.defW=1;MK.defK=1}
   const p=PH(M.id), c=$('#mkc'); MK.c=c; MK.x=c.getContext('2d');
-  try{MK.img=await imgFromUrl(p.url)}catch(e){toast('Couldn\'t open that photo for markup.');closeModal();return}
+  const base=p.markupOf&&p.mk&&PH(p.markupOf)&&PH(p.markupOf).url?PH(p.markupOf):p;MK.editOf=base!==p?p.id:null;
+  try{MK.img=await imgFromUrl(base.url)}catch(e){toast('Couldn\'t open that photo for markup.');closeModal();return}
   const sc=Math.min(1,4032/Math.max(MK.img.naturalWidth,MK.img.naturalHeight)); c.width=Math.round(MK.img.naturalWidth*sc); c.height=Math.round(MK.img.naturalHeight*sc);
-  MK.lw=Math.max(4,c.width*.006); mkDraw(); MK.z=1; mkFit();
+  MK.lw=Math.max(4,c.width*.006);
+  if(MK.editOf&&p.mk&&Array.isArray(p.mk.shapes)){const f=c.width/(p.mk.cw||c.width),sc=q=>[q[0]*f,q[1]*f];MK.shapes=JSON.parse(JSON.stringify(p.mk.shapes)).map(s=>{if(s.pts)s.pts=s.pts.map(sc);if(s.a){s.a=sc(s.a);s.b=sc(s.b)}if(s.p)s.p=sc(s.p);return s});if(p.mk.scale)MK.scale=p.mk.scale*f;const sb=$('[data-a=mkSave]');if(sb)sb.textContent='Save'}
+  mkDraw(); MK.z=1; mkFit();
   const st=c.parentElement;MK.st=st;
   st.addEventListener('wheel',e=>{e.preventDefault();mkZoomAt(MK.z*Math.exp(-e.deltaY*(e.ctrlKey?.01:.0018)),e.clientX,e.clientY)},{passive:false});
   const panOn=e=>MK.tool==='move'||MK.space||e.button===1||e.button===2;
@@ -2225,7 +2261,7 @@ function scrSettings(){
    <div class="list" id="tg-list">${tagRowsHtml()}</div>
    <form data-sub="tagAdd" class="row"><input type="text" id="tg-new" name="t" placeholder="New tag, e.g. Waterproofing" autocapitalize="words" style="flex:1;min-width:180px"><button class="btn pri" type="submit" data-keepfocus>${I('plus')} Add Tag</button></form>
    <div class="row"><button class="btn sm" data-a="tagReset">Reset to the Original List</button></div></div>
-  ${listCard('zones','Work Zone List')}${listCard('trades','Trade Partner List')}
+  ${listCard('zones','Work Zone List')}${listCard('trades','Trade Partner List')}${listCard('punchlib','Common Punch Items')}
   <div class="card stack"><h2>Company</h2><label class="f">Default Company Name<input type="text" id="st-name" value="${esc(coName())}" data-ch="setName" autocapitalize="words"></label>
    <div class="row">${s.logoUrl?`<img src="${esc(s.logoUrl)}" alt="Company logo" style="height:56px;width:auto;background:#fff;border-radius:8px;padding:6px;border:1px solid var(--line)">`:'<span class="note">No logo yet. Photos and PDFs use the company name.</span>'}</div>
    <div class="row"><button class="btn pri" data-a="logoPick" ${AS?'':'disabled'}>${I('img')} ${s.logoUrl?'Replace':'Upload'} Logo</button>${s.logoUrl?'<button class="btn" data-a="logoClear">Remove Logo</button>':''}</div><p class="note">The logo goes on every new photo stamp, every PDF report and the before and after reel. A PNG with a clear background looks best.</p></div>
@@ -2445,8 +2481,11 @@ const ACT={
   mkDel:()=>{if(MK.sel==null)return;const s=MK.shapes.splice(MK.sel,1)[0];if(s&&s.t==='scale')MK.scale=null;MK.sel=null;MK.edit=false;mkOpt();mkDraw()},
   mkUndo:()=>{const s=MK.shapes.pop();if(s&&s.t==='scale')MK.scale=null;MK.sel=null;MK.edit=false;mkOpt();mkDraw()},
   mkScale:()=>{const s=MK.shapes.find(x=>x.t==='scale');const inch=(+($('#mk-ft').value||0))*12+(+($('#mk-in').value||0));if(!s){toast('Draw the scale line first.');return}if(!inch){toast('Enter the length of that line.');return}s.inches=inch;MK.scale=Math.hypot(s.b[0]-s.a[0],s.b[1]-s.a[1])/inch;mkDraw();mkOpt('scale');toast('Scale set. Pick Measure and drag across anything.')},
-  mkSave:async el=>{const p=PH(M.id);mkTextClean();MK.sel=null;mkDraw();el.disabled=true;el.textContent='Saving…';const blob=await new Promise(r=>MK.c.toBlob(r,'image/jpeg',.92));const id=uid();
-    const doc=clean({projectId:p.projectId,kind:'photo',takenAt:p.takenAt,createdAt:Date.now(),lat:p.lat,lng:p.lng,gpsSource:p.gpsSource,code:p.code,tags:p.tags||[],zone:p.zone,trade:p.trade,note:p.note,by:ME.id,byName:ME.name,markupOf:p.id,contentType:'image/jpeg'});
+  mkSave:async el=>{let p=PH(M.id);mkTextClean();MK.sel=null;mkDraw();el.disabled=true;el.textContent='Saving…';const blob=await new Promise(r=>MK.c.toBlob(r,'image/jpeg',.92));const id=uid();
+    const r1=v=>Math.round(v*10)/10,rq=q=>[r1(q[0]),r1(q[1])];const mk={cw:MK.c.width,scale:MK.scale||null,shapes:MK.shapes.map(x=>{const o={...x};if(o.pts)o.pts=o.pts.map(rq);if(o.a){o.a=rq(o.a);o.b=rq(o.b)}if(o.p)o.p=rq(o.p);return o})};
+    if(MK.editOf&&PH(MK.editOf)){const cp=PH(MK.editOf);try{if(AS){const th=await makeThumb(MK.c);const up=await upMedia(blob,th);const old={assetId:cp.assetId,thumbId:cp.thumbId};await upd('photos',cp.id,{...up,thumb:th&&up.thumbId?URL.createObjectURL(th):up.url,mk});if(old.assetId&&old.assetId!==up.assetId)delAsset(old)}else await upd('photos',cp.id,{url:URL.createObjectURL(blob),mk});openModal({kind:'photo',id:cp.id,back:M&&M.back});toast('Markup updated. The original is kept.')}catch(e){el.disabled=false;el.textContent='Save';toast('Couldn\'t save. Check your signal and try again.')}return}
+    if(p.markupOf&&PH(p.markupOf))p=PH(p.markupOf);
+    const doc=clean({projectId:p.projectId,kind:'photo',takenAt:p.takenAt,createdAt:Date.now(),lat:p.lat,lng:p.lng,gpsSource:p.gpsSource,code:p.code,tags:p.tags||[],zone:p.zone,trade:p.trade,note:p.note,by:ME.id,byName:ME.name,markupOf:p.id,contentType:'image/jpeg',mk});
     try{if(AS){const up=await upMedia(blob,await makeThumb(MK.c));await put('photos',{...doc,id,...up})}else await put('photos',{...doc,id,url:URL.createObjectURL(blob),localOnly:true});const bk=M&&M.back;if(bk&&bk.shot)bk.shot=bk.shot.map(x=>x===p.id?id:x);openModal({kind:'photo',id,back:bk});toast('Saved a marked-up copy. The original is kept.')}
     catch(e){el.disabled=false;el.textContent='Save Copy';toast('Couldn\'t save. Check your signal and try again.')}},
   takeAfter:el=>{const b=PH(el.dataset.id);afterShot=null;openModal({kind:'capture',pid:b.projectId,lockProject:true,single:true,title:'After Photo',why:'Stand where the before photo was taken and match the angle. The two will pair up for a side-by-side.',beforeOf:b.id,ctx:{tags:['After'],zone:b.zone||'',trade:b.trade||'',note:''}})},
@@ -2454,7 +2493,7 @@ const ACT={
   voice:el=>{M.voiceFor=el.dataset.id;$('#in-audio').click()},
   newTask:el=>{const pid=el.dataset.pid||V.pid||visProjects()[0]?.id;if(!pid){toast('Add a Project first.');return}openModal({kind:'task',task:{projectId:pid,type:el.dataset.type||'task',photoId:el.dataset.photo||null,title:''}})},
   delTask:el=>{if(!el.dataset.armed){el.dataset.armed=1;el.style.color='var(--bad)';toast('Tap the trash again to remove this task');setTimeout(()=>{delete el.dataset.armed;el.style.color=''},3000);return}del('tasks',el.dataset.id)},
-  fixPhoto:el=>{const t=S.tasks.find(x=>x.id===el.dataset.id);afterShot=id=>{upd('tasks',t.id,{fixPhotoId:id,done:true,doneAt:Date.now()});toast('Marked fixed with photo proof')};
+  fixPhoto:el=>{const t=S.tasks.find(x=>x.id===el.dataset.id);afterShot=id=>{if(canVerify()){upd('tasks',t.id,{fixPhotoId:id,status:'closed',done:true,doneAt:Date.now()});toast('Fixed and closed with photo proof')}else{upd('tasks',t.id,{fixPhotoId:id,status:'ready',readyAt:Date.now()});toast('Marked ready to check')}};
     openModal({kind:'capture',pid:t.projectId,lockProject:true,single:true,title:'Fixed Photo',why:'Take a photo showing the fix. The punch item closes when it saves.',ctx:{tags:['Closeout'],zone:'',trade:'',note:'Fixed: '+t.title}})},
   newChecklist:el=>{const tpl=$('#ck-tpl').value;put('checklists',{projectId:el.dataset.pid,title:tpl==='Blank'?'New Checklist':tpl,items:CK_TPL[tpl].map(t=>({t,needPhoto:true,done:false})),createdAt:Date.now()}).then(id=>{if(tpl==='Blank')openModal({kind:'checklist',id})})},
   editChecklist:el=>openModal({kind:'checklist',id:el.dataset.id}),
@@ -2550,6 +2589,18 @@ const ACT={
   qDel:el=>{if(!el.classList.contains('armed')){el.classList.add('armed');el.style.color='var(--bad)';toast('Tap the trash again to delete this photo for good. It has not been uploaded.',3200);setTimeout(()=>{el.classList.remove('armed');el.style.color=''},3000);return}const id=el.dataset.id;delete PEND[id];qDrop(id).then(()=>render())},
   dashWk:el=>{V.dashWk=+el.dataset.w;render()},
   phTagRm:el=>{const p=PH(el.dataset.id);if(!p||p.pending)return;const tags=[...new Set([...(p.tags||[]),...(p.portfolio?['Portfolio']:[])])];tags.splice(+el.dataset.i,1);setPhotoTags(p,tags)},
+  mkRemove:el=>{if(!el.classList.contains('armed')){el.classList.add('armed');el.style.color='var(--bad)';el.innerHTML=I('trash')+' Tap Again to Remove Markup';setTimeout(()=>{if(!el.isConnected)return;el.classList.remove('armed');el.style.color='';el.innerHTML=I('trash')+' Remove Markup'},3000);return}
+    const p=PH(el.dataset.id);if(!p||!p.markupOf)return;const orig=p.markupOf;del('photos',p.id);if(AS&&p.assetId&&!allPhotos().some(x=>x.assetId===p.assetId&&x.id!==p.id))delAsset(p);if(PH(orig))openModal({kind:'photo',id:orig,back:M&&M.back});else closeModal();toast('Markup removed. The photo is kept.')},
+  punchF:el=>{V.punchF=el.dataset.f;render()},
+  punchShot:el=>{const pid=el.dataset.pid||V.pid||visProjects()[0]?.id;if(!pid){toast('Add a Project first.');return}afterShot=id=>{const ph=PH(id);setTimeout(()=>openModal({kind:'task',task:{projectId:pid,type:'punch',photoId:id,title:'',zone:ph&&ph.zone||'',trade:ph&&ph.trade||''}}),300)};
+    openModal({kind:'capture',pid,lockProject:true,single:true,title:'Punch Photo',why:'Take a photo of the problem. Then describe it.',ctx:{tags:['Punch'],zone:'',trade:'',note:''}})},
+  punchPick:el=>{const i=$('#tk-title');if(i){i.value=el.dataset.v;i.focus()}},
+  punchClose:el=>{upd('tasks',el.dataset.id,{status:'closed',done:true,doneAt:Date.now(),closedBy:ME.name});toast('Punch item closed')},
+  punchReopen:el=>{const t=S.tasks.find(x=>x.id===el.dataset.id);if(!t)return;upd('tasks',t.id,{status:'open',done:false,doneAt:null});if(t.assignee)alertFor(t.assignee,`${ME.name} reopened a punch item: ${t.title} (${P(t.projectId)?.name||''})`,{taskId:t.id,photoId:t.photoId||null,projectId:t.projectId});toast('Reopened')},
+  punchText:el=>{const g=el.dataset.g,pid=el.dataset.pid,f=V.punchF||'open';const items=S.tasks.filter(t=>t.type==='punch'&&(!pid||t.projectId===pid)&&(f==='all'||pStatus(t)===f)).filter(t=>{const gb=V.punchG||'trade';const k=gb==='zone'?(t.zone||'No zone set'):gb==='person'?((M_(t.assignee)||{}).name||t.assigneeText||'Not assigned'):punchTrade(t);return k===g});
+    const byJob={};items.forEach(t=>{const n=P(t.projectId)?.name||'Job';(byJob[n]=byJob[n]||[]).push(t)});
+    const body=`Punch list for ${g}:\n`+Object.keys(byJob).map(j=>`${j}\n`+byJob[j].map((t,i)=>`${i+1}. ${t.title}${t.zone?' ('+t.zone+')':''}`).join('\n')).join('\n\n')+`\n\nOpen Build Camera to see the photos: ${location.origin}`;
+    location.href='sms:?&body='+encodeURIComponent(body)},
   editList:el=>{const k=el.dataset.k;const m=M;if(m&&m.kind==='cam')camStop();closeModal();V.tab='settings';render();setTimeout(()=>{const c=$('#st-'+k);if(c)c.scrollIntoView({block:'start'})},60)},
   lstDel:el=>{const k=el.dataset.k,l=[...LISTS[k].get()],i=+el.dataset.i,t=l[i];if(!el.classList.contains('armed')){el.classList.add('armed');el.style.color='var(--bad)';toast('Tap the trash again to remove "'+t+'" from the list');setTimeout(()=>{el.classList.remove('armed');el.style.color=''},3000);return}l.splice(i,1);saveList(k,l).then(()=>{const b=$('#ls-'+k);if(b)b.innerHTML=listRowsHtml(k)});toast('"'+t+'" removed from the list. Old photos keep it.')},
   editTags:()=>{const m=M;if(m&&m.kind==='cam')camStop();closeModal();V.tab='settings';render();setTimeout(()=>{const c=$('#st-tags');if(c)c.scrollIntoView({block:'start'})},60)},
@@ -2614,6 +2665,7 @@ document.addEventListener('change',async e=>{const el=e.target,k=el.dataset.ch;i
   else if(k==='setAI'){put('settings',{...SET(),id:'company',autoTag:el.checked})}
   else if(k==='ct'){const p=P(el.dataset.pid),i=+el.dataset.i;upd('projects',p.id,{contacts:(p.contacts||[]).map((c,j)=>j===i?{...c,[el.dataset.k]:el.value.trim()}:c)})}
   else if(k==='sxTo'){}
+  else if(k==='punchG'){V.punchG=el.value;render()}
   else if(k==='lstRen'){delete el.dataset.dirty;const lk=el.dataset.k,l=[...LISTS[lk].get()],i=+el.dataset.i,nw=titleCase(el.value.trim());if(!nw){el.value=l[i];return}if(nw===l[i])return;l[i]=nw;saveList(lk,l);toast('Renamed to "'+nw+'"')}
   else if(k==='tagRen'){delete el.dataset.dirty;const l=[...tagList()],i=+el.dataset.i,old=l[i],nw=titleCase(el.value.trim());
     if(!nw){el.value=old;toast('A tag needs a name. Use the trash to remove it.');return}
@@ -2681,7 +2733,7 @@ document.addEventListener('submit',async e=>{const f=e.target,k=f.dataset.sub;if
     try{const tok=await BC.createShare({kind:M.k,projectId:M.pid,ids:M.ids,album:M.album,title:v.title.trim(),comments:!!v.comments,days:+v.days});M.link=BC.shareUrl(tok);delete SHL[M.pid];if(hookOn())BC.hook('share.created',{project:P(M.pid)?.name||'',title:v.title.trim(),link:M.link});renderModal()}
     catch(e){b.disabled=false;b.textContent='Make the Link';toast(/office/i.test(e&&e.message||'')?'Only the owner, office or a super can make guest links. Ask the office.':'Couldn\'t make the link. Check your signal and try again.',4200)}}
   else if(k==='pcomment'){const t=v.text.trim();if(!t)return;const pid=f.dataset.id;await put('comments',{photoId:null,projectId:pid,text:t,by:ME.id,byName:ME.name,at:Date.now()});S.members.filter(m=>m.name&&t.includes('@'+m.name)).forEach(m=>alertFor(m.id,`${ME.name} mentioned you on ${P(pid)?.name||'a job'}: "${t.slice(0,120)}"`,{projectId:pid}));f.reset();const c=$('#pconv');if(c)c.innerHTML=pconvHtml(pid)}
-  else if(k==='saveTask'){const t=M.task;if(hookOn())BC.hook('task.created',{title:v.title.trim(),type:v.type,project:P(v.pid)?.name||'',due:v.due||'',assignee:M_(v.assignee)?.name||v.assigneeText||''});const tid=await put('tasks',{projectId:v.pid,title:v.title.trim(),type:v.type,assignee:v.assignee||null,assigneeText:v.assigneeText.trim(),due:v.due||'',photoId:t.photoId||null,done:false,createdAt:Date.now(),by:ME.name});if(v.assignee)alertFor(v.assignee,`${ME.name} assigned you a ${v.type==='punch'?'punch item':'task'}: ${v.title.trim()} (${P(v.pid)?.name||''})`,{taskId:tid,photoId:t.photoId||null,projectId:v.pid});closeModal();toast(v.type==='punch'?'Punch item added':'Task added')}
+  else if(k==='saveTask'){const t=M.task;if(hookOn())BC.hook('task.created',{title:v.title.trim(),type:v.type,project:P(v.pid)?.name||'',due:v.due||'',assignee:M_(v.assignee)?.name||v.assigneeText||''});const tid=await put('tasks',{projectId:v.pid,title:v.title.trim(),type:v.type,...(v.type==='punch'?{zone:(v.zone||'').trim(),trade:(v.trade||'').trim(),status:'open'}:{}),assignee:v.assignee||null,assigneeText:v.assigneeText.trim(),due:v.due||'',photoId:t.photoId||null,done:false,createdAt:Date.now(),by:ME.name});if(v.assignee)alertFor(v.assignee,`${ME.name} assigned you a ${v.type==='punch'?'punch item':'task'}: ${v.title.trim()} (${P(v.pid)?.name||''})`,{taskId:tid,photoId:t.photoId||null,projectId:v.pid});closeModal();toast(v.type==='punch'?'Punch item added':'Task added')}
   else if(k==='saveMember'){const m=M.m||{};await put('members',{...(m.id?{id:m.id}:{}),name:v.name.trim(),role:v.role,phone:v.phone.trim(),company:v.company.trim(),trade:v.trade.trim()});closeModal()}
   else if(k==='ckAdd'){const c=S.checklists.find(x=>x.id===f.dataset.id);if(!v.t.trim())return;upd('checklists',c.id,{items:[...c.items,{t:v.t.trim(),needPhoto:false,done:false}]});renderModal();setTimeout(()=>$('#ce-new')?.focus(),30)}
   else if(k==='saveLog'){await put('logs',{id:f.dataset.id,projectId:f.dataset.pid,date:f.dataset.date,weather:v.weather,delays:v.delays,notes:v.notes,summary:v.summary,by:ME.name,savedAt:Date.now()});toast('Daily log saved')}

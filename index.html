@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="893a5e6bcf">
+<meta name="bc-ver" content="b1d808edcf">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-oHJNxMjoekRxCSivAdL+Le8oZq2IxlTIJBG/z8C/AEA=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-KEUQtQyFioIqnl2HYDgQ592xNdgpNnz/PxustzR3ig8=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -508,6 +508,7 @@ div.cam{position:fixed;inset:0;background:#000;z-index:55;display:flex;flex-dire
 .camzoom button[aria-pressed="true"]{background:rgba(255,255,255,.22);color:var(--stamp);font-size:14px}
 .camzl{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);background:rgba(0,0,0,.55);color:#fff;font:700 22px var(--f-body);padding:6px 14px;border-radius:999px;pointer-events:none;opacity:0;transition:opacity .25s}.camzl.on{opacity:1}
 .cam video{transform-origin:50% 50%;transition:transform .12s ease-out}
+.camwait{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);color:#fff;font-weight:600;font-size:16px;background:rgba(0,0,0,.45);padding:8px 14px;border-radius:999px;pointer-events:none}
 .camstamp{position:relative;margin-top:auto;align-self:flex-end;display:grid;justify-items:end;gap:1px;padding:0 max(14px,env(safe-area-inset-right,0px)) 10px 14px;pointer-events:none;text-align:right;max-width:78%;font:700 10px/1.25 -apple-system,"SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif;color:#fff;text-shadow:0 0 6px #000,0 0 2px #000,0 1px 1px #000}
 .camstamp span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.camstamp .co{font-size:8.5px;opacity:.95}.camstamp .nogps{color:#ffb4a8}.camstamp .gps{font-size:8px}
 .camstamp+.camzoom{margin-top:0}
@@ -634,6 +635,7 @@ h3.day{align-items:center}
 .pstat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}.pstat button{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:10px;display:grid;gap:2px;text-align:left;color:var(--ink)}.pstat b{font:800 26px/1 var(--f-display)}.pstat span{font-size:12.5px;color:var(--muted)}.pstat button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
 .f .row .linkb{white-space:nowrap;font-size:11.5px}.duebtn .chip{flex:none;font:600 13px var(--f-body);letter-spacing:0;text-transform:none}
 .fixdd{border:1px solid var(--line);border-radius:10px;background:var(--panel)}.fixdd summary{cursor:pointer;padding:10px 12px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:8px}.fixdd summary::after{content:'▾';color:var(--muted)}.fixdd[open] summary::after{content:'▴'}.fixdd summary::-webkit-details-marker{display:none}.fixlist{max-height:240px;overflow:auto;border-top:1px solid var(--line);padding:4px 6px}.fixck{display:flex;align-items:center;gap:10px;padding:8px 6px;border-radius:8px;cursor:pointer}.fixck:hover{background:var(--sunk)}.fixck input{width:20px;height:20px;flex:none}
+.dh{cursor:grab;user-select:none;color:var(--muted);font:700 15px/1 var(--f-ui,inherit);letter-spacing:-3px;padding:8px 6px 8px 2px;touch-action:none}.dh:hover{color:var(--ink)}.reo-drag{opacity:.9;box-shadow:0 6px 18px rgba(0,0,0,.18);background:var(--panel);position:relative;z-index:5;border-radius:8px}body.reo-on,body.reo-on *{cursor:grabbing!important;user-select:none}
 .pgby{display:inline-flex;align-items:center;gap:6px}.pgby select{width:auto;min-height:38px}.pgrp{margin-top:14px}.pgh{display:flex;align-items:center;gap:8px;margin:0 0 6px}.pgh b{font-size:16px}
 .pcard{display:flex;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px}.pimg{display:flex;gap:4px;flex:none}.pimg .tile{width:76px;aspect-ratio:1;border-radius:8px}.pimg .ph0{width:76px;aspect-ratio:1;border-radius:8px;background:var(--sunk);display:grid;place-items:center;color:var(--muted)}.pbody{flex:1;min-width:0;display:grid;gap:2px}.pbody b{font-size:15px}
 @media (min-width:1000px){.sheet.pv .pvside .card{padding:10px 12px}.sheet.pv .pvside .card.stack{gap:6px!important}.sheet.pv .pvside textarea{min-height:52px}.sheet.pv .pvside .acts .btn{min-height:36px;padding:0 12px;font-size:14px}.sheet.pv .pvside .f{gap:4px}.sheet.pv .pvside input,.sheet.pv .pvside select{min-height:38px;padding-top:6px;padding-bottom:6px}.sheet.pv .pvside .btn.sm{min-height:34px}.sheet.pv .pvside .f>.row{flex-wrap:nowrap;gap:6px}.sheet.pv .pvside .f .linkb{font-size:11px;white-space:nowrap}.sheet.pv .pvside #cmts .note{margin:2px 0}.sheet.pv .pvside .chip{min-height:30px;padding:3px 10px}}
@@ -886,11 +888,11 @@ function asgOpts(tr){const lc=(tr||'').toLowerCase(),mine=tr?S.members.filter(m=
 function fixRows(tr){if(!tr)return '<p class="note" style="margin:6px 2px">Pick the trade partner first.</p>';const L=punchFor(tr);return L.length?L.map(x=>`<label class="fixck"><input type="checkbox" name="fix" value="${esc(x)}" data-ch="fixCk"><span>${esc(x)}</span></label>`).join(''):'<p class="note" style="margin:6px 2px">No common fixes for this trade yet. Tap Edit list to add some, or type it below.</p>'}
 function plCard(){const trs=tradeList(),tr=V.plTrade&&trs.includes(V.plTrade)?V.plTrade:trs[0]||'',L=tr?punchFor(tr):[];
   return `<div class="card stack" id="st-punchlib"><h2>Common Punch Items</h2><label class="f">Trade Partner<select data-ch="plTrade">${trs.map(t=>`<option ${t===tr?'selected':''}>${esc(t)}</option>`).join('')}</select></label>
-   <div class="list">${L.length?L.map((x,i)=>`<div class="ck" style="align-items:center;gap:6px"><span style="flex:1">${esc(x)}</span><button class="ib" data-a="plDel" data-t="${esc(tr)}" data-i="${i}" aria-label="Remove ${esc(x)}">${I('trash')}</button></div>`).join(''):'<p class="note" style="margin:6px 0">Nothing on this list yet.</p>'}</div>
+   <div class="list">${L.length?L.map((x,i)=>`<div class="ck" style="align-items:center;gap:6px" data-reo="pl" data-t="${esc(tr)}" data-v="${esc(x)}">${DESK()?`<span class="dh" title="Drag to move" aria-hidden="true">&#8942;&#8942;</span>`:''}<span style="flex:1">${esc(x)}</span><button class="ib" data-a="plDel" data-t="${esc(tr)}" data-i="${i}" aria-label="Remove ${esc(x)}">${I('trash')}</button></div>`).join(''):'<p class="note" style="margin:6px 0">Nothing on this list yet.</p>'}</div>
    <form data-sub="plAdd" data-t="${esc(tr)}" class="row"><input type="text" name="t" placeholder="New fix for ${esc(tr)}" autocapitalize="words" style="flex:1;min-width:180px"><button class="btn pri" type="submit" data-keepfocus>${I('plus')} Add</button></form></div>`}
 const LISTS={zones:{get:()=>zoneList(),name:'Work Zone',ph:'New zone, e.g. Building B, Level 2'},trades:{get:()=>tradeList(),name:'Trade Partner',ph:'New trade, e.g. Masonry'}};
 function saveList(k,list){return put('settings',{id:k,list:[...new Set(list.map(t=>String(t).trim()).filter(Boolean))]})}
-function listRowsHtml(k){const L=LISTS[k].get();return L.length?L.map((t,i)=>`<div class="ck" style="align-items:center;gap:6px"><input type="text" value="${esc(t)}" data-ch="lstRen" data-k="${k}" data-i="${i}" autocapitalize="words" aria-label="${LISTS[k].name} name" style="flex:1;min-width:0"><button class="ib" data-a="lstDel" data-k="${k}" data-i="${i}" aria-label="Remove ${esc(t)}">${I('trash')}</button></div>`).join(''):'<p class="note" style="margin:6px 0">Nothing on the list yet.</p>'}
+function listRowsHtml(k){const L=LISTS[k].get();return L.length?L.map((t,i)=>`<div class="ck" style="align-items:center;gap:6px" data-reo="${k}" data-v="${esc(t)}">${DESK()?`<span class="dh" title="Drag to move" aria-hidden="true">&#8942;&#8942;</span>`:''}<input type="text" value="${esc(t)}" data-ch="lstRen" data-k="${k}" data-i="${i}" autocapitalize="words" aria-label="${LISTS[k].name} name" style="flex:1;min-width:0"><button class="ib" data-a="lstDel" data-k="${k}" data-i="${i}" aria-label="Remove ${esc(t)}">${I('trash')}</button></div>`).join(''):'<p class="note" style="margin:6px 0">Nothing on the list yet.</p>'}
 function listCard(k,title){return `<div class="card stack" id="st-${k}"><h2>${title}</h2><div class="list" id="ls-${k}">${listRowsHtml(k)}</div><form data-sub="lstAdd" data-k="${k}" class="row"><input type="text" name="t" placeholder="${esc(LISTS[k].ph)}" autocapitalize="words" style="flex:1;min-width:180px"><button class="btn pri" type="submit" data-keepfocus>${I('plus')} Add</button></form></div>`}
 const tagList=()=>{const t=(typeof S!=='undefined'&&S.settings||[]).find(x=>x.id==='tags');return t&&Array.isArray(t.list)&&t.list.length?t.list:TAGS_DEF};
 const ROLES=['Owner','Office','Super','Crew','Trade Partner'];
@@ -1508,7 +1510,7 @@ function punchArea(p){
   const chip=(k,l)=>`<button class="chip" data-a="punchF" data-f="${k}" aria-pressed="${f===k}">${l}</button>`;
   const pid=p?p.id:'';
   return `<div class="pstat"><button data-a="punchF" data-f="open" aria-pressed="${f==='open'}"><b>${n.open}</b><span>Open</span></button><button data-a="punchF" data-f="ready" aria-pressed="${f==='ready'}"><b>${n.ready}</b><span>Ready to Check</span></button><button data-a="punchF" data-f="closed" aria-pressed="${f==='closed'}"><b>${n.closed}</b><span>Closed</span></button></div>
-  <div class="row" style="margin:10px 0"><button class="btn pri" data-a="punchShot" data-pid="${pid}">${I('camera')} Punch Photo</button><button class="btn" data-a="newTask" data-pid="${pid}" data-type="punch">${I('plus')} Punch Item</button><span class="sp"></span>${chip('all','Show All')}<label class="pgby"><span class="note">Group by</span><select data-ch="punchG" aria-label="Group by">${[['trade','Trade'],['zone','Work Zone'],['person','Person']].map(([k,l])=>`<option value="${k}" ${g===k?'selected':''}>${l}</option>`).join('')}</select></label></div>
+  <div class="row" style="margin:10px 0"><button class="btn pri" data-a="punchShot" data-pid="${pid}">${I('camera')} Punch Photo</button><button class="btn" data-a="newTask" data-pid="${pid}" data-type="punch">${I('plus')} Punch Item</button>${DESK()?`<button class="btn" data-a="punchImport" data-pid="${pid}">${I('doc')} Import</button><button class="btn" data-a="punchExport" data-pid="${pid}">${I('download')} Export</button>`:''}<span class="sp"></span>${chip('all','Show All')}<label class="pgby"><span class="note">Group by</span><select data-ch="punchG" aria-label="Group by">${[['trade','Trade'],['zone','Work Zone'],['person','Person']].map(([k,l])=>`<option value="${k}" ${g===k?'selected':''}>${l}</option>`).join('')}</select></label></div>
   ${list.length?Object.keys(groups).sort().map(k=>`<div class="pgrp"><div class="pgh"><b>${esc(k)}</b><span class="note">${groups[k].length} item${groups[k].length===1?'':'s'}</span><span class="sp"></span>${f!=='closed'?`<button class="btn sm" data-a="punchText" data-g="${esc(k)}" data-pid="${pid}">${I('share')} Text List</button>`:''}</div><div class="stack">${groups[k].map(punchCard).join('')}</div></div>`).join(''):`<div class="empty">${I('pin2')}<b>${f==='open'?'No open punch items':'Nothing here'}</b><span>Tap Punch Photo to snap the problem and describe it, or drop a pin on any photo.</span></div>`}`;
 }
 function punchCard(t){
@@ -1656,6 +1658,8 @@ function renderModal(){
   else if(M.kind==='checklist')h=checklistSheet();
   else if(M.kind==='pickPhoto')h=pickSheet();
   else if(M.kind==='import')h=importSheet();
+  else if(M.kind==='pimport')h=pImportSheet();
+  else if(M.kind==='pexport')h=pExportSheet();
   else if(M.kind==='social')h=socialSheet();
   else if(M.kind==='sendText')h=sendSheet();
   else if(M.kind==='bulk')h=bulkSheet();
@@ -1701,7 +1705,7 @@ const CAM={mode:'photo',rec:null,audio:null,raf:0,tick:0,stream:null,facing:'env
 function openCam(){if(!M||M.kind!=='capture')return;lvlStart();CAM.zoom=CAM.facing==='user'?1:zoomStart();['zone','trade','note'].forEach(k=>{const i=$('#cap-'+k);if(i)M.ctx[k]=i.value});const sp=$('#cap-p');if(sp)M.pid=sp.value;
   const cap=M;M={kind:'cam',cap,back:cap};renderModal()}
 function camHtml(){const c=M.cap,pr=P(c.pid),last=c.shot&&c.shot[0]&&PH(c.shot[0]);
-  return `<div class="cam" role="dialog" aria-modal="true" aria-label="Camera"><video id="camv" playsinline autoplay muted></video><div class="camflash" id="camflash"></div>
+  return `<div class="cam" role="dialog" aria-modal="true" aria-label="Camera"><video id="camv" playsinline autoplay muted></video><div class="camwait" id="camwait">Starting camera…</div><div class="camflash" id="camflash"></div>
   <div class="camtop"><button class="ib" data-a="camDone" aria-label="Close camera">${I('x')}</button><div class="camjob"><b>${esc(pr?pr.name:'')}</b><span>${esc([c.ctx.zone,c.ctx.trade].filter(Boolean).join(' · ')||'Tap Details to set zone and trade')}</span></div>${OFFLINE()?'<span class="offbadge">No-signal mode</span>':''}<span class="camtimer" id="camtimer" hidden>0:00</span><span class="camgps" id="camgps">GPS…</span><button class="ib" data-a="camDetails" aria-label="Photo details: work zone, trade partner, note" title="Details">${I('pen')}</button><button class="ib" data-a="camSnd" aria-pressed="${sndOn()}" aria-label="Shutter sound ${sndOn()?'on':'off'}">${I(sndOn()?'snd':'mute')}</button><button class="ib" id="camtorch" data-a="camTorch" aria-pressed="false" aria-label="Flashlight off">${I('torchoff')}</button><button class="ib" data-a="camLevel" aria-pressed="${lvlOn()}" aria-label="Level ${lvlOn()?'on':'off'}">${I('level')}</button><button class="ib" data-a="camFlip" aria-label="Switch camera">${I('cmp')}</button></div><div class="camlvl" id="camlvl" ${lvlOn()?'':'hidden'} aria-hidden="true"><i></i><b></b></div><div class="camtoast" id="camtoast" aria-live="polite">${I('check')}<span>Saved</span></div><div class="camzl" id="camzl" aria-hidden="true">1×</div>
   <div class="camstamp" id="camstamp" aria-label="Stamp preview">${stampPrevHtml(c)}</div><div class="camzoom" id="camzoom" role="group" aria-label="Zoom">${zoomBtns()}</div>
   <div class="camtags"><div class="cammode" role="group" aria-label="Photo or video"><button data-a="camMode" data-m="photo" aria-pressed="${CAM.mode!=='video'}">Photo</button><button data-a="camMode" data-m="video" aria-pressed="${CAM.mode==='video'}">Video</button></div><label class="camsel"><span>Tag</span><select id="cam-tag" data-ch="camTagSel" aria-label="Tag for the next photos"><option value="">No tag</option>${tagList().map(t=>`<option ${c.ctx.tags[0]===t?'selected':''}>${esc(t)}</option>`).join('')}</select></label></div>
@@ -1741,15 +1745,18 @@ async function rotatePhoto(id){const p=PH(id);if(!p||p.pending||!p.url||!AS){toa
 function camIsBlack(c){try{const t=document.createElement('canvas');t.width=32;t.height=24;const x=t.getContext('2d');x.drawImage(c,0,0,32,24);const a=x.getImageData(0,0,32,24).data;let s=0;for(let i=0;i<a.length;i+=4)s+=a[i]+a[i+1]+a[i+2];return s/(a.length/4*3)<4}catch(e){return false}}
 async function camRestart(){if(!M||M.kind!=='cam')return;if(CAM.stream){CAM.stream.getTracks().forEach(t=>t.stop());CAM.stream=null}await new Promise(r=>setTimeout(r,250));if(M&&M.kind==='cam')camStart()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible'||!M||M.kind!=='cam')return;const tr=CAM.stream&&CAM.stream.getVideoTracks()[0];if(!tr||tr.readyState==='ended'||tr.muted)camRestart();else{const v=$('#camv');if(v&&v.paused)v.play().catch(()=>{})}});
-async function camOpenBest(){const fm={ideal:CAM.facing};const tries=[{width:{ideal:3264},height:{ideal:2448}},{width:{ideal:1920},height:{ideal:1440}},{width:{ideal:1920},height:{ideal:1080}},{}];
+async function camOpenBest(){const fm={ideal:CAM.facing};const all=[{width:{ideal:3264},height:{ideal:2448}},{width:{ideal:1920},height:{ideal:1440}},{width:{ideal:1920},height:{ideal:1080}},{}];
+  let last=-1;try{last=+localStorage.getItem('pc-camc-'+CAM.facing);if(!(last>=0&&last<all.length))last=-1}catch(e){}
+  const tries=last>=0?[all[last],...all.filter((_,i)=>i!==last)]:all;
   let best=null,bestPx=0;const px=s=>{const t=s.getVideoTracks()[0];const st=t&&t.getSettings?t.getSettings():{};return (st.width||0)*(st.height||0)};
   for(const t of tries){let s=null;try{s=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:fm,...t}})}catch(e){continue}
-    const n=px(s);if(n>bestPx){if(best)best.getTracks().forEach(x=>x.stop());best=s;bestPx=n}else s.getTracks().forEach(x=>x.stop());
+    const n=px(s);if(n>bestPx){if(best)best.getTracks().forEach(x=>x.stop());best=s;bestPx=n;try{localStorage.setItem('pc-camc-'+CAM.facing,String(all.indexOf(t)))}catch(e){}}else s.getTracks().forEach(x=>x.stop());
     if(bestPx>=1.9e6||(bestPx===0&&best))break}
   if(!best)best=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:CAM.facing}});
   return best}
-async function camStart(){const v=$('#camv');if(!v)return;
-  try{CAM.stream=await camOpenBest();v.srcObject=CAM.stream;await v.play().catch(()=>{});zoomSetup();
+async function camStart(){const v=$('#camv');if(!v)return;const tok=CAM.tok=(CAM.tok||0)+1;
+  try{const st=await camOpenBest();if(tok!==CAM.tok||!M||M.kind!=='cam'||!document.body.contains(v)){st.getTracks().forEach(x=>x.stop());return}
+    if(CAM.stream&&CAM.stream!==st)CAM.stream.getTracks().forEach(x=>x.stop());CAM.stream=st;v.srcObject=CAM.stream;await v.play().catch(()=>{});zoomSetup();const w=$('#camwait');if(w)w.hidden=true;
     const tr=CAM.stream.getVideoTracks()[0];if(tr){const me=CAM.stream;tr.addEventListener('ended',()=>{if(CAM.stream===me)camRestart()})}
     if(CAM.torch)camTorch(true);clearInterval(CAM.stick);CAM.stick=setInterval(stampTick,1000);stampTick()}
   catch(e){const er=$('#camerr');if(er){er.hidden=false;er.innerHTML='Camera access was blocked. Allow camera for buildcamera.com in Settings → Safari → Camera, or <button class="btn sm" data-a="camFallback">Use the phone camera</button>'}}
@@ -1781,7 +1788,7 @@ function zoomSetup(){const t=CAM.stream&&CAM.stream.getVideoTracks()[0];let cp={
   cam.addEventListener('touchend',e=>{if(e.touches.length<2)d0=0},{passive:true})}
 /* the part of the camera frame that's zoomed in on, for photos and video */
 function zoomCrop(v){const z=!CAM.hwz&&CAM.zoom>1?CAM.zoom:1,w=v.videoWidth,h=v.videoHeight,sw=Math.round(w/z),sh=Math.round(h/z);return{sx:Math.round((w-sw)/2),sy:Math.round((h-sh)/2),sw,sh}}
-function camStop(){if(CAM.rec)recStop(true);lvlStop();clearInterval(CAM.stick);CAM.stick=0;CAM.torch=false;if(CAM.audio){CAM.audio.getTracks().forEach(t=>t.stop());CAM.audio=null}if(CAM.stream){CAM.stream.getTracks().forEach(t=>t.stop());CAM.stream=null}if(CAM.watch!=null&&navigator.geolocation){navigator.geolocation.clearWatch(CAM.watch);CAM.watch=null}}
+function camStop(){CAM.tok=(CAM.tok||0)+1;if(CAM.rec)recStop(true);lvlStop();clearInterval(CAM.stick);CAM.stick=0;CAM.torch=false;if(CAM.audio){CAM.audio.getTracks().forEach(t=>t.stop());CAM.audio=null}if(CAM.stream){CAM.stream.getTracks().forEach(t=>t.stop());CAM.stream=null}if(CAM.watch!=null&&navigator.geolocation){navigator.geolocation.clearWatch(CAM.watch);CAM.watch=null}}
 const sndOn=()=>{try{return localStorage.getItem('pc-snd')!=='off'}catch(e){return true}};
 let ACX=null;
 function shutterSound(){if(!sndOn())return;try{ACX=ACX||new (window.AudioContext||window.webkitAudioContext)();if(ACX.state==='suspended')ACX.resume();const t=ACX.currentTime+.005,sr=ACX.sampleRate;
@@ -1818,7 +1825,7 @@ function recStart(){const v=$('#camv');if(!v||!v.videoWidth||!window.MediaRecord
   CAM.tick=setInterval(()=>{const s=Math.floor((Date.now()-t0)/1000);const el=$('#camtimer');if(el)el.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} / 1:00`;if(s>=60)recStop()},250)}
 function recStop(quiet){const r=CAM.rec;if(!r)return;CAM.rec=null;cancelAnimationFrame(CAM.raf);clearInterval(CAM.tick);try{r.rec.state!=='inactive'&&r.rec.stop()}catch(e){}
   const sh=document.querySelector('.camshut');if(sh){sh.classList.remove('on');sh.setAttribute('aria-label','Start recording')}const tm=$('#camtimer');if(tm)tm.hidden=true;if(!quiet)shutterSound()}
-async function camShoot(){const v=$('#camv');if(!v||!v.videoWidth||CAM.busy)return;if(v.videoWidth*v.videoHeight<3e5){toast('Camera is still starting. Try again in a second.');return}CAM.busy=true;
+async function camShoot(){const v=$('#camv');if(!v||CAM.busy)return;if(!v.videoWidth){toast('Camera is still starting.');return}if(v.videoWidth*v.videoHeight<3e5){toast('Camera is still starting. Try again in a second.');return}CAM.busy=true;
   let c=null;const tr=CAM.stream&&CAM.stream.getVideoTracks()[0];
   if(window.ImageCapture&&tr){try{const bm=await createImageBitmap(await new ImageCapture(tr).takePhoto());const z=!CAM.hwz&&CAM.zoom>1?CAM.zoom:1,sw=Math.round(bm.width/z),sh=Math.round(bm.height/z);c=document.createElement('canvas');c.width=sw;c.height=sh;c.getContext('2d').drawImage(bm,Math.round((bm.width-sw)/2),Math.round((bm.height-sh)/2),sw,sh,0,0,sw,sh)}catch(e){c=null}}
   if(!c){const zc=zoomCrop(v);c=document.createElement('canvas');c.width=zc.sw;c.height=zc.sh;c.getContext('2d').drawImage(v,zc.sx,zc.sy,zc.sw,zc.sh,0,0,zc.sw,zc.sh)}
@@ -1874,6 +1881,78 @@ function commentsHtml(pid){
   return cs.map(c=>`<div class="cmt"><div class="row"><b>${esc(c.byName)}</b><time>${fmtDay(c.at)} ${fmtTime(c.at)}</time></div><div>${fmt(c.text)}</div></div>`).join('');
 }
 /* task sheet */
+
+
+/* laptop: grab the ⋮⋮ handle and drag list rows up or down */
+document.addEventListener('pointerdown',e=>{const hd=e.target.closest&&e.target.closest('.dh');if(!hd||e.button!==0)return;const row=hd.closest('[data-reo]');if(!row)return;e.preventDefault();
+  const box=row.parentElement,k=row.dataset.reo,before=[...box.querySelectorAll(':scope>[data-reo]')].map(r=>r.dataset.v);row.classList.add('reo-drag');document.body.classList.add('reo-on');
+  const mv=ev=>{const rows=[...box.querySelectorAll(':scope>[data-reo]')].filter(r=>r!==row);let at=null;for(const r of rows){const b=r.getBoundingClientRect();if(ev.clientY<b.top+b.height/2){at=r;break}}if(at){if(row.nextElementSibling!==at)box.insertBefore(row,at)}else{const last=rows[rows.length-1];if(last&&last.nextElementSibling!==row)last.after(row)}};
+  const up=async()=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up);row.classList.remove('reo-drag');document.body.classList.remove('reo-on');
+    const order=[...box.querySelectorAll(':scope>[data-reo]')].map(r=>r.dataset.v);if(order.join('\n')===before.join('\n'))return;
+    try{if(k==='zones'||k==='trades')await saveList(k,order);else if(k==='tags')await saveTags(order);else if(k==='pl')await savePunchFor(row.dataset.t,order);toast('Order saved',1400)}catch(err){toast('Couldn\'t save the new order. Try again.')}
+    if(M)renderModal();else render()};
+  document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up)});
+/* ---------- punch list import / export (CMiC, Excel, any spreadsheet) ---------- */
+const MON=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+function pDate(v){v=String(v||'').trim();if(!v)return '';let m;
+  if(m=v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+  if(m=v.match(/^(\d{1,2})[-\s]([A-Za-z]{3})[A-Za-z]*[-\s,]+(\d{2,4})/)){const mo=MON.indexOf(m[2].toUpperCase());if(mo<0)return '';const y=m[3].length===2?'20'+m[3]:m[3];return `${y}-${String(mo+1).padStart(2,'0')}-${m[1].padStart(2,'0')}`}
+  if(m=v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/)){const y=m[3].length===2?'20'+m[3]:m[3];return `${y}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`}
+  if(/^\d{5}(\.\d+)?$/.test(v)){const d=new Date(Date.UTC(1899,11,30)+Math.floor(+v)*864e5);return d.toISOString().slice(0,10)}
+  return ''}
+function cmicDate(x){if(!x)return '';const d=typeof x==='number'?new Date(x):new Date(x+'T12:00:00');if(isNaN(d))return '';return `${String(d.getDate()).padStart(2,'0')}-${MON[d.getMonth()]}-${d.getFullYear()}`}
+function pMapRows(rows,pid){
+  if(!rows.length)return [];
+  const h=rows[0].map(x=>String(x).trim().toLowerCase().replace(/\s+/g,' '));
+  const find=ks=>{let i=h.findIndex(x=>ks.includes(x));if(i<0)i=h.findIndex(x=>ks.some(k=>k.length>4&&x.includes(k)));return i};
+  let C={desc:find(['description','desc','pmfpdi_desc','item description','what needs fixing','issue','deficiency','punch item','title','task','comments']),
+    zone:find(['area1 value','area','location','work zone','zone','room','unit','pmfpdi_area1_value','area 1']),
+    z2:find(['area2 value','area 2','pmfpdi_area2_value']),z3:find(['area3 value','area 3','pmfpdi_area3_value']),z4:find(['area4 value','area 4','pmfpdi_area4_value']),
+    trade:find(['trade','trade partner','responsibility','responsible company','responsible','subcontractor','sub','pmfpdi_partn_abbrev','company']),
+    asg:find(['assigned to','assignee','assign to','contact','responsible person','pmfpdi_contact_code']),
+    due:find(['due','due date','schd. compl.','schd compl','scheduled completion','schd. compl','sched. compl.','pmfpdi_schd_compl_date','target date']),
+    st:find(['status','pmfpdi_status_code']),no:find(['item no','item no.','item #','item number','no','no.','#','pmfpdi_item_code']),
+    done:find(['completed','completed on','closed','closed on','pmfpdi_completed_date'])};
+  let body=rows;
+  if(C.desc>=0)body=rows.slice(1);
+  else if(rows[0].length>=10&&/^\d+$/.test(String(rows[0][3]).trim()))C={desc:8,zone:4,z2:5,z3:6,z4:7,st:9,trade:10,asg:11,due:20,no:3,done:22};
+  else C={desc:0,zone:rows[0].length>1?1:-1,trade:rows[0].length>2?2:-1,asg:rows[0].length>3?3:-1,due:rows[0].length>4?4:-1,st:-1,no:-1,z2:-1,z3:-1,z4:-1,done:-1};
+  const g=(r,i)=>i>=0?String(r[i]==null?'':r[i]).trim():'';
+  const trades=tradeList(),have=new Set(S.tasks.filter(t=>t.type==='punch'&&t.projectId===pid).map(t=>(t.title+'|'+(t.zone||'')).toLowerCase()));
+  return body.map(r=>{let title=g(r,C.desc).replace(/\s+/g,' ');if(!title)return null;
+    let zone=[g(r,C.zone),g(r,C.z2),g(r,C.z3),g(r,C.z4)].filter(Boolean).join(' / ');
+    let trade=g(r,C.trade);
+    {const m=!trade&&title.match(/^([^:]{1,40}?)(?: - ([^:]{1,60}))?: (.+)$/);if(m&&trades.some(x=>x.toLowerCase()===m[1].toLowerCase())){trade=m[1];if(m[2]&&!zone)zone=m[2];title=m[3]}}const tm=trades.find(x=>x.toLowerCase()===trade.toLowerCase());if(tm)trade=tm;else if(trade)trade=titleCase(trade);
+    const an=g(r,C.asg),am=an&&S.members.find(m=>(m.name||'').toLowerCase()===an.toLowerCase()||(m.company||'').toLowerCase()===an.toLowerCase());
+    const st=g(r,C.st),closed=/clos|complet|done|signed|fixed|resolved/i.test(st)||(!st&&!!g(r,C.done));
+    const o={title:title.length>300?title.slice(0,300):title,zone,trade,assignee:am?am.id:null,assigneeText:am?'':an,due:pDate(g(r,C.due)),closed,extNo:g(r,C.no)};
+    o.dup=have.has((o.title+'|'+o.zone).toLowerCase());o.sel=!o.dup;return o}).filter(Boolean);
+}
+function pImportSheet(){
+  const rows=M.rows||[],ps=visProjects(),n=rows.filter(r=>r.sel).length;
+  return sheet('Import Punch List',`<p class="note" style="margin:0">Copy the rows in Excel (or a CMiC punch list exported to Excel) and paste them here, or pick a CSV file. Columns like Description, Area or Location, Trade or Responsibility, Assigned To or Contact, Due or Schd. Compl., and Status are matched by their headers. A CMiC import file with no headers works too. No headers? Put one item per line: what needs fixing, then work zone, trade, assigned to, due.</p>
+  ${M.pid&&P(M.pid)?'':`<label class="f">Project<select id="pi-p" data-ch="piProj">${ps.map(p=>`<option value="${p.id}" ${p.id===M.pid?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label>`}
+  <textarea id="pi-text" placeholder="Description\tArea\tTrade\tDue&#10;Patch drywall at outlet\tUnit 204\tDrywall\t11/12/2026" style="min-height:120px">${esc(M.text||'')}</textarea>
+  <div class="row"><button class="btn pri" data-a="piParse">Read Rows</button><button class="btn" data-a="piFile">${I('doc')} Pick CSV File</button></div>
+  ${rows.length?`<div class="row"><b style="flex:1">${rows.length} item${rows.length===1?'':'s'} found</b><button class="linkb" data-a="piAll" data-v="1">Check all</button><button class="linkb" data-a="piAll" data-v="0">Uncheck all</button></div><div class="list" style="max-height:46vh;overflow:auto">${rows.map((r,i)=>`<label class="ck" for="pi-${i}"><input type="checkbox" id="pi-${i}" data-ch="piSel" data-i="${i}" ${r.sel?'checked':''}><span class="t"><b>${esc(r.title)}</b><span class="note">${esc([r.extNo?'#'+r.extNo:'',r.trade,r.zone,(r.assignee&&M_(r.assignee)?.name)||r.assigneeText,r.due?'Due '+r.due:''].filter(Boolean).join(' · ')||'No trade or zone')}</span><span class="row">${r.closed?'<span class="pill good">Closed</span>':''}${r.dup?'<span class="pill mut">Already on this job</span>':''}</span></span></label>`).join('')}</div>
+  <button class="btn pri" data-a="piGo" ${n?'':'disabled'}>Import ${n} Punch Item${n===1?'':'s'}</button><p class="mono" id="pi-msg"></p>`:''}`);
+}
+function pExportItems(pid,which){return S.tasks.filter(t=>t.type==='punch'&&(!pid||t.projectId===pid)&&(which==='all'||!t.done)).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0))}
+function pExportSheet(){
+  const p=P(M.pid),ps=visProjects(),c=(p&&p.cmic)||{},w=M.which||'open',n=pExportItems(M.pid,w).length;
+  const opt=(k,l)=>`<button class="chip" data-a="peWhich" data-v="${k}" aria-pressed="${w===k}">${l}</button>`;
+  return sheet('Export Punch List',`${p?'':`<label class="f">Project<select id="pe-p" data-ch="peProj"><option value="">All projects (spreadsheet only)</option>${ps.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></label>`}
+  <div class="chips">${opt('open','Open and Ready to Check')}${opt('all','All, including Closed')}</div><p class="note" style="margin:0">${n} item${n===1?'':'s'}${p?' on '+esc(p.name):''}</p>
+  <div class="card stack"><b>Spreadsheet</b><span class="note">Opens in Excel or Google Sheets. One row per item with trade, work zone, assigned to, dates and status.</span><button class="btn" data-a="peCsv" ${n?'':'disabled'}>${I('download')} Download Spreadsheet (.csv)</button></div>
+  ${p?`<div class="card stack"><b>CMiC Import File</b><span class="note">Made for CMiC's Punch List Items import. Fill in the codes from CMiC once; they're saved for this job.</span>
+   <div class="two"><label class="f">Company Code<input type="text" id="pe-comp" maxlength="8" value="${esc(c.comp||'')}" autocapitalize="characters" placeholder="E.g. 01"></label><label class="f">Project Code<input type="text" id="pe-proj" maxlength="10" value="${esc(c.proj||p.jobNumber||'')}" autocapitalize="characters"></label></div>
+   <div class="two"><label class="f">Punch List Header<input type="text" id="pe-hdr" maxlength="10" value="${esc(c.hdr||'')}" autocapitalize="characters" placeholder="Punch list code in CMiC"></label><label class="f">First Item Number<input type="number" id="pe-no" min="1" value="${esc(c.no||'1')}"></label></div>
+   <div class="two"><label class="f">Status Code for Open<input type="text" id="pe-so" maxlength="10" value="${esc(c.so||'OPEN')}" autocapitalize="characters"></label><label class="f">Status Code for Closed<input type="text" id="pe-sc" maxlength="10" value="${esc(c.sc||'CLOSED')}" autocapitalize="characters"></label></div>
+   <span class="note">The trade and work zone go at the front of each description. CMiC's Responsibility and Area fields are left blank because CMiC needs its own codes for those.</span>
+   <button class="btn pri" data-a="peCmic" ${n?'':'disabled'}>${I('download')} Download CMiC File (.txt)</button></div>`:''}`);
+}
+function dlText(name,text,type){const b=new Blob([text],{type:type||'text/plain'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
+const fileSafe=s=>String(s||'punch-list').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'-')||'punch-list';
 function taskSheet(){
   const t=M.task, ps=visProjects();
   return sheet(t.type==='punch'?'New Punch Item':'New Task',`<form class="stack" data-sub="saveTask">
@@ -1927,7 +2006,9 @@ function cmpInit(){
 /* photo viewer zoom: mouse wheel or trackpad zooms toward the pointer, drag pans, pinch on phones, double-click toggles */
 const PVZ={pts:new Map(),d0:0,z0:1,last:null,moved:false};
 const FULLOK=new Set();
-function upgradeFull(){document.querySelectorAll('img[data-full]').forEach(im=>{const u=im.dataset.full;im.removeAttribute('data-full');if(FULLOK.has(u)){im.src=u;return}const pre=new Image();pre.onload=()=>{FULLOK.add(u);if(im.isConnected)im.src=u};pre.src=u})}
+/* the small copy shows at the same size the full photo will, so nothing jumps when it swaps in */
+function pvFitSize(im){const box=im.closest('#pvbox');if(!box||!im.naturalWidth)return;const cs=getComputedStyle(im),raw=cs.maxHeight,bh=box.clientHeight||600;let mh=/px$/.test(raw)?parseFloat(raw):/%$/.test(raw)?bh*parseFloat(raw)/100:bh;if(!(mh>0))mh=bh;mh=Math.min(mh,bh>50?bh:mh);const bw=box.clientWidth||im.naturalWidth;const ar=im.naturalWidth/im.naturalHeight;const w=Math.min(bw,mh*ar);im.style.width=Math.round(w)+'px';im.style.height='auto'}
+function upgradeFull(){document.querySelectorAll('img[data-full]').forEach(im=>{const u=im.dataset.full;im.removeAttribute('data-full');if(im.complete)pvFitSize(im);else im.addEventListener('load',()=>pvFitSize(im),{once:true});if(FULLOK.has(u)){im.src=u;return}const pre=new Image();pre.onload=()=>{FULLOK.add(u);if(im.isConnected)im.src=u};pre.src=u})}
 new MutationObserver(()=>{if(document.querySelector('img[data-full]'))upgradeFull()}).observe(document.documentElement,{childList:true,subtree:true});
 function pvApply(anim){const im=$('#pvim'),box=$('#pvbox');if(!im||!box||!M)return;const z=M.zoom||1,b=box.getBoundingClientRect();
   const mx=Math.max(0,(im.offsetWidth*z-b.width)/2),my=Math.max(0,(im.offsetHeight*z-b.height)/2);
@@ -2458,7 +2539,7 @@ const ACT={
   openProject:el=>{V.selMode=false;V.sel=new Set();V.pid=el.dataset.id;V.tab='project';V.ptab='photos';V.pf={zone:'',trade:'',tag:'',by:'',tags:[],q:'',album:''};V.pfOpen=false;V.lastProject=V.pid;saveView();render();scrollTo(0,0)},
   openProjTab:el=>{V.selMode=false;V.sel=new Set();V.pid=el.dataset.id;V.tab='project';V.ptab=el.dataset.t||'photos';V.pf={zone:'',trade:'',tag:'',by:'',tags:[],q:'',album:''};V.pfOpen=false;V.lastProject=V.pid;saveView();render();scrollTo(0,0)},
   newProject:()=>openModal({kind:'newProject'}),
-  capture:el=>{afterShot=null;openModal({kind:'capture',pid:el.dataset.pid||(V.tab==='project'?V.pid:'')});if(visProjects().some(p=>p.status!=='Done')){if(CAM.ok&&!bestQ())openCam();else $('#in-photo').click()}},
+  capture:el=>{if(M&&M.kind==='cam')return;if(Date.now()-(CAM.tapAt||0)<1200)return;CAM.tapAt=Date.now();afterShot=null;openModal({kind:'capture',pid:el.dataset.pid||(V.tab==='project'?V.pid:'')});if(visProjects().some(p=>p.status!=='Done')){if(CAM.ok&&!bestQ())openCam();else $('#in-photo').click()}},
   pickLib:el=>{afterShot=null;M={kind:'capture',pid:el.dataset.pid,ctx:ctxFor(el.dataset.pid),hidden:true};$('#in-lib').click()},
   scanDoc:el=>{afterShot=null;M={kind:'capture',pid:el.dataset.pid,ctx:ctxFor(el.dataset.pid),hidden:true};$('#in-doc').click()},
   capTag:el=>{const t=el.dataset.t,c=M.ctx;c.tags=c.tags.includes(t)?c.tags.filter(x=>x!==t):[...c.tags,t];el.setAttribute('aria-pressed',c.tags.includes(t))},
@@ -2622,6 +2703,30 @@ const ACT={
   mkRemove:el=>{if(!el.classList.contains('armed')){el.classList.add('armed');el.style.color='var(--bad)';el.innerHTML=I('trash')+' Tap Again to Remove Markup';setTimeout(()=>{if(!el.isConnected)return;el.classList.remove('armed');el.style.color='';el.innerHTML=I('trash')+' Remove Markup'},3000);return}
     const p=PH(el.dataset.id);if(!p||!p.markupOf)return;const orig=p.markupOf;del('photos',p.id);if(AS&&p.assetId&&!allPhotos().some(x=>x.assetId===p.assetId&&x.id!==p.id))delAsset(p);if(PH(orig))openModal({kind:'photo',id:orig,back:M&&M.back});else closeModal();toast('Markup removed. The photo is kept.')},
   punchF:el=>{V.punchF=el.dataset.f;render()},
+  punchImport:el=>{const pid=el.dataset.pid||V.lastProject||(visProjects()[0]||{}).id||'';if(!pid){toast('Add a Project first.');return}openModal({kind:'pimport',pid,fixedPid:!!el.dataset.pid,text:'',rows:[]})},
+  piFile:()=>{M.text=$('#pi-text').value;$('#in-csv').click()},
+  piParse:()=>{M.text=$('#pi-text').value;M.rows=pMapRows(parseRows(M.text),M.pid);if(!M.rows.length)toast('No rows found. Put one item per line.');renderModal()},
+  piAll:el=>{M.text=$('#pi-text').value;(M.rows||[]).forEach(r=>r.sel=el.dataset.v==='1');renderModal()},
+  piGo:async el=>{const rows=(M.rows||[]).filter(r=>r.sel);if(!rows.length)return;el.disabled=true;const msg=$('#pi-msg'),pid=M.pid,now=Date.now();let i=0;
+    for(const r of rows){i++;if(msg)msg.textContent=`Adding ${i} of ${rows.length}…`;await put('tasks',{projectId:pid,title:r.title,type:'punch',zone:r.zone,trade:r.trade,status:r.closed?'closed':'open',assignee:r.assignee||null,assigneeText:r.assigneeText||'',due:r.due||'',photoId:null,done:r.closed,doneAt:r.closed?now:null,createdAt:now+i,by:ME.name,...(r.extNo?{extNo:r.extNo}:{}),src:'import'})}
+    const zs=[...new Set(rows.map(r=>r.zone).filter(Boolean))],ts=[...new Set(rows.map(r=>r.trade).filter(Boolean))];
+    try{const zl=zoneList(),nz=zs.filter(z=>!zl.includes(z));if(nz.length&&nz.length<=40)await saveList('zones',[...zl,...nz]);const tl=tradeList(),nt=ts.filter(t=>!tl.includes(t));if(nt.length&&nt.length<=40)await saveList('trades',[...tl,...nt])}catch(e){}
+    closeModal();V.punchF='open';render();toast(`Imported ${rows.length} punch item${rows.length===1?'':'s'}`)},
+  punchExport:el=>openModal({kind:'pexport',pid:el.dataset.pid||'',which:'open'}),
+  peWhich:el=>{M.which=el.dataset.v;renderModal()},
+  peCsv:()=>{const items=pExportItems(M.pid,M.which),p=P(M.pid);const head=['Item No','Project','Status','Trade Partner','Work Zone','What Needs Fixing','Assigned To','Due','Created','Closed','Problem Photo','Fixed Photo','Created By'];
+    const rows=items.map((t,i)=>{const as=M_(t.assignee);return [t.extNo||i+1,P(t.projectId)?.name||'',PST[pStatus(t)][0],t.trade||'',t.zone||'',t.title,as?as.name+(as.company?' ('+as.company+')':''):t.assigneeText||'',t.due||'',t.createdAt?dayKey(t.createdAt):'',t.doneAt?dayKey(t.doneAt):'',t.photoId?'Yes':'No',t.fixPhotoId?'Yes':'No',t.by||'']});
+    dlText(fileSafe((p?p.name:'All Jobs')+' Punch List')+'.csv','﻿'+[head,...rows].map(r=>r.map(csvCell).join(',')).join('\r\n'),'text/csv');toast(`Downloaded ${items.length} items`)},
+  peCmic:async()=>{const p=P(M.pid);if(!p)return;const v=id=>($(id).value||'').trim().toUpperCase();const c={comp:v('#pe-comp'),proj:v('#pe-proj'),hdr:v('#pe-hdr'),no:String(Math.max(1,parseInt($('#pe-no').value,10)||1)),so:v('#pe-so')||'OPEN',sc:v('#pe-sc')||'CLOSED'};
+    if(!c.comp||!c.proj||!c.hdr){toast('Fill in Company Code, Project Code and Punch List Header from CMiC.',3600);return}
+    upd('projects',p.id,{cmic:c});const items=pExportItems(p.id,M.which);let n=+c.no;const used=new Set(items.map(t=>/^\d+$/.test(t.extNo||'')?+t.extNo:null).filter(x=>x!=null));
+    const q=x=>'"'+String(x||'').replace(/[\r\n]+/g,' ').replace(/"/g,'""')+'"';
+    const lines=items.map(t=>{let no;if(/^\d+$/.test(t.extNo||''))no=+t.extNo;else{while(used.has(n))n++;no=n;used.add(n);n++}
+      const desc=[t.trade,t.zone].filter(Boolean).join(' - ');const d=(desc?desc+': ':'')+t.title;
+      const r=new Array(31).fill('');r[0]=q(c.comp);r[1]=q(c.proj);r[2]=q(c.hdr);r[3]=String(no).slice(0,5);r[8]=q(d.slice(0,4000));r[9]=q(t.done?c.sc:c.so);r[18]=cmicDate(t.createdAt);r[20]=cmicDate(t.due);r[22]=t.done?cmicDate(t.doneAt):'';
+      for(const i of [4,5,6,7,10,11,12,13,14,15,16,25,26,27,28,29,30])r[i]='';return r.join(',')});
+    dlText(fileSafe(p.name+' CMiC Punch Import')+'.txt',lines.join('\r\n'),'text/plain');toast(`CMiC file ready: ${items.length} items`)},
+
   punchShot:el=>{const pid=el.dataset.pid||V.pid||visProjects()[0]?.id;if(!pid){toast('Add a Project first.');return}afterShot=id=>{const ph=PH(id);setTimeout(()=>openModal({kind:'task',task:{projectId:(PH(id)&&PH(id).projectId)||pid,type:'punch',photoId:id,title:'',zone:ph&&ph.zone||'',trade:ph&&ph.trade||''}}),300)};
     openModal({kind:'capture',pid,lockProject:true,single:true,title:'Punch Photo',why:'Take a photo of the problem. Then describe it.',ctx:{tags:['Punch'],zone:'',trade:'',note:''}})},
   dueIn:el=>{const i=$('#tk-due');if(!i)return;const d=new Date();d.setDate(d.getDate()+(+el.dataset.d));i.value=dayKey(d.getTime());document.querySelectorAll('.duebtn .chip').forEach(b=>b.setAttribute('aria-pressed',b===el))},
@@ -2689,6 +2794,9 @@ document.addEventListener('change',async e=>{const el=e.target,k=el.dataset.ch;i
   else if(k==='ckText'||k==='ckNeed'){const c=S.checklists.find(x=>x.id===el.dataset.id),i=+el.dataset.i;upd('checklists',c.id,{items:c.items.map((x,j)=>j===i?(k==='ckText'?{...x,t:el.value}:{...x,needPhoto:el.checked}):x)})}
   else if(k==='logDate'){V.logDate=el.value||dayKey(Date.now());render()}
   else if(k==='viewAs'){V.viewAs=el.value;saveView();render()}
+  else if(k==='piSel'){M.rows[+el.dataset.i].sel=el.checked;M.text=$('#pi-text').value;renderModal()}
+  else if(k==='piProj'){M.pid=el.value;M.text=$('#pi-text').value;M.rows=M.text.trim()?pMapRows(parseRows(M.text),M.pid):[];renderModal()}
+  else if(k==='peProj'){M.pid=el.value;renderModal()}
   else if(k==='imSel'){M.rows[+el.dataset.i].sel=el.checked;M.text=$('#im-text').value;renderModal()}
   else if(k==='myMember'){setMyMember(el.value);render()}
   else if(k==='billInt'){document.querySelectorAll('.billbtn').forEach(b=>{const p=PLANS_UI.find(x=>x[0]===b.dataset.plan),t=b.querySelector('span+b');if(p&&t)t.innerHTML=el.value==='year'?'$'+(p[2]*10).toLocaleString()+'<small>/yr</small>':'$'+p[2]+'<small>/mo</small>'})}
@@ -2790,6 +2898,7 @@ async function handleFiles(files,kind){
   if(kind==='logo'){const f=files[0];if(!AS){toast('Uploads aren\'t available here.');return}toast('Uploading logo…');try{const up=await AS.upload(f);await put('settings',{...SET(),id:'company',logoUrl:up.url,logoAsset:up.id});LOGO.url=null;toast('Logo saved. New photos and PDFs will use it.')}catch(e){toast('Couldn\'t upload the logo. Try a PNG or JPG under 5 MB.')}return}
   if(kind==='avatar'){try{toast('Saving your photo…');const blob=await avCrop(files[0]);let url;if(AS){const up=await AS.upload(blob);url=up.url}else url=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(blob)});
     const cur=S.settings.find(x=>x.id==='avatars')||{id:'avatars',map:{}};const map={...(cur.map||{})};if(ME.id)map['id:'+ME.id]=url;map['n:'+ME.name]=url;await put('settings',{id:'avatars',map});toast('Your photo is set. It shows on the photos you take.')}catch(e){toast('Couldn\'t use that photo. Try another one.')}return}
+  if(kind==='csv'&&M&&M.kind==='pimport'){const t=await files[0].text();M.text=t;M.rows=pMapRows(parseRows(t),M.pid);if(!M.rows.length)toast('No punch items found in that file.');renderModal();return}
   if(kind==='csv'){const t=await files[0].text();M={kind:'import',text:t,rows:mapRows(parseRows(t))};renderModal();return}
   if(kind==='audio'&&M&&M.voiceFor){const pid=M.voiceFor;const f=files[0];toast('Uploading voice note…');
     try{if(!AS)throw 0;const up=await AS.upload(f);upd('photos',pid,{voiceUrl:up.url,voiceAsset:up.id});renderModal();toast('Voice note added')}catch(e){toast('Couldn\'t upload the voice note. Try again with signal.')}return}
@@ -2963,7 +3072,7 @@ function scrDash(){
   <div class="hcard"><h2 class="hsec"><span>Open punch by trade</span></h2>${Object.keys(byTrade).length?`<table class="dtab"><tbody>${Object.entries(byTrade).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<tr><td>${esc(k)}</td><td class="n">${n}</td></tr>`).join('')}</tbody></table>`:'<p class="note">No open punch items.</p>'}</div></div></div>`}
 function setPhotoTags(p,tags){const q=['#modal .pvside','#modal .sb'],ys=q.map(x=>document.querySelector(x)?.scrollTop||0);
   upd('photos',p.id,{tags,portfolio:tags.includes('Portfolio')});if(M&&M.kind==='photo'&&M.id===p.id){renderModal();q.forEach((x,i)=>{const e=document.querySelector(x);if(e)e.scrollTop=ys[i]})}}
-function tagRowsHtml(){return tagList().map((t,i,a)=>`<div class="ck" style="align-items:center;gap:6px"><input type="text" id="tg-${i}" value="${esc(t)}" data-ch="tagRen" data-i="${i}" ${t==='Portfolio'?'disabled title="Portfolio is built in"':''} autocapitalize="words" aria-label="Tag name" style="flex:1;min-width:0"><button class="ib" data-a="tagMove" data-i="${i}" data-d="-1" ${i?'':'disabled'} aria-label="Move ${esc(t)} up">${I('back','up')}</button><button class="ib" data-a="tagMove" data-i="${i}" data-d="1" ${i<a.length-1?'':'disabled'} aria-label="Move ${esc(t)} down">${I('back','down')}</button>${t==='Portfolio'?'<span class="ib" aria-hidden="true"></span>':`<button class="ib" data-a="tagDel" data-i="${i}" aria-label="Remove ${esc(t)}">${I('trash')}</button>`}</div>`).join('')}
+function tagRowsHtml(){return tagList().map((t,i,a)=>`<div class="ck" style="align-items:center;gap:6px" data-reo="tags" data-v="${esc(t)}">${DESK()?`<span class="dh" title="Drag to move" aria-hidden="true">&#8942;&#8942;</span>`:''}<input type="text" id="tg-${i}" value="${esc(t)}" data-ch="tagRen" data-i="${i}" ${t==='Portfolio'?'disabled title="Portfolio is built in"':''} autocapitalize="words" aria-label="Tag name" style="flex:1;min-width:0"><button class="ib" data-a="tagMove" data-i="${i}" data-d="-1" ${i?'':'disabled'} aria-label="Move ${esc(t)} up">${I('back','up')}</button><button class="ib" data-a="tagMove" data-i="${i}" data-d="1" ${i<a.length-1?'':'disabled'} aria-label="Move ${esc(t)} down">${I('back','down')}</button>${t==='Portfolio'?'<span class="ib" aria-hidden="true"></span>':`<button class="ib" data-a="tagDel" data-i="${i}" aria-label="Remove ${esc(t)}">${I('trash')}</button>`}</div>`).join('')}
 function saveTags(list){const l=[...new Set(list.map(t=>String(t).trim()).filter(Boolean))];if(!l.includes('Portfolio'))l.push('Portfolio');return put('settings',{id:'tags',list:l})}
 async function avCrop(file){const url=URL.createObjectURL(file);try{const img=await new Promise((r,j)=>{const i=new Image();i.onload=()=>r(i);i.onerror=j;i.src=url});
   const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d'),m=Math.min(img.naturalWidth,img.naturalHeight);

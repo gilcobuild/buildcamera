@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="e95ba1a1a0">
+<meta name="bc-ver" content="c6490e413c">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-NPPvpnxmO0ij9QEApf8WNmlv8/6jaGzlYPVrxhWT2kA=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-4xTCHi7VH70PQXjkpX77ZTeeEXhL5cx80XNra7kQLko=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -1165,11 +1165,16 @@ addEventListener('error',e=>logErr(e.error||e.message,'page'));addEventListener(
 const BCVER=(document.querySelector('meta[name="bc-ver"]')||{}).content||'';let UPCHK=0;
 async function checkUpdate(){if(!BCVER||Date.now()-UPCHK<30000)return;UPCHK=Date.now();
   try{const t=await (await fetch('/sw.js?u='+Date.now(),{cache:'no-store'})).text();const v=(t.match(/version (\w+)/)||[])[1];if(!v||v===BCVER)return;
-    const busy=M||Object.keys(PEND||{}).length;const go=()=>location.replace('/?app&v='+v);
+    const busy=M||Object.keys(PEND||{}).length||/INPUT|TEXTAREA|SELECT/.test((document.activeElement||{}).tagName||'');const go=()=>location.replace('/?app&v='+v);
     if(!busy){go();return}
     if(!document.getElementById('updbar')){const b=document.createElement('button');b.id='updbar';b.className='updbar';b.textContent='New version ready. Tap to update.';b.onclick=go;document.body.appendChild(b)}}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});
+addEventListener('focus',()=>checkUpdate());
 setTimeout(checkUpdate,4000);
+/* a laptop tab can stay open all day: check every 5 minutes too */
+setInterval(()=>{if(document.visibilityState==='visible')checkUpdate()},300000);
+/* if you were busy when the update came, load it once you're done (closed the photo or camera) */
+setInterval(()=>{if(document.getElementById('updbar')&&!M&&!Object.keys(PEND||{}).length&&document.visibilityState==='visible'&&!/INPUT|TEXTAREA|SELECT/.test((document.activeElement||{}).tagName||''))document.getElementById('updbar').click()},5000);
 /* photos show newest day first; earlier days are added as you scroll down */
 const FEEDN={},DAYCHUNK=30;let GLAST=null;
 const feedKey=()=>V.tab+'|'+(V.pid||'');
@@ -1918,15 +1923,16 @@ async function mkInit(){
   mkCursor();
   const pt=e=>{const r=c.getBoundingClientRect();return [(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]};
   c.addEventListener('pointerdown',e=>{c.setPointerCapture(e.pointerId);const q=pt(e);
-    if(MK.tool==='select'){mkTextClean();const r=c.getBoundingClientRect(),tol=22*c.width/r.width,en=mkEnd(q,tol);if(en){MK.drag={end:en};return}const i=mkHit(q,tol);MK.sel=i;MK.drag=i!=null?{q,o:JSON.parse(JSON.stringify(MK.shapes[i]))}:null;mkDraw();mkOpt();return}
+    if(MK.tool==='select'){mkTextClean();const r=c.getBoundingClientRect(),tol=22*c.width/r.width,en=mkEnd(q,tol);if(en){MK.drag=mkDragStart(en,q);return}const i=mkHit(q,tol);MK.sel=i;MK.drag=i!=null?{q,o:JSON.parse(JSON.stringify(MK.shapes[i]))}:null;mkDraw();mkOpt();return}
     if(MK.tool==='text'){const r=c.getBoundingClientRect(),hit=mkHit(q,14*c.width/r.width);mkTextClean();
       if(hit!=null&&MK.shapes[hit]&&MK.shapes[hit].t==='text'){MK.sel=hit;MK.drag={q,o:JSON.parse(JSON.stringify(MK.shapes[hit]))}}
       else{MK.shapes.push({t:'text',p:q,s:'',c:MK.color,k:MK.defK});MK.sel=MK.shapes.length-1}
       MK.edit=true;mkDraw();mkOpt();mkFocusText();return}
-    if(MK.sel!=null&&MK.shapes[MK.sel]){const r=c.getBoundingClientRect(),tl=22*c.width/r.width,en=mkEnd(q,tl);if(en){MK.drag={end:en};return}const h=mkHit(q,tl);if(h===MK.sel){MK.drag={q,o:JSON.parse(JSON.stringify(MK.shapes[h]))};return}}
+    if(MK.sel!=null&&MK.shapes[MK.sel]){const r=c.getBoundingClientRect(),tl=22*c.width/r.width,en=mkEnd(q,tl);if(en){MK.drag=mkDragStart(en,q);return}const h=mkHit(q,tl);if(h===MK.sel){MK.drag={q,o:JSON.parse(JSON.stringify(MK.shapes[h]))};return}}
     if(MK.sel!=null){mkTextClean();MK.sel=null;mkOpt()}
     MK.cur=MK.tool==='pen'?{t:'pen',c:MK.color,pts:[q],w:MK.defW}:{t:MK.tool,c:MK.color,a:q,b:q,w:MK.defW};});
-  c.addEventListener('pointermove',e=>{if(MK.drag&&MK.drag.end&&MK.sel!=null&&MK.shapes[MK.sel]){const sh=MK.shapes[MK.sel];sh[MK.drag.end]=pt(e);if(sh.t==='scale'&&sh.inches)MK.scale=Math.hypot(sh.b[0]-sh.a[0],sh.b[1]-sh.a[1])/sh.inches;mkDraw();return}if(MK.drag&&MK.sel!=null){const q=pt(e),dx=q[0]-MK.drag.q[0],dy=q[1]-MK.drag.q[1];MK.shapes[MK.sel]=mkMove(MK.drag.o,dx,dy);mkDraw();return}if(!MK.cur)return;const q=pt(e);if(MK.cur.t==='pen')MK.cur.pts.push(q);else MK.cur.b=q;mkDraw()});
+  c.addEventListener('pointermove',e=>{if(MK.drag&&MK.drag.end&&MK.sel!=null&&MK.shapes[MK.sel]){if(MK.drag.end==='rs'){const D=MK.drag,q=pt(e),f=Math.max(.15,Math.hypot(q[0]-D.ax,q[1]-D.ay)/D.d0);MK.shapes[MK.sel]=mkScaleFrom(D.o,D.ax,D.ay,f);mkDraw();return}
+  const sh=MK.shapes[MK.sel];sh[MK.drag.end]=mkSnap(sh.t,MK.drag.end==='a'?sh.b:sh.a,pt(e),e.shiftKey);if(sh.t==='scale'&&sh.inches)MK.scale=Math.hypot(sh.b[0]-sh.a[0],sh.b[1]-sh.a[1])/sh.inches;mkDraw();return}if(MK.drag&&MK.sel!=null){const q=pt(e),dx=q[0]-MK.drag.q[0],dy=q[1]-MK.drag.q[1];MK.shapes[MK.sel]=mkMove(MK.drag.o,dx,dy);mkDraw();return}if(!MK.cur)return;const q=pt(e);if(MK.cur.t==='pen')MK.cur.pts.push(q);else MK.cur.b=mkSnap(MK.cur.t,MK.cur.a,q,e.shiftKey);mkDraw()});
   c.addEventListener('click',()=>{if(MK.tool==='text'&&MK.edit)mkFocusText()});
   c.addEventListener('touchend',()=>{if(MK.tool==='text'&&MK.edit)mkFocusText()});
   c.addEventListener('pointerup',()=>{if(MK.drag){MK.drag=null;if(MK.tool==='text'&&MK.edit)mkFocusText();return}if(!MK.cur)return;const s=MK.cur;MK.cur=null;
@@ -1961,7 +1967,13 @@ function mkHit(q,tol){for(let i=MK.shapes.length-1;i>=0;i--){const s=MK.shapes[i
     if(d<=tol)return i}return null}
 function mkFocusText(){const i=$('#mk-text');if(!i||document.activeElement===i)return;try{i.focus({preventScroll:true})}catch(_){i.focus()}try{i.setSelectionRange(i.value.length,i.value.length)}catch(_){}}
 function mkTextClean(){const before=MK.shapes.length;const keep=MK.sel!=null?MK.shapes[MK.sel]:null;MK.shapes=MK.shapes.filter(x=>!(x.t==='text'&&!String(x.s||'').trim()));if(MK.shapes.length!==before)MK.sel=keep&&MK.shapes.includes(keep)?MK.shapes.indexOf(keep):null;MK.edit=false}
-function mkEnd(q,tol){const s=MK.sel!=null&&MK.shapes[MK.sel];if(!s||!s.a)return null;const t=tol*1.3;const da=Math.hypot(q[0]-s.a[0],q[1]-s.a[1]),db=Math.hypot(q[0]-s.b[0],q[1]-s.b[1]);if(Math.min(da,db)>t)return null;return da<=db?'a':'b'}
+function mkSnap(t,a,q,on){if(!on||!a)return q;const dx=q[0]-a[0],dy=q[1]-a[1];
+  if(t==='arrow'||t==='measure'||t==='scale'){const L=Math.hypot(dx,dy),ang=Math.round(Math.atan2(dy,dx)/(Math.PI/4))*(Math.PI/4);return [a[0]+L*Math.cos(ang),a[1]+L*Math.sin(ang)]}
+  if(t==='box'||t==='circle'){const m=Math.max(Math.abs(dx),Math.abs(dy));return [a[0]+(dx<0?-m:m),a[1]+(dy<0?-m:m)]}return q}
+function mkScaleFrom(o,ax,ay,f){const s=JSON.parse(JSON.stringify(o)),sc=q=>[ax+(q[0]-ax)*f,ay+(q[1]-ay)*f];if(s.pts)s.pts=s.pts.map(sc);if(s.a){s.a=sc(s.a);s.b=sc(s.b)}if(s.p)s.p=sc(s.p);if(s.t==='text')s.k=Math.min(6,Math.max(.3,(o.k||1)*f));return s}
+function mkEnd(q,tol){const s=MK.sel!=null&&MK.shapes[MK.sel];if(!s)return null;
+  if(!s.a){const[,, x1,y1]=mkBox(s),pd=MK.lw*3;return Math.hypot(q[0]-x1-pd,q[1]-y1-pd)<=tol*1.3?'rs':null}const t=tol*1.3;const da=Math.hypot(q[0]-s.a[0],q[1]-s.a[1]),db=Math.hypot(q[0]-s.b[0],q[1]-s.b[1]);if(Math.min(da,db)>t)return null;return da<=db?'a':'b'}
+function mkDragStart(en,q){const o=JSON.parse(JSON.stringify(MK.shapes[MK.sel]));if(en!=='rs')return {end:en};const[x0,y0,x1,y1]=mkBox(o);return {end:'rs',o,ax:x0,ay:y0,d0:Math.max(1,Math.hypot(x1-x0,y1-y0))}}
 function mkMove(o,dx,dy){const s=JSON.parse(JSON.stringify(o));const mv=q=>[q[0]+dx,q[1]+dy];if(s.pts)s.pts=s.pts.map(mv);if(s.a){s.a=mv(s.a);s.b=mv(s.b)}if(s.p)s.p=mv(s.p);return s}
 function mkResize(s,f){if(s.t==='text'){s.k=Math.min(6,Math.max(.3,(s.k||1)*f));return}const[x0,y0,x1,y1]=mkBox(s),cx=(x0+x1)/2,cy=(y0+y1)/2,sc=q=>[cx+(q[0]-cx)*f,cy+(q[1]-cy)*f];
   if(s.pts)s.pts=s.pts.map(sc);if(s.a){s.a=sc(s.a);s.b=sc(s.b)}}
@@ -1986,6 +1998,7 @@ function mkDraw(){
     else if(s.t==='text'){const ed=MK.edit&&MK.sel!=null&&MK.shapes[MK.sel]===s;mkLabel(ed?(s.s||'')+'|':(s.s||'Type here…'),s.p[0],s.p[1],s.c,s.k,true)}
   });
   const ss=MK.sel!=null&&MK.shapes[MK.sel];if(ss&&ss.a){x.save();const hr=Math.max(10,MK.lw*2.6);[ss.a,ss.b].forEach(q=>{x.beginPath();x.arc(q[0],q[1],hr,0,Math.PI*2);x.fillStyle='#ffffff';x.shadowColor='rgba(0,0,0,.7)';x.shadowBlur=MK.lw;x.fill();x.shadowBlur=0;x.lineWidth=Math.max(2,MK.lw*.5);x.strokeStyle='#2f80ed';x.stroke()});x.restore()}
+  if(ss&&!ss.a){const[,,x1,y1]=mkBox(ss),pd=MK.lw*3,hr=Math.max(10,MK.lw*2.6);x.save();x.beginPath();x.arc(x1+pd,y1+pd,hr,0,Math.PI*2);x.fillStyle='#ffffff';x.shadowColor='rgba(0,0,0,.7)';x.shadowBlur=MK.lw;x.fill();x.shadowBlur=0;x.lineWidth=Math.max(2,MK.lw*.5);x.strokeStyle='#2f80ed';x.stroke();x.restore()}
   if(ss&&!(ss.t==='arrow'||ss.t==='measure'||ss.t==='scale')){const[x0,y0,x1,y1]=mkBox(ss),pd=MK.lw*3;x.save();x.lineWidth=Math.max(2,MK.lw*.5);x.setLineDash([MK.lw*2,MK.lw*1.5]);x.strokeStyle='#ffffff';x.shadowColor='rgba(0,0,0,.8)';x.shadowBlur=MK.lw;x.strokeRect(x0-pd,y0-pd,x1-x0+pd*2,y1-y0+pd*2);x.restore()}
 }
 function mkLabel(t,cx,cy,col,k,plain){const x=MK.x,fs=Math.max(18,MK.c.width*.032)*(k||1);x.font=`700 ${fs}px "IBM Plex Sans",Arial,sans-serif`;x.textAlign='center';x.textBaseline='middle';const w=x.measureText(t).width;

@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="30c8dc71c1">
+<meta name="bc-ver" content="72b4fe420a">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-OZ80ctdLr8zfGycAw0/caGaP4BRZ+oTH4qV6eg5Shck=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-FQhIoph5bSu75iQzPxlZAZoH4G9AvWjVC9dvNT6iGu8=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -414,7 +414,9 @@ a{color:var(--accent)}
 .big-act .btn svg{width:26px;height:26px}
 /* markup */
 .mk{flex:1;display:flex;flex-direction:column;min-height:0;background:#0d1012}
-.mk .bar{display:flex;gap:6px;overflow-x:auto;padding:8px max(10px,env(safe-area-inset-left,0px));background:var(--panel);border-bottom:1px solid var(--line);align-items:center;height:auto;flex:none;position:static}
+.mk .bar{display:flex;flex-wrap:wrap;gap:6px;overflow:visible;padding:8px max(10px,env(safe-area-inset-left,0px));background:var(--panel);border-bottom:1px solid var(--line);align-items:center;height:auto;flex:none;position:static}
+.mk .bar .brk{flex-basis:100%;height:0}.mk .bar .gap{width:10px}@media (pointer:coarse){.mk .bar .mkz,.mk .bar .brk{display:none}}
+@media (max-width:520px){.mk .bar .tool{padding:6px 8px;font-size:12.5px;min-height:36px}}
 .tool{flex:none;border:1px solid var(--line);background:var(--panel);border-radius:9px;min-height:40px;padding:6px 10px;font-weight:600;font-size:13px}
 .tool[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
 .sw{flex:none;width:32px;height:32px;border-radius:50%;border:3px solid var(--panel);box-shadow:0 0 0 1px var(--line)}
@@ -622,7 +624,9 @@ h3.day{align-items:center}
 .pvtb .ib{width:38px;height:38px;color:var(--ink);text-decoration:none}
 .pvtb .ib svg{width:19px;height:19px}
 .pvtb{max-width:calc(100% - 20px);flex-wrap:wrap}@media (pointer:coarse){.pvtb .pvz{display:none}}
-.pvtb .ib.armed{width:auto;padding:0 10px;color:var(--bad);font-weight:600;font-size:13px;gap:4px;display:flex}
+.pvtb .ib.armed2{width:38px;padding:0;background:var(--bad,#c0392b);color:#fff}
+.pvarm{position:absolute;top:58px;left:10px;z-index:3;background:var(--bad,#c0392b);color:#fff;font-weight:600;font-size:13px;padding:6px 10px;border-radius:8px;pointer-events:none}
+.pvtb .ib.armed:not(.armed2){width:auto;padding:0 10px;color:var(--bad);font-weight:600;font-size:13px;gap:4px;display:flex}
 .pvnav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#111;display:grid;place-items:center;z-index:2;box-shadow:0 1px 6px rgba(0,0,0,.3)}
 .pvnav.l{left:10px}.pvnav.r{right:10px}.pvnav svg{width:22px;height:22px}
 .pvside{display:grid;gap:14px;align-content:start;min-width:0}
@@ -1860,14 +1864,17 @@ document.addEventListener('wheel',e=>{const box=e.target.closest&&e.target.close
   const[cx,cy]=pvRel(e,box);pvZoomAt((M.zoom||1)*Math.exp(-e.deltaY*(e.ctrlKey?.01:.0018)),cx,cy,false)},{passive:false});
 document.addEventListener('dblclick',e=>{const box=e.target.closest&&e.target.closest('#pvbox');if(!box||!$('#pvim')||e.target.closest('button,a')||(M&&M.pinMode))return;const[cx,cy]=pvRel(e,box);pvZoomAt((M.zoom||1)>1?1:2.5,cx,cy,true)});
 document.addEventListener('pointerdown',e=>{const box=e.target.closest&&e.target.closest('#pvbox');if(!box||!$('#pvim')||e.target.closest('button,a,video,audio'))return;
-  PVZ.pts.set(e.pointerId,[e.clientX,e.clientY]);PVZ.moved=false;
+  PVZ.pts.set(e.pointerId,[e.clientX,e.clientY]);PVZ.moved=false;PVZ.sw=PVZ.pts.size===1&&(M.zoom||1)<=1.01&&!M.pinMode?{x:e.clientX,y:e.clientY,t:Date.now()}:null;
   if(PVZ.pts.size===2){const[a,b]=[...PVZ.pts.values()];PVZ.d0=Math.hypot(a[0]-b[0],a[1]-b[1]);PVZ.z0=M.zoom||1}
   else if((M.zoom||1)>1){PVZ.last=[e.clientX,e.clientY];box.classList.add('drag')}});
 document.addEventListener('pointermove',e=>{if(!PVZ.pts.has(e.pointerId))return;const box=$('#pvbox');if(!box||!M)return;PVZ.pts.set(e.pointerId,[e.clientX,e.clientY]);
   if(PVZ.pts.size===2&&PVZ.d0){const[a,b]=[...PVZ.pts.values()];const r=box.getBoundingClientRect();PVZ.moved=true;
     pvZoomAt(PVZ.z0*Math.hypot(a[0]-b[0],a[1]-b[1])/PVZ.d0,(a[0]+b[0])/2-(r.left+r.width/2),(a[1]+b[1])/2-(r.top+r.height/2),false);return}
   if(PVZ.last&&(M.zoom||1)>1){const dx=e.clientX-PVZ.last[0],dy=e.clientY-PVZ.last[1];if(Math.abs(dx)+Math.abs(dy)>3)PVZ.moved=true;M.px=(M.px||0)+dx;M.py=(M.py||0)+dy;PVZ.last=[e.clientX,e.clientY];pvApply(false)}});
-const pvUp=e=>{if(!PVZ.pts.delete(e.pointerId))return;if(PVZ.pts.size<2)PVZ.d0=0;if(!PVZ.pts.size){PVZ.last=null;const b=$('#pvbox');if(b)b.classList.remove('drag')}};
+const pvUp=e=>{if(!PVZ.pts.delete(e.pointerId))return;
+  if(PVZ.sw&&!PVZ.pts.size&&e.type==='pointerup'&&(M&&(M.zoom||1)<=1.01)){const dx=e.clientX-PVZ.sw.x,dy=e.clientY-PVZ.sw.y;PVZ.sw=null;
+    if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.4){const b=document.querySelector(dx<0?'.pvnav.r':'.pvnav.l');if(b&&M&&M.kind==='photo'){PVZ.moved=true;setTimeout(()=>{PVZ.moved=false},400);M.id=b.dataset.id;M.zoom=1;M.px=0;M.py=0;renderModal()}}}
+  if(e.type==='pointercancel')PVZ.sw=null;if(PVZ.pts.size<2)PVZ.d0=0;if(!PVZ.pts.size){PVZ.last=null;const b=$('#pvbox');if(b)b.classList.remove('drag')}};
 document.addEventListener('pointerup',pvUp);document.addEventListener('pointercancel',pvUp);
 /* a drag that moved the photo isn't a tap (so it won't drop a pin) */
 document.addEventListener('click',e=>{if(PVZ.moved&&e.target.closest&&e.target.closest('#pvbox')){PVZ.moved=false;e.stopPropagation();e.preventDefault()}},true);
@@ -1875,11 +1882,11 @@ const MK={};
 function markupSheet(){
   const col=['#ff3b30','#f2b705','#2f80ed','#ffffff','#111111'];
   return `<div class="sheet" role="dialog" aria-modal="true" aria-label="Mark up photo"><div class="sh"><button class="ib" data-a="close" aria-label="Cancel">${I('x')}</button><b>Mark Up</b><button class="btn sm" data-a="mkUndo">Undo</button><button class="btn pri sm" data-a="mkSave">Save Copy</button></div>
-  <div class="mk"><div class="bar">${[['move','Move'],['pen','Pen'],['arrow','Arrow'],['circle','Circle'],['box','Box'],['text','Text'],['scale','Set Scale'],['measure','Measure']].map(([k,l])=>`<button class="tool" data-a="mkTool" data-t="${k}" aria-pressed="${k==='arrow'}">${l}</button>`).join('')}<span style="width:6px"></span><button class="tool" data-a="mkZoom" data-z="-1" aria-label="Zoom out" title="Zoom out (or scroll)">−</button><button class="tool" data-a="mkZoom" data-z="0" aria-label="Fit photo" title="Fit" id="mkzl">Fit</button><button class="tool" data-a="mkZoom" data-z="1" aria-label="Zoom in" title="Zoom in (or scroll)">+</button><span style="width:6px"></span>${col.map((c,i)=>`<button class="sw" data-a="mkCol" data-c="${c}" style="background:${c}" aria-label="Color ${i+1}" aria-pressed="${i===0}"></button>`).join('')}</div>
+  <div class="mk"><div class="bar">${[['select','Select'],['move','Move'],['pen','Pen'],['arrow','Arrow'],['circle','Circle'],['box','Box'],['text','Text'],['scale','Set Scale'],['measure','Measure']].map(([k,l])=>`<button class="tool${k==='move'?' mkz':''}" data-a="mkTool" data-t="${k}" aria-pressed="${k==='arrow'}">${l}</button>`).join('')}<span class="brk"></span><button class="tool mkz" data-a="mkZoom" data-z="-1" aria-label="Zoom out" title="Zoom out (or scroll)">−</button><button class="tool mkz" data-a="mkZoom" data-z="0" aria-label="Fit photo" title="Fit" id="mkzl">Fit</button><button class="tool mkz" data-a="mkZoom" data-z="1" aria-label="Zoom in" title="Zoom in (or scroll)">+</button><span class="gap"></span>${col.map((c,i)=>`<button class="sw" data-a="mkCol" data-c="${c}" style="background:${c}" aria-label="Color ${i+1}" aria-pressed="${i===0}"></button>`).join('')}</div>
   <div class="stage"><canvas id="mkc" aria-label="Photo markup area"></canvas></div><div class="opt" id="mkopt"><span class="note">Draw on the photo. Your original stays untouched.</span></div></div></div>`;
 }
 async function mkInit(){
-  Object.assign(MK,{tool:'arrow',color:'#ff3b30',shapes:[],cur:null,scale:null,text:''});
+  Object.assign(MK,{tool:'arrow',color:'#ff3b30',shapes:[],cur:null,scale:null,text:'',sel:null,drag:null});
   const p=PH(M.id), c=$('#mkc'); MK.c=c; MK.x=c.getContext('2d');
   try{MK.img=await imgFromUrl(p.url)}catch(e){toast('Couldn\'t open that photo for markup.');closeModal();return}
   const sc=Math.min(1,4032/Math.max(MK.img.naturalWidth,MK.img.naturalHeight)); c.width=Math.round(MK.img.naturalWidth*sc); c.height=Math.round(MK.img.naturalHeight*sc);
@@ -1899,12 +1906,14 @@ async function mkInit(){
   mkCursor();
   const pt=e=>{const r=c.getBoundingClientRect();return [(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]};
   c.addEventListener('pointerdown',e=>{c.setPointerCapture(e.pointerId);const q=pt(e);
-    if(MK.tool==='text'){if(!MK.text.trim()){toast('Type your label in the box below first.');return}MK.shapes.push({t:'text',p:q,s:MK.text,c:MK.color});mkDraw();return}
+    if(MK.tool==='select'){const r=c.getBoundingClientRect(),tol=22*c.width/r.width,i=mkHit(q,tol);MK.sel=i;MK.drag=i!=null?{q,o:JSON.parse(JSON.stringify(MK.shapes[i]))}:null;mkDraw();mkOpt();return}
+    if(MK.sel!=null){MK.sel=null;mkOpt()}
+    if(MK.tool==='text'){if(!MK.text.trim()){toast('Type your label in the box below first.');return}MK.shapes.push({t:'text',p:q,s:MK.text,c:MK.color});MK.sel=MK.shapes.length-1;mkOpt();mkDraw();return}
     MK.cur=MK.tool==='pen'?{t:'pen',c:MK.color,pts:[q]}:{t:MK.tool,c:MK.color,a:q,b:q};});
-  c.addEventListener('pointermove',e=>{if(!MK.cur)return;const q=pt(e);if(MK.cur.t==='pen')MK.cur.pts.push(q);else MK.cur.b=q;mkDraw()});
-  c.addEventListener('pointerup',()=>{if(!MK.cur)return;const s=MK.cur;MK.cur=null;
+  c.addEventListener('pointermove',e=>{if(MK.drag&&MK.sel!=null){const q=pt(e),dx=q[0]-MK.drag.q[0],dy=q[1]-MK.drag.q[1];MK.shapes[MK.sel]=mkMove(MK.drag.o,dx,dy);mkDraw();return}if(!MK.cur)return;const q=pt(e);if(MK.cur.t==='pen')MK.cur.pts.push(q);else MK.cur.b=q;mkDraw()});
+  c.addEventListener('pointerup',()=>{if(MK.drag){MK.drag=null;return}if(!MK.cur)return;const s=MK.cur;MK.cur=null;
     if(s.t!=='pen'&&Math.hypot(s.b[0]-s.a[0],s.b[1]-s.a[1])<6){mkDraw();return}
-    if(s.t==='scale'){MK.shapes=MK.shapes.filter(x=>x.t!=='scale');MK.shapes.push(s);mkOpt('scale')}else MK.shapes.push(s);mkDraw()});
+    if(s.t==='scale'){MK.shapes=MK.shapes.filter(x=>x.t!=='scale');MK.shapes.push(s);mkOpt('scale')}else{MK.shapes.push(s);MK.sel=MK.shapes.length-1;mkOpt()}mkDraw()});
   mkOpt();
 }
 function mkFit(){const c=MK.c,st=c&&c.parentElement;if(!st)return;const r=st.getBoundingClientRect(),aw=Math.max(50,r.width-20),ah=Math.max(50,r.height-20),f=Math.min(aw/c.width,ah/c.height,1);MK.fw=c.width*f;MK.fh=c.height*f;mkSize()}
@@ -1918,17 +1927,32 @@ document.addEventListener('keyup',e=>{if(e.code==='Space'&&MK.space){MK.space=fa
 addEventListener('resize',()=>{if(MK.c&&document.body.contains(MK.c))mkFit()});
 function mkOpt(kind){
   const o=$('#mkopt');if(!o)return;
+  const sel=MK.sel!=null&&MK.shapes[MK.sel];
+  if(sel&&kind!=='scale'){const nm={arrow:'Arrow',circle:'Circle',box:'Box',pen:'Drawing',text:'Label',measure:'Measurement',scale:'Scale line'}[sel.t]||'Mark';
+    o.innerHTML=`<b style="font-size:13px">${nm}</b>${sel.t!=='scale'?`<button class="btn sm" data-a="mkSz" data-f="0.8" aria-label="Make smaller">− Smaller</button><button class="btn sm" data-a="mkSz" data-f="1.25" aria-label="Make bigger">+ Bigger</button>`:''}${sel.t!=='text'?`<button class="btn sm" data-a="mkW" data-f="0.75" aria-label="Thinner line">Thinner</button><button class="btn sm" data-a="mkW" data-f="1.35" aria-label="Thicker line">Thicker</button>`:''}<button class="btn sm" data-a="mkDel" aria-label="Delete this mark">${I('trash')}</button><span class="note">Drag it with Select to move it.</span>`;return}
+  if(MK.tool==='select'){o.innerHTML='<span class="note">Tap an arrow, circle, box, drawing or label to pick it. Then drag to move it, or make it bigger or smaller.</span>';return}
   if(kind==='scale'||MK.tool==='scale')o.innerHTML=`<span class="note">Draw along something you know the length of, then enter it:</span><input type="number" id="mk-ft" min="0" placeholder="Feet" style="width:90px"><input type="number" id="mk-in" min="0" step="0.25" placeholder="Inches" style="width:100px"><button class="btn sm pri" data-a="mkScale">Set Scale</button>${MK.scale?`<span class="pill good">Scale set</span>`:''}`;
   else if(MK.tool==='text')o.innerHTML=`<input type="text" id="mk-text" value="${esc(MK.text)}" placeholder="Label, e.g. Missing Strap" data-in="mkText" style="flex:1"><span class="note">then tap the photo to place it</span>`;
   else if(MK.tool==='measure')o.innerHTML=MK.scale?'<span class="note">Drag across anything to measure it.</span>':'<span class="callout">Set the scale first: pick Set Scale and draw along something you know, like a 4 ft level.</span>';
   else if(MK.tool==='move')o.innerHTML='<span class="note">Drag to move around the photo. Scroll or pinch to zoom.</span>';
   else o.innerHTML='<span class="note">Draw on the photo. Scroll to zoom, hold Space and drag to move around. Your original stays untouched.</span>';
 }
+function mkBox(s){let xs=[],ys=[];if(s.t==='pen')s.pts.forEach(q=>{xs.push(q[0]);ys.push(q[1])});else if(s.t==='text'){const fs=Math.max(18,MK.c.width*.032)*(s.k||1);MK.x.font=`700 ${fs}px "IBM Plex Sans",Arial,sans-serif`;const w=MK.x.measureText(s.s).width/2+fs*.35;xs=[s.p[0]-w,s.p[0]+w];ys=[s.p[1]-fs*.7,s.p[1]+fs*.7]}else{xs=[s.a[0],s.b[0]];ys=[s.a[1],s.b[1]]}
+  return [Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys)]}
+function segD(q,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],l=dx*dx+dy*dy||1;let t=((q[0]-a[0])*dx+(q[1]-a[1])*dy)/l;t=Math.max(0,Math.min(1,t));return Math.hypot(q[0]-a[0]-t*dx,q[1]-a[1]-t*dy)}
+function mkHit(q,tol){for(let i=MK.shapes.length-1;i>=0;i--){const s=MK.shapes[i];let d;
+    if(s.t==='arrow'||s.t==='measure'||s.t==='scale')d=segD(q,s.a,s.b);
+    else if(s.t==='pen'){d=1e9;for(let k=1;k<s.pts.length;k++)d=Math.min(d,segD(q,s.pts[k-1],s.pts[k]));if(s.pts.length===1)d=Math.hypot(q[0]-s.pts[0][0],q[1]-s.pts[0][1])}
+    else{const[x0,y0,x1,y1]=mkBox(s);d=(q[0]>=x0-tol&&q[0]<=x1+tol&&q[1]>=y0-tol&&q[1]<=y1+tol)?0:1e9}
+    if(d<=tol)return i}return null}
+function mkMove(o,dx,dy){const s=JSON.parse(JSON.stringify(o));const mv=q=>[q[0]+dx,q[1]+dy];if(s.pts)s.pts=s.pts.map(mv);if(s.a){s.a=mv(s.a);s.b=mv(s.b)}if(s.p)s.p=mv(s.p);return s}
+function mkResize(s,f){if(s.t==='text'){s.k=Math.min(6,Math.max(.3,(s.k||1)*f));return}const[x0,y0,x1,y1]=mkBox(s),cx=(x0+x1)/2,cy=(y0+y1)/2,sc=q=>[cx+(q[0]-cx)*f,cy+(q[1]-cy)*f];
+  if(s.pts)s.pts=s.pts.map(sc);if(s.a){s.a=sc(s.a);s.b=sc(s.b)}}
 const ftIn=inch=>{const f=Math.floor(inch/12),i=Math.round((inch-f*12)*4)/4;return (f?f+"' ":'')+i+'"'};
 function mkDraw(){
   const x=MK.x,c=MK.c;if(!x||!MK.img)return;x.clearRect(0,0,c.width,c.height);x.drawImage(MK.img,0,0,c.width,c.height);
   const lw=MK.lw;[...MK.shapes,MK.cur].filter(Boolean).forEach(s=>{
-    x.strokeStyle=s.c;x.fillStyle=s.c;x.lineWidth=lw;x.lineCap='round';x.lineJoin='round';
+    const lw=MK.lw*(s.w||1);x.strokeStyle=s.c;x.fillStyle=s.c;x.lineWidth=lw;x.lineCap='round';x.lineJoin='round';
     if(s.t==='pen'){x.beginPath();s.pts.forEach((q,i)=>i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]));x.stroke()}
     else if(s.t==='arrow'||s.t==='scale'||s.t==='measure'){
       x.beginPath();x.moveTo(...s.a);x.lineTo(...s.b);if(s.t!=='arrow')x.setLineDash([lw*2.5,lw*1.5]);x.stroke();x.setLineDash([]);
@@ -1942,10 +1966,11 @@ function mkDraw(){
     }
     else if(s.t==='circle'){x.beginPath();x.ellipse((s.a[0]+s.b[0])/2,(s.a[1]+s.b[1])/2,Math.abs(s.b[0]-s.a[0])/2,Math.abs(s.b[1]-s.a[1])/2,0,0,Math.PI*2);x.stroke()}
     else if(s.t==='box'){x.strokeRect(Math.min(s.a[0],s.b[0]),Math.min(s.a[1],s.b[1]),Math.abs(s.b[0]-s.a[0]),Math.abs(s.b[1]-s.a[1]))}
-    else if(s.t==='text')mkLabel(s.s,s.p[0],s.p[1],s.c);
+    else if(s.t==='text')mkLabel(s.s,s.p[0],s.p[1],s.c,s.k);
   });
+  const ss=MK.sel!=null&&MK.shapes[MK.sel];if(ss){const[x0,y0,x1,y1]=mkBox(ss),pd=MK.lw*3;x.save();x.lineWidth=Math.max(2,MK.lw*.5);x.setLineDash([MK.lw*2,MK.lw*1.5]);x.strokeStyle='#ffffff';x.shadowColor='rgba(0,0,0,.8)';x.shadowBlur=MK.lw;x.strokeRect(x0-pd,y0-pd,x1-x0+pd*2,y1-y0+pd*2);x.restore()}
 }
-function mkLabel(t,cx,cy,col){const x=MK.x,fs=Math.max(18,MK.c.width*.032);x.font=`700 ${fs}px "IBM Plex Sans",Arial,sans-serif`;x.textAlign='center';x.textBaseline='middle';const w=x.measureText(t).width;x.fillStyle='rgba(0,0,0,.7)';x.fillRect(cx-w/2-fs*.35,cy-fs*.7,w+fs*.7,fs*1.4);x.fillStyle=col==='#111111'?'#ffffff':col;x.fillText(t,cx,cy)}
+function mkLabel(t,cx,cy,col,k){const x=MK.x,fs=Math.max(18,MK.c.width*.032)*(k||1);x.font=`700 ${fs}px "IBM Plex Sans",Arial,sans-serif`;x.textAlign='center';x.textBaseline='middle';const w=x.measureText(t).width;x.fillStyle='rgba(0,0,0,.7)';x.fillRect(cx-w/2-fs*.35,cy-fs*.7,w+fs*.7,fs*1.4);x.fillStyle=col==='#111111'?'#ffffff':col;x.fillText(t,cx,cy)}
 
 /* ---------- reports (PDF) ---------- */
 let jsPdfP=null;
@@ -2345,7 +2370,7 @@ const ACT={
   close:()=>{const m=M;closeModal();if(m&&m.kind==='photo'&&m.back&&m.back.kind==='cam')goJob(m.back.cap.pid)},
   phTag:el=>{const p=PH(el.dataset.id),t=el.dataset.t;if(!p||p.pending)return;if(t==='Portfolio'){const on=!p.portfolio;upd('photos',p.id,{portfolio:on,tags:on?[...new Set([...(p.tags||[]),'Portfolio'])]:(p.tags||[]).filter(x=>x!=='Portfolio')});el.setAttribute('aria-pressed',on);return}const tags=(p.tags||[]).includes(t)?(p.tags||[]).filter(x=>x!==t):[...(p.tags||[]),t];upd('photos',p.id,{tags});el.setAttribute('aria-pressed',tags.includes(t))},
   mention:el=>{const i=$('#cm-text');i.value=(i.value&&!i.value.endsWith(' ')?i.value+' ':i.value)+'@'+el.dataset.n+' ';i.focus()},
-  delPhoto:el=>{if(!el.classList.contains('armed')){const h=el.innerHTML;el.classList.add('armed');el.innerHTML=I('trash')+' Tap Again to Delete';setTimeout(()=>{el.classList.remove('armed');el.innerHTML=h},3000);return}
+  delPhoto:el=>{if(!el.classList.contains('armed')){el.classList.add('armed2');el.classList.add('armed');el.setAttribute('aria-label','Tap again to delete');const tb=el.closest('.pvtb');let n=null;if(tb){n=document.createElement('span');n.className='pvarm';n.textContent='Tap the trash again to delete';tb.after(n)}setTimeout(()=>{el.classList.remove('armed','armed2');el.setAttribute('aria-label','Delete photo');if(n)n.remove()},3000);return}
     const p=PH(el.dataset.id);closeModal();if(p.pending){delete PEND[p.id];qDrop(p.id);scheduleRender();return}del('photos',p.id);if(AS&&p.assetId&&!allPhotos().some(x=>x.assetId===p.assetId&&x.id!==p.id))delAsset(p);toast('Photo deleted')},
   markup:el=>{const p=PH(el.dataset.id);if(p.pending){toast('Wait for the upload to finish, then mark it up.');return}openModal({kind:'markup',id:p.id,back:M&&M.back})},
   capPhoto:el=>{const back=M;openModal({kind:'photo',id:el.dataset.id,back})},
@@ -2371,10 +2396,13 @@ const ACT={
     catch(e){toast(e.message||'Couldn\'t open billing.',3500);el.disabled=false;el.textContent=t}},
   mkZoom:el=>{const z=+el.dataset.z;mkZoomAt(z===0?1:MK.z*(z>0?1.5:1/1.5))},
   mkTool:el=>{MK.tool=el.dataset.t;document.querySelectorAll('.tool[data-t]').forEach(b=>b.setAttribute('aria-pressed',b===el));mkOpt();mkCursor();if(MK.tool==='text')setTimeout(()=>$('#mk-text')?.focus(),30)},
-  mkCol:el=>{MK.color=el.dataset.c;document.querySelectorAll('.sw').forEach(b=>b.setAttribute('aria-pressed',b===el))},
-  mkUndo:()=>{const s=MK.shapes.pop();if(s&&s.t==='scale')MK.scale=null;mkDraw()},
+  mkCol:el=>{MK.color=el.dataset.c;document.querySelectorAll('.sw').forEach(b=>b.setAttribute('aria-pressed',b===el));if(MK.sel!=null&&MK.shapes[MK.sel]){MK.shapes[MK.sel].c=MK.color;mkDraw()}},
+  mkSz:el=>{const s=MK.sel!=null&&MK.shapes[MK.sel];if(!s)return;mkResize(s,+el.dataset.f);mkDraw()},
+  mkW:el=>{const s=MK.sel!=null&&MK.shapes[MK.sel];if(!s)return;s.w=Math.min(5,Math.max(.3,(s.w||1)*+el.dataset.f));mkDraw()},
+  mkDel:()=>{if(MK.sel==null)return;const s=MK.shapes.splice(MK.sel,1)[0];if(s&&s.t==='scale')MK.scale=null;MK.sel=null;mkOpt();mkDraw()},
+  mkUndo:()=>{const s=MK.shapes.pop();if(s&&s.t==='scale')MK.scale=null;MK.sel=null;mkOpt();mkDraw()},
   mkScale:()=>{const s=MK.shapes.find(x=>x.t==='scale');const inch=(+($('#mk-ft').value||0))*12+(+($('#mk-in').value||0));if(!s){toast('Draw the scale line first.');return}if(!inch){toast('Enter the length of that line.');return}s.inches=inch;MK.scale=Math.hypot(s.b[0]-s.a[0],s.b[1]-s.a[1])/inch;mkDraw();mkOpt('scale');toast('Scale set. Pick Measure and drag across anything.')},
-  mkSave:async el=>{const p=PH(M.id);el.disabled=true;el.textContent='Saving…';const blob=await new Promise(r=>MK.c.toBlob(r,'image/jpeg',.92));const id=uid();
+  mkSave:async el=>{const p=PH(M.id);MK.sel=null;mkDraw();el.disabled=true;el.textContent='Saving…';const blob=await new Promise(r=>MK.c.toBlob(r,'image/jpeg',.92));const id=uid();
     const doc=clean({projectId:p.projectId,kind:'photo',takenAt:p.takenAt,createdAt:Date.now(),lat:p.lat,lng:p.lng,gpsSource:p.gpsSource,code:p.code,tags:p.tags||[],zone:p.zone,trade:p.trade,note:p.note,by:ME.id,byName:ME.name,markupOf:p.id,contentType:'image/jpeg'});
     try{if(AS){const up=await upMedia(blob,await makeThumb(MK.c));await put('photos',{...doc,id,...up})}else await put('photos',{...doc,id,url:URL.createObjectURL(blob),localOnly:true});const bk=M&&M.back;if(bk&&bk.shot)bk.shot=bk.shot.map(x=>x===p.id?id:x);openModal({kind:'photo',id,back:bk});toast('Saved a marked-up copy. The original is kept.')}
     catch(e){el.disabled=false;el.textContent='Save Copy';toast('Couldn\'t save. Check your signal and try again.')}},

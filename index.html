@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="b889eb0111">
+<meta name="bc-ver" content="a9558546ec">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-5ap6cElwfr+iiPktwi9ZR4A17Fw/wLwY5ChGjrQpk1Q=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-8nr1QkuKXaWTeVioCJId/DHNxK6HfsuMYBPCDU3qr08=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -1058,7 +1058,7 @@ async function processFile(file,ctx){
   if(kind==='photo'||kind==='doc'){const r=await stampImage(file,{takenAt,project:pr?.name,jobNumber:pr?.jobNumber,address:pr?.address,lat,lng,gpsSource,zone:ctx.zone,trade:ctx.trade,code,company:coName(pid),logo:await getLogo()},kind==='doc');blob=r.blob;thumb=r.thumb;qual=r.q&&(r.q.blurry||r.q.dark)?r.q:null}
   const id=uid();
   const doc=clean({projectId:pid||null,kind,takenAt,createdAt:Date.now(),lat,lng,gpsSource,code,tags:ctx.tags||[],zone:ctx.zone||'',trade:ctx.trade||'',note:ctx.note||'',by:ME.id,byName:ME.name,beforeOf:ctx.beforeOf||null,markupOf:ctx.markupOf||null,portfolio:(ctx.tags||[]).includes('Portfolio'),tpTask:ctx.tpTask||'',contentType:blob.type||file.type,quality:qual});
-  PEND[id]={...doc,id,url:URL.createObjectURL(blob),pending:true}; scheduleRender(); if(ctx.onAdd)ctx.onAdd(id);
+  PEND[id]={...doc,id,url:URL.createObjectURL(blob),...(thumb?{thumb:URL.createObjectURL(thumb)}:{}),pending:true}; scheduleRender(); if(ctx.onAdd)ctx.onAdd(id);
   if(AS&&OFFLINE()){await qSave({id,blob,thumb,doc})}
   else if(AS){
     try{const up=await upMedia(blob,thumb);await put('photos',{...doc,id,...up});delete PEND[id];if(kind==='photo')aiTag(id,blob);if(hookOn())BC.hook('photo.created',hookPhoto({...doc,id,url:up.url}))}
@@ -1149,6 +1149,12 @@ function tile(p,showProj){
   const sm=V.selMode&&V.tab==='project'&&!p.pending,on=sm&&V.sel.has(p.id);
   return `<div class="tw"><button class="tile${p.pending?' pend':''}${on?' on':''}" data-a="${sm?'selPhoto':'openPhoto'}" data-id="${p.id}" ${sm?`aria-pressed="${on}"`:''}>${sm?`<span class="selck" aria-hidden="true">${on?'✓':''}</span>`:''}${media}${b.length?`<span class="bdg">${b.join('')}</span>`:''}${avHtml(p.byName,'tav',p.by)}<span class="lab">${showProj&&pr?esc(pr.name)+' · ':''}${fmtTime(p.takenAt)}</span></button><span class="tcap"><span class="tl">${showProj&&pr?`<b>${esc(pr.name)}</b>`:''}<span>${fmtTime(p.takenAt)}${p.byName?' • '+esc(p.byName):''}</span></span></span></div>`;
 }
+/* short error reports: when something breaks on a phone, save what broke so it can be fixed */
+const ERRS=[];
+function logErr(e,where){try{const m=String((e&&(e.message||(e.reason&&e.reason.message)))||e||'').slice(0,300);if(!m||ERRS.length>15||ERRS.includes(m))return;ERRS.push(m);
+  const st=String((e&&(e.stack||(e.error&&e.error.stack)))||'').slice(0,900);
+  if(DB)DB.collection('errlog').doc(uid()).set({msg:m,stack:st,where:where||'',tab:(typeof V!=='undefined'&&V.tab)||'',modal:(M&&M.kind)||'',ver:BCVER,ua:navigator.userAgent.slice(0,160),at:Date.now(),by:(ME&&ME.name)||''}).catch(()=>{})}catch(_){}}
+addEventListener('error',e=>logErr(e.error||e.message,'page'));addEventListener('unhandledrejection',e=>logErr(e.reason,'promise'));
 /* updates: when a newer version is live, load it right away (or offer a button if you're in the middle of something) */
 const BCVER=(document.querySelector('meta[name="bc-ver"]')||{}).content||'';let UPCHK=0;
 async function checkUpdate(){if(!BCVER||Date.now()-UPCHK<30000)return;UPCHK=Date.now();
@@ -2357,7 +2363,7 @@ const ACT={
   camZoom:el=>setZoom(+el.dataset.z,true),
   camDone:()=>{const cap=M&&M.cap;camStop();closeModal();goJob(cap&&cap.pid)},
   camDetails:()=>{const b=M&&M.back;camStop();if(b){M=b;renderModal()}else closeModal()},
-  camLast:()=>{const id=M.cap.shot&&M.cap.shot[0];if(!id)return;camStop();const camM=M;openModal({kind:'photo',id,back:camM})},
+  camLast:()=>{const id=M.cap.shot&&M.cap.shot[0];if(!id)return;const camM=M;try{openModal({kind:'photo',id,back:camM});camStop()}catch(e){logErr(e,'camLast');M=camM;toast('Couldn\'t open that photo yet. Try again in a second.')}},
   camTag:el=>{const c=M.cap.ctx,t=el.dataset.t;c.tags=c.tags.includes(t)?c.tags.filter(x=>x!==t):[...c.tags,t];el.setAttribute('aria-pressed',c.tags.includes(t))},
   billUp:async el=>{if(!window.BC||!BC.billing)return;const t=el.innerHTML;document.querySelectorAll('.billbtn').forEach(b=>b.disabled=true);el.innerHTML='<span><b>Opening checkout…</b></span>';
     try{const r=await BC.billing('checkout',{plan:el.dataset.plan,interval:($('#bill-int')||{}).value||'month'});if(r.url&&/^https:\/\/checkout\.stripe\.com\//.test(r.url))location.href=r.url;else throw new Error('Checkout didn\'t open')}

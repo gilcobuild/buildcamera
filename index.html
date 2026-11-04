@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-Jg1+SMawuaaYNHpXwSijLcEZ/FZc/0JtNnbLlAhMOlw=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-GYHImPrjO/3lilBSkbPkEgrb1XmlaA/LIIKwokpoElc=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -999,7 +999,7 @@ async function storeStatus(){const el=$('#st-store');if(!el||!window.BC||!BC.sto
 async function makeThumb(src){try{const w0=src.width||src.naturalWidth,h0=src.height||src.naturalHeight,sc=Math.min(1,640/Math.max(w0,h0));const c=document.createElement('canvas');c.width=Math.round(w0*sc);c.height=Math.round(h0*sc);c.getContext('2d').drawImage(src,0,0,c.width,c.height);return await new Promise(r=>c.toBlob(r,'image/jpeg',.8))}catch(e){return null}}
 async function upMedia(blob,thumb){const up=await AS.upload(blob);let t=null;if(thumb){try{t=(await AS.upload(thumb)).id}catch(e){}}return t?{url:up.url,assetId:up.id,thumbId:t}:{url:up.url,assetId:up.id}}
 function delAsset(p){if(!p)return;if(p.assetId)AS.delete(p.assetId).catch(()=>{});if(p.thumbId)AS.delete(p.thumbId).catch(()=>{})}
-const bestQ=()=>{try{const v=localStorage.getItem('pc-camq');return v?v==='best':/iPhone|iPad/i.test(navigator.userAgent)}catch(e){return false}};
+const bestQ=()=>{try{const v=localStorage.getItem('pc-camq');return v==='best'}catch(e){return false}};
 async function stampImage(file,info,isDoc){
   const url=URL.createObjectURL(file); const img=await loadImg(url); URL.revokeObjectURL(url);
   const max=4032,sc=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));

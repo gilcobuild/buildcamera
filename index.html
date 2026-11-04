@@ -1,8 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
+<meta name="bc-ver" content="b889eb0111">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-HeHTbTa1C6q/I0g0gUv61kooXT0SgVTT4aGlkGeRBOo=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-5ap6cElwfr+iiPktwi9ZR4A17Fw/wLwY5ChGjrQpk1Q=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -590,6 +591,7 @@ a.btn{text-decoration:none;color:inherit}a.btn.pri{color:var(--accent-ink)}
 .dayck{width:22px;height:22px;border-radius:5px;border:2px solid var(--muted);background:var(--panel);display:grid;place-items:center;padding:0;color:var(--accent-ink);font-size:13px;font-weight:700;line-height:1}
 .dayck[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
 h3.day{align-items:center}
+.updbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 84px);z-index:60;border:0;border-radius:999px;background:var(--stamp,#f2b705);color:#16191c;font-weight:700;font-size:15px;padding:12px 18px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
 .moredays{padding:22px 0 30px;text-align:center;color:var(--muted,#6b7378);font-size:14px}
 /* checklists table */
 .ckrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:transparent;width:100%;text-align:left}
@@ -1147,6 +1149,15 @@ function tile(p,showProj){
   const sm=V.selMode&&V.tab==='project'&&!p.pending,on=sm&&V.sel.has(p.id);
   return `<div class="tw"><button class="tile${p.pending?' pend':''}${on?' on':''}" data-a="${sm?'selPhoto':'openPhoto'}" data-id="${p.id}" ${sm?`aria-pressed="${on}"`:''}>${sm?`<span class="selck" aria-hidden="true">${on?'✓':''}</span>`:''}${media}${b.length?`<span class="bdg">${b.join('')}</span>`:''}${avHtml(p.byName,'tav',p.by)}<span class="lab">${showProj&&pr?esc(pr.name)+' · ':''}${fmtTime(p.takenAt)}</span></button><span class="tcap"><span class="tl">${showProj&&pr?`<b>${esc(pr.name)}</b>`:''}<span>${fmtTime(p.takenAt)}${p.byName?' • '+esc(p.byName):''}</span></span></span></div>`;
 }
+/* updates: when a newer version is live, load it right away (or offer a button if you're in the middle of something) */
+const BCVER=(document.querySelector('meta[name="bc-ver"]')||{}).content||'';let UPCHK=0;
+async function checkUpdate(){if(!BCVER||Date.now()-UPCHK<30000)return;UPCHK=Date.now();
+  try{const t=await (await fetch('/sw.js?u='+Date.now(),{cache:'no-store'})).text();const v=(t.match(/version (\w+)/)||[])[1];if(!v||v===BCVER)return;
+    const busy=M||Object.keys(PEND||{}).length;const go=()=>location.replace('/?app&v='+v);
+    if(!busy){go();return}
+    if(!document.getElementById('updbar')){const b=document.createElement('button');b.id='updbar';b.className='updbar';b.textContent='New version ready. Tap to update.';b.onclick=go;document.body.appendChild(b)}}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});
+setTimeout(checkUpdate,4000);
 /* photos show newest day first; earlier days are added as you scroll down */
 const FEEDN={},DAYCHUNK=30;let GLAST=null;
 const feedKey=()=>V.tab+'|'+(V.pid||'');

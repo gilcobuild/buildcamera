@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-PrRd474ecJtfcUOqMnQu3zCntjbful9yLb2/9iAj9sk=' 'sha256-mY+E0G9HTNsQaPFo35W7P7/omFiAd7MqG+dwoyy7dDw=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-Jg1+SMawuaaYNHpXwSijLcEZ/FZc/0JtNnbLlAhMOlw=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -135,9 +135,15 @@ function clean(col,id,d){if(!OKID.test(String(id)))return null;d=d&&typeof d==='
   return d}
 /* photos are private; each phone gets links that stop working after 12 hours, renewed while the app is open */
 const SIGN=new Map(),SIGN_TTL=12*3600;
+/* keep this phone's photo links between visits: same link = the browser's saved copy is used instead of downloading again */
+const signKey=()=>'bc-sign-'+TEAM;let signT=0;
+function signLoad(){try{const o=JSON.parse(lsGet(signKey())||'{}');const now=Date.now()+3600e3;for(const[k,v]of Object.entries(o))if(v&&v.exp>now&&typeof v.url==='string'&&/^https:\/\//.test(v.url)&&!SIGN.has(k))SIGN.set(k,v)}catch(e){}}
+function signSave(){clearTimeout(signT);signT=setTimeout(()=>{try{const now=Date.now()+3600e3;const e=[...SIGN.entries()].filter(([k,v])=>mine(k)&&v.exp>now).slice(-3000);lsSet(signKey(),JSON.stringify(Object.fromEntries(e)))}catch(_){}},800)}
 const mine=a=>typeof a==='string'&&TEAM&&a.startsWith(TEAM+'/');
 async function signAll(m){const need=[...new Set([...m.values()].flatMap(d=>[d.assetId,d.thumbId]).filter(a=>mine(a)&&!(SIGN.get(a)?.exp>Date.now()+3600e3)))];
-  for(let i=0;i<need.length;i+=100){const{data}=await sb.storage.from(BUCKET).createSignedUrls(need.slice(i,i+100),SIGN_TTL);(data||[]).forEach(r=>{if(r.signedUrl&&r.path)SIGN.set(r.path,{url:r.signedUrl,exp:Date.now()+SIGN_TTL*1000})})}
+  const batches=[];for(let i=0;i<need.length;i+=100)batches.push(need.slice(i,i+100));
+  for(let i=0;i<batches.length;i+=4)await Promise.all(batches.slice(i,i+4).map(async b=>{const{data}=await sb.storage.from(BUCKET).createSignedUrls(b,SIGN_TTL);(data||[]).forEach(r=>{if(r.signedUrl&&r.path)SIGN.set(r.path,{url:r.signedUrl,exp:Date.now()+SIGN_TTL*1000})})}));
+  if(need.length)signSave();
   for(const d of m.values()){if(mine(d.assetId)&&SIGN.get(d.assetId))d.url=SIGN.get(d.assetId).url;if(mine(d.thumbId)&&SIGN.get(d.thumbId))d.thumb=SIGN.get(d.thumbId).url}}
 setInterval(()=>{const m=cache.photos;if(m&&m.size)signAll(m).then(()=>emit('photos')).catch(()=>{})},2*3600e3);
 /* the stored record keeps the file's place, not a link */
@@ -146,7 +152,11 @@ function emit(col){const m=cache[col]||new Map();const docs=[...m.entries()].map
 function startRealtime(){if(chan)return;chan=sb.channel('sc-'+TEAM).on('postgres_changes',{event:'*',schema:'public',table:'sc_docs',filter:'team_id=eq.'+TEAM},p=>{
   const r=p.eventType==='DELETE'?p.old:p.new;if(!r||!r.col)return;if(r.team_id&&r.team_id!==TEAM)return;const m=cache[r.col]||(cache[r.col]=new Map());
   if(p.eventType==='DELETE'){m.delete(r.id);emit(r.col);return}const d=clean(r.col,r.id,r.data);if(!d)return;m.set(r.id,d);if(r.col==='photos')signAll(new Map([[r.id,d]])).catch(()=>{}).then(()=>emit(r.col));else emit(r.col)}).subscribe(st=>{if(st==='SUBSCRIBED')Object.keys(subs).forEach(load)})}
-async function load(col){const out=new Map();let from=0;for(;;){const{data,error}=await sb.from('sc_docs').select('id,data').eq('team_id',TEAM).eq('col',col).range(from,from+999);if(error)throw error;data.forEach(r=>{const d=clean(col,r.id,r.data);if(d)out.set(r.id,d)});if(data.length<1000)break;from+=1000}if(col==='photos')await signAll(out).catch(()=>{});cache[col]=out;emit(col)}
+async function load(col){const out=new Map();let from=0;for(;;){const{data,error}=await sb.from('sc_docs').select('id,data').eq('team_id',TEAM).eq('col',col).range(from,from+999);if(error)throw error;data.forEach(r=>{const d=clean(col,r.id,r.data);if(d)out.set(r.id,d)});if(data.length<1000)break;from+=1000}if(col==='photos'){if(!SIGN.size)signLoad();const arr=[...out.entries()].sort((a,b)=>(b[1].takenAt||0)-(a[1].takenAt||0));
+    await signAll(new Map(arr.slice(0,150))).catch(()=>{});cache[col]=out;emit(col);
+    if(arr.length>150)signAll(new Map(arr.slice(150))).then(()=>{if(cache[col]===out)emit(col)}).catch(()=>{});
+    setTimeout(()=>{BC.backfillThumbs&&BC.backfillThumbs()},5000);return}
+  cache[col]=out;emit(col)}
 const err=e=>({code:/fetch|network/i.test(String(e?.message))?'unavailable':'invalid_argument',message:String(e?.message||e)});
 function docRef(col,id){id=id||crypto.randomUUID().replace(/-/g,'').slice(0,20);if(!OKID.test(String(id)))throw{code:'invalid_argument',message:'Bad record id'};return{id,path:col+'/'+id,
   async get(){const{data}=await sb.from('sc_docs').select('data').eq('team_id',TEAM).eq('col',col).eq('id',id).maybeSingle();return{id,exists:!!data,data:()=>data?.data}},
@@ -187,6 +197,12 @@ window.BC={
     const r=await fetch(SB_URL+'/functions/v1/bc-billing',{method:'POST',headers:{Authorization:'Bearer '+session.access_token,apikey:SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({action,team:TEAM,...(extra||{})})});
     const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||('Error '+r.status));return j},
   async storage(){if(!TEAM)return null;const{data,error}=await sb.rpc('sc_storage',{t:TEAM});if(error)throw err(error);return data},
+  async backfillThumbs(){if(window.__bcBF||!['Owner','Office'].includes(ROLE))return;const m=cache.photos;if(!m)return;window.__bcBF=1;
+    const todo=[...m.entries()].filter(([,d])=>(d.kind||'photo')==='photo'&&mine(d.assetId)&&!d.thumbId&&d.url).sort((a,b)=>(b[1].takenAt||0)-(a[1].takenAt||0)).slice(0,80);
+    for(const[id]of todo){try{const d=m.get(id);if(!d||d.thumbId||!d.url)continue;const r=await fetch(d.url);if(!r.ok)continue;const bm=await createImageBitmap(await r.blob());
+      const sc=Math.min(1,640/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=Math.round(bm.width*sc);c.height=Math.round(bm.height*sc);c.getContext('2d').drawImage(bm,0,0,c.width,c.height);if(bm.close)bm.close();
+      const t=await new Promise(res=>c.toBlob(res,'image/jpeg',.8));if(!t)continue;const up=await ASSETS.upload(t);const cur=m.get(id);if(!cur||cur.thumbId)continue;
+      await docRef('photos',id).update({thumbId:up.id});const nd=m.get(id);if(nd)nd.thumb=up.url;signSave();emit('photos');await new Promise(z=>setTimeout(z,400))}catch(e){}}},
   async seatsFull(){try{const r=await BC.storage();if(!r||r.users==null)return null;return r.members>=r.users?r.users:null}catch(e){return null}},
   seatMsg(n){const nat=(()=>{try{return !!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())||/BuildCameraApp/.test(navigator.userAgent)}catch(e){return false}})();
     return `Your company is using all ${n} user${n===1?'':'s'} on its plan. `+(nat?'The owner can move up a plan at buildcamera.com.':'Move up a plan in Settings → Plan & Storage, then invite them.')},
@@ -219,6 +235,7 @@ window.BC={
     if(n&&!confirm(`${n} photo${n>1?'s haven\'t':' hasn\'t'} uploaded yet. Signing out deletes ${n>1?'them':'it'} from this phone. Sign out anyway?`))return;
     window.__bcOut=true;
     try{await sb.auth.signOut()}catch(e){}
+    try{if(window.caches)await caches.delete('bc-img-1')}catch(e){}
     try{Object.keys(localStorage).filter(k=>/^(pc-|bc-|sb-)/.test(k)).forEach(k=>localStorage.removeItem(k))}catch(e){}
     try{sessionStorage.clear()}catch(e){}
     try{await new Promise(r=>{const q=indexedDB.deleteDatabase('picturecam');q.onsuccess=q.onerror=q.onblocked=()=>r()})}catch(e){}
@@ -563,6 +580,7 @@ a.btn{text-decoration:none;color:inherit}a.btn.pri{color:var(--accent-ink)}
 .dayck{width:22px;height:22px;border-radius:5px;border:2px solid var(--muted);background:var(--panel);display:grid;place-items:center;padding:0;color:var(--accent-ink);font-size:13px;font-weight:700;line-height:1}
 .dayck[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
 h3.day{align-items:center}
+.moredays{padding:22px 0 30px;text-align:center;color:var(--muted,#6b7378);font-size:14px}
 /* checklists table */
 .ckrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:transparent;width:100%;text-align:left}
 .ckrow:last-child{border-bottom:0}.ckrow:hover{background:var(--sunk)}
@@ -1055,7 +1073,7 @@ function render(){
   const keep={};document.querySelectorAll('#main [data-dirty="1"][id]').forEach(e=>{keep[e.id]=e.value});
   $('#app').innerHTML=`<header class="top"><div class="in" id="topin"></div></header>${sideHtml()}<main id="main">${screen()}</main>${selBar()}${navHtml()}`;
   Object.entries(keep).forEach(([id,v])=>{const e=document.getElementById(id);if(e){e.value=v;e.dataset.dirty='1'}});
-  renderTop(); scrollTo(0,y); liveModal(); mwDrawAll(); saveScreen(); if(V.tab==='settings'){pushStatus();storeStatus()} deepLink();
+  renderTop(); scrollTo(0,y); liveModal(); mwDrawAll(); saveScreen(); if(V.tab==='settings'){pushStatus();storeStatus()} deepLink(); requestAnimationFrame(chkMore);
 }
 document.addEventListener('focusout',()=>setTimeout(()=>{if(dirty&&!typing())render()},50));
 function renderTop(){
@@ -1117,11 +1135,23 @@ function tile(p,showProj){
   const sm=V.selMode&&V.tab==='project'&&!p.pending,on=sm&&V.sel.has(p.id);
   return `<div class="tw"><button class="tile${p.pending?' pend':''}${on?' on':''}" data-a="${sm?'selPhoto':'openPhoto'}" data-id="${p.id}" ${sm?`aria-pressed="${on}"`:''}>${sm?`<span class="selck" aria-hidden="true">${on?'✓':''}</span>`:''}${media}${b.length?`<span class="bdg">${b.join('')}</span>`:''}${avHtml(p.byName,'tav',p.by)}<span class="lab">${showProj&&pr?esc(pr.name)+' · ':''}${fmtTime(p.takenAt)}</span></button><span class="tcap"><span class="tl">${showProj&&pr?`<b>${esc(pr.name)}</b>`:''}<span>${fmtTime(p.takenAt)}${p.byName?' • '+esc(p.byName):''}</span></span></span></div>`;
 }
+/* photos show newest day first; earlier days are added as you scroll down */
+const FEEDN={},DAYCHUNK=30;let GLAST=null;
+const feedKey=()=>V.tab+'|'+(V.pid||'');
+function dayBlock(k,list,showProj,ds){const ids=list.filter(p=>!p.pending).map(p=>p.id),all=V.selMode&&ids.length&&ids.every(i=>V.sel.has(i));return `<h3 class="day">${ds?`<button class="dayck" data-a="daySel" data-d="${k}" aria-pressed="${!!all}" aria-label="Select all photos from ${esc(fmtDay(list[0].takenAt))}">${all?'✓':''}</button>`:''}<span>${fmtDay(list[0].takenAt)}</span><span>· ${list.length} item${list.length>1?'s':''}</span></h3><div class="grid">${list.map(p=>tile(p,showProj)).join('')}</div>`}
 function grouped(ps,showProj){
   const g={};ps.sort(byNew).forEach(p=>{const k=dayKey(p.takenAt);(g[k]=g[k]||[]).push(p)});
-  const ds=V.tab==='project';
-  return Object.keys(g).sort().reverse().map(k=>{const ids=g[k].filter(p=>!p.pending).map(p=>p.id),all=V.selMode&&ids.length&&ids.every(i=>V.sel.has(i));return `<h3 class="day">${ds?`<button class="dayck" data-a="daySel" data-d="${k}" aria-pressed="${!!all}" aria-label="Select all photos from ${esc(fmtDay(g[k][0].takenAt))}">${all?'✓':''}</button>`:''}<span>${fmtDay(g[k][0].takenAt)}</span><span>· ${g[k].length} item${g[k].length>1?'s':''}</span></h3><div class="grid">${g[k].map(p=>tile(p,showProj)).join('')}</div>`}).join('');
+  const ds=V.tab==='project',keys=Object.keys(g).sort().reverse(),key=feedKey(),want=FEEDN[key]||DAYCHUNK;let i=0,n=0,out='';
+  for(;i<keys.length&&(i===0||n<want);i++){out+=dayBlock(keys[i],g[keys[i]],showProj,ds);n+=g[keys[i]].length}
+  GLAST={g,keys,i,n,showProj,ds,key};
+  if(i<keys.length)out+=`<div class="moredays" id="moredays" aria-live="polite">Loading earlier days…</div>`;
+  return out;
 }
+function moreDays(){const el=document.getElementById('moredays');if(!el||!GLAST)return;const G=GLAST;const stop=G.n+DAYCHUNK;let out='';
+  for(;G.i<G.keys.length&&G.n<stop;G.i++){const k=G.keys[G.i];out+=dayBlock(k,G.g[k],G.showProj,G.ds);G.n+=G.g[k].length}
+  el.insertAdjacentHTML('beforebegin',out);FEEDN[G.key]=G.n;if(G.i>=G.keys.length)el.remove()}
+function chkMore(){const el=document.getElementById('moredays');if(el&&el.getBoundingClientRect().top<innerHeight+1400){moreDays();requestAnimationFrame(chkMore)}}
+addEventListener('scroll',()=>{if(!chkMore.t)chkMore.t=requestAnimationFrame(()=>{chkMore.t=0;chkMore()})},{passive:true});
 function scrFeed(){
   let ps=vis(allPhotos()).filter(p=>p.kind!=='doc');
   const f=V.feedF, today=dayKey(Date.now());
@@ -1376,7 +1406,7 @@ function taskCard(t){
   const ph=t.photoId&&PH(t.photoId), fx=t.fixPhotoId&&PH(t.fixPhotoId), as=M_(t.assignee), pr=P(t.projectId);
   const due=t.due?(t.due<dayKey(Date.now())&&!t.done?`<span class="pill bad">Late · ${esc(t.due)}</span>`:`<span class="pill mut">Due ${esc(t.due)}</span>`):'';
   return `<div class="task${t.done?' done':''}"><div class="hd"><input type="checkbox" id="tk-${t.id}" data-ch="taskDone" data-id="${t.id}" ${t.done?'checked':''} aria-label="Done"><div class="t"><b>${esc(t.title)}</b><div class="row" style="margin-top:4px">${t.type==='punch'?'<span class="pill warn">Punch</span>':'<span class="pill mut">Task</span>'}${due}${as?`<span class="note">${esc(as.name)}${as.company?' · '+esc(as.company):''}</span>`:t.assigneeText?`<span class="note">${esc(t.assigneeText)}</span>`:''}</div>${V.tab!=='project'&&pr?`<div class="note">${esc(pr.name)}</div>`:''}</div><button class="ib" data-a="delTask" data-id="${t.id}" aria-label="Remove task">${I('trash')}</button></div>
-  ${ph||fx||t.type==='punch'?`<div class="pair"><figure>${ph?`<button class="tile" style="aspect-ratio:4/3" data-a="openPhoto" data-id="${ph.id}"><img src="${esc(ph.url)}" alt="Problem photo"></button>`:'<span class="empty" style="padding:10px">No photo</span>'}<figcaption>Problem</figcaption></figure><figure>${fx?`<button class="tile" style="aspect-ratio:4/3" data-a="openPhoto" data-id="${fx.id}"><img src="${esc(fx.url)}" alt="Fixed photo"></button>`:`<button class="btn sm" style="aspect-ratio:4/3;width:100%" data-a="fixPhoto" data-id="${t.id}">${I('camera')} Add Fixed Photo</button>`}<figcaption>Fixed</figcaption></figure></div>`:''}</div>`;
+  ${ph||fx||t.type==='punch'?`<div class="pair"><figure>${ph?`<button class="tile" style="aspect-ratio:4/3" data-a="openPhoto" data-id="${ph.id}"><img src="${esc(ph.thumb||ph.url)}" alt="Problem photo" loading="lazy"></button>`:'<span class="empty" style="padding:10px">No photo</span>'}<figcaption>Problem</figcaption></figure><figure>${fx?`<button class="tile" style="aspect-ratio:4/3" data-a="openPhoto" data-id="${fx.id}"><img src="${esc(fx.thumb||fx.url)}" alt="Fixed photo" loading="lazy"></button>`:`<button class="btn sm" style="aspect-ratio:4/3;width:100%" data-a="fixPhoto" data-id="${t.id}">${I('camera')} Add Fixed Photo</button>`}<figcaption>Fixed</figcaption></figure></div>`:''}</div>`;
 }
 function taskList(ts){
   const f=V.taskF; const list=ts.filter(t=>f==='open'?!t.done:f==='done'?t.done:f==='punch'?t.type==='punch'&&!t.done:true).sort((a,b)=>(a.done-b.done)||((a.due||'9')<(b.due||'9')?-1:1));
@@ -1554,7 +1584,7 @@ function captureBody(){
   <p class="note">Each photo saves right away with the company, job, date, time and GPS stamped on it. Your phone may still show its own Retake / Use Photo screen after each shot.</p>${datalists()}`;
 }
 function capThumb(id){const p=PH(id);if(!p)return '';const tg=(p.tags||[]).length,mk=allPhotos().some(x=>x.markupOf===id);
-  return `<button class="st" data-a="capPhoto" data-id="${id}" aria-label="Open photo to add tags or markup">${p.kind==='video'?`<span class="ph">${I('video')}</span>`:`<img src="${esc(p.url)}" alt="">`}${p.pending?'<i class="up">…</i>':''}${tg||mk?`<i class="tg">${mk?'Marked':tg+' tag'+(tg>1?'s':'')}</i>`:''}</button>`}
+  return `<button class="st" data-a="capPhoto" data-id="${id}" aria-label="Open photo to add tags or markup">${p.kind==='video'?`<span class="ph">${I('video')}</span>`:`<img src="${esc(p.thumb||p.url)}" alt="">`}${p.pending?'<i class="up">…</i>':''}${tg||mk?`<i class="tg">${mk?'Marked':tg+' tag'+(tg>1?'s':'')}</i>`:''}</button>`}
 function capStrip(){const el=$('#cap-strip');if(!el||!M||M.kind!=='capture')return;el.innerHTML=(M.shot||[]).map(capThumb).join('');el.hidden=!(M.shot||[]).length}
 /* in-app camera: live view, one tap per photo, no retake step */
 const CAM={mode:'photo',rec:null,audio:null,raf:0,tick:0,stream:null,facing:'environment',gps:null,watch:null,busy:false,ok:!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)&&!/claudeusercontent|claude\.ai/.test(location.host)&&window.isSecureContext};
@@ -1565,7 +1595,7 @@ function camHtml(){const c=M.cap,pr=P(c.pid),last=c.shot&&c.shot[0]&&PH(c.shot[0
   <div class="camtop"><button class="ib" data-a="camDone" aria-label="Close camera">${I('x')}</button><div class="camjob"><b>${esc(pr?pr.name:'')}</b><span>${esc([c.ctx.zone,c.ctx.trade].filter(Boolean).join(' · ')||'Tap Details to set zone and trade')}</span></div>${OFFLINE()?'<span class="offbadge">No-signal mode</span>':''}<span class="camtimer" id="camtimer" hidden>0:00</span><span class="camgps" id="camgps">GPS…</span><button class="ib" data-a="camDetails" aria-label="Photo details: work zone, trade partner, note" title="Details">${I('pen')}</button><button class="ib" data-a="camSnd" aria-pressed="${sndOn()}" aria-label="Shutter sound ${sndOn()?'on':'off'}">${I(sndOn()?'snd':'mute')}</button><button class="ib" data-a="camFlip" aria-label="Switch camera">${I('cmp')}</button></div><div class="camtoast" id="camtoast" aria-live="polite">${I('check')}<span>Saved</span></div><div class="camzl" id="camzl" aria-hidden="true">1×</div>
   <div class="camzoom" id="camzoom" role="group" aria-label="Zoom">${zoomBtns()}</div>
   <div class="camtags"><div class="cammode" role="group" aria-label="Photo or video"><button data-a="camMode" data-m="photo" aria-pressed="${CAM.mode!=='video'}">Photo</button><button data-a="camMode" data-m="video" aria-pressed="${CAM.mode==='video'}">Video</button></div><label class="camsel"><span>Tag</span><select id="cam-tag" data-ch="camTagSel" aria-label="Tag for the next photos"><option value="">No tag</option>${tagList().map(t=>`<option ${c.ctx.tags[0]===t?'selected':''}>${esc(t)}</option>`).join('')}</select></label></div>
-  <div class="cambot"><button class="camlast" data-a="camLast" aria-label="Open last photo">${last?`<img src="${esc(last.url)}" alt="">`:''}</button><button class="camshut${CAM.mode==='video'?' vid':''}" data-a="camShutter" aria-label="${CAM.mode==='video'?'Start recording':'Take photo'}"><span></span></button><button class="camdone" data-a="camDone"><b id="camcount">${c.count||0}</b><span>Done</span></button></div>
+  <div class="cambot"><button class="camlast" data-a="camLast" aria-label="Open last photo">${last?`<img src="${esc(last.thumb||last.url)}" alt="">`:''}</button><button class="camshut${CAM.mode==='video'?' vid':''}" data-a="camShutter" aria-label="${CAM.mode==='video'?'Start recording':'Take photo'}"><span></span></button><button class="camdone" data-a="camDone"><b id="camcount">${c.count||0}</b><span>Done</span></button></div>
   <p class="camerr" id="camerr" hidden></p></div>`}
 async function camStart(){const v=$('#camv');if(!v)return;
   try{try{CAM.stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:CAM.facing},width:{ideal:4032},height:{ideal:3024},aspectRatio:{ideal:4/3}}})}catch(e1){CAM.stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:CAM.facing}})}v.srcObject=CAM.stream;await v.play().catch(()=>{});zoomSetup()}
@@ -1606,7 +1636,7 @@ function shutterSound(){if(!sndOn())return;try{ACX=ACX||new (window.AudioContext
     const src=ACX.createBufferSource();src.buffer=buf;const f=ACX.createBiquadFilter();f.type='bandpass';f.frequency.value=hz;f.Q.value=.8;const g=ACX.createGain();g.gain.value=gain;src.connect(f);f.connect(g);g.connect(ACX.destination);src.start(t+at)};
   burst(0,.035,1.4,3200);burst(.065,.055,1,2200)}catch(e){}}
 function goJob(pid){if(pid&&P(pid)){V.selMode=false;V.sel=new Set();V.pid=pid;V.tab='project';V.ptab='photos';V.lastProject=pid;saveView();render();scrollTo(0,0)}}
-function camOnAdd(cap){return id=>{cap.shot=[id,...(cap.shot||[])];cap.count=(cap.count||0)+1;const n=$('#camcount');if(n){n.textContent=cap.count;n.classList.remove('bump');void n.offsetWidth;n.classList.add('bump')}const l=document.querySelector('.camlast');const p=PH(id);if(l&&p){l.innerHTML=p.kind==='video'?`<span class="ph" style="display:grid;place-items:center;height:100%;color:#fff">${I('video')}</span>`:`<img src="${esc(p.url)}" alt="">`;l.classList.remove('got');void l.offsetWidth;l.classList.add('got')}const ct=$('#camtoast');if(ct){ct.querySelector('span').textContent=p&&p.kind==='video'?'Video saved':cap.count>1?cap.count+' saved':'Saved';ct.classList.remove('go');void ct.offsetWidth;ct.classList.add('go')}}}
+function camOnAdd(cap){return id=>{cap.shot=[id,...(cap.shot||[])];cap.count=(cap.count||0)+1;const n=$('#camcount');if(n){n.textContent=cap.count;n.classList.remove('bump');void n.offsetWidth;n.classList.add('bump')}const l=document.querySelector('.camlast');const p=PH(id);if(l&&p){l.innerHTML=p.kind==='video'?`<span class="ph" style="display:grid;place-items:center;height:100%;color:#fff">${I('video')}</span>`:`<img src="${esc(p.thumb||p.url)}" alt="">`;l.classList.remove('got');void l.offsetWidth;l.classList.add('got')}const ct=$('#camtoast');if(ct){ct.querySelector('span').textContent=p&&p.kind==='video'?'Video saved':cap.count>1?cap.count+' saved':'Saved';ct.classList.remove('go');void ct.offsetWidth;ct.classList.add('go')}}}
 function stampTile(W,H,lines){const fs=Math.max(16,Math.round(Math.max(W,H)*.024)),gap=fs*1.18,pad=Math.round(fs*1.1),c=document.createElement('canvas');c.width=W;c.height=Math.ceil(gap*lines.length+pad*2);const x=c.getContext('2d');
   const face='-apple-system,"SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif';x.textAlign='right';let y=c.height-pad;
   for(let k=lines.length-1;k>=0;k--){x.font=`${k===0?700:k===1?700:600} ${k===0?Math.round(fs*.78):fs}px ${face}`;const t=lines[k];x.shadowColor='rgba(0,0,0,1)';x.shadowBlur=Math.max(6,fs*.7);x.fillStyle='rgba(0,0,0,.75)';x.fillText(t,W-pad,y);x.shadowBlur=0;x.shadowColor='transparent';x.lineJoin='round';x.strokeStyle='rgba(0,0,0,.65)';x.lineWidth=Math.max(1.5,fs*.08);x.strokeText(t,W-pad,y);x.fillStyle='#fff';x.fillText(t,W-pad,y);y-=gap}
@@ -1642,7 +1672,7 @@ async function camShoot(){const v=$('#camv');if(!v||!v.videoWidth||CAM.busy)retu
   shutterSound();const f=$('#camflash');if(f){f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}
   const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.95));CAM.busy=false;
   const cap=M.cap,ctx={...cap.ctx,projectId:cap.pid,lockProject:false,fromCamera:true,gps:CAM.gps};
-  ctx.onAdd=id=>{cap.shot=[id,...(cap.shot||[])];cap.count=(cap.count||0)+1;const n=$('#camcount');if(n){n.textContent=cap.count;n.classList.remove('bump');void n.offsetWidth;n.classList.add('bump')}const l=document.querySelector('.camlast');const p=PH(id);if(l&&p){l.innerHTML=`<img src="${esc(p.url)}" alt="">`;l.classList.remove('got');void l.offsetWidth;l.classList.add('got')}const ct=$('#camtoast');if(ct){ct.querySelector('span').textContent=cap.count>1?cap.count+' saved':'Saved';ct.classList.remove('go');void ct.offsetWidth;ct.classList.add('go')}};
+  ctx.onAdd=id=>{cap.shot=[id,...(cap.shot||[])];cap.count=(cap.count||0)+1;const n=$('#camcount');if(n){n.textContent=cap.count;n.classList.remove('bump');void n.offsetWidth;n.classList.add('bump')}const l=document.querySelector('.camlast');const p=PH(id);if(l&&p){l.innerHTML=`<img src="${esc(p.thumb||p.url)}" alt="">`;l.classList.remove('got');void l.offsetWidth;l.classList.add('got')}const ct=$('#camtoast');if(ct){ct.querySelector('span').textContent=cap.count>1?cap.count+' saved':'Saved';ct.classList.remove('go');void ct.offsetWidth;ct.classList.add('go')}};
   processFile(blob,ctx).then(id=>{if(id)setLastZT(cap.pid,cap.ctx.zone,cap.ctx.trade,(cap.ctx.tags||[])[0])}).catch(()=>toast('Couldn\'t save that photo. Try again.'));
 }
 /* photo viewer */
@@ -1652,7 +1682,7 @@ function photoSheet(){
   const pr=P(p.projectId), before=p.beforeOf&&PH(p.beforeOf), after=allPhotos().find(x=>x.beforeOf===p.id), orig=p.markupOf&&PH(p.markupOf);
   const list=p.kind==='doc'?[p]:phList(p),i=list.findIndex(x=>x.id===p.id),prev=i>0&&list[i-1],next=i>=0&&list[i+1];
   const z=M.zoom||1;
-  const media=p.kind==='video'?`<video src="${esc(p.url)}" controls playsinline></video>`:p.kind==='audio'?`<audio src="${esc(p.url)}" controls style="width:90%;margin:20px"></audio>`:`<span class="pvfig${M.pinMode?' pinmode':''}" id="pvim" style="transform:translate(${M.px||0}px,${M.py||0}px) scale(${z})" ${M.pinMode?'data-a="pinAdd"':''} data-id="${p.id}"><img src="${esc(p.url)}" alt="${esc(p.note||'Jobsite photo')}" draggable="false">${(p.pins||[]).map((q,i)=>`<button class="pin${M.pinSel===q.id?' on':''}" style="left:${(q.x*100).toFixed(2)}%;top:${(q.y*100).toFixed(2)}%" data-a="pinSel" data-pin="${q.id}" aria-label="Pin ${i+1}: ${esc(q.tag||'')}${q.note?' – '+esc(q.note):''}">${i+1}</button>`).join('')}</span>${M.pinMode?'<span class="pinbar">Tap the photo to drop a pin</span>':''}`;
+  const media=p.kind==='video'?`<video src="${esc(p.url)}" controls playsinline></video>`:p.kind==='audio'?`<audio src="${esc(p.url)}" controls style="width:90%;margin:20px"></audio>`:`<span class="pvfig${M.pinMode?' pinmode':''}" id="pvim" style="transform:translate(${M.px||0}px,${M.py||0}px) scale(${z})" ${M.pinMode?'data-a="pinAdd"':''} data-id="${p.id}"><img src="${esc(p.thumb&&!FULLOK.has(p.url)?p.thumb:p.url)}" ${p.thumb&&p.thumb!==p.url&&!FULLOK.has(p.url)?`data-full="${esc(p.url)}"`:''} alt="${esc(p.note||'Jobsite photo')}" draggable="false">${(p.pins||[]).map((q,i)=>`<button class="pin${M.pinSel===q.id?' on':''}" style="left:${(q.x*100).toFixed(2)}%;top:${(q.y*100).toFixed(2)}%" data-a="pinSel" data-pin="${q.id}" aria-label="Pin ${i+1}: ${esc(q.tag||'')}${q.note?' – '+esc(q.note):''}">${i+1}</button>`).join('')}</span>${M.pinMode?'<span class="pinbar">Tap the photo to drop a pin</span>':''}`;
   const tb=`<div class="pvtb" role="toolbar" aria-label="Photo tools">${p.kind==='photo'||p.kind==='doc'?`<button class="ib" data-a="markup" data-id="${p.id}" aria-label="Mark up" title="Mark up">${I('pen')}</button>`:''}${p.kind==='photo'||p.kind==='doc'?`<button class="ib" data-a="pinMode" aria-pressed="${!!M.pinMode}" aria-label="Pin a tag on the photo" title="Pin a tag">${I('pin2')}</button>`:''}<button class="ib" data-a="pvFull" aria-label="Full screen" title="Full screen">${I('expand')}</button>${p.kind==='photo'||p.kind==='doc'?`<button class="ib" data-a="pvZoom" data-z="-1" aria-label="Zoom out" title="Zoom out">${I('zoomout')}</button><button class="ib" data-a="pvZoom" data-z="1" aria-label="Zoom in" title="Zoom in">${I('zoomin')}</button>`:''}<a class="ib" href="${/^(https:|blob:)/.test(p.url||'')?esc(p.url):'#'}" target="_blank" rel="noopener" download aria-label="Download" title="Download">${I('download')}</a><button class="ib" data-a="delPhoto" data-id="${p.id}" aria-label="Delete photo" title="Delete">${I('trash')}</button></div>`;
   const nav=`${prev?`<button class="pvnav l" data-a="pvNav" data-id="${prev.id}" aria-label="Newer photo">${I('back')}</button>`:''}${next?`<button class="pvnav r" data-a="pvNav" data-id="${next.id}" aria-label="Older photo">${I('fwd')}</button>`:''}`;
   const tks=S.tasks.filter(t=>t.photoId===p.id||t.fixPhotoId===p.id);
@@ -1738,6 +1768,9 @@ function cmpInit(){
 /* ---------- markup editor ---------- */
 /* photo viewer zoom: mouse wheel or trackpad zooms toward the pointer, drag pans, pinch on phones, double-click toggles */
 const PVZ={pts:new Map(),d0:0,z0:1,last:null,moved:false};
+const FULLOK=new Set();
+function upgradeFull(){document.querySelectorAll('img[data-full]').forEach(im=>{const u=im.dataset.full;im.removeAttribute('data-full');if(FULLOK.has(u)){im.src=u;return}const pre=new Image();pre.onload=()=>{FULLOK.add(u);if(im.isConnected)im.src=u};pre.src=u})}
+new MutationObserver(()=>{if(document.querySelector('img[data-full]'))upgradeFull()}).observe(document.documentElement,{childList:true,subtree:true});
 function pvApply(anim){const im=$('#pvim'),box=$('#pvbox');if(!im||!box||!M)return;const z=M.zoom||1,b=box.getBoundingClientRect();
   const mx=Math.max(0,(im.offsetWidth*z-b.width)/2),my=Math.max(0,(im.offsetHeight*z-b.height)/2);
   M.px=Math.max(-mx,Math.min(mx,M.px||0));M.py=Math.max(-my,Math.min(my,M.py||0));if(z<=1){M.px=0;M.py=0}
@@ -2033,7 +2066,7 @@ function scrOnsite(){
   const by={};ts.forEach(t=>{(by[t.projectId]=by[t.projectId]||[]).push(t)});
   const ids=Object.keys(by);
   return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">On Site Today</h1><p class="sub">${fmtDay(Date.now())} · ${ts.filter(t=>!t.out).length} on the clock now</p>
-  ${ids.length?ids.map(pid=>{const p=P(pid);return `<h3 class="day">${esc(p?.name||'Unknown job')}</h3><div class="list">${by[pid].map(t=>{const ph=allPhotos().filter(x=>x.projectId===pid&&x.byName===t.who&&dayKey(x.takenAt)===today&&x.kind==='photo').sort(byNew)[0];return `<div class="li">${ph?`<button class="tile" style="width:52px;flex:none" data-a="openPhoto" data-id="${ph.id}"><img src="${esc(ph.url)}" alt=""></button>`:I('users')}<span class="t"><b>${esc(t.who)}</b><span>${fmtTime(t.in)} to ${t.out?fmtTime(t.out):'now'} · ${(((t.out||Date.now())-t.in)/36e5).toFixed(1)} hrs${ph?' · last photo '+fmtTime(ph.takenAt):' · no photos yet'}</span></span>${t.out?'<span class="pill mut">Left</span>':'<span class="pill good">On site</span>'}</div>`}).join('')}</div>`}).join(''):`<div class="empty">${I('clock')}<b>No one clocked in today</b><button class="btn pri" data-a="tab" data-t="time">Open Time Clock</button></div>`}`;
+  ${ids.length?ids.map(pid=>{const p=P(pid);return `<h3 class="day">${esc(p?.name||'Unknown job')}</h3><div class="list">${by[pid].map(t=>{const ph=allPhotos().filter(x=>x.projectId===pid&&x.byName===t.who&&dayKey(x.takenAt)===today&&x.kind==='photo').sort(byNew)[0];return `<div class="li">${ph?`<button class="tile" style="width:52px;flex:none" data-a="openPhoto" data-id="${ph.id}"><img src="${esc(ph.thumb||ph.url)}" alt="" loading="lazy"></button>`:I('users')}<span class="t"><b>${esc(t.who)}</b><span>${fmtTime(t.in)} to ${t.out?fmtTime(t.out):'now'} · ${(((t.out||Date.now())-t.in)/36e5).toFixed(1)} hrs${ph?' · last photo '+fmtTime(ph.takenAt):' · no photos yet'}</span></span>${t.out?'<span class="pill mut">Left</span>':'<span class="pill good">On site</span>'}</div>`}).join('')}</div>`}).join(''):`<div class="empty">${I('clock')}<b>No one clocked in today</b><button class="btn pri" data-a="tab" data-t="time">Open Time Clock</button></div>`}`;
 }
 
 /* settings */

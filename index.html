@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-fTTrrnznRQ1PmUCFWRJZ1NgXaKS0U0IoWkacVs1urzk=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-3aRkmW0sPEpwmQNvrECpTBoy9Ktsfud9jE7khmBFD5k=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -383,7 +383,7 @@ a{color:var(--accent)}
 .callout{background:var(--warn-soft);color:var(--ink);border-radius:10px;padding:10px 12px;font-size:13.5px}
 .callout.info{background:var(--accent-soft)}
 /* modal */
-#modal{position:fixed;inset:0;z-index:50;background:var(--scrim);display:flex;justify-content:center;align-items:flex-end}
+#modal{position:fixed;inset:0;bottom:auto;height:100%;z-index:50;background:var(--scrim);display:flex;justify-content:center;align-items:flex-end}
 .sheet{background:var(--bg);width:100%;max-width:720px;height:100%;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
 @media (min-width:760px){#modal{align-items:center}.sheet{height:calc(100% - 40px);border-radius:16px;overflow:hidden}}
 .sh{display:flex;align-items:center;gap:8px;background:var(--panel);border-bottom:1px solid var(--line);padding-block:8px;padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
@@ -1529,12 +1529,18 @@ function scrAbout(){
 function datalists(){return `<datalist id="dl-people">${S.members.map(m=>`<option value="${esc(m.name)}">`).join('')}</datalist><datalist id="dl-trades">${[...new Set([...TRADES,...S.members.map(m=>m.trade).filter(Boolean)])].map(t=>`<option value="${esc(t)}">`).join('')}</datalist><datalist id="dl-zones">${[...new Set(allPhotos().map(p=>p.zone).filter(Boolean))].map(z=>`<option value="${esc(z)}">`).join('')}</datalist>`}
 
 /* ---------- modals ---------- */
+/* while a sheet is open, pin the page behind it so typing (keyboard up) can't scroll the photos underneath */
+let MLY=null;
+function mlock(){if(MLY!==null)return;MLY=scrollY;const b=document.body.style;b.position='fixed';b.top=-MLY+'px';b.left='0';b.right='0';b.width='100%';b.overflow='hidden';mfit()}
+function munlock(){if(MLY===null)return;const y=MLY;MLY=null;const b=document.body.style;b.position='';b.top='';b.left='';b.right='';b.width='';b.overflow='';scrollTo(0,y);const el=$('#modal');if(el){el.style.top='';el.style.height=''}}
+function mfit(){const el=$('#modal'),vv=window.visualViewport;if(!el||el.hidden||!vv)return;el.style.top=vv.offsetTop+'px';el.style.height=vv.height+'px'}
+if(window.visualViewport){visualViewport.addEventListener('resize',mfit);visualViewport.addEventListener('scroll',mfit)}
 function openModal(m){M=m;renderModal()}
-function closeModal(){camStop();M=null;$('#modal').hidden=true;$('#modal').innerHTML='';document.body.style.overflow=''}
+function closeModal(){camStop();M=null;$('#modal').hidden=true;$('#modal').innerHTML='';munlock()}
 function sheet(title,body,extra='',cls=''){return `<div class="sheet${cls?' '+cls:''}" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="sh"><button class="ib" data-a="close" aria-label="Close">${I('x')}</button><b>${esc(title)}</b>${extra}</div><div class="sb">${body}</div></div>`}
 function renderModal(){
   if(!M){closeModal();return}
-  const el=$('#modal'); el.hidden=false; document.body.style.overflow='hidden';
+  const el=$('#modal'); el.hidden=false; mlock();
   let h='';
   if(M.kind==='newProject'){const src=M.from&&P(M.from);h=sheet(src?'Copy as New Job':'New Project',`<form class="stack" data-sub="createProject" ${src?`data-from="${src.id}"`:''}>${src?`<p class="callout info">Starts a new job from <b>${esc(src.name)}</b>. Copies its checklists (unchecked), contacts, albums, company name, group and Trade Partners. Photos, tasks and the address stay with the old job.</p>`:''}<div class="two"><label class="f">Project Name<input type="text" id="np-name" name="name" required autocapitalize="words" placeholder="E.g. Smith Patio Cover"></label><label class="f">Job Number<input type="text" id="np-num" name="jobNumber" placeholder="Optional"></label></div><label class="f">Company Name on This Job<input type="text" id="np-co" name="companyName" list="dl-co2" value="${esc(src?src.companyName||'':'')}" placeholder="${esc(SET().name||DEFCO())}" autocapitalize="words"><datalist id="dl-co2">${companyNames().map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>${addrBlock('np',{})}<label class="f">Group<input type="text" id="np-group" name="group" value="${esc(src?src.group||'':'')}" autocapitalize="words" placeholder="Optional, e.g. Ochsner Clinics"></label><button class="btn pri" type="submit">${src?'Create the Copy':'Create Project'}</button></form>`)}
   else if(M.kind==='capture')h=sheet(M.title||'New Photo',captureBody());
@@ -1555,7 +1561,7 @@ function renderModal(){
   else if(M.kind==='export')h=exportSheet();
   else if(M.kind==='onboard')h=onboardSheet();
   else if(M.kind==='albName')h=sheet(M.old?'Rename Album':'New Album',`<form class="stack" data-sub="albSave"><label class="f">Album Name<input type="text" id="al-name" name="n" value="${esc(M.old||'')}" required autocapitalize="words" placeholder="E.g. Level 2 Rough-In"></label>${M.old?'':'<p class="note" style="margin:0">Then open photos and add them to it, or use Select → Edit to add many at once.</p>'}<button class="btn pri" type="submit">${M.old?'Rename':'Create Album'}</button></form>`);
-  else if(M.kind==='cam'){el.innerHTML=camHtml();el.hidden=false;document.body.style.overflow='hidden';camStart();return}
+  else if(M.kind==='cam'){el.innerHTML=camHtml();el.hidden=false;mlock();camStart();return}
   else if(M.kind==='busy')h=sheet(M.title,`<div class="empty"><b>${esc(M.msg)}</b><span id="busymsg"></span></div>`);
   el.innerHTML=h;
   if(M.kind==='markup')mkInit();

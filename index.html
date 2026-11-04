@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="edf19f6df4">
+<meta name="bc-ver" content="695e75dc17">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-G2zJEAtgfPBhW155CvKwebhdolAD2bQggUymS60LwvY=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-CfuVIyTFsd8ckHXn7xyRAtj+Qg0buZDzgxpjQ9DhDgk=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -636,7 +636,8 @@ h3.day{align-items:center}
 .f .row .linkb{white-space:nowrap;font-size:11.5px}.duebtn .chip{flex:none;font:600 13px var(--f-body);letter-spacing:0;text-transform:none}
 .fixdd{border:1px solid var(--line);border-radius:10px;background:var(--panel)}.fixdd summary{cursor:pointer;padding:10px 12px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:8px}.fixdd summary::after{content:'▾';color:var(--muted)}.fixdd[open] summary::after{content:'▴'}.fixdd summary::-webkit-details-marker{display:none}.fixlist{max-height:240px;overflow:auto;border-top:1px solid var(--line);padding:4px 6px}.fixck{display:flex;align-items:center;gap:10px;padding:8px 6px;border-radius:8px;cursor:pointer}.fixck:hover{background:var(--sunk)}.fixck input{width:20px;height:20px;flex:none}
 ::placeholder{color:var(--muted);opacity:.5}
-.stgrid{display:grid;gap:12px;margin-top:10px}.stgrid>.card{margin:0}
+.zkids{margin:2px 0 4px 18px;padding-left:8px;border-left:2px solid var(--line)}.zadd{gap:6px;flex-wrap:nowrap;padding:4px 6px}.zsel{width:100%}.zsel+input{margin-top:6px}
+.stgrid{display:grid;gap:10px;margin-top:6px}.stsec{font:700 13px/1.2 var(--f-ui,inherit);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:18px 2px 0}.stgrid>.card{margin:0}
 @media(min-width:1000px){.stgrid{grid-template-columns:1fr 1fr;align-items:start}}
 details.stl>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 10px}details.stl>summary::-webkit-details-marker{display:none}
 details.stl>summary h2{margin:0}details.stl>summary .note{grid-column:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -903,10 +904,33 @@ const stOpen=k=>!!(V.stOpen&&V.stOpen[k]);
 function stSum(k,title,count,prev){return `<summary class="stsum"><h2>${title}</h2><span class="note">${count}${prev?' · '+esc(prev):''}</span><span class="stchev" aria-hidden="true"></span></summary>`}
 const stPrev=L=>L.slice(0,4).join(', ')+(L.length>4?'…':'');
 document.addEventListener('toggle',e=>{const d=e.target;if(d&&d.matches&&d.matches('details.stl')){V.stOpen=V.stOpen||{};V.stOpen[d.dataset.k]=d.open}},true);
+/* work zones can nest: "Building A / 1st Floor / Classroom 101" */
+const ZS=' / ';
+const zParts=z=>String(z||'').split(ZS);
+function zoneTreeHtml(){const L=zoneList();if(!L.length)return '<p class="note" style="margin:6px 0">Nothing on the list yet. Add a building or area below, then tap + Inside to add floors and rooms under it.</p>';
+  const kids=par=>L.filter(z=>{const a=zParts(z);return a.length===(par?zParts(par).length+1:1)&&(!par||z.startsWith(par+ZS))});
+  const node=z=>{const a=zParts(z),nm=a[a.length-1],ch=kids(z),deep=a.length>=4;
+    return `<div class="zn" data-reo="zones" data-v="${esc(z)}"><div class="ck" style="align-items:center;gap:6px">${DESK()?`<span class="dh" title="Drag to move" aria-hidden="true">&#8942;&#8942;</span>`:''}<input type="text" value="${esc(nm)}" data-ch="zRen" data-v="${esc(z)}" autocapitalize="words" aria-label="Work zone name" style="flex:1;min-width:0">${deep?'':`<button class="btn sm" data-a="zSub" data-v="${esc(z)}" aria-label="Add inside ${esc(nm)}">${I('plus')} Inside</button>`}<button class="ib" data-a="zDel" data-v="${esc(z)}" aria-label="Remove ${esc(nm)}">${I('trash')}</button></div>
+    ${ch.length||V.zAddAt===z?`<div class="zkids">${ch.map(node).join('')}${V.zAddAt===z?`<form data-sub="zAdd" data-par="${esc(z)}" class="row zadd"><input type="text" name="t" id="z-new" placeholder="Inside ${esc(nm)}, e.g. ${a.length===1?'1st Floor':a.length===2?'Classroom 101':'North Wall'}" autocapitalize="words" style="flex:1;min-width:0"><button class="btn sm pri" type="submit" data-keepfocus>Add</button><button class="btn sm" type="button" data-a="zSubX">Done</button></form>`:''}</div>`:''}</div>`};
+  return kids('').map(node).join('')}
+function zRefresh(){const b=$('#ls-zones');if(b)b.innerHTML=zoneTreeHtml();const f=$('#z-new');if(f)f.focus()}
+/* pickers: one drop-down with the tree indented, or type a new one */
+function zEnhance(inp){if(inp.dataset.zp)return;const L=zoneList();if(!L.length)return;inp.dataset.zp='1';
+  const sel=document.createElement('select');sel.className='zsel';sel.setAttribute('aria-label','Work zone');
+  const first=inp.id==='bk-zone'?'Leave as is':'No work zone';
+  sel.innerHTML=`<option value="">${first}</option>`+L.map(z=>{const a=zParts(z);return `<option value="${esc(z)}">${'\u00a0\u00a0\u00a0\u00a0'.repeat(a.length-1)}${a.length>1?'\u2514 ':''}${esc(a[a.length-1])}</option>`}).join('')+'<option value="__new">+ Type a different one…</option>';
+  const v=inp.value;if(v&&!L.includes(v)){sel.value='__new'}else{sel.value=v||'';inp.hidden=true}
+  [...sel.options].forEach(o=>o.dataset.t=o.textContent);
+  const full=()=>{[...sel.options].forEach(o=>o.textContent=o.dataset.t);const o=sel.selectedOptions[0];if(o&&o.value&&o.value!=='__new')o.textContent=zParts(o.value).join(' \u203a ')};
+  const tree=()=>[...sel.options].forEach(o=>o.textContent=o.dataset.t);
+  full();sel.addEventListener('mousedown',tree);sel.addEventListener('touchstart',tree,{passive:true});sel.addEventListener('keydown',tree);sel.addEventListener('blur',full);
+  inp.before(sel);
+  sel.addEventListener('change',()=>{full();if(sel.value==='__new'){inp.hidden=false;inp.value='';inp.focus();return}inp.value=sel.value;inp.hidden=true;inp.dispatchEvent(new Event('input',{bubbles:true}));inp.dispatchEvent(new Event('change',{bubbles:true}))})}
+new MutationObserver(()=>document.querySelectorAll('input[list="dl-zones"]:not([data-zp])').forEach(zEnhance)).observe(document.documentElement,{childList:true,subtree:true});
 const LISTS={zones:{get:()=>zoneList(),name:'Work Zone',ph:'New zone, e.g. Building B, Level 2'},trades:{get:()=>tradeList(),name:'Trade Partner',ph:'New trade, e.g. Masonry'}};
 function saveList(k,list){return put('settings',{id:k,list:[...new Set(list.map(t=>String(t).trim()).filter(Boolean))]})}
-function listRowsHtml(k){const L=LISTS[k].get();return L.length?L.map((t,i)=>`<div class="ck" style="align-items:center;gap:6px" data-reo="${k}" data-v="${esc(t)}">${DESK()?`<span class="dh" title="Drag to move" aria-hidden="true">&#8942;&#8942;</span>`:''}<input type="text" value="${esc(t)}" data-ch="lstRen" data-k="${k}" data-i="${i}" autocapitalize="words" aria-label="${LISTS[k].name} name" style="flex:1;min-width:0"><button class="ib" data-a="lstDel" data-k="${k}" data-i="${i}" aria-label="Remove ${esc(t)}">${I('trash')}</button></div>`).join(''):'<p class="note" style="margin:6px 0">Nothing on the list yet.</p>'}
-function listCard(k,title){const L=LISTS[k].get();return `<details class="card stack stl" id="st-${k}" data-k="${k}" ${stOpen(k)?'open':''}>${stSum(k,title,L.length+' item'+(L.length===1?'':'s'),stPrev(L))}<div class="list" id="ls-${k}">${listRowsHtml(k)}</div><form data-sub="lstAdd" data-k="${k}" class="row"><input type="text" name="t" placeholder="${esc(LISTS[k].ph)}" autocapitalize="words" style="flex:1;min-width:180px"><button class="btn pri" type="submit" data-keepfocus>${I('plus')} Add</button></form></details>`}
+function listRowsHtml(k){if(k==='zones')return zoneTreeHtml();const L=LISTS[k].get();return L.length?L.map((t,i)=>`<div class="ck" style="align-items:center;gap:6px" data-reo="${k}" data-v="${esc(t)}">${DESK()?`<span class="dh" title="Drag to move" aria-hidden="true">&#8942;&#8942;</span>`:''}<input type="text" value="${esc(t)}" data-ch="lstRen" data-k="${k}" data-i="${i}" autocapitalize="words" aria-label="${LISTS[k].name} name" style="flex:1;min-width:0"><button class="ib" data-a="lstDel" data-k="${k}" data-i="${i}" aria-label="Remove ${esc(t)}">${I('trash')}</button></div>`).join(''):'<p class="note" style="margin:6px 0">Nothing on the list yet.</p>'}
+function listCard(k,title){const L=LISTS[k].get(),T=k==='zones'?L.filter(z=>!z.includes(ZS)):L;return `<details class="card stack stl" id="st-${k}" data-k="${k}" ${stOpen(k)?'open':''}>${stSum(k,title,k==='zones'?T.length+' top level, '+L.length+' in all':L.length+' item'+(L.length===1?'':'s'),stPrev(T))}<div class="list" id="ls-${k}">${listRowsHtml(k)}</div><form data-sub="lstAdd" data-k="${k}" class="row"><input type="text" name="t" placeholder="${esc(LISTS[k].ph)}" autocapitalize="words" style="flex:1;min-width:180px"><button class="btn pri" type="submit" data-keepfocus>${I('plus')} Add</button></form></details>`}
 const tagList=()=>{const t=(typeof S!=='undefined'&&S.settings||[]).find(x=>x.id==='tags');return t&&Array.isArray(t.list)&&t.list.length?t.list:TAGS_DEF};
 const ROLES=['Owner','Office','Super','Crew','Trade Partner'];
 const TRADES=['General','Site Work','Concrete','Framing','Roofing','Plumbing','Electrical','HVAC','Insulation','Drywall','Paint','Flooring','Fence','Patio Cover','Cleanup'];
@@ -1067,7 +1091,7 @@ async function storeStatus(){const el=$('#st-store');if(!el||!window.BC||!BC.sto
     const meter=`<p><b>${fmtB(r.used)}</b> of ${r.limitGb} GB used · ${r.files} file${r.files===1?'':'s'}</p><div class="meter" role="progressbar" aria-valuenow="${pc}" aria-valuemin="0" aria-valuemax="100" aria-label="Storage used"><i style="width:${pc}%;background:${pc>=100?'#c0392b':pc>=80?'#e67e22':'var(--stamp,#f2b705)'}"></i></div><p class="note">${pc>=100?'Your company is over its storage. Nothing is deleted and you can keep taking photos, but please move up a plan.':pc>=80?`Almost full. About ${left.toLocaleString()} more full-quality photos fit.`:`Room for about ${left.toLocaleString()} more full-quality photos.`}</p>`;
     const pick=NATIVE_APP?(r.plan==='demo'?'':'<p class="note">To change your plan, sign in at buildcamera.com on a computer.</p>'):(!live&&r.plan!=='demo')?`<div class="billpick"><div class="row" style="align-items:center;gap:8px"><b style="flex:1">${r.trialUsed?'Choose a plan':'Add your crew: start a free trial'}</b><select id="bill-int" data-ch="billInt" aria-label="Billing period"><option value="month">Monthly</option><option value="year">Yearly (2 months free)</option></select></div>${PLANS_UI.map(([k,n,pr,d])=>`<button class="btn billbtn" data-a="billUp" data-plan="${k}"><span><b>${n}</b><small>${d}</small></span><b>$${pr}<small>/mo</small></b></button>`).join('')}<p class="note">${r.trialUsed?'You pay on a secure Stripe page.':'14-day free trial. You won\'t be charged until it ends, and you can cancel any time.'} <a href="/pricing/" target="_blank" rel="noopener">Compare plans</a></p></div>`:'';
     const manage=(r.hasBilling&&!NATIVE_APP)?`<button class="btn" data-a="billPortal">${live?'Manage billing':'Billing history'}</button>`:'';
-    box.innerHTML=`<h2>Plan &amp; Storage</h2><p>${planLine}</p>${meter}${pick}${manage}`;
+    box.innerHTML=`<p>${planLine}</p>${meter}${pick}${manage}`;
     if(back==='done'&&live)toast(r.status==='trialing'?'Your free trial has started.':'Your plan is updated.');
   }catch(e){const b=$('#st-store');if(b){const n=b.querySelector('.note');if(n)n.textContent='Couldn\'t check your plan right now.'}}}
 async function makeThumb(src){try{const w0=src.width||src.naturalWidth,h0=src.height||src.naturalHeight,sc=Math.min(1,640/Math.max(w0,h0));const c=document.createElement('canvas');c.width=Math.round(w0*sc);c.height=Math.round(h0*sc);c.getContext('2d').drawImage(src,0,0,c.width,c.height);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.8));c.width=c.height=0;return b}catch(e){return null}}
@@ -1902,7 +1926,7 @@ document.addEventListener('pointerdown',e=>{const hd=e.target.closest&&e.target.
   const mv=ev=>{const rows=[...box.querySelectorAll(':scope>[data-reo]')].filter(r=>r!==row);let at=null;for(const r of rows){const b=r.getBoundingClientRect();if(ev.clientY<b.top+b.height/2){at=r;break}}if(at){if(row.nextElementSibling!==at)box.insertBefore(row,at)}else{const last=rows[rows.length-1];if(last&&last.nextElementSibling!==row)last.after(row)}};
   const up=async()=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up);row.classList.remove('reo-drag');document.body.classList.remove('reo-on');
     const order=[...box.querySelectorAll(':scope>[data-reo]')].map(r=>r.dataset.v);if(order.join('\n')===before.join('\n'))return;
-    try{if(k==='zones'||k==='trades')await saveList(k,order);else if(k==='tags')await saveTags(order);else if(k==='pl')await savePunchFor(row.dataset.t,order);toast('Order saved',1400)}catch(err){toast('Couldn\'t save the new order. Try again.')}
+    try{if(k==='zones')await saveList(k,[...document.querySelectorAll('#ls-zones [data-reo=zones]')].map(r=>r.dataset.v));else if(k==='trades')await saveList(k,order);else if(k==='tags')await saveTags(order);else if(k==='pl')await savePunchFor(row.dataset.t,order);toast('Order saved',1400)}catch(err){toast('Couldn\'t save the new order. Try again.')}
     if(M)renderModal();else render()};
   document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up)});
 /* ---------- punch list import / export (CMiC, Excel, any spreadsheet) ---------- */
@@ -2373,13 +2397,38 @@ function scrOnsite(){
 }
 
 /* settings */
-function scrSettings(){
+/* Settings: every card folds into a drop-down, grouped into sections */
+const ST_SEC=[['You',['Account','Your Photo','Phone Notifications']],['Company',['Company','Plan & Storage','Who Can Sign In','Connect to Other Apps']],['Lists',['Work Zone List','Trade Partner List','Common Punch Items','Tag List']],['Camera & Photos',['Camera','AI Help']]];
+function stSub(t){const on=x=>x?'On':'Off';try{switch(t){
+  case 'Account':return 'Sign out, Home Screen, delete account';
+  case 'Your Photo':return ME.name+(avUrl(ME.id,ME.name)?' · photo set':' · no photo yet');
+  case 'Phone Notifications':return 'Alerts for @mentions and punch items';
+  case 'Company':return coName()+(SET().logoUrl?' · logo set':' · no logo');
+  case 'Plan & Storage':return 'Plan, storage used and billing';
+  case 'Who Can Sign In':return 'Invite people and set their role';
+  case 'Connect to Other Apps':{const h=S.settings.find(x=>x.id==='hooks')||{};return h.url?'Connected':'Send photos and tasks to Zapier'}
+  case 'Camera':return (bestQ()?'Best quality':'Fast, many shots')+(z=>' · starts at '+(z==='last'?'last zoom':z+'×'))(String(localStorage.getItem('pc-zoom')||'.5').replace(/^0\./,'.'));
+  case 'AI Help':return 'Suggest tags and trade: '+on(aiAutoTag());
+}}catch(e){}return ''}
+function stOrganize(html){const t=document.createElement('template');t.innerHTML=html;const c=t.content;
+  const cards=[...c.querySelectorAll('.card')].filter(el=>!(el.parentElement&&el.parentElement.closest('.card')));const by={};
+  cards.forEach(el=>{let title;if(el.matches('details.stl')){title=el.querySelector('summary h2').textContent}else{const h=el.querySelector(':scope>h2');if(!h)return;title=h.textContent;
+      const k=el.id||('st-'+title.toLowerCase().replace(/[^a-z]+/g,'-'));const d=document.createElement('details');d.className='card stack stl';d.dataset.k=k;if(el.id&&el.id!=='st-storec')d.id=el.id;if(stOpen(k))d.open=true;
+      h.remove();d.innerHTML=stSum(k,esc(title),esc(stSub(title)||''),'');while(el.firstChild)d.appendChild(el.firstChild);if(el.id==='st-storec'){}el.replaceWith(d);el=d}
+    by[title]=el});
+  const top=document.createElement('div');[...c.childNodes].forEach(n=>{if(!(n.nodeType===1&&(n.matches('.card,.stgrid'))))top.appendChild(n.cloneNode(true))});
+  const seen=new Set();let out=top.innerHTML.replace(/<div class="stgrid">\s*<\/div>/,'');
+  for(const [sec,names] of ST_SEC){const els=names.map(n=>by[n]).filter(Boolean);els.forEach(e=>seen.add(e));if(!els.length)continue;out+=`<h3 class="stsec">${esc(sec)}</h3><div class="stgrid">${els.map(e=>e.outerHTML).join('')}</div>`}
+  const rest=Object.values(by).filter(e=>!seen.has(e));if(rest.length)out+=`<h3 class="stsec">More</h3><div class="stgrid">${rest.map(e=>e.outerHTML).join('')}</div>`;
+  return out}
+function scrSettings(){return stOrganize(scrSettingsRaw())}
+function scrSettingsRaw(){
   const s=SET();
   const my=avUrl(ME.id,ME.name);
   return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Settings</h1>${window.BC?BC.accountCard():''}<div class="stgrid">
   <div class="card stack" id="st-me"><h2>Your Photo</h2><div class="row" style="gap:14px"><span class="avbig">${my?`<img src="${esc(my)}" alt="Your photo">`:esc(ini(ME.name))}</span><div class="stack" style="gap:6px;flex:1;min-width:200px"><b>${esc(ME.name)}</b><span class="note">Shows in the corner of every photo you take, so the crew can see who took it.</span></div></div>
    <div class="row"><button class="btn pri" data-a="avPick" data-cap="user">${I('camera')} Take a Selfie</button><button class="btn" data-a="avPick">${I('img')} Choose a Photo</button>${my?`<button class="btn bad" data-a="avDel">${I('trash')} Remove</button>`:''}</div></div>
-  ${canInvite()&&window.BC&&BC.storage?'<div class="card stack" id="st-store"><h2>Plan &amp; Storage</h2><p class="note">Checking…</p></div>':''}<div class="card stack" id="st-cam"><h2>Camera</h2><label class="f">Photo Quality<select data-ch="camQ"><option value="best" ${bestQ()?'selected':''}>Best: full 12 MP, uses the phone's camera</option><option value="fast" ${bestQ()?'':'selected'}>Fast: Build Camera's camera, many shots in a row</option></select></label><p class="note">Best uses your phone's own camera, with Night mode, HDR and the real zoom lenses, like CompanyCam. Fast lets you take many photos quickly with tags and zoom on screen, but photos are less sharp on iPhone.</p><label class="f">Start the Camera At<select data-ch="zoomDef">${[['0.5','.5× wide (phones with a wide lens)'],['1','1× (normal)'],['2','2× zoom'],['3','3× zoom'],['last','Last zoom I used']].map(([v,l])=>`<option value="${v}" ${zoomPref()===v?'selected':''}>${l}</option>`).join('')}</select></label><p class="note" style="margin:0">In the camera, tap 1×, 2× or 3×, or pinch with two fingers to zoom. Phones with a wide lens also show .5×. The zoom carries into the photo and into videos.</p></div>
+  ${canInvite()&&window.BC&&BC.storage?'<div class="card stack" id="st-storec"><h2>Plan &amp; Storage</h2><div class="stack" id="st-store"><p class="note">Checking…</p></div></div>':''}<div class="card stack" id="st-cam"><h2>Camera</h2><label class="f">Photo Quality<select data-ch="camQ"><option value="best" ${bestQ()?'selected':''}>Best: full 12 MP, uses the phone's camera</option><option value="fast" ${bestQ()?'':'selected'}>Fast: Build Camera's camera, many shots in a row</option></select></label><p class="note">Best uses your phone's own camera, with Night mode, HDR and the real zoom lenses, like CompanyCam. Fast lets you take many photos quickly with tags and zoom on screen, but photos are less sharp on iPhone.</p><label class="f">Start the Camera At<select data-ch="zoomDef">${[['0.5','.5× wide (phones with a wide lens)'],['1','1× (normal)'],['2','2× zoom'],['3','3× zoom'],['last','Last zoom I used']].map(([v,l])=>`<option value="${v}" ${zoomPref()===v?'selected':''}>${l}</option>`).join('')}</select></label><p class="note" style="margin:0">In the camera, tap 1×, 2× or 3×, or pinch with two fingers to zoom. Phones with a wide lens also show .5×. The zoom carries into the photo and into videos.</p></div>
   ${pushCard()}${hookCard()}
   <details class="card stack stl" id="st-tags" data-k="tags" ${stOpen('tags')?'open':''}>${stSum('tags','Tag List',tagList().length+' tags',stPrev(tagList()))}<p class="note" style="margin:0">Renaming a tag also renames it on photos that have it. Removing one keeps it on old photos.</p>
    <div class="list" id="tg-list">${tagRowsHtml()}</div>
@@ -2752,6 +2801,10 @@ const ACT={
     const body=`Punch list for ${g}:\n`+Object.keys(byJob).map(j=>`${j}\n`+byJob[j].map((t,i)=>`${i+1}. ${t.title}${t.zone?' ('+t.zone+')':''}`).join('\n')).join('\n\n')+`\n\nOpen Build Camera to see the photos: ${location.origin}`;
     location.href='sms:?&body='+encodeURIComponent(body)},
   editList:el=>{const k=el.dataset.k;const m=M;if(m&&m.kind==='cam')camStop();closeModal();V.stOpen={...(V.stOpen||{}),[k]:true};V.tab='settings';render();setTimeout(()=>{const c=$('#st-'+k);if(c)c.scrollIntoView({block:'start'})},60)},
+  zSub:el=>{V.zAddAt=el.dataset.v;zRefresh()},
+  zSubX:()=>{V.zAddAt=null;zRefresh()},
+  zDel:el=>{const z=el.dataset.v,l=zoneList(),sub=l.filter(x=>x.startsWith(z+ZS)).length,nm=zParts(z).pop();if(!el.classList.contains('armed')){el.classList.add('armed');el.style.color='var(--bad)';toast(`Tap the trash again to remove "${nm}"${sub?` and the ${sub} inside it`:''}`,3200);setTimeout(()=>{el.classList.remove('armed');el.style.color=''},3200);return}
+    saveList('zones',l.filter(x=>x!==z&&!x.startsWith(z+ZS))).then(zRefresh);toast(`"${nm}" removed. Old photos keep it.`)},
   lstDel:el=>{const k=el.dataset.k,l=[...LISTS[k].get()],i=+el.dataset.i,t=l[i];if(!el.classList.contains('armed')){el.classList.add('armed');el.style.color='var(--bad)';toast('Tap the trash again to remove "'+t+'" from the list');setTimeout(()=>{el.classList.remove('armed');el.style.color=''},3000);return}l.splice(i,1);saveList(k,l).then(()=>{const b=$('#ls-'+k);if(b)b.innerHTML=listRowsHtml(k)});toast('"'+t+'" removed from the list. Old photos keep it.')},
   editTags:()=>{const m=M;if(m&&m.kind==='cam')camStop();closeModal();V.stOpen={...(V.stOpen||{}),tags:true};V.tab='settings';render();setTimeout(()=>{const c=$('#st-tags');if(c)c.scrollIntoView({block:'start'})},60)},
   tagMove:el=>{const l=[...tagList()],i=+el.dataset.i,j=i+(+el.dataset.d);if(j<0||j>=l.length)return;[l[i],l[j]]=[l[j],l[i]];saveTags(l)},
@@ -2824,6 +2877,7 @@ document.addEventListener('change',async e=>{const el=e.target,k=el.dataset.ch;i
   else if(k==='pAs'){const w=$('#tk-astw');if(w){w.hidden=el.value!=='__new';if(el.value==='__new')setTimeout(()=>$('#tk-ast')?.focus(),20);else{const i=$('#tk-ast');if(i)i.value=''}}}
   else if(k==='fixCk'){const c=[...document.querySelectorAll('#fixlist input:checked')].map(x=>x.value);const sm=$('#fixsum');if(sm)sm.textContent=c.length?`${c.length} picked: ${c.join(', ')}`:'Pick what needs fixing'}
   else if(k==='plTrade'){V.plTrade=el.value;render();setTimeout(()=>{const c=$('#st-punchlib');if(c)c.scrollIntoView({block:'start'})},40)}
+  else if(k==='zRen'){delete el.dataset.dirty;const old=el.dataset.v,a=zParts(old),nm=titleCase(el.value.trim().replace(/\s*\/\s*/g,' '));if(!nm){el.value=a[a.length-1];return}if(nm===a[a.length-1])return;a[a.length-1]=nm;const nw=a.join(ZS),l=zoneList();if(l.includes(nw)){toast('"'+nm+'" is already there.');el.value=zParts(old).pop();return}await saveList('zones',l.map(x=>x===old?nw:x.startsWith(old+ZS)?nw+x.slice(old.length):x));zRefresh();toast('Renamed to "'+nm+'"')}
   else if(k==='lstRen'){delete el.dataset.dirty;const lk=el.dataset.k,l=[...LISTS[lk].get()],i=+el.dataset.i,nw=titleCase(el.value.trim());if(!nw){el.value=l[i];return}if(nw===l[i])return;l[i]=nw;saveList(lk,l);toast('Renamed to "'+nw+'"')}
   else if(k==='tagRen'){delete el.dataset.dirty;const l=[...tagList()],i=+el.dataset.i,old=l[i],nw=titleCase(el.value.trim());
     if(!nw){el.value=old;toast('A tag needs a name. Use the trash to remove it.');return}
@@ -2862,7 +2916,8 @@ document.addEventListener('submit',async e=>{const f=e.target,k=f.dataset.sub;if
       if(Object.keys(ch).length){await upd('photos',p.id,ch);n++}}
     closeModal();V.selMode=false;V.sel=new Set();render();toast(n?`Saved changes to ${n} photo${n===1?'':'s'}`:'Nothing to change');}
   else if(k==='plAdd'){const tr=f.dataset.t,t=titleCase((v.t||'').trim());if(!t||!tr)return;if(punchFor(tr).some(x=>x.toLowerCase()===t.toLowerCase())){toast('"'+t+'" is already on the list.');return}await savePunchFor(tr,[...punchFor(tr),t]);V.plTrade=tr;render();setTimeout(()=>{const c=$('#st-punchlib');if(c){c.scrollIntoView({block:'start'});const i=c.querySelector('input[name=t]');if(i)i.focus()}},40);toast('"'+t+'" added to '+tr)}
-  else if(k==='lstAdd'){const lk=f.dataset.k,t=titleCase((v.t||'').trim());if(!t||!LISTS[lk])return;if(LISTS[lk].get().some(x=>x.toLowerCase()===t.toLowerCase())){toast('"'+t+'" is already on the list.');return}await saveList(lk,[...LISTS[lk].get(),t]);f.reset();const b=$('#ls-'+lk);if(b)b.innerHTML=listRowsHtml(lk);toast('"'+t+'" added')}
+  else if(k==='zAdd'){const par=f.dataset.par,t=titleCase((v.t||'').trim().replace(/\s*\/\s*/g,' '));if(!t)return;const nz=par+ZS+t,l=[...zoneList()];if(l.includes(nz)){toast('"'+t+'" is already inside.');return}let at=l.indexOf(par);for(let i=at+1;i<l.length&&l[i].startsWith(par+ZS);i++)at=i;l.splice(at+1,0,nz);await saveList('zones',l);zRefresh();toast('"'+t+'" added inside '+zParts(par).pop())}
+  else if(k==='lstAdd'){const lk=f.dataset.k,t=titleCase((v.t||'').trim()).replace(lk==='zones'?/\s*\/\s*/g:/$^/,' ');if(!t||!LISTS[lk])return;if(LISTS[lk].get().some(x=>x.toLowerCase()===t.toLowerCase())){toast('"'+t+'" is already on the list.');return}await saveList(lk,[...LISTS[lk].get(),t]);f.reset();const b=$('#ls-'+lk);if(b)b.innerHTML=listRowsHtml(lk);toast('"'+t+'" added')}
   else if(k==='tagAdd'){const t=titleCase((v.t||'').trim());if(!t)return;if(tagList().some(x=>x.toLowerCase()===t.toLowerCase())){toast('"'+t+'" is already on the list.');return}const l=[...tagList()];const pi=l.indexOf('Portfolio');if(pi>=0)l.splice(pi,0,t);else l.push(t);await saveTags(l);f.reset();const tl=$('#tg-list');if(tl)tl.innerHTML=tagRowsHtml();toast('"'+t+'" added')}
   else if(k==='phAlb'){const p=PH(f.dataset.id);const a=titleCase((v.a||'').trim());if(!p||!a)return;if(!(p.albums||[]).includes(a))await upd('photos',p.id,{albums:[...(p.albums||[]),a]});const pr=P(p.projectId);if(pr&&!(pr.albums||[]).includes(a))upd('projects',pr.id,{albums:[...(pr.albums||[]),a]});renderModal();toast('Added to '+a)}
   else if(k==='albSave'){const p=P(M.pid),n=titleCase((v.n||'').trim());if(!p||!n)return;

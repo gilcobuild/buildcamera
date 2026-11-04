@@ -1,5 +1,5 @@
-// Build Camera offline shell, version 8fa6e1a6c3
-const C='bc-8fa6e1a6c3';const IMG='bc-img-1';let puts=0;
+// Build Camera offline shell, version 6aa45c4863
+const C='bc-6aa45c4863';const IMG='bc-img-1';let puts=0;
 // photo thumbnails: keep a copy on this device, keyed by the file (not the link, which changes)
 function trimImg(c){c.keys().then(ks=>{const x=ks.length-2500;if(x>0)ks.slice(0,x).forEach(k=>c.delete(k))})}const SHELL=['./','index.html','manifest.webmanifest','icon-192.png','apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});

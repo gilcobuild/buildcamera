@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-hhLsnBTFSWTG6kAFRhcaw039HxL3qAVLZTWLEcE7BEE=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-kCqA7KTAteJ0ak9xO/GsN6JWEWA4w8ibmsHuDuhqx1o=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -504,6 +504,16 @@ div.cam{position:fixed;inset:0;background:#000;z-index:55;display:flex;flex-dire
 .camzoom button[aria-pressed="true"]{background:rgba(255,255,255,.22);color:var(--stamp);font-size:14px}
 .camzl{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);background:rgba(0,0,0,.55);color:#fff;font:700 22px var(--f-body);padding:6px 14px;border-radius:999px;pointer-events:none;opacity:0;transition:opacity .25s}.camzl.on{opacity:1}
 .cam video{transform-origin:50% 50%;transition:transform .12s ease-out}
+.camstamp{position:relative;margin-top:auto;align-self:flex-end;display:grid;justify-items:end;gap:1px;padding:0 max(14px,env(safe-area-inset-right,0px)) 10px 14px;pointer-events:none;text-align:right;max-width:78%;font:700 13px/1.25 -apple-system,"SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif;color:#fff;text-shadow:0 0 6px #000,0 0 2px #000,0 1px 1px #000}
+.camstamp span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.camstamp .co{font-size:11px;opacity:.95}.camstamp .nogps{color:#ffb4a8}
+.camstamp+.camzoom{margin-top:0}
+.cam .ib.lit{background:var(--stamp);color:#111}
+.camtop{gap:4px}.camtop .ib{width:38px;height:38px;min-width:38px;min-height:38px;flex:none}.camtop .ib svg{width:20px;height:20px}.camtop .camgps{display:none}
+.camstamp .gpsacc{font:600 10px var(--f-mono);opacity:.85}
+.camlvl{position:absolute;left:50%;top:46%;width:min(62vw,300px);height:40px;transform:translate(-50%,-50%);pointer-events:none;display:grid;place-items:center}
+.camlvl i{position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:rgba(255,255,255,.85);box-shadow:0 0 3px rgba(0,0,0,.7);border-radius:2px;transition:transform .08s linear}
+.camlvl b{position:relative;top:22px;font:600 12px var(--f-body);color:#fff;text-shadow:0 0 4px #000}
+.camlvl.ok i{background:var(--stamp);height:3px}.camlvl.ok b{color:var(--stamp)}
 .camzoom+.camtags{margin-top:0}
 .camtags{position:relative;margin-top:auto;display:flex;gap:6px;overflow-x:auto;padding:8px max(10px,env(safe-area-inset-left,0px));scrollbar-width:none}
 .camtags .chip{background:rgba(0,0,0,.45);color:#fff;border-color:rgba(255,255,255,.4)}.camtags .chip[aria-pressed="true"]{background:var(--stamp);color:var(--stamp-ink);border-color:var(--stamp)}
@@ -856,6 +866,7 @@ const REPORTS={
  custom:{n:'All Photos',d:'Every photo in the date range',tags:[]}
 };
 const ICON={
+ torch:'<path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/>', torchoff:'<path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/><path d="M3 3l18 18"/>', level:'<path d="M3 12h4M17 12h4"/><rect x="8" y="10" width="8" height="4" rx="1"/>',
  camera:'<path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h2l1.5-2h6l1.5 2h2A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/><circle cx="12" cy="13" r="4"/>',
  feed:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
  folder:'<path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2.5h6.5A2.5 2.5 0 0 1 21 10v7.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/>',
@@ -1594,16 +1605,33 @@ function capThumb(id){const p=PH(id);if(!p)return '';const tg=(p.tags||[]).lengt
 function capStrip(){const el=$('#cap-strip');if(!el||!M||M.kind!=='capture')return;el.innerHTML=(M.shot||[]).map(capThumb).join('');el.hidden=!(M.shot||[]).length}
 /* in-app camera: live view, one tap per photo, no retake step */
 const CAM={mode:'photo',rec:null,audio:null,raf:0,tick:0,stream:null,facing:'environment',gps:null,watch:null,busy:false,ok:!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)&&!/claudeusercontent|claude\.ai/.test(location.host)&&window.isSecureContext};
-function openCam(){if(!M||M.kind!=='capture')return;CAM.zoom=CAM.facing==='user'?1:zoomStart();['zone','trade','note'].forEach(k=>{const i=$('#cap-'+k);if(i)M.ctx[k]=i.value});const sp=$('#cap-p');if(sp)M.pid=sp.value;
+function openCam(){if(!M||M.kind!=='capture')return;if(lvlOn())lvlStart();CAM.zoom=CAM.facing==='user'?1:zoomStart();['zone','trade','note'].forEach(k=>{const i=$('#cap-'+k);if(i)M.ctx[k]=i.value});const sp=$('#cap-p');if(sp)M.pid=sp.value;
   const cap=M;M={kind:'cam',cap,back:cap};renderModal()}
 function camHtml(){const c=M.cap,pr=P(c.pid),last=c.shot&&c.shot[0]&&PH(c.shot[0]);
   return `<div class="cam" role="dialog" aria-modal="true" aria-label="Camera"><video id="camv" playsinline autoplay muted></video><div class="camflash" id="camflash"></div>
-  <div class="camtop"><button class="ib" data-a="camDone" aria-label="Close camera">${I('x')}</button><div class="camjob"><b>${esc(pr?pr.name:'')}</b><span>${esc([c.ctx.zone,c.ctx.trade].filter(Boolean).join(' · ')||'Tap Details to set zone and trade')}</span></div>${OFFLINE()?'<span class="offbadge">No-signal mode</span>':''}<span class="camtimer" id="camtimer" hidden>0:00</span><span class="camgps" id="camgps">GPS…</span><button class="ib" data-a="camDetails" aria-label="Photo details: work zone, trade partner, note" title="Details">${I('pen')}</button><button class="ib" data-a="camSnd" aria-pressed="${sndOn()}" aria-label="Shutter sound ${sndOn()?'on':'off'}">${I(sndOn()?'snd':'mute')}</button><button class="ib" data-a="camFlip" aria-label="Switch camera">${I('cmp')}</button></div><div class="camtoast" id="camtoast" aria-live="polite">${I('check')}<span>Saved</span></div><div class="camzl" id="camzl" aria-hidden="true">1×</div>
-  <div class="camzoom" id="camzoom" role="group" aria-label="Zoom">${zoomBtns()}</div>
+  <div class="camtop"><button class="ib" data-a="camDone" aria-label="Close camera">${I('x')}</button><div class="camjob"><b>${esc(pr?pr.name:'')}</b><span>${esc([c.ctx.zone,c.ctx.trade].filter(Boolean).join(' · ')||'Tap Details to set zone and trade')}</span></div>${OFFLINE()?'<span class="offbadge">No-signal mode</span>':''}<span class="camtimer" id="camtimer" hidden>0:00</span><span class="camgps" id="camgps">GPS…</span><button class="ib" data-a="camDetails" aria-label="Photo details: work zone, trade partner, note" title="Details">${I('pen')}</button><button class="ib" data-a="camSnd" aria-pressed="${sndOn()}" aria-label="Shutter sound ${sndOn()?'on':'off'}">${I(sndOn()?'snd':'mute')}</button><button class="ib" id="camtorch" data-a="camTorch" aria-pressed="false" aria-label="Flashlight off">${I('torchoff')}</button><button class="ib" data-a="camLevel" aria-pressed="${lvlOn()}" aria-label="Level ${lvlOn()?'on':'off'}">${I('level')}</button><button class="ib" data-a="camFlip" aria-label="Switch camera">${I('cmp')}</button></div><div class="camlvl" id="camlvl" ${lvlOn()?'':'hidden'} aria-hidden="true"><i></i><b></b></div><div class="camtoast" id="camtoast" aria-live="polite">${I('check')}<span>Saved</span></div><div class="camzl" id="camzl" aria-hidden="true">1×</div>
+  <div class="camstamp" id="camstamp" aria-label="Stamp preview">${stampPrevHtml(c)}</div><div class="camzoom" id="camzoom" role="group" aria-label="Zoom">${zoomBtns()}</div>
   <div class="camtags"><div class="cammode" role="group" aria-label="Photo or video"><button data-a="camMode" data-m="photo" aria-pressed="${CAM.mode!=='video'}">Photo</button><button data-a="camMode" data-m="video" aria-pressed="${CAM.mode==='video'}">Video</button></div><label class="camsel"><span>Tag</span><select id="cam-tag" data-ch="camTagSel" aria-label="Tag for the next photos"><option value="">No tag</option>${tagList().map(t=>`<option ${c.ctx.tags[0]===t?'selected':''}>${esc(t)}</option>`).join('')}</select></label></div>
   <div class="cambot"><button class="camlast" data-a="camLast" aria-label="Open last photo">${last?`<img src="${esc(last.thumb||last.url)}" alt="">`:''}</button><button class="camshut${CAM.mode==='video'?' vid':''}" data-a="camShutter" aria-label="${CAM.mode==='video'?'Start recording':'Take photo'}"><span></span></button><button class="camdone" data-a="camDone"><b id="camcount">${c.count||0}</b><span>Done</span></button></div>
   <p class="camerr" id="camerr" hidden></p></div>`}
 /* ask for the sharpest camera the phone allows. Some iPhones answer a too-big request with their tiniest size (192×144), so check what we got and step down until it's sharp */
+/* live stamp preview: what gets burned into the photo, updated every second */
+function stampPrevHtml(c){const L=stampLines(c);return L.map((t,i)=>`<span class="${i===0?'co':i===3&&!CAM.gps?'nogps':''}">${esc(t)}</span>`).join('')+(CAM.gps?`<span class="gpsacc">GPS ±${Math.round(CAM.gps.acc*3.28)} ft</span>`:`<span class="gpsacc nogps">Finding GPS…</span>`)}
+function stampTick(){const el=$('#camstamp');if(!el||!M||M.kind!=='cam'){clearInterval(CAM.stick);CAM.stick=0;return}el.innerHTML=stampPrevHtml(M.cap)}
+/* flashlight: the phone's light stays on while you shoot (a browser can't fire a real flash) */
+async function camTorch(force){const b=$('#camtorch');const tr=CAM.stream&&CAM.stream.getVideoTracks()[0];const on=force!=null?force:!CAM.torch;
+  const caps=tr&&tr.getCapabilities?tr.getCapabilities():{};if(!caps.torch){if(force==null)toast(CAM.facing==='user'?'The front camera has no light.':'This phone\'s browser doesn\'t allow the light. For flash, use Best quality in Settings → Camera.',4500);return}
+  try{await tr.applyConstraints({advanced:[{torch:on}]});CAM.torch=on}catch(e){CAM.torch=false;if(force==null)toast('Couldn\'t turn on the light.')}
+  if(b){b.setAttribute('aria-pressed',!!CAM.torch);b.setAttribute('aria-label','Flashlight '+(CAM.torch?'on':'off'));b.innerHTML=I(CAM.torch?'torch':'torchoff');b.classList.toggle('lit',!!CAM.torch)}}
+/* level: a line that stays with the real horizon; turns yellow when the phone is straight */
+const lvlOn=()=>{try{return localStorage.getItem('pc-level')!=='off'}catch(e){return true}};
+function lvlMotion(e){const g=e.accelerationIncludingGravity;if(!g||g.x==null)return;CAM.g=[g.x,g.y];if(!CAM.lraf)CAM.lraf=requestAnimationFrame(lvlDraw)}
+function lvlDraw(){CAM.lraf=0;const el=$('#camlvl');if(!el||el.hidden||!CAM.g)return;const[x,y]=CAM.g;let d;
+  if(Math.abs(y)>=Math.abs(x)){const s=y>=0?1:-1;d=Math.atan2(s*x,s*y)}else{const s=x>=0?1:-1;d=Math.atan2(-s*y,s*x)}
+  d=d*180/Math.PI;const ok=Math.abs(d)<1.5;el.classList.toggle('ok',ok);el.querySelector('i').style.transform=`rotate(${ok?0:d.toFixed(1)}deg)`;el.querySelector('b').textContent=ok?'Level':Math.abs(d)<25?Math.round(Math.abs(d))+'°':''}
+function lvlStart(){if(CAM.lvl)return;const go=()=>{if(CAM.lvl)return;CAM.lvl=1;addEventListener('devicemotion',lvlMotion)};
+  try{if(window.DeviceMotionEvent&&typeof DeviceMotionEvent.requestPermission==='function'){DeviceMotionEvent.requestPermission().then(r=>{if(r==='granted')go()}).catch(()=>{})}else if(window.DeviceMotionEvent)go()}catch(e){}}
+function lvlStop(){if(CAM.lvl){removeEventListener('devicemotion',lvlMotion);CAM.lvl=0}}
 function camIsBlack(c){try{const t=document.createElement('canvas');t.width=32;t.height=24;const x=t.getContext('2d');x.drawImage(c,0,0,32,24);const a=x.getImageData(0,0,32,24).data;let s=0;for(let i=0;i<a.length;i+=4)s+=a[i]+a[i+1]+a[i+2];return s/(a.length/4*3)<4}catch(e){return false}}
 async function camRestart(){if(!M||M.kind!=='cam')return;if(CAM.stream){CAM.stream.getTracks().forEach(t=>t.stop());CAM.stream=null}await new Promise(r=>setTimeout(r,250));if(M&&M.kind==='cam')camStart()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible'||!M||M.kind!=='cam')return;const tr=CAM.stream&&CAM.stream.getVideoTracks()[0];if(!tr||tr.readyState==='ended'||tr.muted)camRestart();else{const v=$('#camv');if(v&&v.paused)v.play().catch(()=>{})}});
@@ -1616,9 +1644,10 @@ async function camOpenBest(){const fm={ideal:CAM.facing};const tries=[{width:{id
   return best}
 async function camStart(){const v=$('#camv');if(!v)return;
   try{CAM.stream=await camOpenBest();v.srcObject=CAM.stream;await v.play().catch(()=>{});zoomSetup();
-    const tr=CAM.stream.getVideoTracks()[0];if(tr){const me=CAM.stream;tr.addEventListener('ended',()=>{if(CAM.stream===me)camRestart()})}}
+    const tr=CAM.stream.getVideoTracks()[0];if(tr){const me=CAM.stream;tr.addEventListener('ended',()=>{if(CAM.stream===me)camRestart()})}
+    if(CAM.torch)camTorch(true);clearInterval(CAM.stick);CAM.stick=setInterval(stampTick,1000);stampTick()}
   catch(e){const er=$('#camerr');if(er){er.hidden=false;er.innerHTML='Camera access was blocked. Allow camera for buildcamera.com in Settings → Safari → Camera, or <button class="btn sm" data-a="camFallback">Use the phone camera</button>'}}
-  if(navigator.geolocation&&CAM.watch==null){CAM.watch=navigator.geolocation.watchPosition(p=>{CAM.gps={lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy,t:Date.now()};const g=$('#camgps');if(g){g.textContent='GPS ±'+Math.round(p.coords.accuracy*3.28)+' ft';g.className='camgps ok'}},()=>{const g=$('#camgps');if(g){g.textContent='No GPS';g.className='camgps bad'}},{enableHighAccuracy:true,maximumAge:10000,timeout:20000})}}
+  if(navigator.geolocation&&CAM.watch==null){CAM.watch=navigator.geolocation.watchPosition(p=>{CAM.gps={lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy,t:Date.now()};const g=$('#camgps');if(g){g.textContent='GPS ±'+Math.round(p.coords.accuracy*3.28)+' ft';g.className='camgps ok'}stampTick()},()=>{const g=$('#camgps');if(g){g.textContent='No GPS';g.className='camgps bad'}},{enableHighAccuracy:true,maximumAge:10000,timeout:20000})}}
 /* zoom: real lens zoom when the phone allows it, otherwise a sharp center crop */
 const zoomPref=()=>{try{return localStorage.getItem('pc-zoom')||'1'}catch(e){return '1'}};
 const zoomStart=()=>{const p=zoomPref();if(p==='last'){try{return +localStorage.getItem('pc-zoom-last')||1}catch(e){return 1}}return +p||1};
@@ -1646,7 +1675,7 @@ function zoomSetup(){const t=CAM.stream&&CAM.stream.getVideoTracks()[0];let cp={
   cam.addEventListener('touchend',e=>{if(e.touches.length<2)d0=0},{passive:true})}
 /* the part of the camera frame that's zoomed in on, for photos and video */
 function zoomCrop(v){const z=!CAM.hwz&&CAM.zoom>1?CAM.zoom:1,w=v.videoWidth,h=v.videoHeight,sw=Math.round(w/z),sh=Math.round(h/z);return{sx:Math.round((w-sw)/2),sy:Math.round((h-sh)/2),sw,sh}}
-function camStop(){if(CAM.rec)recStop(true);if(CAM.audio){CAM.audio.getTracks().forEach(t=>t.stop());CAM.audio=null}if(CAM.stream){CAM.stream.getTracks().forEach(t=>t.stop());CAM.stream=null}if(CAM.watch!=null&&navigator.geolocation){navigator.geolocation.clearWatch(CAM.watch);CAM.watch=null}}
+function camStop(){if(CAM.rec)recStop(true);lvlStop();clearInterval(CAM.stick);CAM.stick=0;CAM.torch=false;if(CAM.audio){CAM.audio.getTracks().forEach(t=>t.stop());CAM.audio=null}if(CAM.stream){CAM.stream.getTracks().forEach(t=>t.stop());CAM.stream=null}if(CAM.watch!=null&&navigator.geolocation){navigator.geolocation.clearWatch(CAM.watch);CAM.watch=null}}
 const sndOn=()=>{try{return localStorage.getItem('pc-snd')!=='off'}catch(e){return true}};
 let ACX=null;
 function shutterSound(){if(!sndOn())return;try{ACX=ACX||new (window.AudioContext||window.webkitAudioContext)();if(ACX.state==='suspended')ACX.resume();const t=ACX.currentTime+.005,sr=ACX.sampleRate;
@@ -2295,7 +2324,9 @@ const ACT={
   camMode:el=>camMode(el.dataset.m),
   camSnd:el=>{const on=!sndOn();try{localStorage.setItem('pc-snd',on?'on':'off')}catch(e){}el.setAttribute('aria-pressed',on);el.setAttribute('aria-label','Shutter sound '+(on?'on':'off'));el.innerHTML=I(on?'snd':'mute');if(on)shutterSound();toast(on?'Shutter sound on':'Shutter sound off')},
   camFallback:()=>{const b=M&&M.back;camStop();CAM.ok=false;if(b){M=b;renderModal()}$('#in-photo').click()},
-  camFlip:()=>{CAM.facing=CAM.facing==='environment'?'user':'environment';CAM.zoom=CAM.facing==='user'?1:zoomStart();camStop();camStart()},
+  camFlip:()=>{CAM.facing=CAM.facing==='environment'?'user':'environment';CAM.zoom=CAM.facing==='user'?1:zoomStart();camStop();if(lvlOn())lvlStart();camStart()},
+  camTorch:()=>camTorch(),
+  camLevel:el=>{const on=!lvlOn();try{localStorage.setItem('pc-level',on?'on':'off')}catch(e){}el.setAttribute('aria-pressed',on);el.setAttribute('aria-label','Level '+(on?'on':'off'));const l=$('#camlvl');if(l)l.hidden=!on;if(on){lvlStart();lvlDraw()}else lvlStop()},
   camZoom:el=>setZoom(+el.dataset.z,true),
   camDone:()=>{const cap=M&&M.cap;camStop();closeModal();goJob(cap&&cap.pid)},
   camDetails:()=>{const b=M&&M.back;camStop();if(b){M=b;renderModal()}else closeModal()},

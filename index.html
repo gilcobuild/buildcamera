@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="224f13fa10">
+<meta name="bc-ver" content="5f8d4542af">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-X1EB4qCSjdm1px8LSi5OGNfxe7Efkn8Zdk/I+fvr7z4=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-ZZ9EloZ4BuFlk8CcQ7vjuZWSEBU7kxpa1Aj7FD86qCo=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -505,8 +505,8 @@ div.cam{position:fixed;inset:0;background:#000;z-index:55;display:flex;flex-dire
 .camzoom button[aria-pressed="true"]{background:rgba(255,255,255,.22);color:var(--stamp);font-size:14px}
 .camzl{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);background:rgba(0,0,0,.55);color:#fff;font:700 22px var(--f-body);padding:6px 14px;border-radius:999px;pointer-events:none;opacity:0;transition:opacity .25s}.camzl.on{opacity:1}
 .cam video{transform-origin:50% 50%;transition:transform .12s ease-out}
-.camstamp{position:relative;margin-top:auto;align-self:flex-end;display:grid;justify-items:end;gap:1px;padding:0 max(14px,env(safe-area-inset-right,0px)) 10px 14px;pointer-events:none;text-align:right;max-width:78%;font:700 13px/1.25 -apple-system,"SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif;color:#fff;text-shadow:0 0 6px #000,0 0 2px #000,0 1px 1px #000}
-.camstamp span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.camstamp .co{font-size:11px;opacity:.95}.camstamp .nogps{color:#ffb4a8}
+.camstamp{position:relative;margin-top:auto;align-self:flex-end;display:grid;justify-items:end;gap:1px;padding:0 max(14px,env(safe-area-inset-right,0px)) 10px 14px;pointer-events:none;text-align:right;max-width:78%;font:700 10px/1.25 -apple-system,"SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif;color:#fff;text-shadow:0 0 6px #000,0 0 2px #000,0 1px 1px #000}
+.camstamp span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.camstamp .co{font-size:8.5px;opacity:.95}.camstamp .nogps{color:#ffb4a8}.camstamp .gps{font-size:8px}
 .camstamp+.camzoom{margin-top:0}
 .cam .ib.lit{background:var(--stamp);color:#111}
 .camtop{gap:4px}.camtop .ib{width:38px;height:38px;min-width:38px;min-height:38px;flex:none}.camtop .ib svg{width:20px;height:20px}.camtop .camgps{display:none}
@@ -1023,13 +1023,13 @@ async function stampImage(file,info,isDoc){
   if(isDoc){const d=x.getImageData(0,0,W,H),a=d.data;for(let i=0;i<a.length;i+=4){let g=.3*a[i]+.59*a[i+1]+.11*a[i+2];g=Math.max(0,Math.min(255,(g-128)*1.6+150));a[i]=a[i+1]=a[i+2]=g}x.putImageData(d,0,0)}
   const qual=isDoc?null:quality(c,W,H);
   /* stamp: bottom-right, white text with soft shadow — Job / date and time / GPS / proof code */
-  const fs=Math.max(18,Math.round(Math.max(W,H)*.021)), gap=fs*1.18, pad=Math.round(fs*1.1);
+  const fs=Math.max(14,Math.round(Math.max(W,H)*.0147)), gap=fs*1.18, pad=Math.round(fs*1.1);
   const d=new Date(info.takenAt);
   const when=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' at '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',second:'2-digit'});
   const gps=info.lat!=null?`${Math.abs(info.lat).toFixed(6)}° ${info.lat>=0?'N':'S'} ${Math.abs(info.lng).toFixed(6)}° ${info.lng>=0?'E':'W'}`:'GPS not available';
   const job=info.project||'Jobsite';
   const face='-apple-system,"SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif';
-  const rows=[[info.company||coName(),`700 ${Math.round(fs*.78)}px ${face}`],[job,`700 ${fs}px ${face}`],[when,`600 ${fs}px ${face}`],[gps,`600 ${fs}px ${face}`]];
+  const rows=[[info.company||coName(),`700 ${Math.round(fs*.78)}px ${face}`],[job,`700 ${fs}px ${face}`],[when,`600 ${fs}px ${face}`],[gps,`600 ${Math.round(fs*.7)}px ${face}`]];
   x.textAlign='right';x.textBaseline='alphabetic';
   const maxW=W*.72; const fit=(t)=>{let s2=t;while(s2.length>4&&x.measureText(s2).width>maxW)s2=s2.slice(0,-2);return s2===t?t:s2+'…'};
   let yb=H-pad; const out=[];
@@ -1635,7 +1635,7 @@ function camHtml(){const c=M.cap,pr=P(c.pid),last=c.shot&&c.shot[0]&&PH(c.shot[0
   <p class="camerr" id="camerr" hidden></p></div>`}
 /* ask for the sharpest camera the phone allows. Some iPhones answer a too-big request with their tiniest size (192×144), so check what we got and step down until it's sharp */
 /* live stamp preview: what gets burned into the photo, updated every second */
-function stampPrevHtml(c){const L=stampLines(c);return L.map((t,i)=>`<span class="${i===0?'co':i===3&&!CAM.gps?'nogps':''}">${esc(t)}</span>`).join('')+(CAM.gps?`<span class="gpsacc">GPS ±${Math.round(CAM.gps.acc*3.28)} ft</span>`:`<span class="gpsacc nogps">Finding GPS…</span>`)}
+function stampPrevHtml(c){const L=stampLines(c);return L.map((t,i)=>`<span class="${i===0?'co':i===3?(CAM.gps?'gps':'gps nogps'):''}">${esc(t)}</span>`).join('')+(CAM.gps?`<span class="gpsacc">GPS ±${Math.round(CAM.gps.acc*3.28)} ft</span>`:`<span class="gpsacc nogps">Finding GPS…</span>`)}
 function stampTick(){const el=$('#camstamp');if(!el||!M||M.kind!=='cam'){clearInterval(CAM.stick);CAM.stick=0;return}el.innerHTML=stampPrevHtml(M.cap)}
 /* flashlight: the phone's light stays on while you shoot (a browser can't fire a real flash) */
 async function camTorch(force){const b=$('#camtorch');const tr=CAM.stream&&CAM.stream.getVideoTracks()[0];const on=force!=null?force:!CAM.torch;
@@ -1716,9 +1716,9 @@ function shutterSound(){if(!sndOn())return;try{ACX=ACX||new (window.AudioContext
   burst(0,.035,1.4,3200);burst(.065,.055,1,2200)}catch(e){}}
 function goJob(pid){if(pid&&P(pid)){V.selMode=false;V.sel=new Set();V.pid=pid;V.tab='project';V.ptab='photos';V.lastProject=pid;saveView();render();scrollTo(0,0)}}
 function camOnAdd(cap){return id=>{cap.shot=[id,...(cap.shot||[])];cap.count=(cap.count||0)+1;const n=$('#camcount');if(n){n.textContent=cap.count;n.classList.remove('bump');void n.offsetWidth;n.classList.add('bump')}const l=document.querySelector('.camlast');const p=PH(id);if(l&&p){l.innerHTML=p.kind==='video'?`<span class="ph" style="display:grid;place-items:center;height:100%;color:#fff">${I('video')}</span>`:`<img src="${esc(p.thumb||p.url)}" alt="">`;l.classList.remove('got');void l.offsetWidth;l.classList.add('got')}const ct=$('#camtoast');if(ct){ct.querySelector('span').textContent=p&&p.kind==='video'?'Video saved':cap.count>1?cap.count+' saved':'Saved';ct.classList.remove('go');void ct.offsetWidth;ct.classList.add('go')}}}
-function stampTile(W,H,lines){const fs=Math.max(16,Math.round(Math.max(W,H)*.024)),gap=fs*1.18,pad=Math.round(fs*1.1),c=document.createElement('canvas');c.width=W;c.height=Math.ceil(gap*lines.length+pad*2);const x=c.getContext('2d');
+function stampTile(W,H,lines){const fs=Math.max(12,Math.round(Math.max(W,H)*.0168)),gap=fs*1.18,pad=Math.round(fs*1.1),c=document.createElement('canvas');c.width=W;c.height=Math.ceil(gap*lines.length+pad*2);const x=c.getContext('2d');
   const face='-apple-system,"SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif';x.textAlign='right';let y=c.height-pad;
-  for(let k=lines.length-1;k>=0;k--){x.font=`${k===0?700:k===1?700:600} ${k===0?Math.round(fs*.78):fs}px ${face}`;const t=lines[k];x.shadowColor='rgba(0,0,0,1)';x.shadowBlur=Math.max(6,fs*.7);x.fillStyle='rgba(0,0,0,.75)';x.fillText(t,W-pad,y);x.shadowBlur=0;x.shadowColor='transparent';x.lineJoin='round';x.strokeStyle='rgba(0,0,0,.65)';x.lineWidth=Math.max(1.5,fs*.08);x.strokeText(t,W-pad,y);x.fillStyle='#fff';x.fillText(t,W-pad,y);y-=gap}
+  for(let k=lines.length-1;k>=0;k--){x.font=`${k===0?700:k===1?700:600} ${k===0?Math.round(fs*.78):k===3?Math.round(fs*.7):fs}px ${face}`;const t=lines[k];x.shadowColor='rgba(0,0,0,1)';x.shadowBlur=Math.max(6,fs*.7);x.fillStyle='rgba(0,0,0,.75)';x.fillText(t,W-pad,y);x.shadowBlur=0;x.shadowColor='transparent';x.lineJoin='round';x.strokeStyle='rgba(0,0,0,.65)';x.lineWidth=Math.max(1.5,fs*.08);x.strokeText(t,W-pad,y);x.fillStyle='#fff';x.fillText(t,W-pad,y);y-=gap}
   return c}
 function stampLines(cap){const pr=P(cap.pid),d=new Date(),g=CAM.gps;return [coName(cap.pid),pr?pr.name:'Jobsite',d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' at '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',second:'2-digit'}),g?`${Math.abs(g.lat).toFixed(6)}° ${g.lat>=0?'N':'S'} ${Math.abs(g.lng).toFixed(6)}° ${g.lng>=0?'E':'W'}`:'GPS not available']}
 async function camMode(m){if(CAM.rec)return;CAM.mode=m;document.querySelectorAll('.cammode button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m));const sh=document.querySelector('.camshut');if(sh){sh.classList.toggle('vid',m==='video');sh.setAttribute('aria-label',m==='video'?'Start recording':'Take photo')}

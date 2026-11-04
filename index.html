@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-HygY9Q49lkVOAVs1sm2I/bv0i+EhxJekRCwAuYrN7RI=' 'sha256-VFHUUzmfprlOSWTXFv6H2nVsaSKhaw60R444UdX+8EM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-PrRd474ecJtfcUOqMnQu3zCntjbful9yLb2/9iAj9sk=' 'sha256-mY+E0G9HTNsQaPFo35W7P7/omFiAd7MqG+dwoyy7dDw=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -187,6 +187,9 @@ window.BC={
     const r=await fetch(SB_URL+'/functions/v1/bc-billing',{method:'POST',headers:{Authorization:'Bearer '+session.access_token,apikey:SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({action,team:TEAM,...(extra||{})})});
     const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||('Error '+r.status));return j},
   async storage(){if(!TEAM)return null;const{data,error}=await sb.rpc('sc_storage',{t:TEAM});if(error)throw err(error);return data},
+  async seatsFull(){try{const r=await BC.storage();if(!r||r.users==null)return null;return r.members>=r.users?r.users:null}catch(e){return null}},
+  seatMsg(n){const nat=(()=>{try{return !!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())||/BuildCameraApp/.test(navigator.userAgent)}catch(e){return false}})();
+    return `Your company is using all ${n} user${n===1?'':'s'} on its plan. `+(nat?'The owner can move up a plan at buildcamera.com.':'Move up a plan in Settings → Plan & Storage, then invite them.')},
   async inviteToJob(o){const code=mkCode();const{error}=await sb.from('sc_invites').insert({code,team_id:TEAM,role:o.role||'Crew',project_id:o.projectId,member_id:o.memberId||null});if(error)throw new Error(error.message);
     return{code,link:location.origin+'/?invite='+code}},
   shareUrl(tok){return location.origin+'/s/?t='+tok},
@@ -221,7 +224,8 @@ window.BC={
     try{await new Promise(r=>{const q=indexedDB.deleteDatabase('picturecam');q.onsuccess=q.onerror=q.onblocked=()=>r()})}catch(e){}
     location.reload()},
   async members(){const el=document.getElementById('bc-mem');if(!el)return;const{data}=await sb.from('sc_members').select('user_id,role,name').eq('team_id',TEAM);el.innerHTML=(data||[]).map(m=>`<div class="li"><span class="t"><b>${esc(m.name||'Teammate')}${m.user_id===USR.id?' (you)':''}</b><span>${esc(m.role)}</span></span></div>`).join('')},
-  async invite(){const role=document.getElementById('bc-role').value;const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='';crypto.getRandomValues(new Uint8Array(10)).forEach(x=>c+=A[x%32]);const cs=c.slice(0,5)+'-'+c.slice(5);
+  async invite(){const box0=document.getElementById('bc-inv');const full=await BC.seatsFull();if(full){if(box0)box0.innerHTML='<p class="callout">'+esc(BC.seatMsg(full))+'</p>';return}
+    const role=document.getElementById('bc-role').value;const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='';crypto.getRandomValues(new Uint8Array(10)).forEach(x=>c+=A[x%32]);const cs=c.slice(0,5)+'-'+c.slice(5);
     const{error}=await sb.from('sc_invites').insert({code:c,team_id:TEAM,role});const box=document.getElementById('bc-inv');if(error){box.innerHTML='<p class="callout">Couldn\'t make a code. Try again.</p>';return}
     const msg=`You're invited to ${TEAMNAME} on Build Camera. Open https://buildcamera.com on your phone, create an account, then enter invite code ${cs}. The code works once, for 14 days.`;
     box.innerHTML=`<div class="callout info stack" style="gap:8px"><b style="font-size:22px;letter-spacing:.12em" class="mono">${cs}</b><span>${esc(role)} · works once, for 14 days</span><textarea id="bc-invmsg" readonly>${esc(msg)}</textarea><div class="row"><button class="btn sm" data-bc="shareinv">Text It</button><button class="btn sm" data-a="copy" data-src="#bc-invmsg">Copy</button></div></div>`},
@@ -958,18 +962,19 @@ async function makeCode(seed){
 function nearestProject(la,ln){let best=null;S.projects.forEach(p=>{if(p.lat==null||p.status==='Done')return;const d=km(la,ln,p.lat,p.lng);if(!best||d<best.d)best={p,d}});return best}
 /* small preview for photo grids, so full-size photos only load when opened */
 const fmtB=b=>b>=1e9?(b/1e9).toFixed(b>=1e10?0:1)+' GB':Math.max(1,Math.round(b/1e6))+' MB';
+const NATIVE_APP=(()=>{try{return !!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())||/BuildCameraApp/.test(navigator.userAgent)}catch(e){return false}})();
 const PLANS_UI=[['solo','Solo',29,'1 user · 25 GB'],['crew','Crew',79,'Up to 5 users · 100 GB'],['company','Company',149,'Up to 15 users · 500 GB']];
 async function storeStatus(){const el=$('#st-store');if(!el||!window.BC||!BC.storage)return;
   try{let back=null;try{back=sessionStorage.getItem('bc-billing');sessionStorage.removeItem('bc-billing')}catch(_){}
-    if(BC.billing&&(back==='done'||!window.__bcSync)){window.__bcSync=1;try{await BC.billing('sync')}catch(e){}}
+    if(BC.billing&&!NATIVE_APP&&(back==='done'||!window.__bcSync)){window.__bcSync=1;try{await BC.billing('sync')}catch(e){}}
     const r=await BC.storage();if(!r)return;const lim=r.limitGb*1e9,pc=Math.min(100,Math.round(r.used/lim*100)),left=Math.max(0,Math.round((lim-r.used)/3.5e6));
     const box=$('#st-store');if(!box)return;
     const live=['active','trialing','past_due'].includes(r.status),pn=(PLANS_UI.find(x=>x[0]===r.plan)||[0,r.plan==='demo'?'Demo':'Free'])[1];
     const when=r.periodEnd?new Date(r.periodEnd).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';
-    const planLine=live?`<b>${esc(pn)} plan</b> · ${r.status==='trialing'?'free trial ends '+when:r.status==='past_due'?'<span style="color:#c0392b">payment problem, update your card</span>':'renews '+when}${r.users?` · ${r.members} of ${r.users} users`:''}`:`<b>${esc(pn)}</b> · free during early access`;
-    const meter=`<p><b>${fmtB(r.used)}</b> of ${r.limitGb} GB used · ${r.files} file${r.files===1?'':'s'}</p><div class="meter" role="progressbar" aria-valuenow="${pc}" aria-valuemin="0" aria-valuemax="100" aria-label="Storage used"><i style="width:${pc}%;background:${pc>=100?'#c0392b':pc>=80?'#e67e22':'var(--stamp,#f2b705)'}"></i></div><p class="note">${pc>=100?'Your company is over its storage. Nothing is deleted, but please move up a plan or add storage.':pc>=80?`Almost full. About ${left.toLocaleString()} more full-quality photos fit.`:`Room for about ${left.toLocaleString()} more full-quality photos.`}</p>`;
-    const pick=(!live&&r.plan!=='demo')?`<div class="billpick"><div class="row" style="align-items:center;gap:8px"><b style="flex:1">Choose a plan</b><select id="bill-int" data-ch="billInt" aria-label="Billing period"><option value="month">Monthly</option><option value="year">Yearly (2 months free)</option></select></div>${PLANS_UI.map(([k,n,pr,d])=>`<button class="btn billbtn" data-a="billUp" data-plan="${k}"><span><b>${n}</b><small>${d}</small></span><b>$${pr}<small>/mo</small></b></button>`).join('')}<p class="note">${r.trialUsed?'You pay on a secure Stripe page.':'14-day free trial. You won\'t be charged until it ends, and you can cancel any time.'} <a href="/pricing/" target="_blank" rel="noopener">Compare plans</a></p></div>`:'';
-    const manage=r.hasBilling?`<button class="btn" data-a="billPortal">${live?'Manage billing':'Billing history'}</button>`:'';
+    const planLine=live?`<b>${esc(pn)} plan</b> · ${r.status==='trialing'?'free trial ends '+when:r.status==='past_due'?'<span style="color:#c0392b">payment problem, update your card</span>':'renews '+when}${r.users?` · ${r.members} of ${r.users} users`:''}`:r.plan==='demo'?'<b>Demo</b>':`<b>${esc(pn)}</b> · 1 user · ${r.limitGb} GB${r.members>1?` · ${r.members} people already in your company`:''}`;
+    const meter=`<p><b>${fmtB(r.used)}</b> of ${r.limitGb} GB used · ${r.files} file${r.files===1?'':'s'}</p><div class="meter" role="progressbar" aria-valuenow="${pc}" aria-valuemin="0" aria-valuemax="100" aria-label="Storage used"><i style="width:${pc}%;background:${pc>=100?'#c0392b':pc>=80?'#e67e22':'var(--stamp,#f2b705)'}"></i></div><p class="note">${pc>=100?'Your company is over its storage. Nothing is deleted and you can keep taking photos, but please move up a plan.':pc>=80?`Almost full. About ${left.toLocaleString()} more full-quality photos fit.`:`Room for about ${left.toLocaleString()} more full-quality photos.`}</p>`;
+    const pick=NATIVE_APP?(r.plan==='demo'?'':'<p class="note">To change your plan, sign in at buildcamera.com on a computer.</p>'):(!live&&r.plan!=='demo')?`<div class="billpick"><div class="row" style="align-items:center;gap:8px"><b style="flex:1">${r.trialUsed?'Choose a plan':'Add your crew: start a free trial'}</b><select id="bill-int" data-ch="billInt" aria-label="Billing period"><option value="month">Monthly</option><option value="year">Yearly (2 months free)</option></select></div>${PLANS_UI.map(([k,n,pr,d])=>`<button class="btn billbtn" data-a="billUp" data-plan="${k}"><span><b>${n}</b><small>${d}</small></span><b>$${pr}<small>/mo</small></b></button>`).join('')}<p class="note">${r.trialUsed?'You pay on a secure Stripe page.':'14-day free trial. You won\'t be charged until it ends, and you can cancel any time.'} <a href="/pricing/" target="_blank" rel="noopener">Compare plans</a></p></div>`:'';
+    const manage=(r.hasBilling&&!NATIVE_APP)?`<button class="btn" data-a="billPortal">${live?'Manage billing':'Billing history'}</button>`:'';
     box.innerHTML=`<h2>Plan &amp; Storage</h2><p>${planLine}</p>${meter}${pick}${manage}`;
     if(back==='done'&&live)toast(r.status==='trialing'?'Your free trial has started.':'Your plan is updated.');
   }catch(e){const b=$('#st-store');if(b){const n=b.querySelector('.note');if(n)n.textContent='Couldn\'t check your plan right now.'}}}
@@ -2471,6 +2476,7 @@ document.addEventListener('submit',async e=>{const f=e.target,k=f.dataset.sub;if
     if(phone&&phone.replace(/\D/g,'').length<10){toast('Check the phone number.');return}
     b.disabled=true;b.textContent='Making the text…';
     try{let mid=m?m.id:null;
+      if(!(m&&m.userId)&&BC.seatsFull){const full=await BC.seatsFull();if(full){b.disabled=false;b.textContent='Make the Text';toast(BC.seatMsg(full),6000);return}}
       if(m){await upd('members',m.id,{projects:[...new Set([...(m.projects||[]),p.id])],...(phone&&!m.phone?{phone}:{})})}
       else{mid=await put('members',{name:titleCase(v.name.trim()),role:v.role,company:v.role==='Trade Partner'?(v.company||'').trim():'',phone,projects:[p.id],invitedAt:Date.now()})}
       const who=M_(mid)||m||{name:v.name.trim(),role:v.role};const first=String(who.name||'').split(' ')[0];const co=coName(p.id);

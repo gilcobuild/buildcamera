@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="5618d5e228">
+<meta name="bc-ver" content="e95ba1a1a0">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-p95VqrI7L/csyjp5I4NydzgjWcePhzG7lJVrYVrtxAY=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-NPPvpnxmO0ij9QEApf8WNmlv8/6jaGzlYPVrxhWT2kA=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -386,7 +386,7 @@ a{color:var(--accent)}
 /* modal */
 #modal{position:fixed;inset:0;bottom:auto;height:100%;z-index:50;background:var(--scrim);display:flex;justify-content:center;align-items:flex-end}
 .sheet{background:var(--bg);width:100%;max-width:720px;height:100%;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
-@media (min-width:760px){#modal{align-items:center}.sheet{height:calc(100% - 40px);border-radius:16px;overflow:hidden}}
+@media (min-width:760px){#modal{align-items:center}.sheet{height:calc(100% - 40px);border-radius:16px;overflow:hidden}.sheet.mksheet{max-width:none;width:100%;height:100%;border-radius:0}.mk .bar .brk{display:none}.mk .bar{order:0}.mk .opt{order:1;border-top:0;border-bottom:1px solid var(--line)}.mk .stage{order:2}.mk .opt [data-a=mkDel]{margin-left:8px!important}}
 .sh{display:flex;align-items:center;gap:8px;background:var(--panel);border-bottom:1px solid var(--line);padding-block:8px;padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
 .sh b{font-family:var(--f-display);font-size:20px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ib{border:0;background:transparent;width:44px;height:44px;display:grid;place-items:center;border-radius:10px;color:var(--ink)}
@@ -1893,7 +1893,7 @@ document.addEventListener('click',e=>{if(PVZ.moved&&e.target.closest&&e.target.c
 const MK={};
 function markupSheet(){
   const col=['#ff3b30','#f2b705','#2f80ed','#ffffff','#111111'];
-  return `<div class="sheet" role="dialog" aria-modal="true" aria-label="Mark up photo"><div class="sh"><button class="ib" data-a="close" aria-label="Cancel">${I('x')}</button><b>Mark Up</b><button class="btn sm" data-a="mkUndo">Undo</button><button class="btn pri sm" data-a="mkSave">Save Copy</button></div>
+  return `<div class="sheet mksheet" role="dialog" aria-modal="true" aria-label="Mark up photo"><div class="sh"><button class="ib" data-a="close" aria-label="Cancel">${I('x')}</button><b>Mark Up</b><button class="btn sm" data-a="mkUndo">Undo</button><button class="btn pri sm" data-a="mkSave">Save Copy</button></div>
   <div class="mk"><div class="bar">${[['select','Select'],['move','Move'],['pen','Pen'],['arrow','Arrow'],['circle','Circle'],['box','Box'],['text','Text'],['scale','Set Scale'],['measure','Measure']].map(([k,l])=>`<button class="tool${k==='move'?' mkz':''}" data-a="mkTool" data-t="${k}" aria-pressed="${k==='arrow'}">${l}</button>`).join('')}<span class="brk"></span><button class="tool mkz" data-a="mkZoom" data-z="-1" aria-label="Zoom out" title="Zoom out (or scroll)">−</button><button class="tool mkz" data-a="mkZoom" data-z="0" aria-label="Fit photo" title="Fit" id="mkzl">Fit</button><button class="tool mkz" data-a="mkZoom" data-z="1" aria-label="Zoom in" title="Zoom in (or scroll)">+</button><span class="gap"></span><span class="mkcw"><button class="tool mkcolb" data-a="mkColPick" aria-expanded="false" aria-label="Color"><i class="dot" id="mkdot" style="background:${col[0]}"></i>Color</button><span class="mkpal" id="mkpal" hidden>${col.map((c,i)=>`<button class="sw" data-a="mkCol" data-c="${c}" style="background:${c}" aria-label="Color ${i+1}" aria-pressed="${i===0}"></button>`).join('')}</span></span></div>
   <div class="stage"><canvas id="mkc" aria-label="Photo markup area"></canvas></div><div class="opt" id="mkopt" hidden></div></div></div>`;
 }

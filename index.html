@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="695e75dc17">
+<meta name="bc-ver" content="e7f65e0490">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-CfuVIyTFsd8ckHXn7xyRAtj+Qg0buZDzgxpjQ9DhDgk=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-cf1tlwOFJ1Vy9A0H7mnIHayGKbfrpFOy1nMLqVsyzQw=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -636,6 +636,8 @@ h3.day{align-items:center}
 .f .row .linkb{white-space:nowrap;font-size:11.5px}.duebtn .chip{flex:none;font:600 13px var(--f-body);letter-spacing:0;text-transform:none}
 .fixdd{border:1px solid var(--line);border-radius:10px;background:var(--panel)}.fixdd summary{cursor:pointer;padding:10px 12px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:8px}.fixdd summary::after{content:'▾';color:var(--muted)}.fixdd[open] summary::after{content:'▴'}.fixdd summary::-webkit-details-marker{display:none}.fixlist{max-height:240px;overflow:auto;border-top:1px solid var(--line);padding:4px 6px}.fixck{display:flex;align-items:center;gap:10px;padding:8px 6px;border-radius:8px;cursor:pointer}.fixck:hover{background:var(--sunk)}.fixck input{width:20px;height:20px;flex:none}
 ::placeholder{color:var(--muted);opacity:.5}
+.ztog,.ztog0{width:30px;height:30px;min-height:30px;flex:none}.ztog .stchev,details.stl[open] .ztog .stchev{display:block;margin:0 auto 4px;transform:rotate(45deg)}.ztog.shut .stchev,details.stl[open] .ztog.shut .stchev{transform:rotate(-45deg);margin:2px auto 0}
+@media(max-width:640px){.zn .zl{display:none}.zn .btn.sm{padding:0 9px;min-width:36px}.zkids{margin-left:8px!important;padding-left:5px!important}.zcnt{font-size:11.5px}.zn .ck{gap:4px!important}}.zcnt{white-space:nowrap}
 .zkids{margin:2px 0 4px 18px;padding-left:8px;border-left:2px solid var(--line)}.zadd{gap:6px;flex-wrap:nowrap;padding:4px 6px}.zsel{width:100%}.zsel+input{margin-top:6px}
 .stgrid{display:grid;gap:10px;margin-top:6px}.stsec{font:700 13px/1.2 var(--f-ui,inherit);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:18px 2px 0}.stgrid>.card{margin:0}
 @media(min-width:1000px){.stgrid{grid-template-columns:1fr 1fr;align-items:start}}
@@ -906,22 +908,24 @@ const stPrev=L=>L.slice(0,4).join(', ')+(L.length>4?'…':'');
 document.addEventListener('toggle',e=>{const d=e.target;if(d&&d.matches&&d.matches('details.stl')){V.stOpen=V.stOpen||{};V.stOpen[d.dataset.k]=d.open}},true);
 /* work zones can nest: "Building A / 1st Floor / Classroom 101" */
 const ZS=' / ';
+
 const zParts=z=>String(z||'').split(ZS);
-function zoneTreeHtml(){const L=zoneList();if(!L.length)return '<p class="note" style="margin:6px 0">Nothing on the list yet. Add a building or area below, then tap + Inside to add floors and rooms under it.</p>';
+const zShow=z=>zParts(z).join(' - ');
+function zoneTreeHtml(){if(!V.zColl){try{V.zColl=JSON.parse(localStorage.getItem('pc-zcoll')||'{}')}catch(e){V.zColl={}}}const L=zoneList();if(!L.length)return '<p class="note" style="margin:6px 0">Nothing on the list yet. Add a building or area below, then tap + Inside to add floors and rooms under it.</p>';
   const kids=par=>L.filter(z=>{const a=zParts(z);return a.length===(par?zParts(par).length+1:1)&&(!par||z.startsWith(par+ZS))});
-  const node=z=>{const a=zParts(z),nm=a[a.length-1],ch=kids(z),deep=a.length>=4;
-    return `<div class="zn" data-reo="zones" data-v="${esc(z)}"><div class="ck" style="align-items:center;gap:6px">${DESK()?`<span class="dh" title="Drag to move" aria-hidden="true">&#8942;&#8942;</span>`:''}<input type="text" value="${esc(nm)}" data-ch="zRen" data-v="${esc(z)}" autocapitalize="words" aria-label="Work zone name" style="flex:1;min-width:0">${deep?'':`<button class="btn sm" data-a="zSub" data-v="${esc(z)}" aria-label="Add inside ${esc(nm)}">${I('plus')} Inside</button>`}<button class="ib" data-a="zDel" data-v="${esc(z)}" aria-label="Remove ${esc(nm)}">${I('trash')}</button></div>
-    ${ch.length||V.zAddAt===z?`<div class="zkids">${ch.map(node).join('')}${V.zAddAt===z?`<form data-sub="zAdd" data-par="${esc(z)}" class="row zadd"><input type="text" name="t" id="z-new" placeholder="Inside ${esc(nm)}, e.g. ${a.length===1?'1st Floor':a.length===2?'Classroom 101':'North Wall'}" autocapitalize="words" style="flex:1;min-width:0"><button class="btn sm pri" type="submit" data-keepfocus>Add</button><button class="btn sm" type="button" data-a="zSubX">Done</button></form>`:''}</div>`:''}</div>`};
+  const node=z=>{const a=zParts(z),nm=a[a.length-1],ch=kids(z),deep=a.length>=4,shut=!!(V.zColl&&V.zColl[z])&&V.zAddAt!==z,all=L.filter(x=>x.startsWith(z+ZS)).length;
+    return `<div class="zn" data-reo="zones" data-v="${esc(z)}"><div class="ck" style="align-items:center;gap:6px">${DESK()?`<span class="dh" title="Drag to move" aria-hidden="true">&#8942;&#8942;</span>`:''}${ch.length?`<button class="ib ztog${shut?' shut':''}" data-a="zTog" data-v="${esc(z)}" aria-expanded="${!shut}" aria-label="${shut?'Show':'Hide'} what's inside ${esc(nm)}"><span class="stchev" aria-hidden="true"></span></button>`:'<span class="ztog0" aria-hidden="true"></span>'}<input type="text" value="${esc(nm)}" data-ch="zRen" data-v="${esc(z)}" autocapitalize="words" aria-label="Work zone name" style="flex:1;min-width:0">${shut?`<span class="note zcnt">${all} inside</span>`:''}<button class="btn sm" data-a="zCopy" data-v="${esc(z)}" aria-label="Copy ${esc(nm)} and everything inside"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span class="zl">Copy</span></button>${deep?'':`<button class="btn sm" data-a="zSub" data-v="${esc(z)}" aria-label="Add inside ${esc(nm)}">${I('plus')}<span class="zl">Inside</span></button>`}<button class="ib" data-a="zDel" data-v="${esc(z)}" aria-label="Remove ${esc(nm)}">${I('trash')}</button></div>
+    ${(ch.length&&!shut)||V.zAddAt===z?`<div class="zkids">${ch.map(node).join('')}${V.zAddAt===z?`<form data-sub="zAdd" data-par="${esc(z)}" class="row zadd"><input type="text" name="t" id="z-new" placeholder="Inside ${esc(nm)}, e.g. ${a.length===1?'1st Floor':a.length===2?'Classroom 101':'North Wall'}" autocapitalize="words" style="flex:1;min-width:0"><button class="btn sm pri" type="submit" data-keepfocus>Add</button><button class="btn sm" type="button" data-a="zSubX">Done</button></form>`:''}</div>`:''}</div>`};
   return kids('').map(node).join('')}
 function zRefresh(){const b=$('#ls-zones');if(b)b.innerHTML=zoneTreeHtml();const f=$('#z-new');if(f)f.focus()}
 /* pickers: one drop-down with the tree indented, or type a new one */
 function zEnhance(inp){if(inp.dataset.zp)return;const L=zoneList();if(!L.length)return;inp.dataset.zp='1';
   const sel=document.createElement('select');sel.className='zsel';sel.setAttribute('aria-label','Work zone');
   const first=inp.id==='bk-zone'?'Leave as is':'No work zone';
-  sel.innerHTML=`<option value="">${first}</option>`+L.map(z=>{const a=zParts(z);return `<option value="${esc(z)}">${'\u00a0\u00a0\u00a0\u00a0'.repeat(a.length-1)}${a.length>1?'\u2514 ':''}${esc(a[a.length-1])}</option>`}).join('')+'<option value="__new">+ Type a different one…</option>';
-  const v=inp.value;if(v&&!L.includes(v)){sel.value='__new'}else{sel.value=v||'';inp.hidden=true}
+  sel.innerHTML=`<option value="">${first}</option>`+L.map(z=>{const a=zParts(z);return `<option value="${esc(zShow(z))}">${'\u00a0\u00a0\u00a0\u00a0'.repeat(a.length-1)}${a.length>1?'\u2514 ':''}${esc(a[a.length-1])}</option>`}).join('')+'<option value="__new">+ Type a different one…</option>';
+  let v=inp.value;if(v&&L.includes(v))v=zShow(v);const D=L.map(zShow);if(v&&!D.includes(v)){sel.value='__new'}else{sel.value=v||'';inp.hidden=true}
   [...sel.options].forEach(o=>o.dataset.t=o.textContent);
-  const full=()=>{[...sel.options].forEach(o=>o.textContent=o.dataset.t);const o=sel.selectedOptions[0];if(o&&o.value&&o.value!=='__new')o.textContent=zParts(o.value).join(' \u203a ')};
+  const full=()=>{[...sel.options].forEach(o=>o.textContent=o.dataset.t);const o=sel.selectedOptions[0];if(o&&o.value&&o.value!=='__new')o.textContent=o.value};
   const tree=()=>[...sel.options].forEach(o=>o.textContent=o.dataset.t);
   full();sel.addEventListener('mousedown',tree);sel.addEventListener('touchstart',tree,{passive:true});sel.addEventListener('keydown',tree);sel.addEventListener('blur',full);
   inp.before(sel);
@@ -1957,7 +1961,7 @@ function pMapRows(rows,pid){
   const g=(r,i)=>i>=0?String(r[i]==null?'':r[i]).trim():'';
   const trades=tradeList(),have=new Set(S.tasks.filter(t=>t.type==='punch'&&t.projectId===pid).map(t=>(t.title+'|'+(t.zone||'')).toLowerCase()));
   return body.map(r=>{let title=g(r,C.desc).replace(/\s+/g,' ');if(!title)return null;
-    let zone=[g(r,C.zone),g(r,C.z2),g(r,C.z3),g(r,C.z4)].filter(Boolean).join(' / ');
+    let zone=[g(r,C.zone),g(r,C.z2),g(r,C.z3),g(r,C.z4)].filter(Boolean).join(' - ');
     let trade=g(r,C.trade);
     {const m=!trade&&title.match(/^([^:]{1,40}?)(?: - ([^:]{1,60}))?: (.+)$/);if(m&&trades.some(x=>x.toLowerCase()===m[1].toLowerCase())){trade=m[1];if(m[2]&&!zone)zone=m[2];title=m[3]}}const tm=trades.find(x=>x.toLowerCase()===trade.toLowerCase());if(tm)trade=tm;else if(trade)trade=titleCase(trade);
     const an=g(r,C.asg),am=an&&S.members.find(m=>(m.name||'').toLowerCase()===an.toLowerCase()||(m.company||'').toLowerCase()===an.toLowerCase());
@@ -2772,7 +2776,7 @@ const ACT={
   piGo:async el=>{const rows=(M.rows||[]).filter(r=>r.sel);if(!rows.length)return;el.disabled=true;const msg=$('#pi-msg'),pid=M.pid,now=Date.now();let i=0;
     for(const r of rows){i++;if(msg)msg.textContent=`Adding ${i} of ${rows.length}…`;await put('tasks',{projectId:pid,title:r.title,type:'punch',zone:r.zone,trade:r.trade,status:r.closed?'closed':'open',assignee:r.assignee||null,assigneeText:r.assigneeText||'',due:r.due||'',photoId:null,done:r.closed,doneAt:r.closed?now:null,createdAt:now+i,by:ME.name,...(r.extNo?{extNo:r.extNo}:{}),src:'import'})}
     const zs=[...new Set(rows.map(r=>r.zone).filter(Boolean))],ts=[...new Set(rows.map(r=>r.trade).filter(Boolean))];
-    try{const zl=zoneList(),nz=zs.filter(z=>!zl.includes(z));if(nz.length&&nz.length<=40)await saveList('zones',[...zl,...nz]);const tl=tradeList(),nt=ts.filter(t=>!tl.includes(t));if(nt.length&&nt.length<=40)await saveList('trades',[...tl,...nt])}catch(e){}
+    try{const zl=zoneList(),nz=[];zs.forEach(z=>{const a=z.split(' - ');for(let i=1;i<=Math.min(a.length,4);i++){const pth=a.slice(0,i).join(ZS);if(!zl.includes(pth)&&!nz.includes(pth))nz.push(pth)}});if(nz.length&&nz.length<=40)await saveList('zones',[...zl,...nz]);const tl=tradeList(),nt=ts.filter(t=>!tl.includes(t));if(nt.length&&nt.length<=40)await saveList('trades',[...tl,...nt])}catch(e){}
     closeModal();V.punchF='open';render();toast(`Imported ${rows.length} punch item${rows.length===1?'':'s'}`)},
   punchExport:el=>openModal({kind:'pexport',pid:el.dataset.pid||'',which:'open'}),
   peWhich:el=>{M.which=el.dataset.v;renderModal()},
@@ -2801,7 +2805,12 @@ const ACT={
     const body=`Punch list for ${g}:\n`+Object.keys(byJob).map(j=>`${j}\n`+byJob[j].map((t,i)=>`${i+1}. ${t.title}${t.zone?' ('+t.zone+')':''}`).join('\n')).join('\n\n')+`\n\nOpen Build Camera to see the photos: ${location.origin}`;
     location.href='sms:?&body='+encodeURIComponent(body)},
   editList:el=>{const k=el.dataset.k;const m=M;if(m&&m.kind==='cam')camStop();closeModal();V.stOpen={...(V.stOpen||{}),[k]:true};V.tab='settings';render();setTimeout(()=>{const c=$('#st-'+k);if(c)c.scrollIntoView({block:'start'})},60)},
-  zSub:el=>{V.zAddAt=el.dataset.v;zRefresh()},
+  zTog:el=>{const z=el.dataset.v;V.zColl={...(V.zColl||{}),[z]:!(V.zColl&&V.zColl[z])};try{localStorage.setItem('pc-zcoll',JSON.stringify(V.zColl))}catch(e){}zRefresh()},
+  zCopy:async el=>{const z=el.dataset.v,l=[...zoneList()],a=zParts(z),par=a.slice(0,-1).join(ZS),base=a[a.length-1];let nm=base+' Copy',n=2;const full=x=>(par?par+ZS:'')+x;while(l.includes(full(nm)))nm=base+' Copy '+(n++);
+    const nz=full(nm),sub=l.filter(x=>x.startsWith(z+ZS)),add=[nz,...sub.map(x=>nz+x.slice(z.length))];let at=l.indexOf(z);for(let i=at+1;i<l.length&&l[i].startsWith(z+ZS);i++)at=i;l.splice(at+1,0,...add);
+    await saveList('zones',l);V.zAddAt=null;zRefresh();const inp=document.querySelector(`input[data-ch=zRen][data-v="${CSS.escape(nz)}"]`);if(inp){inp.scrollIntoView({block:'center'});inp.focus();inp.select()}
+    toast(`Copied ${base}${sub.length?' with '+sub.length+' inside':''}. Type the new name.`,3200)},
+  zSub:el=>{V.zAddAt=el.dataset.v;if(V.zColl)delete V.zColl[el.dataset.v];zRefresh()},
   zSubX:()=>{V.zAddAt=null;zRefresh()},
   zDel:el=>{const z=el.dataset.v,l=zoneList(),sub=l.filter(x=>x.startsWith(z+ZS)).length,nm=zParts(z).pop();if(!el.classList.contains('armed')){el.classList.add('armed');el.style.color='var(--bad)';toast(`Tap the trash again to remove "${nm}"${sub?` and the ${sub} inside it`:''}`,3200);setTimeout(()=>{el.classList.remove('armed');el.style.color=''},3200);return}
     saveList('zones',l.filter(x=>x!==z&&!x.startsWith(z+ZS))).then(zRefresh);toast(`"${nm}" removed. Old photos keep it.`)},
@@ -2877,7 +2886,7 @@ document.addEventListener('change',async e=>{const el=e.target,k=el.dataset.ch;i
   else if(k==='pAs'){const w=$('#tk-astw');if(w){w.hidden=el.value!=='__new';if(el.value==='__new')setTimeout(()=>$('#tk-ast')?.focus(),20);else{const i=$('#tk-ast');if(i)i.value=''}}}
   else if(k==='fixCk'){const c=[...document.querySelectorAll('#fixlist input:checked')].map(x=>x.value);const sm=$('#fixsum');if(sm)sm.textContent=c.length?`${c.length} picked: ${c.join(', ')}`:'Pick what needs fixing'}
   else if(k==='plTrade'){V.plTrade=el.value;render();setTimeout(()=>{const c=$('#st-punchlib');if(c)c.scrollIntoView({block:'start'})},40)}
-  else if(k==='zRen'){delete el.dataset.dirty;const old=el.dataset.v,a=zParts(old),nm=titleCase(el.value.trim().replace(/\s*\/\s*/g,' '));if(!nm){el.value=a[a.length-1];return}if(nm===a[a.length-1])return;a[a.length-1]=nm;const nw=a.join(ZS),l=zoneList();if(l.includes(nw)){toast('"'+nm+'" is already there.');el.value=zParts(old).pop();return}await saveList('zones',l.map(x=>x===old?nw:x.startsWith(old+ZS)?nw+x.slice(old.length):x));zRefresh();toast('Renamed to "'+nm+'"')}
+  else if(k==='zRen'){delete el.dataset.dirty;const old=el.dataset.v,a=zParts(old),nm=titleCase(el.value.trim().replace(/\s*\/\s*/g,' '));if(!nm){el.value=a[a.length-1];return}if(nm===a[a.length-1])return;a[a.length-1]=nm;const nw=a.join(ZS),l=zoneList();if(l.includes(nw)){toast('"'+nm+'" is already there.');el.value=zParts(old).pop();return}await saveList('zones',l.map(x=>x===old?nw:x.startsWith(old+ZS)?nw+x.slice(old.length):x));if(V.zColl){const c={};for(const [x,v] of Object.entries(V.zColl))c[x===old?nw:x.startsWith(old+ZS)?nw+x.slice(old.length):x]=v;V.zColl=c;try{localStorage.setItem('pc-zcoll',JSON.stringify(c))}catch(e){}}zRefresh();toast('Renamed to "'+nm+'"')}
   else if(k==='lstRen'){delete el.dataset.dirty;const lk=el.dataset.k,l=[...LISTS[lk].get()],i=+el.dataset.i,nw=titleCase(el.value.trim());if(!nw){el.value=l[i];return}if(nw===l[i])return;l[i]=nw;saveList(lk,l);toast('Renamed to "'+nw+'"')}
   else if(k==='tagRen'){delete el.dataset.dirty;const l=[...tagList()],i=+el.dataset.i,old=l[i],nw=titleCase(el.value.trim());
     if(!nw){el.value=old;toast('A tag needs a name. Use the trash to remove it.');return}

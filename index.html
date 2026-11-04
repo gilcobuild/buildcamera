@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-HygY9Q49lkVOAVs1sm2I/bv0i+EhxJekRCwAuYrN7RI=' 'sha256-ugrRcp4qvnB77myv6dqbZnltdGoUiyj7PcBZy11+sR4=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-HygY9Q49lkVOAVs1sm2I/bv0i+EhxJekRCwAuYrN7RI=' 'sha256-VFHUUzmfprlOSWTXFv6H2nVsaSKhaw60R444UdX+8EM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -961,7 +961,7 @@ const fmtB=b=>b>=1e9?(b/1e9).toFixed(b>=1e10?0:1)+' GB':Math.max(1,Math.round(b/
 const PLANS_UI=[['solo','Solo',29,'1 user · 25 GB'],['crew','Crew',79,'Up to 5 users · 100 GB'],['company','Company',149,'Up to 15 users · 500 GB']];
 async function storeStatus(){const el=$('#st-store');if(!el||!window.BC||!BC.storage)return;
   try{let back=null;try{back=sessionStorage.getItem('bc-billing');sessionStorage.removeItem('bc-billing')}catch(_){}
-    if(back==='done'&&BC.billing){try{await BC.billing('sync')}catch(e){}}
+    if(BC.billing&&(back==='done'||!window.__bcSync)){window.__bcSync=1;try{await BC.billing('sync')}catch(e){}}
     const r=await BC.storage();if(!r)return;const lim=r.limitGb*1e9,pc=Math.min(100,Math.round(r.used/lim*100)),left=Math.max(0,Math.round((lim-r.used)/3.5e6));
     const box=$('#st-store');if(!box)return;
     const live=['active','trialing','past_due'].includes(r.status),pn=(PLANS_UI.find(x=>x[0]===r.plan)||[0,r.plan==='demo'?'Demo':'Free'])[1];

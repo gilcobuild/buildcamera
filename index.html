@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="0a76ef4cfb">
+<meta name="bc-ver" content="192de6587c">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-4qFhbhpNmtn+qRdil0WKiRHzEfgYPRNzF8kWnLzQw1A=' 'sha256-2+wOoRaGFVFL3RC+mBVXv97+79l+OjvXtx83I1igxrU=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-fLCFIXINhG1txBmF/ce/122TDr+LPMm5seGH79vlkwY=' 'sha256-FN5qSMBYZZHEPbYjRt8/f5z756/LZleU3FBmfP4eRd0=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -51,6 +51,7 @@ const css=`#bcgate{position:fixed;inset:0;z-index:100;background:var(--bg,#eef0e
 #bcgate .lnk{background:none;border:0;min-height:40px;color:var(--accent,#1d5c8f);font-weight:600}
 #bcgate .msg{font-size:14px;border-radius:10px;padding:10px 12px;background:var(--accent-soft,#e1ebf4)}
 #bcgate .msg.bad{background:var(--bad-soft,#f9e3e1);color:var(--bad,#b3261e)}
+#bcgate .ts:empty{display:none}#bcgate .ts{display:flex;justify-content:center;min-height:0}
 #bcgate .note{font-size:13px;color:var(--muted,#59626a)}`;
 function gate(html){let g=document.getElementById('bcgate');if(!g){const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);g=document.createElement('div');g.id='bcgate';g.setAttribute('role','dialog');g.setAttribute('aria-label','Sign in to Build Camera');document.body.appendChild(g)}
   g.innerHTML=`<div class="bx"><div class="lg"><i aria-hidden="true"><b></b></i><h1>Build Camera<small>Jobsite photos</small></h1></div>${html}<p class="note" style="text-align:center;margin-top:8px"><a href="/terms/" target="_blank" rel="noopener" style="color:inherit">Terms</a> · <a href="/privacy/" target="_blank" rel="noopener" style="color:inherit">Privacy Policy</a></p></div>`;g.hidden=false;return g}
@@ -58,6 +59,12 @@ function closeGate(){const g=document.getElementById('bcgate');if(g)g.remove()}
 function say(t,bad){const m=document.getElementById('bcmsg');if(m){m.textContent=t;m.className='msg'+(bad?' bad':'');m.hidden=!t}}
 function busy(b,on,txt){if(!b)return;b.disabled=on;if(txt)b.textContent=txt}
 
+/* bot check (Cloudflare Turnstile): usually invisible; a box appears only for suspicious visitors */
+const TS={key:/(^|\.)buildcamera\.com$/.test(location.hostname)?'0x4AAAAAAF1Xj8sGoxsk-dr1':'1x00000000000000000000AA',tok:null,id:null,p:null};
+function tsLoad(){if(TS.p)return TS.p;TS.p=new Promise(res=>{if(window.turnstile)return res(true);const s=document.createElement('script');s.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';s.async=true;s.onload=()=>res(true);s.onerror=()=>{TS.p=null;res(false)};document.head.appendChild(s)});return TS.p}
+async function tsRender(el){TS.tok=null;TS.id=null;if(!el||!(await tsLoad())||!window.turnstile||!document.body.contains(el))return;try{TS.id=turnstile.render(el,{sitekey:TS.key,appearance:'interaction-only',callback:t=>{TS.tok=t},'expired-callback':()=>{TS.tok=null},'error-callback':()=>{TS.tok=null}})}catch(e){}}
+async function tsToken(){const t0=Date.now();while(!TS.tok&&Date.now()-t0<10000&&TS.id!=null)await new Promise(r=>setTimeout(r,200));return TS.tok||undefined}
+function tsReset(){TS.tok=null;try{if(TS.id!=null)turnstile.reset(TS.id)}catch(e){}}
 function showSignIn(mode){
   mode=mode||(ssGet('bc-invite')||ssGet('bc-signup')?'up':'in');ssDel('bc-signup');
   const g=gate(`${ssGet('bc-invite')?'<p class="msg">You\'ve been invited to a job on Build Camera. Make your account below, or sign in if you already have one, and the job opens.</p>':''}<h2>${mode==='up'?'Create Your Account':mode==='reset'?'Reset Password':'Sign In'}</h2>
@@ -66,26 +73,28 @@ function showSignIn(mode){
    ${mode==='up'?'<label>Your Name<input id="bc-name" autocomplete="name" autocapitalize="words" required></label>':''}
    <label>Email<input id="bc-email" type="email" autocomplete="email" inputmode="email" required value="${esc(lsGet('bc-email')||'')}"></label>
    ${mode!=='reset'?`<label>Password<input id="bc-pw" type="password" autocomplete="${mode==='up'?'new-password':'current-password'}" minlength="8" required></label>`:''}
+   <div id="bc-ts" class="ts" aria-label="Security check"></div>
    <button class="pri" type="submit" id="bcgo">${mode==='up'?'Create Account':mode==='reset'?'Email Me a Reset Link':'Sign In'}</button>
    ${mode==='up'?'<p class="note" style="margin:0;text-align:center">By creating an account you agree to the <a href="/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>':''}
   </form>
   ${mode==='in'?'<button class="lnk" data-m="up">New here? Create an account</button><button class="lnk" data-m="reset">Forgot password?</button>':'<button class="lnk" data-m="in">Back to sign in</button>'}`);
   g.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>showSignIn(b.dataset.m));
+  tsRender(g.querySelector('#bc-ts'));
   g.querySelector('#bcf').onsubmit=async e=>{e.preventDefault();const em=g.querySelector('#bc-email').value.trim(),pw=g.querySelector('#bc-pw')?.value,b=g.querySelector('#bcgo');lsSet('bc-email',em);say('');
     try{
-      if(mode==='reset'){busy(b,true,'Sending…');const{error}=await sb.auth.resetPasswordForEmail(em,{redirectTo:location.origin+location.pathname});if(error)throw error;say('Check your email for the reset link.');busy(b,false,'Email Me a Reset Link');return}
-      if(mode==='up'){busy(b,true,'Creating…');const nm=g.querySelector('#bc-name').value.trim();lsSet('bc-name',nm);if(await pwned(pw))throw{message:BREACHED};const{data,error}=await sb.auth.signUp({email:em,password:pw,options:{data:{name:nm},emailRedirectTo:location.origin+location.pathname}});if(error)throw error;
+      if(mode==='reset'){busy(b,true,'Sending…');const captchaToken=await tsToken();const{error}=await sb.auth.resetPasswordForEmail(em,{redirectTo:location.origin+location.pathname,captchaToken});tsReset();if(error)throw error;say('Check your email for the reset link.');busy(b,false,'Email Me a Reset Link');return}
+      if(mode==='up'){busy(b,true,'Creating…');const nm=g.querySelector('#bc-name').value.trim();lsSet('bc-name',nm);if(await pwned(pw))throw{message:BREACHED};const captchaToken=await tsToken();const{data,error}=await sb.auth.signUp({email:em,password:pw,options:{data:{name:nm},emailRedirectTo:location.origin+location.pathname,captchaToken}});tsReset();if(error)throw error;
         if(!data.session){say('Almost done. Open the email we just sent and tap the link to confirm, then sign in here.');busy(b,false,'Create Account');return}}
-      else{busy(b,true,'Signing in…');const{error}=await sb.auth.signInWithPassword({email:em,password:pw});if(error)throw error}
+      else{busy(b,true,'Signing in…');const captchaToken=await tsToken();const{error}=await sb.auth.signInWithPassword({email:em,password:pw,options:{captchaToken}});tsReset();if(error)throw error}
       await afterAuth();
-    }catch(err){busy(b,false,mode==='up'?'Create Account':mode==='reset'?'Email Me a Reset Link':'Sign In');say(niceErr(err),true)}};
+    }catch(err){tsReset();busy(b,false,mode==='up'?'Create Account':mode==='reset'?'Email Me a Reset Link':'Sign In');say(niceErr(err),true)}};
 }
 /* leaked-password check: only the first 5 letters of the password's fingerprint leave the phone (haveibeenpwned.com) */
 const BREACHED='That password has shown up in a data breach on another website, so hackers try it first. Pick a different one.';
 async function pwned(pw){try{const h=[...new Uint8Array(await crypto.subtle.digest('SHA-1',new TextEncoder().encode(pw)))].map(b=>b.toString(16).padStart(2,'0')).join('').toUpperCase();
   const r=await fetch('https://api.pwnedpasswords.com/range/'+h.slice(0,5),{headers:{'Add-Padding':'true'},signal:AbortSignal.timeout?AbortSignal.timeout(5000):undefined});if(!r.ok)return false;
   return (await r.text()).split('\n').some(l=>{const[x,n]=l.trim().split(':');return x===h.slice(5)&&+n>0})}catch(e){return false}}
-function niceErr(e){const m=String(e&&e.message||e||'');if(m===BREACHED)return m;
+function niceErr(e){const m=String(e&&e.message||e||'');if(m===BREACHED)return m;if(/captcha/i.test(m))return 'We couldn\'t confirm you\'re a person. Wait a moment and try again, or refresh the page.';
   if(/Invalid login/i.test(m))return 'That email and password don\'t match. Try again or reset your password.';
   if(/not confirmed/i.test(m))return 'Confirm your email first. Open the email we sent and tap the link, then sign in.';
   if(/already registered/i.test(m))return 'That email already has an account. Sign in instead.';
@@ -2164,8 +2173,8 @@ function mkOpt(kind){
   const o=$('#mkopt');if(!o)return;const show=h=>{o.innerHTML=h;o.hidden=!h};
   const sel=MK.sel!=null&&MK.shapes[MK.sel];
   if(sel&&sel.t==='text'&&MK.edit){show(`<input type="text" id="mk-text" value="${esc(sel.s)}" placeholder="Type your label" data-in="mkTextEd" enterkeyhint="done" style="flex:1;min-width:160px"><button class="btn sm pri" data-a="mkTextDone">Done</button><button class="btn sm" data-a="mkSz" data-f="0.8" aria-label="Smaller">−</button><button class="btn sm" data-a="mkSz" data-f="1.25" aria-label="Bigger">+</button><button class="btn sm" data-a="mkDel" aria-label="Delete this label">${I('trash')}</button>`);return}
-  if(sel&&kind!=='scale'){show(`${sel.t!=='scale'?`<span class="mkgrp"><b>Size</b><button class="btn sm" data-a="mkSz" data-f="0.8" aria-label="Make smaller">−</button><button class="btn sm" data-a="mkSz" data-f="1.25" aria-label="Make bigger">+</button></span>`:''}${sel.t!=='text'?`<span class="mkgrp"><b>Line</b><button class="btn sm" data-a="mkW" data-f="0.75" aria-label="Thinner line">−</button><button class="btn sm" data-a="mkW" data-f="1.35" aria-label="Thicker line">+</button></span>`:''}<button class="btn sm" data-a="mkDel" aria-label="Delete this mark" style="margin-left:auto">${I('trash')}</button>`);return}
-  if(kind==='scale'||MK.tool==='scale'){show(`<input type="number" id="mk-ft" min="0" placeholder="Feet" style="width:90px" aria-label="Feet"><input type="number" id="mk-in" min="0" step="0.25" placeholder="Inches" style="width:100px" aria-label="Inches"><button class="btn sm pri" data-a="mkScale">Set Scale</button>${MK.scale?`<span class="pill good">Scale set</span>`:''}`);return}
+  if(sel&&kind!=='scale'){show(`${sel.t==='scale'&&sel.inches?`<span class="pill good">Scale ${ftIn(sel.inches)}</span>`:''}${sel.t!=='scale'?`<span class="mkgrp"><b>Size</b><button class="btn sm" data-a="mkSz" data-f="0.8" aria-label="Make smaller">−</button><button class="btn sm" data-a="mkSz" data-f="1.25" aria-label="Make bigger">+</button></span>`:''}${sel.t!=='text'?`<span class="mkgrp"><b>Line</b><button class="btn sm" data-a="mkW" data-f="0.75" aria-label="Thinner line">−</button><button class="btn sm" data-a="mkW" data-f="1.35" aria-label="Thicker line">+</button></span>`:''}<button class="btn sm" data-a="mkDel" aria-label="Delete this mark" style="margin-left:auto">${I('trash')}</button>`);return}
+  if(kind==='scale'||MK.tool==='scale'){show(`<input type="number" id="mk-ft" min="0" placeholder="Feet" style="width:90px" aria-label="Feet"><input type="number" id="mk-in" min="0" step="0.25" placeholder="Inches" style="width:100px" aria-label="Inches"><button class="btn sm pri" data-a="mkScale">Set Scale</button>${MK.scale?`<span class="pill good">Scale set${(MK.shapes.find(x=>x.t==='scale')||{}).inches?' · '+ftIn(MK.shapes.find(x=>x.t==='scale').inches):''}</span>`:''}`);return}
   show('');
 }
 function mkBox(s){let xs=[],ys=[];if(s.t==='pen')s.pts.forEach(q=>{xs.push(q[0]);ys.push(q[1])});else if(s.t==='text'){const fs=Math.max(18,MK.c.width*.032)*(s.k||1);MK.x.font=`700 ${fs}px "IBM Plex Sans",Arial,sans-serif`;const w=MK.x.measureText(s.s||'Type here…').width/2+fs*.35;xs=[s.p[0]-w,s.p[0]+w];ys=[s.p[1]-fs*.7,s.p[1]+fs*.7]}else{xs=[s.a[0],s.b[0]];ys=[s.a[1],s.b[1]]}
@@ -2200,9 +2209,9 @@ function mkDraw(){
       const head=(p,a)=>{x.beginPath();x.moveTo(p[0],p[1]);x.lineTo(p[0]-hl*Math.cos(a-0.45),p[1]-hl*Math.sin(a-0.45));x.lineTo(p[0]-hl*Math.cos(a+0.45),p[1]-hl*Math.sin(a+0.45));x.closePath();x.fill()};
       head(s.b,ang); if(s.t!=='arrow')head(s.a,ang+Math.PI);
       let lab=null; const len=Math.hypot(s.b[0]-s.a[0],s.b[1]-s.a[1]);
-      if(s.t==='scale')lab=s.inches?'Scale '+ftIn(s.inches):'Scale';
+      /* the scale line shows its length only in the bar below; a measurement sits small, beside its line */
       if(s.t==='measure')lab=MK.scale?ftIn(len/MK.scale):'Set scale';
-      if(lab)mkLabel(lab,(s.a[0]+s.b[0])/2,(s.a[1]+s.b[1])/2,s.c);
+      if(lab){const k=.62,fs=Math.max(18,MK.c.width*.032)*k;let nx=-Math.sin(ang),ny=Math.cos(ang);if(ny>0||(Math.abs(ny)<.01&&nx>0)){nx=-nx;ny=-ny}const off=fs*1.35+lw;mkLabel(lab,(s.a[0]+s.b[0])/2+nx*off,(s.a[1]+s.b[1])/2+ny*off,s.c,k)}
     }
     else if(s.t==='circle'){x.beginPath();x.ellipse((s.a[0]+s.b[0])/2,(s.a[1]+s.b[1])/2,Math.abs(s.b[0]-s.a[0])/2,Math.abs(s.b[1]-s.a[1])/2,0,0,Math.PI*2);x.stroke()}
     else if(s.t==='box'){x.strokeRect(Math.min(s.a[0],s.b[0]),Math.min(s.a[1],s.b[1]),Math.abs(s.b[0]-s.a[0]),Math.abs(s.b[1]-s.a[1]))}

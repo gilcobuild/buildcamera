@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="192de6587c">
+<meta name="bc-ver" content="e0edbc1351">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-fLCFIXINhG1txBmF/ce/122TDr+LPMm5seGH79vlkwY=' 'sha256-FN5qSMBYZZHEPbYjRt8/f5z756/LZleU3FBmfP4eRd0=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-yvt1DsQj7N81+bA4P4VJWiW8FNlhxVBNGRBrrpSZ/bs=' 'sha256-FN5qSMBYZZHEPbYjRt8/f5z756/LZleU3FBmfP4eRd0=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -24,6 +24,7 @@
 /* Build Camera: runs the app on its own domain with Supabase for logins, data and photos */
 (function(){
 const SB_URL='https://zrdgebzujpsatzxcvryi.supabase.co', SB_KEY='sb_publishable_VZXm4AVVTzMUzg_HFs_xug_F4ixJM5R', BUCKET='sitecam';
+let RECOV=/type=recovery/.test(location.hash);
 const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 let TEAM=null,TEAMNAME='',ROLE='',USR=null,MYNAME='';
 let ready,readyP=new Promise(r=>ready=r);
@@ -237,7 +238,7 @@ window.BC={
   teamCard(){return `<div class="card stack" id="bc-team"><h2>Who Can Sign In</h2><p class="note">${esc(TEAMNAME)} · you're signed in as ${esc(USR?.email||'')} (${esc(ROLE)}).</p>
    ${['Owner','Office'].includes(ROLE)?`<div class="row"><label class="f" style="flex:1;min-width:150px">New Person's Role<select id="bc-role"><option>Crew</option><option>Super</option><option>Office</option><option>Trade Partner</option></select></label><button class="btn pri" data-bc="invite" style="align-self:end">Make Invite Code</button></div><div id="bc-inv"></div>`:'<p class="note">Ask the owner or office for an invite code to add someone.</p>'}
    <div id="bc-mem" class="list"></div></div>`},
-  accountCard(){return `<div class="card stack"><h2>Account</h2><p class="note">Signed in as ${esc(USR?.email||'')} · ${esc(TEAMNAME)}</p><div class="row"><button class="btn" data-bc="install">Add to Home Screen</button><button class="btn bad" data-bc="signout">Sign Out</button></div>
+  accountCard(){return `<div class="card stack"><h2>Account</h2><p class="note">Signed in as ${esc(USR?.email||'')} · ${esc(TEAMNAME)}</p><div class="row"><button class="btn" data-bc="install">Add to Home Screen</button><button class="btn" data-bc="chpw">Change Password</button><button class="btn bad" data-bc="signout">Sign Out</button></div>
    <details><summary class="note" style="cursor:pointer">Delete my account</summary><div class="stack" style="gap:8px;margin-top:8px"><p class="note" style="margin:0">This removes you from ${esc(TEAMNAME)} and deletes your sign-in. If you're the only person on the team, the whole team is deleted too, with every job and photo. This can't be undone.</p>
    <label class="f">Type DELETE to confirm<input id="bc-delc" autocomplete="off" autocapitalize="characters"></label><button class="btn bad" data-bc="delacct">Delete My Account</button><p id="bc-delmsg" class="note" role="status"></p></div></details>
    <p class="note" style="margin:0"><a href="/terms/" target="_blank" rel="noopener">Terms of Service</a> · <a href="/privacy/" target="_blank" rel="noopener">Privacy Policy</a> · <a href="/legal/" target="_blank" rel="noopener">All legal documents</a></p></div>`},
@@ -269,13 +270,21 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-bc]'
       try{await new Promise(r=>{const q=indexedDB.deleteDatabase('picturecam');q.onsuccess=q.onerror=q.onblocked=()=>r()})}catch(_){}
       gate('<h2>Account deleted</h2><p class="msg">Your Build Camera account has been deleted. Thanks for using Build Camera.</p>')}
     catch(err){b.disabled=false;msg.textContent='Couldn\'t delete right now. Check your signal and try again.'}})();return}
-  if(k==='signout')BC.signOut();else if(k==='invite')BC.invite();else if(k==='install'){if(deferredInstall){deferredInstall.prompt();deferredInstall=null}else BC.installHelp()}
+  if(k==='signout')BC.signOut();else if(k==='chpw')BC.changePassword();else if(k==='invite')BC.invite();else if(k==='install'){if(deferredInstall){deferredInstall.prompt();deferredInstall=null}else BC.installHelp()}
   else if(k==='shareinv'){const t=document.getElementById('bc-invmsg').value;try{await navigator.share({text:t})}catch(err){try{await navigator.clipboard.writeText(t);alertBox('Copied. Paste it into a text.')}catch(e2){}}}});
 new MutationObserver(()=>{const m=document.getElementById('bc-mem');if(m&&!m.dataset.l){m.dataset.l=1;BC.members()}}).observe(document.documentElement,{childList:true,subtree:true});
 
 /* ---------- start ---------- */
-sb.auth.onAuthStateChange((ev)=>{if(ev==='PASSWORD_RECOVERY'){const g=gate(`<h2>Set a New Password</h2><p id="bcmsg" class="msg" hidden></p><form id="bcr" class="fm"><label>New Password<input id="bc-np" type="password" minlength="8" autocomplete="new-password" required></label><button class="pri" type="submit">Save Password</button></form>`);g.querySelector('#bcr').onsubmit=async e2=>{e2.preventDefault();const np=g.querySelector('#bc-np').value;if(await pwned(np)){say(BREACHED,true);return}const{error}=await sb.auth.updateUser({password:np});if(error){say(niceErr(error),true);return}afterAuth()}}});
-document.addEventListener('DOMContentLoaded',async()=>{const{data:{session}}=await sb.auth.getSession();if(session)afterAuth();else showSignIn()});
+/* set a new password: after a reset link, or from Settings > Account */
+function showSetPw(fromSettings){const g=gate(`<h2>${fromSettings?'Change Password':'Set a New Password'}</h2><p id="bcmsg" class="msg" hidden></p><form id="bcr" class="fm"><label>New Password<input id="bc-np" type="password" minlength="8" autocomplete="new-password" required></label><button class="pri" type="submit" id="bcpw">Save Password</button></form>${fromSettings?'<button class="lnk" id="bcpwx">Cancel</button>':''}`);
+  const x=g.querySelector('#bcpwx');if(x)x.onclick=()=>closeGate();
+  g.querySelector('#bcr').onsubmit=async e2=>{e2.preventDefault();const np=g.querySelector('#bc-np').value,b=g.querySelector('#bcpw');say('');b.disabled=true;b.textContent='Saving…';
+    try{if(await pwned(np))throw{message:BREACHED};const{error}=await sb.auth.updateUser({password:np});if(error)throw error;RECOV=false;try{history.replaceState(null,'',location.pathname+location.search)}catch(_){}
+      if(fromSettings){closeGate();alertBox('Password changed.')}else afterAuth()}
+    catch(err){b.disabled=false;b.textContent='Save Password';say(niceErr(err),true)}}}
+BC.changePassword=()=>showSetPw(true);
+sb.auth.onAuthStateChange((ev)=>{if(ev==='PASSWORD_RECOVERY'){RECOV=true;showSetPw(false)}});
+document.addEventListener('DOMContentLoaded',async()=>{const{data:{session}}=await sb.auth.getSession();if(RECOV&&session){showSetPw(false);return}if(session)afterAuth();else showSignIn()});
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 })();
 

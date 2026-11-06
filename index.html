@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="64e6305080">
+<meta name="bc-ver" content="5d723b2b75">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-VA5PIAvWmI5smMNjpHZHNn6gEXdL8c6HnoksZS4+XIg=' 'sha256-ouKzajnE/hxUS7Rd9ck1ZGDxrSF+FCdGlgmFS78jFyI=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-VA5PIAvWmI5smMNjpHZHNn6gEXdL8c6HnoksZS4+XIg=' 'sha256-st3GX4tVJF//qEXFLCDRylUzGeE48l8+Bm2ifPk8ZHw=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -1265,7 +1265,8 @@ function avHtml(name,cls,by){if(!name)return '';const u=avUrl(by,name);let h=0;f
   return `<span class="${cls}" title="${esc(name)}" aria-label="Taken by ${esc(name)}" style="--avc:hsl(${h} 45% 38%)">${u?`<img src="${esc(u)}" alt="">`:esc(ini(name))}</span>`}
 const ini=n=>{const w=String(n||'').trim().split(/\s+/).filter(Boolean);return w.length?(w[0][0]+(w.length>1?w[w.length-1][0]:'')).toUpperCase():'?'};
 const ago=ts=>{if(!ts)return '';const m=Math.round((Date.now()-ts)/6e4);if(m<1)return 'just now';if(m<60)return m+' min ago';const h=Math.round(m/60);if(h<24)return 'about '+h+' hour'+(h>1?'s':'')+' ago';const d=Math.round(h/24);if(d<31)return d+' day'+(d>1?'s':'')+' ago';return fmtDay(ts)};
-const pstat=p=>p.status==='Done'?'<span class="badge done">Done</span>':'<span class="badge">In Progress</span>';
+/* "In Progress" only means something next to other jobs; with one job it's noise. "Done" always shows. */
+const pstat=p=>p.status==='Done'?'<span class="badge done">Done</span>':(S.projects.filter(x=>x.status!=='Done'&&!x.archived).length>1?'<span class="badge">In Progress</span>':'');
 const starBtn=p=>`<button class="starb" data-a="star" data-id="${p.id}" aria-pressed="${!!p.starred}" aria-label="${p.starred?'Unstar':'Star'} ${esc(p.name)}">${I('star')}</button>`;
 function navHtml(){
   const cur=['feed','projects'].includes(V.tab)?V.tab:(V.tab==='project'?'projects':'more');

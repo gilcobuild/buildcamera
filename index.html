@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="a54df3ec22">
+<meta name="bc-ver" content="612c452a73">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-VA5PIAvWmI5smMNjpHZHNn6gEXdL8c6HnoksZS4+XIg=' 'sha256-nYwjNJ+QUO6yW5PIcw/5ecCPE7MvFMPWPkerdy4RNeM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-YC3t1HXvjwW/AupdOiEP8ovRcqFb+2TkBfS0Qiki64c=' 'sha256-nYwjNJ+QUO6yW5PIcw/5ecCPE7MvFMPWPkerdy4RNeM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -99,6 +99,7 @@ function niceErr(e){const m=String(e&&e.message||e||'');if(m===BREACHED)return m
   if(/Invalid login/i.test(m))return 'That email and password don\'t match. Try again or reset your password.';
   if(/not confirmed/i.test(m))return 'Confirm your email first. Open the email we sent and tap the link, then sign in.';
   if(/already registered/i.test(m))return 'That email already has an account. Sign in instead.';
+  if(/different from the old/i.test(m))return 'That is already your password. You\'re all set, or pick a different one.';
   if(/Password should/i.test(m))return 'Use a password with at least 8 characters.';
   if(/fetch|network/i.test(m))return 'No connection. Check your signal and try again.';
   return m||'Something went wrong. Try again.'}

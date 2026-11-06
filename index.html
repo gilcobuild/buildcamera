@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="5d723b2b75">
+<meta name="bc-ver" content="a54df3ec22">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-VA5PIAvWmI5smMNjpHZHNn6gEXdL8c6HnoksZS4+XIg=' 'sha256-st3GX4tVJF//qEXFLCDRylUzGeE48l8+Bm2ifPk8ZHw=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-VA5PIAvWmI5smMNjpHZHNn6gEXdL8c6HnoksZS4+XIg=' 'sha256-nYwjNJ+QUO6yW5PIcw/5ecCPE7MvFMPWPkerdy4RNeM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -1348,7 +1348,7 @@ function scrFeed(){
   const chip=(k,l)=>`<button class="chip" data-a="feedF" data-f="${k}" aria-pressed="${f===k}">${l}</button>`;
   const head=`<h1>Photos</h1><p class="sub">Every photo from every job, newest first.</p><div class="chips">${chip('all','All Jobs')}${chip('today','Today')}${chip('mine','My Photos')}${chip('punch','Punch Items')}${chip('portfolio','Portfolio')}</div>`;
   if(!S.projects.length&&!ps.length)return head+`<div class="empty">${I('folder')}<b>Start with your first Project</b><span>Add a job with its address so photos file themselves to it by GPS.</span><button class="btn pri" data-a="newProject">${I('plus')} New Project</button></div>`;
-  if(!ps.length)return head+`<div class="empty">${I('camera')}<b>No photos here yet</b><span>Tap the yellow camera button to take one. It gets the date, time, GPS and a proof code stamped on it.</span><button class="btn stamp" data-a="capture">${I('camera')} Take a Photo</button></div>`;
+  if(!ps.length)return head+`<div class="empty">${I('camera')}<b>No photos here yet</b><span>Tap the yellow camera button to take one. It gets the date, time and GPS stamped on it.</span><button class="btn stamp" data-a="capture">${I('camera')} Take a Photo</button></div>`;
   return head+grouped(ps,true);
 }
 function lastPhoto(pid){return allPhotos().filter(x=>x.projectId===pid&&x.kind==='photo').sort(byNew)[0]}
@@ -1959,7 +1959,7 @@ function photoSheet(){
   return sheet(pr?pr.name:'Photo',`<div class="pvimg" id="pvbox">${tb}${media}${nav}</div><div class="pvside">
   <div class="stack" style="gap:8px">${pr?`<div><b style="font-size:17px">${esc(pr.name)}</b>${pr.address?`<div class="note">${esc(pr.address)}</div>`:''}</div>`:''}
    <div class="pvwho">${avHtml(p.byName||'?','av',p.by)}<div style="flex:1;min-width:0"><b>${esc(p.byName||'Unknown')}</b><div class="note">${fmtFull(p.takenAt)}${list.length>1&&i>=0?` · ${i+1} of ${list.length}`:''}</div></div>${p.lat!=null?`<a class="btn sm" href="https://www.google.com/maps?q=${+p.lat},${+p.lng}" target="_blank" rel="noopener" aria-label="Show where it was taken">${I('map')}</a>`:''}</div>
-   ${p.code?`<div class="note mono"><span class="code">${esc(p.code)}</span></div>`:''}</div>
+   </div>
   ${p.pending?'<p class="callout">Waiting to upload. It\'s safe on this phone.</p>':''}
   ${p.quality?`<p class="callout">This photo ${p.quality.blurry?'might be blurry':'is very dark'}. It's saved either way; take another if you need a clearer one.</p>`:''}
   ${p.suggest&&!p.suggest.done&&(p.suggest.tags.length||p.suggest.trade||p.suggest.caption)?`<div class="callout info stack" style="gap:6px"><b>${I('sparkle')} AI suggests</b><span>${esc([p.suggest.tags.join(', '),p.suggest.trade&&'Trade: '+p.suggest.trade,p.suggest.caption&&'Note: '+p.suggest.caption].filter(Boolean).join(' · '))}</span><div class="row"><button class="btn sm pri" data-a="aiAccept" data-id="${p.id}">Accept</button><button class="btn sm" data-a="aiDismiss" data-id="${p.id}">Dismiss</button></div></div>`:''}

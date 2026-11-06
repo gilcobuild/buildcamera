@@ -10,7 +10,7 @@ jobs:
     env:
       HAS_KEYS: ${{ secrets.ASC_KEY_P8 != '' }}
       # not secret: they only say which key and team to use. The key itself is the ASC_KEY_P8 secret.
-      ASC_KEY_ID: TXSZ5GU2XN
+      ASC_KEY_ID: 6NFU72Q3J6
       ASC_ISSUER_ID: 1ead3c1f-2dd6-47f6-a553-12bf28b8775b
       APPLE_TEAM_ID: F7CSMJKW57
     steps:

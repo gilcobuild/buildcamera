@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="416061d63b">
+<meta name="bc-ver" content="bf477035cf">
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-ZcjgiZ1emfKIyi38Fm4w8suOohO6Qfmnxz1rUUU7kZk=' 'sha256-Ce8zlgz2FDtENYhNjBHpK7drii6bFrzeiV1EwTaICLY=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -406,6 +406,13 @@ h3.day{font-family:var(--f-mono);font-size:12px;font-weight:500;letter-spacing:.
 .pcard{display:grid;gap:8px;text-align:left;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .pcard .th{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px}
 .pcard .th img,.pcard .th span{aspect-ratio:1;object-fit:cover;border-radius:4px;background:var(--sunk);width:100%}
+html,body{overflow-x:clip;max-width:100%}
+fieldset{min-width:0;max-width:100%}
+.stack>*{min-width:0}
+input[type=date],input[type=time],input[type=datetime-local]{min-width:0;max-width:100%}
+.row>label.f{min-width:0}
+fieldset .li .t{min-width:0;flex:1}
+fieldset .li .t>*{white-space:normal;overflow-wrap:anywhere}
 .ptabs{display:flex;gap:4px;overflow-x:auto;margin:10px 0 12px;border-bottom:1px solid var(--line);scrollbar-width:none}
 .ptab{flex:none;border:0;background:transparent;padding:9px 11px;font-weight:600;font-size:14px;color:var(--muted);border-bottom:3px solid transparent;min-height:44px}
 .ptab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}

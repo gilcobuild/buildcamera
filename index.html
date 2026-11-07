@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="630f7a50bf">
+<meta name="bc-ver" content="1b504b47a9">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-UUmkTIQqJnXQ8EApxTvEwXUG4T0IZrfUry1TvMKS2bw=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-zPNn9Ltfmr/nDjwLLcTrFmw/OU1IVNbqU38JgoEzc7c=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -880,7 +880,7 @@ nav.side{display:none}
 .pdhd2 a.ad{color:var(--muted);font-size:14px}
 .psrch{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:4px 0 8px}
 .sbox{display:block;position:relative}
-.psrch{flex-wrap:nowrap}.psrch .seg{margin-left:auto}.psrch .btn{white-space:nowrap}
+.psrch{flex-wrap:nowrap}.albsel{display:flex;align-items:center;gap:8px;margin:0 0 10px;max-width:420px}.albsel svg{width:20px;height:20px;flex:none;color:var(--muted)}.albsel select{flex:1;min-width:0;font-weight:600}.psrch .seg{margin-left:auto}.psrch .btn{white-space:nowrap}
 @media (max-width:999px){.psup{display:none}.psrch .seg{display:none}.psrch{flex-wrap:wrap}}
 .sbox svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--muted);pointer-events:none}
 .sbox input{padding-left:36px}
@@ -1688,7 +1688,7 @@ function ptPhotos(p){
   const active=[...(q?[['q','',`“${f.q.trim()}”`]]:[]),...f.tags.map(t=>['tags',t,t]),...['zone','trade','by'].filter(k=>f[k]).map(k=>[k,f[k],f[k]])];
   const panel=V.pfOpen?`<div class="fpanel" id="pf-panel"><div class="fg"><span>Search</span><label class="sbox">${I('search')}<input type="search" id="phq" data-in="phq" value="${esc(f.q||'')}" placeholder="Notes, tags, zone, trade, who, date, or what's in the photo" autocomplete="off" aria-label="Search this job's photos"></label></div>${grp('tags','Tags',tags)}${grp('zone','Work Zone',zones)}${grp('trade','Trade Partner',trades)}${users.length>1?grp('by','Taken By',users):''}${!tags.length&&!zones.length&&!trades.length?'<p class="note" style="margin:0">No tags, zones or trades on this job\'s photos yet. Add them when you take a photo or open one.</p>':''}${nOn?`<div class="row"><button class="btn sm" data-a="pfClear">Clear All</button></div>`:''}</div>`:'';
   return `<div class="psrch"><button class="btn sm fbtn" data-a="pfToggle" aria-expanded="${!!V.pfOpen}" aria-controls="pf-panel">${I('search')} Filter${nOn?`<span class="fn">${nOn}</span>`:''}</button><div class="seg sm" role="group" aria-label="View"><button data-a="ptab" data-t="photos" aria-pressed="true" aria-label="Photo grid">${I('feed')}</button><button data-a="ptab" data-t="map" aria-pressed="false" aria-label="Photo map">${I('map')}</button></div><button class="btn sm" data-a="selMode" aria-pressed="${!!V.selMode}">${V.selMode?'Cancel Select':'Select'}</button><button class="btn sm" data-a="albNew" data-pid="${p.id}" aria-label="New album">${I('plus')} Album</button><button class="btn sm pri psup" data-a="pickLib" data-pid="${p.id}">${I('plus')} Upload</button></div>
-  ${albs.length?`<div class="albrow" role="group" aria-label="Albums"><button class="chip" data-a="albPick" data-v="" aria-pressed="${!f.album}">All Photos <span class="n">${allN}</span></button>${albs.map(a=>`<button class="chip" data-a="albPick" data-v="${esc(a)}" aria-pressed="${f.album===a}">${I('album')}${esc(a)} <span class="n">${allPhotos().filter(x=>x.projectId===p.id&&(x.albums||[]).includes(a)).length}</span></button>`).join('')}</div>`:''}
+  ${albs.length?`<label class="albsel">${I('album')}<select data-ch="albSel" aria-label="Album">${[['',`All Photos (${allN})`],...albs.map(a=>[a,`${a} (${allPhotos().filter(x=>x.projectId===p.id&&(x.albums||[]).includes(a)).length})`])].map(([v,l])=>`<option value="${esc(v)}" ${(f.album||'')===v?'selected':''}>${esc(l)}</option>`).join('')}</select></label>`:''}
   ${f.album?`<div class="row" style="margin:-2px 0 8px"><span class="note" style="flex:1">Album: <b>${esc(f.album)}</b></span><button class="btn sm" data-a="albPdf" data-pid="${p.id}" ${DL?'':'disabled'}>${I('report')} Album PDF</button><button class="btn sm" data-a="albSend" data-pid="${p.id}">${I('share')} Send in Text</button><button class="btn sm" data-a="shareAlb" data-pid="${p.id}">${I('link')} Share Link</button><button class="btn sm" data-a="albRen" data-pid="${p.id}">${I('pen')} Rename</button></div>`:''}
   ${panel}${!V.pfOpen&&active.length?`<div class="factive">${active.map(([k,v,l])=>`<button class="chip" data-a="pfPick" data-k="${k}" data-v="${esc(v)}" aria-label="Remove filter ${esc(l)}">${esc(l)} ✕</button>`).join('')}<button class="btn sm" data-a="pfClear">Clear</button></div>`:''}
   ${V.selMode?'<p class="callout info">Tap photos, or the box by a date to pick that whole day. Then Send in Text.</p>':''}
@@ -3206,6 +3206,7 @@ document.addEventListener('input',e=>{const el=e.target;if(el.closest&&el.closes
   if(el.matches('input[autocapitalize="words"]')&&el.type==='text'){const p=el.selectionStart,v=titleCase(el.value);if(v!==el.value){el.value=v;try{el.setSelectionRange(p,p)}catch(_){}}}
 });
 document.addEventListener('change',async e=>{const el=e.target,k=el.dataset.ch;if(!k)return;
+  if(k==='albSel'){ACT.albPick({dataset:{v:el.value}});return}
   if(k==='planPick'){if(M&&M.kind==='plan'){M.n=+el.value;M.drop=null;PLV.placed=false;renderModal()}return}
   if(k==='jiWho'){const n=$('#ji-new');if(n)n.hidden=!!el.value;const m=M_(el.value);const ph=el.form&&el.form.phone;if(ph&&m&&m.phone)ph.value=m.phone}
   else if(k==='jiRole'){const c=$('#ji-co');if(c)c.hidden=el.value!=='Trade Partner'}

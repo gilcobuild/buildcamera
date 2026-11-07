@@ -19,4 +19,7 @@ if [ -f "$ICON/AppIcon-512@2x.png" ]; then cp assets/AppIcon-1024.png "$ICON/App
 fi
 # iPhone only (no iPad version, so Apple doesn't require iPad screenshots)
 sed -i '' 's/TARGETED_DEVICE_FAMILY = "1,2";/TARGETED_DEVICE_FAMILY = 1;/g' ios/App/App.xcodeproj/project.pbxproj || true
+# iOS 15 or newer (Apple requires it from April 2027)
+sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 1[34].0;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g' ios/App/App.xcodeproj/project.pbxproj || true
+[ -f ios/App/Podfile ] && sed -i '' "s/platform :ios, '1[34].0'/platform :ios, '15.0'/" ios/App/Podfile || true
 echo "iOS project ready"

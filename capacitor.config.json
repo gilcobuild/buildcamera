@@ -5,11 +5,28 @@
   "server": {
     "url": "https://buildcamera.com",
     "cleartext": false,
-    "allowNavigation": ["buildcamera.com", "*.buildcamera.com", "*.supabase.co"]
+    "allowNavigation": [
+      "buildcamera.com",
+      "*.buildcamera.com",
+      "*.supabase.co"
+    ],
+    "errorPath": "index.html"
   },
   "ios": {
     "contentInset": "never",
     "backgroundColor": "#1b2024",
     "limitsNavigationsToAppBoundDomains": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 800,
+      "launchAutoHide": true,
+      "backgroundColor": "#1b2024",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "overlaysWebView": true
+    }
   }
 }

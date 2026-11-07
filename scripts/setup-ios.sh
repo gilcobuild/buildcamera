@@ -22,4 +22,7 @@ sed -i '' 's/TARGETED_DEVICE_FAMILY = "1,2";/TARGETED_DEVICE_FAMILY = 1;/g' ios/
 # iOS 15 or newer (Apple requires it from April 2027)
 sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 1[34].0;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g' ios/App/App.xcodeproj/project.pbxproj || true
 [ -f ios/App/Podfile ] && sed -i '' "s/platform :ios, '1[34].0'/platform :ios, '15.0'/" ios/App/Podfile || true
+# Build Camera splash screen (dark with the app icon) instead of Capacitor's default
+for f in ios/App/App/Assets.xcassets/Splash.imageset/*.png; do [ -f "$f" ] && cp assets/splash-2732.png "$f"; done
+put UIStatusBarStyle string UIStatusBarStyleLightContent
 echo "iOS project ready"

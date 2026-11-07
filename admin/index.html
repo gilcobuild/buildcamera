@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-MztPl12Hyonu3uH1jNys1x1GqEHrVncZO4gfUUfNFPc=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Admin · Build Camera</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--bg:#eef0ed;--panel:#fff;--sunk:#f6f7f5;--ink:#1b2024;--muted:#59626a;--line:#d7dbd5;--accent:#1d5c8f;--stamp:#f2b705;--good:#2e7d4f;--warn:#a86200;--bad:#b3261e;--bar2:#9fb7cc;
+ --f-display:"Archivo Narrow","Arial Narrow",Arial,sans-serif;--f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121619;--panel:#1b2125;--sunk:#161b1e;--ink:#e6eaed;--muted:#9ba6ae;--line:#2d363c;--accent:#6eaee6;--good:#6cc795;--warn:#e0a24a;--bad:#f08b83;--bar2:#3f5a72;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121619;--panel:#1b2125;--sunk:#161b1e;--ink:#e6eaed;--muted:#9ba6ae;--line:#2d363c;--accent:#6eaee6;--good:#6cc795;--warn:#e0a24a;--bad:#f08b83;--bar2:#3f5a72;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;font-variant-numeric:tabular-nums}
+[hidden]{display:none!important}
+header{background:#1b2024;color:#fff;padding:calc(env(safe-area-inset-top,0px) + 16px) 16px 18px}
+header .in{max-width:1068px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.co{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--stamp)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,6vw,36px);line-height:1.05;margin:2px 0 0}
+.meta{font-family:var(--f-mono);font-size:12px;color:#aab4bc}
+header button{font:600 14px var(--f-body);border:0;border-radius:8px;padding:9px 14px;background:var(--stamp);color:#1b2024;cursor:pointer}
+main{max-width:1100px;margin:0 auto;padding:16px 16px 60px}
+h2{font-family:var(--f-display);font-size:22px;margin:26px 0 10px}
+h2 small{font:500 12px var(--f-mono);color:var(--muted);margin-left:8px;letter-spacing:.04em}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.kpi .l{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.kpi .v{font-family:var(--f-display);font-weight:700;font-size:34px;line-height:1.1;margin-top:4px}
+.kpi .s{font-size:13px;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;overflow:hidden}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--muted);margin-bottom:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+svg.chart{width:100%;height:auto;display:block}
+svg text{fill:var(--muted);font:11px var(--f-mono)}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+th{font:500 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+@media (max-width:640px){table{min-width:0}thead{display:none}table,tbody,tr,td{display:block}
+ tr{padding:10px 0;border-bottom:1px solid var(--line)}tr:last-child{border-bottom:0}
+ td{border:0;padding:3px 2px;display:flex;justify-content:space-between;gap:12px;text-align:right}
+ td::before{content:attr(data-l);font:500 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding-top:2px}
+ td:first-child{display:block;text-align:left;padding-bottom:6px}td:first-child::before{content:none}
+ .card.tw{padding:4px 14px}}
+td.n{text-align:right;font-family:var(--f-mono)}th.n{text-align:right}
+td .sub{display:block;font-size:12px;color:var(--muted)}
+.pill{display:inline-block;font:500 12px var(--f-mono);padding:2px 8px;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
+.pill.good{color:var(--good);border-color:currentColor}.pill.warn{color:var(--warn);border-color:currentColor}.pill.bad{color:var(--bad);border-color:currentColor}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:var(--line)}
+.dot.on{background:var(--good)}.dot.wk{background:var(--stamp)}
+.alerts{display:grid;gap:8px}
+.alert{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:10px;padding:10px 12px;font-size:14px}
+.alert.bad{border-left-color:var(--bad)}
+.empty{color:var(--muted);font-size:14px}
+.gate{max-width:420px;margin:60px auto;text-align:center}
+.gate a{color:var(--accent);font-weight:600}
+</style>
+</head>
+<body>
+<header><div class="in"><div><div class="co">Build Camera</div><h1>Admin</h1><div class="meta" id="upd">Loading…</div></div><button id="ref" hidden>Refresh</button></div></header>
+<main>
+<div id="gate" class="gate" hidden></div>
+<div id="dash" hidden>
+  <div class="kpis" id="kpis"></div>
+  <div id="alertsWrap"><h2>Needs Attention</h2><div class="alerts" id="alerts"></div></div>
+  <h2>Last 30 Days</h2>
+  <div class="card"><div class="legend"><span><i style="background:var(--stamp)"></i>Photos</span><span><i style="background:var(--accent)"></i>New people</span></div><div id="chart"></div></div>
+  <h2>Companies <small id="tc"></small></h2>
+  <div class="card tw"><table><thead><tr><th>Company</th><th>Plan</th><th class="n">People</th><th class="n">Jobs</th><th class="n">Photos</th><th class="n">This week</th><th class="n">Storage</th><th>Last active</th></tr></thead><tbody id="teams"></tbody></table></div>
+  <h2>People <small id="uc"></small></h2>
+  <div class="card tw"><table><thead><tr><th>Name</th><th>Company</th><th>Role</th><th>Joined</th><th>Last signed in</th></tr></thead><tbody id="users"></tbody></table></div>
+</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+const SB_URL='https://zrdgebzujpsatzxcvryi.supabase.co',SB_KEY='sb_publishable_VZXm4AVVTzMUzg_HFs_xug_F4ixJM5R';
+const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const DAY=864e5,now=()=>Date.now();
+const ago=t=>{if(!t)return'Never';const d=(now()-new Date(t))/1000;if(d<90)return'Just now';if(d<3600)return Math.round(d/60)+' min ago';if(d<86400)return Math.round(d/3600)+' hr ago';const n=Math.round(d/86400);return n===1?'Yesterday':n+' days ago'};
+const dt=t=>t?new Date(t).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';
+const size=b=>b<1e6?Math.round(b/1e3)+' KB':b<1e9?(b/1e6).toFixed(b<1e7?1:0)+' MB':(b/1e9).toFixed(1)+' GB';
+const dot=t=>{const a=t?now()-new Date(t):1e15;return'<span class="dot'+(a<DAY?' on':a<7*DAY?' wk':'')+'"></span>'};
+const PLAN={free:'Free',solo:'Solo',crew:'Crew',company:'Company',demo:'Demo'};
+function planPill(t){const p=PLAN[t.plan]||t.plan,s=t.status;
+  if(t.plan==='demo')return'<span class="pill">Demo</span>';
+  if(s==='trialing')return'<span class="pill warn">'+esc(p)+' trial</span><span class="sub">ends '+dt(t.period_end)+'</span>';
+  if(s==='past_due')return'<span class="pill bad">'+esc(p)+' · payment failed</span>';
+  if(s==='active')return'<span class="pill good">'+esc(p)+' · paying</span>';
+  return'<span class="pill">'+esc(p)+'</span>'}
+function chart(days){
+  days=days.slice(-30);const W=Math.max(340,Math.min(1000,$('chart').clientWidth||1000)),H=W<600?150:200,P=26,n=days.length,bw=(W-P)/n;
+  const mp=Math.max(4,...days.map(d=>d.photos)),ms=Math.max(2,...days.map(d=>d.signups));
+  let s='<svg class="chart" viewBox="0 0 '+W+' '+(H+24)+'" role="img" aria-label="Photos and new people per day, last 30 days">';
+  for(let g=0;g<=2;g++){const y=H-(H-10)*g/2;s+='<line x1="'+P+'" x2="'+W+'" y1="'+y+'" y2="'+y+'" stroke="currentColor" stroke-opacity=".12"/><text x="0" y="'+(y+4)+'">'+Math.round(mp*g/2)+'</text>'}
+  days.forEach((d,i)=>{const x=P+i*bw,h=(H-10)*d.photos/mp,hs=(H-10)*.45*d.signups/ms;
+    s+='<rect x="'+(x+1)+'" y="'+(H-h)+'" width="'+Math.max(1,bw-2)+'" height="'+h+'" rx="1.5" fill="var(--stamp)"><title>'+esc(d.d)+': '+d.photos+' photos, '+d.signups+' new</title></rect>';
+    if(d.signups)s+='<rect x="'+(x+bw*.3)+'" y="'+(H-hs)+'" width="'+Math.max(1,bw*.4)+'" height="'+hs+'" rx="1.5" fill="var(--accent)"><title>'+esc(d.d)+': '+d.signups+' new people</title></rect>';
+    if(i%(W<600?10:5)===0||i===n-1)s+='<text x="'+(i===n-1?W:x+bw/2)+'" y="'+(H+18)+'" text-anchor="'+(i===n-1?'end':'middle')+'">'+new Date(d.d+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})+'</text>'});
+  return s+'</svg>'}
+let LAST=null;
+function render(D){
+  LAST=D;$('gate').hidden=true;$('dash').hidden=false;
+  const real=D.teams.filter(t=>t.plan!=='demo'),users=D.users,u7=users.filter(u=>u.last&&now()-new Date(u.last)<7*DAY).length,
+    u1=users.filter(u=>u.last&&now()-new Date(u.last)<DAY).length,new7=users.filter(u=>now()-new Date(u.created)<7*DAY).length,
+    ph7=D.teams.reduce((a,t)=>a+t.photos7,0),ph=D.teams.reduce((a,t)=>a+t.photos,0),
+    paying=real.filter(t=>t.status==='active').length,trial=real.filter(t=>t.status==='trialing').length;
+  const K=[['Companies',real.length,D.teams.length-real.length?'plus '+(D.teams.length-real.length)+' demo':''],['People',users.length,new7+' new this week'],
+    ['Active this week',u7,u1+' today'],['Photos this week',ph7,ph+' all time'],['Paying',paying,trial+' on trial']];
+  $('kpis').innerHTML=K.map(k=>'<div class="kpi"><div class="l">'+k[0]+'</div><div class="v">'+k[1]+'</div><div class="s">'+esc(k[2])+'</div></div>').join('');
+  const A=[];
+  real.forEach(t=>{
+    if(t.status==='past_due')A.push(['bad','<b>'+esc(t.name)+'</b>: payment failed. Stripe will retry; reach out to '+esc(t.owner||'the owner')+'.']);
+    if(t.status==='trialing'&&t.period_end&&new Date(t.period_end)-now()<5*DAY)A.push(['','<b>'+esc(t.name)+'</b>: trial ends '+dt(t.period_end)+'.']);
+    if(t.last_sign_in&&now()-new Date(t.last_sign_in)>14*DAY)A.push(['','<b>'+esc(t.name)+'</b>: nobody has signed in for '+ago(t.last_sign_in).replace(' ago','')+'.']);
+    if(t.storage_gb&&t.bytes>t.storage_gb*1e9*.8)A.push(['','<b>'+esc(t.name)+'</b>: using '+size(t.bytes)+' of '+t.storage_gb+' GB.'])});
+  $('alerts').innerHTML=A.length?A.map(a=>'<div class="alert '+a[0]+'">'+a[1]+'</div>').join(''):'<div class="empty">Nothing needs attention.</div>';
+  $('chart').innerHTML=chart(D.daily);
+  $('tc').textContent=D.teams.length;$('uc').textContent=users.length;
+  $('teams').innerHTML=D.teams.map(t=>'<tr><td><b>'+esc(t.name)+'</b><span class="sub">'+esc(t.owner||'')+' · since '+dt(t.created)+'</span></td><td data-l="Plan"><span>'+planPill(t)+'</span></td><td class="n" data-l="People">'+t.users+'</td><td class="n" data-l="Jobs">'+t.projects+'</td><td class="n" data-l="Photos">'+t.photos+'</td><td class="n" data-l="This week">'+t.photos7+'</td><td class="n" data-l="Storage">'+size(t.bytes)+'</td><td data-l="Last active"><span>'+dot(t.last_sign_in)+ago(t.last_sign_in)+'</span></td></tr>').join('');
+  $('users').innerHTML=users.map(u=>'<tr><td><b>'+esc(u.name||u.email.split('@')[0])+'</b><span class="sub">'+esc(u.email)+'</span></td><td data-l="Company">'+esc(u.team)+'</td><td data-l="Role">'+esc(u.role)+'</td><td data-l="Joined">'+dt(u.created)+'</td><td data-l="Last signed in"><span>'+dot(u.last)+ago(u.last)+'</span></td></tr>').join('');
+  $('upd').textContent='Updated '+new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  $('gate').hidden=true;$('dash').hidden=false;$('ref').hidden=false}
+function gate(h){$('gate').innerHTML=h;$('gate').hidden=false;$('dash').hidden=true;$('upd').textContent=''}
+async function load(){
+  $('upd').textContent='Loading…';
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session)return gate('<p>Sign in to Build Camera first, then come back to this page.</p><p><a href="/">Open Build Camera</a></p>');
+  try{const r=await fetch(SB_URL+'/functions/v1/bc-admin',{method:'POST',headers:{Authorization:'Bearer '+session.access_token,apikey:SB_KEY,'Content-Type':'application/json'},body:'{}'});
+    if(r.status===403)return gate('<p>This page is only for the Build Camera owner.</p><p><a href="/">Back to Build Camera</a></p>');
+    if(!r.ok)throw 0;render(await r.json())}
+  catch(e){gate('<p>Couldn\'t load the numbers. Check your connection and try again.</p>')}}
+$('ref').onclick=load;
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if(LAST)$('chart').innerHTML=chart(LAST.daily)},200)});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
+load();
+})();
+</script>
+</body>
+</html>

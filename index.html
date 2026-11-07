@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="612c452a73">
+<meta name="bc-ver" content="e9029a0081">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-YC3t1HXvjwW/AupdOiEP8ovRcqFb+2TkBfS0Qiki64c=' 'sha256-nYwjNJ+QUO6yW5PIcw/5ecCPE7MvFMPWPkerdy4RNeM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-ZcjgiZ1emfKIyi38Fm4w8suOohO6Qfmnxz1rUUU7kZk=' 'sha256-nYwjNJ+QUO6yW5PIcw/5ecCPE7MvFMPWPkerdy4RNeM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -294,6 +294,24 @@ function showSetPw(fromSettings){const g=gate(`<h2>${fromSettings?'Change Passwo
 BC.changePassword=()=>showSetPw(true);
 sb.auth.onAuthStateChange((ev)=>{if(ev==='PASSWORD_RECOVERY'){RECOV=true;showSetPw(false)}});
 document.addEventListener('DOMContentLoaded',async()=>{const{data:{session}}=await sb.auth.getSession();if(RECOV&&session){showSetPw(false);return}if(session)afterAuth();else showSignIn()});
+
+/* error reports (Sentry): errors only, no screen recording, no names, emails, photos or link codes */
+const SENTRY_DSN='https://2bb092791b3c510d1179ba45afd4936b@o4512391235895296.ingest.us.sentry.io/4512391248478208';
+const scrub=v=>String(v||'').replace(/([?&#](?:invite|token|tok|code|access_token|refresh_token|type|key)=)[^&#\s]*/gi,'$1[x]').replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g,'[email]').replace(/eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g,'[jwt]');
+function startSentry(){if(!SENTRY_DSN||!/^https:\/\/buildcamera\.com$/.test(location.origin))return;
+  const sc=document.createElement('script');sc.src='https://browser.sentry-cdn.com/8.33.1/bundle.min.js';sc.crossOrigin='anonymous';
+  sc.onload=()=>{try{const S=window.Sentry;S.init({dsn:SENTRY_DSN,release:(document.querySelector('meta[name="bc-ver"]')||{}).content,
+    environment:(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())?'iphone':'web',
+    sendDefaultPii:false,tracesSampleRate:0,autoSessionTracking:false,maxBreadcrumbs:30,
+    integrations:i=>i.filter(x=>!/Replay|BrowserTracing/.test(x.name)),
+    ignoreErrors:['ResizeObserver loop','Load failed','Failed to fetch','NetworkError','The network connection was lost','AbortError','NotAllowedError'],
+    beforeBreadcrumb(b){if(b.category==='ui.input'||b.category==='console')return null;if(b.data&&b.data.url)b.data.url=scrub(b.data.url);if(b.data&&b.data.to)b.data.to=scrub(b.data.to);if(b.data&&b.data.from)b.data.from=scrub(b.data.from);if(b.message)b.message=scrub(b.message);return b},
+    beforeSend(e){delete e.user;if(e.request){e.request.url=scrub(e.request.url);delete e.request.cookies;delete e.request.headers;delete e.request.query_string}
+      (e.exception&&e.exception.values||[]).forEach(v=>{v.value=scrub(v.value)});if(e.message)e.message=scrub(e.message);return e}});
+    S.setTag('role',ROLE||'none');
+    if(/[?&]sentrytest=1/.test(location.search))setTimeout(()=>{throw new Error('Build Camera test error (safe to ignore)')},500)}catch(_){}};
+  document.head.appendChild(sc)}
+addEventListener('load',()=>setTimeout(startSentry,3000));
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 })();
 

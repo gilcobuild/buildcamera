@@ -533,6 +533,10 @@ a{color:var(--accent)}
 .gpsok{color:var(--good)} .gpsbad{color:var(--bad)}
 .mapbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .mapbox svg{display:block;width:100%;height:auto}
+.mapbox{position:relative}.mapbox svg[data-pz]{touch-action:pan-y;user-select:none;-webkit-user-select:none}.mapbox svg[data-pz].zm{touch-action:none;cursor:grab}
+.pzc{position:absolute;top:8px;right:8px;display:flex;gap:6px}
+.pzc button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:600 20px/1 var(--f-body,system-ui);display:grid;place-items:center;box-shadow:0 1px 3px rgba(0,0,0,.15);padding:0}
+.pzc button[data-pz="fit"]{font-size:11px;font-weight:600}
 .stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
 .stat div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
 .stat b{display:block;font-family:var(--f-display);font-size:24px;font-variant-numeric:tabular-nums}
@@ -1589,14 +1593,14 @@ function projMap(ps){
   const g=ps.filter(p=>p.lat!=null);
   if(!g.length)return `<div class="empty">${I('map')}<b>No Projects have GPS yet</b><span>Look up each job's address in Job Info and they'll show here.</span></div>`;
   let a=Math.min(...g.map(p=>p.lat)),b=Math.max(...g.map(p=>p.lat)),c=Math.min(...g.map(p=>p.lng)),d=Math.max(...g.map(p=>p.lng));
-  const pv=Math.max((b-a)*.18,.01),ph=Math.max((d-c)*.18,.01);a-=pv;b+=pv;c-=ph;d+=ph;
+  const pv=Math.max((b-a)*.18,.01),ph=Math.max((d-c)*.18,.01);a-=pv;b+=pv;c-=ph;d+=ph;b+=(b-a)*.2;
   const W=600,H=440,X=x=>((x-c)/(d-c))*W,Y=y=>H-((y-a)/(b-a))*H,mi=Math.round(km(a,c,a,d)*0.621);
-  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Projects by location"><rect width="${W}" height="${H}" fill="var(--sunk)"/>`;
-  for(let i=1;i<6;i++)svg+=`<line x1="${i*W/6}" y1="0" x2="${i*W/6}" y2="${H}" stroke="var(--line)"/><line x1="0" y1="${i*H/6}" x2="${W}" y2="${i*H/6}" stroke="var(--line)"/>`;
-  g.forEach(p=>{const x=X(p.lng),y=Y(p.lat);svg+=`<g transform="translate(${x},${y})" data-a="openProject" data-id="${p.id}" style="cursor:pointer"><circle r="18" fill="transparent"/><path d="M0 0c-7-9-11-14-11-19a11 11 0 0 1 22 0c0 5-4 10-11 19z" fill="${p.status==='Done'?'var(--muted)':'var(--accent)'}" stroke="var(--panel)" stroke-width="2"/><circle cy="-19" r="4" fill="var(--panel)"/><text y="16" text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink)" font-family="IBM Plex Sans,Arial">${esc(p.name).slice(0,24)}</text></g>`});
-  svg+=`<text x="10" y="${H-10}" font-size="12" fill="var(--muted)" font-family="IBM Plex Mono,monospace">Width ≈ ${mi} mi · North up</text></svg>`;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" data-pz="${W} ${H}" role="img" aria-label="Projects by location"><rect width="${W}" height="${H}" fill="var(--sunk)"/>`;
+  for(let i=1;i<6;i++)svg+=`<line x1="${i*W/6}" y1="0" x2="${i*W/6}" y2="${H}" stroke="var(--line)" vector-effect="non-scaling-stroke"/><line x1="0" y1="${i*H/6}" x2="${W}" y2="${i*H/6}" stroke="var(--line)" vector-effect="non-scaling-stroke"/>`;
+  g.forEach(p=>{const x=X(p.lng),y=Y(p.lat);svg+=`<g class="pzp" data-x="${x}" data-y="${y}" transform="translate(${x},${y})" data-a="openProject" data-id="${p.id}" style="cursor:pointer"><circle r="18" fill="transparent"/><path d="M0 0c-7-9-11-14-11-19a11 11 0 0 1 22 0c0 5-4 10-11 19z" fill="${p.status==='Done'?'var(--muted)':'var(--accent)'}" stroke="var(--panel)" stroke-width="2"/><circle cy="-19" r="4" fill="var(--panel)"/><text y="16" text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink)" font-family="IBM Plex Sans,Arial">${esc(p.name).slice(0,24)}</text></g>`});
+  svg+=`<text class="pzs" data-w="${km(a,c,a,d)*0.621}" data-u="mi" x="10" y="${H-10}" font-size="12" fill="var(--muted)" font-family="IBM Plex Mono,monospace">Width ≈ ${mi} mi · North up</text></svg>`;
   const no=ps.length-g.length;
-  return `<div class="mapbox">${svg}</div><p class="note" style="margin-top:8px">Tap a pin to open the job.${no?` ${no} job${no>1?'s have':' has'} no GPS yet.`:''}</p>`;
+  return `<div class="mapbox">${svg}${pzCtl()}</div><p class="note" style="margin-top:8px">Pinch or use + and − to zoom. Tap a pin to open the job.${no?` ${no} job${no>1?'s have':' has'} no GPS yet.`:''}</p>`;
 }
 function pcard(p){
   const ph=allPhotos().filter(x=>x.projectId===p.id&&x.kind==='photo').sort(byNew),n=ph.length,cover=ph[0];
@@ -1650,15 +1654,15 @@ function ptMap(p){
   const gm=p.lat!=null?`<a class="btn sm" href="https://www.google.com/maps?q=${+p.lat},${+p.lng}" target="_blank" rel="noopener">${I('pin')} Open Job in Google Maps</a>`:'';
   if(pts.length<1)return `<div class="empty">${I('map')}<b>Nothing to map yet</b><span>Set the job's GPS spot in Job Info. Photos with their own GPS show here as pins.</span><button class="btn" data-a="ptab" data-t="info">Go to Job Info</button></div>`;
   const la=pts.map(q=>q[0]),ln=pts.map(q=>q[1]);let a=Math.min(...la),b=Math.max(...la),c=Math.min(...ln),d=Math.max(...ln);
-  const padv=Math.max((b-a)*.15,0.0004),padh=Math.max((d-c)*.15,0.0004);a-=padv;b+=padv;c-=padh;d+=padh;
+  const padv=Math.max((b-a)*.15,0.0004),padh=Math.max((d-c)*.15,0.0004);a-=padv;b+=padv;c-=padh;d+=padh;b+=(b-a)*.2;
   const W=600,H=420,X=x=>((x-c)/(d-c))*W,Y=y=>H-((y-a)/(b-a))*H;
   const meters=Math.round(km(a,c,a,d)*1000);
-  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Photo locations on site"><rect width="${W}" height="${H}" fill="var(--sunk)"/>`;
-  for(let i=1;i<6;i++)svg+=`<line x1="${i*W/6}" y1="0" x2="${i*W/6}" y2="${H}" stroke="var(--line)"/><line x1="0" y1="${i*H/6}" x2="${W}" y2="${i*H/6}" stroke="var(--line)"/>`;
-  if(p.lat!=null)svg+=`<g transform="translate(${X(p.lng)},${Y(p.lat)})"><rect x="-9" y="-9" width="18" height="18" fill="var(--stamp)" stroke="var(--ink)" stroke-width="2" transform="rotate(45)"/><text y="28" text-anchor="middle" font-size="13" fill="var(--ink)" font-family="IBM Plex Sans,Arial">Job</text></g>`;
-  ps.forEach(x=>{svg+=`<g transform="translate(${X(x.lng)},${Y(x.lat)})" data-a="openPhoto" data-id="${x.id}" style="cursor:pointer"><circle r="14" fill="transparent"/><circle r="8" fill="var(--accent)" stroke="var(--panel)" stroke-width="2.5"/></g>`});
-  svg+=`<text x="10" y="${H-10}" font-size="12" fill="var(--muted)" font-family="IBM Plex Mono,monospace">Width ≈ ${meters} m · North up</text></svg>`;
-  return `<div class="mapbox">${svg}</div><div class="row" style="margin-top:10px">${gm}<span class="note">${ps.length} photo${ps.length===1?'':'s'} with their own GPS. Tap a pin to open it.</span></div>`;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" data-pz="${W} ${H}" role="img" aria-label="Photo locations on site"><rect width="${W}" height="${H}" fill="var(--sunk)"/>`;
+  for(let i=1;i<6;i++)svg+=`<line x1="${i*W/6}" y1="0" x2="${i*W/6}" y2="${H}" stroke="var(--line)" vector-effect="non-scaling-stroke"/><line x1="0" y1="${i*H/6}" x2="${W}" y2="${i*H/6}" stroke="var(--line)" vector-effect="non-scaling-stroke"/>`;
+  if(p.lat!=null)svg+=`<g class="pzp" data-x="${X(p.lng)}" data-y="${Y(p.lat)}" transform="translate(${X(p.lng)},${Y(p.lat)})"><rect x="-9" y="-9" width="18" height="18" fill="var(--stamp)" stroke="var(--ink)" stroke-width="2" transform="rotate(45)"/><text y="28" text-anchor="middle" font-size="13" fill="var(--ink)" font-family="IBM Plex Sans,Arial">Job</text></g>`;
+  ps.forEach(x=>{svg+=`<g class="pzp" data-x="${X(x.lng)}" data-y="${Y(x.lat)}" transform="translate(${X(x.lng)},${Y(x.lat)})" data-a="openPhoto" data-id="${x.id}" style="cursor:pointer"><circle r="14" fill="transparent"/><circle r="8" fill="var(--accent)" stroke="var(--panel)" stroke-width="2.5"/></g>`});
+  svg+=`<text class="pzs" data-w="${km(a,c,a,d)*1000}" data-u="m" x="10" y="${H-10}" font-size="12" fill="var(--muted)" font-family="IBM Plex Mono,monospace">Width ≈ ${meters} m · North up</text></svg>`;
+  return `<div class="mapbox">${svg}${pzCtl()}</div><div class="row" style="margin-top:10px">${gm}<span class="note">${ps.length} photo${ps.length===1?'':'s'} with their own GPS. Pinch or use + and − to zoom. Tap a pin to open it.</span></div>`;
 }
 function ptDocs(p){
   const ds=allPhotos().filter(x=>x.projectId===p.id&&x.kind==='doc').sort(byNew);
@@ -3102,6 +3106,27 @@ const ACT={
   dailyPdf:el=>savePdf(P(el.dataset.pid),{tpl:'daily',from:V.logDate,to:V.logDate,per:'4',inc:'notes'})
 };
 Object.assign(ACT,PLAN_ACT);
+/* map zoom: pinch, wheel, drag to move, + / − / Fit buttons. Pins keep their size. */
+function pzCtl(){return `<div class="pzc"><button type="button" data-pz="in" aria-label="Zoom in">+</button><button type="button" data-pz="out" aria-label="Zoom out">−</button><button type="button" data-pz="fit" aria-label="Show whole map">Fit</button></div>`}
+const PZ={st:new WeakMap(),moved:false};
+function pzS(svg){let o=PZ.st.get(svg);if(!o){const [W,H]=svg.dataset.pz.split(' ').map(Number);o={W,H,k:1,x:0,y:0,pts:new Map()};PZ.st.set(svg,o)}return o}
+function pzApply(svg){const o=pzS(svg);o.k=Math.min(40,Math.max(1,o.k));const w=o.W/o.k,h=o.H/o.k;o.x=Math.min(o.W-w,Math.max(0,o.x));o.y=Math.min(o.H-h,Math.max(0,o.y));
+ svg.setAttribute('viewBox',`${o.x} ${o.y} ${w} ${h}`);svg.classList.toggle('zm',o.k>1.01);
+ svg.querySelectorAll('.pzp').forEach(g=>g.setAttribute('transform',`translate(${g.dataset.x},${g.dataset.y}) scale(${1/o.k})`));
+ const t=svg.querySelector('.pzs');if(t){t.setAttribute('x',o.x+10/o.k);t.setAttribute('y',o.y+h-10/o.k);t.setAttribute('font-size',12/o.k);const v=+t.dataset.w/o.k;t.textContent=`Width ≈ ${v>=10?Math.round(v):v>=1?v.toFixed(1):v.toFixed(2)} ${t.dataset.u} · North up`}}
+function pzAt(svg,f,cx,cy){const o=pzS(svg),r=svg.getBoundingClientRect();if(!r.width)return;const fx=(cx-r.left)/r.width,fy=(cy-r.top)/r.height;const px=o.x+fx*o.W/o.k,py=o.y+fy*o.H/o.k;o.k*=f;o.k=Math.min(40,Math.max(1,o.k));o.x=px-fx*o.W/o.k;o.y=py-fy*o.H/o.k;pzApply(svg)}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.pzc button');if(!b)return;e.preventDefault();e.stopPropagation();const svg=b.closest('.mapbox').querySelector('svg[data-pz]');if(!svg)return;const r=svg.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+ if(b.dataset.pz==='in')pzAt(svg,2,cx,cy);else if(b.dataset.pz==='out')pzAt(svg,.5,cx,cy);else{const o=pzS(svg);o.k=1;o.x=0;o.y=0;pzApply(svg)}},true);
+document.addEventListener('click',e=>{if(PZ.moved&&e.target.closest&&e.target.closest('svg[data-pz]')){PZ.moved=false;e.stopPropagation();e.preventDefault()}},true);
+document.addEventListener('wheel',e=>{const svg=e.target.closest&&e.target.closest('svg[data-pz]');if(!svg||!(e.ctrlKey||e.metaKey||pzS(svg).k>1.01))return;e.preventDefault();pzAt(svg,Math.exp(-e.deltaY*(e.ctrlKey?.01:.002)),e.clientX,e.clientY)},{passive:false});
+['gesturestart','gesturechange'].forEach(n=>document.addEventListener(n,e=>{if(e.target.closest&&e.target.closest('svg[data-pz]'))e.preventDefault()},{passive:false}));
+document.addEventListener('pointerdown',e=>{const svg=e.target.closest&&e.target.closest('svg[data-pz]');if(!svg)return;const o=pzS(svg);if(e.isPrimary)o.pts.clear();o.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});o.d0=null;o.sx=e.clientX;o.sy=e.clientY;PZ.moved=false;PZ.cur=svg});
+document.addEventListener('pointermove',e=>{const svg=PZ.cur;if(!svg)return;const o=pzS(svg);const pr=o.pts.get(e.pointerId);if(!pr)return;const nx=e.clientX,ny=e.clientY;
+ if(o.pts.size>=2){o.pts.set(e.pointerId,{x:nx,y:ny});const [p1,p2]=[...o.pts.values()];const d=Math.hypot(p1.x-p2.x,p1.y-p2.y),mx=(p1.x+p2.x)/2,my=(p1.y+p2.y)/2;
+  if(o.d0){pzAt(svg,d/o.d0,mx,my);const r=svg.getBoundingClientRect();o.x-=(mx-o.mx)/r.width*o.W/o.k;o.y-=(my-o.my)/r.height*o.H/o.k;pzApply(svg)}o.d0=d;o.mx=mx;o.my=my;PZ.moved=true;e.preventDefault();return}
+ if(o.k>1.01){const r=svg.getBoundingClientRect();o.x-=(nx-pr.x)/r.width*o.W/o.k;o.y-=(ny-pr.y)/r.height*o.H/o.k;pzApply(svg);e.preventDefault()}
+ if(Math.hypot(nx-o.sx,ny-o.sy)>6)PZ.moved=true;o.pts.set(e.pointerId,{x:nx,y:ny})},{passive:false});
+['pointerup','pointercancel'].forEach(n=>document.addEventListener(n,e=>{const svg=PZ.cur;if(!svg)return;const o=pzS(svg);o.pts.delete(e.pointerId);o.d0=null;if(!o.pts.size)PZ.cur=null}));
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;const f=ACT[el.dataset.a];if(f){e.preventDefault();f(el,e)}});
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 document.addEventListener('keydown',e=>{const t=e.target;

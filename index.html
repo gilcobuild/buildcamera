@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="e9029a0081">
+<meta name="bc-ver" content="416061d63b">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-ZcjgiZ1emfKIyi38Fm4w8suOohO6Qfmnxz1rUUU7kZk=' 'sha256-nYwjNJ+QUO6yW5PIcw/5ecCPE7MvFMPWPkerdy4RNeM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-ZcjgiZ1emfKIyi38Fm4w8suOohO6Qfmnxz1rUUU7kZk=' 'sha256-Ce8zlgz2FDtENYhNjBHpK7drii6bFrzeiV1EwTaICLY=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -1161,6 +1161,7 @@ async function makeCode(seed){
 function nearestProject(la,ln){let best=null;S.projects.forEach(p=>{if(p.lat==null||p.status==='Done')return;const d=km(la,ln,p.lat,p.lng);if(!best||d<best.d)best={p,d}});return best}
 /* small preview for photo grids, so full-size photos only load when opened */
 const fmtB=b=>b>=1e9?(b/1e9).toFixed(b>=1e10?0:1)+' GB':Math.max(1,Math.round(b/1e6))+' MB';
+const haptic=k=>{try{const H=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.Haptics;if(H){if(k==='shot')H.impact({style:'MEDIUM'});else H.notification({type:k==='ok'?'SUCCESS':'WARNING'});return}navigator.vibrate&&navigator.vibrate(k==='shot'?15:30)}catch(e){}};
 const NATIVE_APP=(()=>{try{return !!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())||/BuildCameraApp/.test(navigator.userAgent)}catch(e){return false}})();
 const PLANS_UI=[['solo','Solo',29,'1 user · 25 GB'],['crew','Crew',79,'Up to 5 users · 100 GB'],['company','Company',149,'Up to 15 users · 500 GB']];
 async function storeStatus(){const el=$('#st-store');if(!el||!window.BC||!BC.storage)return;
@@ -1302,7 +1303,23 @@ function vis(list,kind){
 function visProjects(){const m=V.viewAs&&M_(V.viewAs);let ps=[...S.projects];if(m){const ids=new Set([...vis(allPhotos()).map(p=>p.projectId),...vis(S.tasks,'tasks').map(t=>t.projectId),...(m.projects||[])]);ps=ps.filter(p=>ids.has(p.id))}return ps}
 
 /* ---------- screens ---------- */
-function screen(){
+/* plan reminders for Owner/Office: trial ending soon, failed payment (website only) */
+let PLANBAR='';
+function planBarHtml(){return PLANBAR&&['home','dash','projects','feed'].includes(V.tab)?PLANBAR:''}
+async function planCheck(){
+  if(NATIVE_APP||!window.BC||!BC.storage||!(BC.role&&BC.role())||!canInvite())return;
+  let r;try{r=await BC.storage()}catch(e){return}if(!r)return;
+  const end=r.periodEnd?new Date(r.periodEnd):null,days=end?Math.ceil((end-Date.now())/864e5):99,
+    pn=(PLANS_UI.find(x=>x[0]===r.plan)||[0,'your'])[1],day=new Date().toISOString().slice(0,10);
+  let kind='',msg='',btn='';
+  if(r.status==='past_due'){kind='due';msg='<b>Your last payment didn\'t go through.</b> Update your card to keep your crew\'s access.';btn='<button class="btn sm pri" data-a="billPortal">Update Card</button>'}
+  else if(r.status==='trialing'&&end&&days<=3){kind='trial';msg=`<b>Your free ${esc(pn)} trial ends ${end.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'})}.</b> Your plan starts then and the card on file is charged.`;btn='<button class="btn sm" data-a="planOpen">View Plan</button>'}
+  const key='bc-planbar-'+kind+'-'+day;let hid=false;try{hid=!!localStorage.getItem(key)}catch(e){}
+  const html=kind&&!hid?`<div class="callout planbar row" style="align-items:center;gap:10px;margin:0 0 14px"><span style="flex:1">${msg}</span>${btn}<button class="ib" data-a="planHide" data-k="${key}" aria-label="Hide for today">${I('x')}</button></div>`:'';
+  if(html!==PLANBAR){PLANBAR=html;render()}}
+setTimeout(planCheck,4000);setTimeout(planCheck,20000);setInterval(()=>{if(!document.hidden)planCheck()},30*60*1000);
+function screen(){return planBarHtml()+screen0()}
+function screen0(){
   switch(V.tab){
     case 'dash':return scrDash(); case 'uploads':return scrUploads();
     case 'home':return scrHome(); case 'checklists':return scrChecklists(); case 'docs':return scrDocs(); case 'reports':return scrReportsAll(); case 'map':return scrMapAll();
@@ -1955,7 +1972,7 @@ async function camShoot(){const v=$('#camv');if(!v||CAM.busy)return;if(!v.videoW
   let c=null;const tr=CAM.stream&&CAM.stream.getVideoTracks()[0];
   if(window.ImageCapture&&tr){try{const bm=await createImageBitmap(await new ImageCapture(tr).takePhoto());const z=!CAM.hwz&&CAM.zoom>1?CAM.zoom:1,sw=Math.round(bm.width/z),sh=Math.round(bm.height/z);c=document.createElement('canvas');c.width=sw;c.height=sh;c.getContext('2d').drawImage(bm,Math.round((bm.width-sw)/2),Math.round((bm.height-sh)/2),sw,sh,0,0,sw,sh)}catch(e){c=null}}
   if(!c){const zc=zoomCrop(v);c=document.createElement('canvas');c.width=zc.sw;c.height=zc.sh;c.getContext('2d').drawImage(v,zc.sx,zc.sy,zc.sw,zc.sh,0,0,zc.sw,zc.sh)}
-  shutterSound();const f=$('#camflash');if(f){f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}
+  shutterSound();const f=$('#camflash');if(f){f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}haptic('shot');
   {const o=camOri();if(o&&c.height>c.width){const r=turnCanvas(c,o);c.width=c.height=0;c=r}}
   if(camIsBlack(c)){c.width=c.height=0;CAM.busy=false;toast('The camera went dark. Restarting it, take that one again.',3500);camRestart();return}
   const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));c.width=c.height=0;CAM.busy=false;
@@ -2748,7 +2765,7 @@ const ACT={
     if(MK.editOf&&PH(MK.editOf)){const cp=PH(MK.editOf);try{if(AS){const th=await makeThumb(MK.c);const up=await upMedia(blob,th);const old={assetId:cp.assetId,thumbId:cp.thumbId};await upd('photos',cp.id,{...up,thumb:th&&up.thumbId?URL.createObjectURL(th):up.url,mk});if(old.assetId&&old.assetId!==up.assetId)delAsset(old)}else await upd('photos',cp.id,{url:URL.createObjectURL(blob),mk});openModal({kind:'photo',id:cp.id,back:M&&M.back});toast('Markup updated. The original is kept.')}catch(e){el.disabled=false;el.textContent='Save';toast('Couldn\'t save. Check your signal and try again.')}return}
     if(p.markupOf&&PH(p.markupOf))p=PH(p.markupOf);
     const doc=clean({projectId:p.projectId,kind:'photo',takenAt:p.takenAt,createdAt:Date.now(),lat:p.lat,lng:p.lng,gpsSource:p.gpsSource,code:p.code,tags:p.tags||[],zone:p.zone,trade:p.trade,note:p.note,by:ME.id,byName:ME.name,markupOf:p.id,contentType:'image/jpeg',mk});
-    try{if(AS){const up=await upMedia(blob,await makeThumb(MK.c));await put('photos',{...doc,id,...up})}else await put('photos',{...doc,id,url:URL.createObjectURL(blob),localOnly:true});const bk=M&&M.back;if(bk&&bk.shot)bk.shot=bk.shot.map(x=>x===p.id?id:x);openModal({kind:'photo',id,back:bk});toast('Saved a marked-up copy. The original is kept.')}
+    try{if(AS){const up=await upMedia(blob,await makeThumb(MK.c));await put('photos',{...doc,id,...up})}else await put('photos',{...doc,id,url:URL.createObjectURL(blob),localOnly:true});const bk=M&&M.back;if(bk&&bk.shot)bk.shot=bk.shot.map(x=>x===p.id?id:x);openModal({kind:'photo',id,back:bk});haptic('ok');toast('Saved a marked-up copy. The original is kept.')}
     catch(e){el.disabled=false;el.textContent='Save Copy';toast('Couldn\'t save. Check your signal and try again.')}},
   takeAfter:el=>{const b=PH(el.dataset.id);afterShot=null;openModal({kind:'capture',pid:b.projectId,lockProject:true,single:true,title:'After Photo',why:'Stand where the before photo was taken and match the angle. The two will pair up for a side-by-side.',beforeOf:b.id,ctx:{tags:['After'],zone:b.zone||'',trade:b.trade||'',note:''}})},
   compare:el=>openModal({kind:'compare',a:el.dataset.a2,b:el.dataset.b2}),
@@ -2848,6 +2865,8 @@ const ACT={
   onbDone:()=>{onbMark();closeModal()},
   onbPhoto:()=>{onbMark();closeModal();V.tab='settings';render()},
   onbShow:()=>openModal({kind:'onboard',step:0}),
+  planOpen:()=>{V.tab='settings';render();setTimeout(()=>{const c=$('#st-storec');if(!c)return;const d=c.closest('details');if(d)d.open=true;c.scrollIntoView({block:'start'})},80)},
+  planHide:el=>{try{localStorage.setItem(el.dataset.k,'1')}catch(e){}PLANBAR='';render()},
   qNow:()=>{qRun().then(()=>{render()});toast('Uploading…')},
   qDel:el=>{if(!el.classList.contains('armed')){el.classList.add('armed');el.style.color='var(--bad)';toast('Tap the trash again to delete this photo for good. It has not been uploaded.',3200);setTimeout(()=>{el.classList.remove('armed');el.style.color=''},3000);return}const id=el.dataset.id;delete PEND[id];qDrop(id).then(()=>render())},
   dashWk:el=>{V.dashWk=+el.dataset.w;render()},

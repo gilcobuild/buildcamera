@@ -1,0 +1,20 @@
+name: Vendor libraries
+on:
+  push:
+    branches: [vendor]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    if: "!contains(github.event.head_commit.message, '[vendored]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          set -e
+          mkdir -p tmp pdfjs && cd tmp
+          npm pack pdfjs-dist@3.11.174 >/dev/null && tar xzf pdfjs-dist-3.11.174.tgz
+          cp package/legacy/build/pdf.min.js package/legacy/build/pdf.worker.min.js ../pdfjs/
+          cd .. && rm -rf tmp && sha256sum pdfjs/* > pdfjs/SHA256SUMS && ls -la pdfjs
+          git config user.name "github-actions" && git config user.email "actions@github.com"
+          git add pdfjs && git commit -m "pdf.js 3.11.174 legacy build [vendored]" && git push

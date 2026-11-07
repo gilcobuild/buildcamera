@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="6dd682625a">
+<meta name="bc-ver" content="2c08e503f7">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-PiSn67j3bNFyOu5n20jRtvF2rag40fktySunompZckQ=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-3cd4x1tD2LL13FCvRE55VXWE+GYo46XL2KeMChkl+Qw=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -436,6 +436,11 @@ fieldset .li .t>*{white-space:normal;overflow-wrap:anywhere}
 .plhint{padding:6px 14px calc(8px + env(safe-area-inset-bottom,0px));font-size:13px;color:var(--muted);text-align:center;background:var(--bg)}
 .plcard{position:absolute;left:10px;right:10px;bottom:calc(104px + env(safe-area-inset-bottom,0px));z-index:5;max-width:560px;margin:0 auto;box-shadow:0 6px 24px rgba(0,0,0,.3);border-radius:14px;background:var(--panel)}
 .plcard .pcard{margin:0}.plcard .plx{position:absolute;right:6px;top:6px;z-index:2;background:var(--panel)}
+.plimp{opacity:.55}.plimp.on{opacity:1;border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.plck{position:relative;display:block;cursor:pointer}.plck input{position:absolute;left:6px;top:6px;width:22px;height:22px;z-index:1;accent-color:var(--accent)}
+.plimp input[type=text],.plt input[type=text]{font-weight:600;font-size:14px;padding:6px 8px;min-width:0;width:100%}
+.plset .pgh .plsetn{font-weight:700;font-size:16px;flex:1 1 auto;width:100%;min-width:0}
+body.pldrop #main{outline:3px dashed var(--accent);outline-offset:-6px}
 .ptabs{display:flex;gap:4px;overflow-x:auto;margin:10px 0 12px;border-bottom:1px solid var(--line);scrollbar-width:none}
 .ptab{flex:none;border:0;background:transparent;padding:9px 11px;font-weight:600;font-size:14px;color:var(--muted);border-bottom:3px solid transparent;min-height:44px}
 .ptab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
@@ -533,10 +538,6 @@ a{color:var(--accent)}
 .gpsok{color:var(--good)} .gpsbad{color:var(--bad)}
 .mapbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .mapbox svg{display:block;width:100%;height:auto}
-.mapbox{position:relative}.mapbox svg[data-pz]{touch-action:pan-y;user-select:none;-webkit-user-select:none}.mapbox svg[data-pz].zm{touch-action:none;cursor:grab}
-.pzc{position:absolute;top:8px;right:8px;display:flex;gap:6px}
-.pzc button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:600 20px/1 var(--f-body,system-ui);display:grid;place-items:center;box-shadow:0 1px 3px rgba(0,0,0,.15);padding:0}
-.pzc button[data-pz="fit"]{font-size:11px;font-weight:600}
 .stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
 .stat div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
 .stat b{display:block;font-family:var(--f-display);font-size:24px;font-variant-numeric:tabular-nums}
@@ -879,7 +880,6 @@ nav.side{display:none}
 .sbox{display:block;position:relative}
 .psrch{flex-wrap:nowrap}.psrch .seg{margin-left:auto}.psrch .btn{white-space:nowrap}
 @media (max-width:999px){.psup{display:none}}
-@media (max-width:560px){.psrch{flex-wrap:wrap;gap:6px}.psrch .fbtn .fl{display:none}.psrch .seg.sm button{padding:0 9px}}
 .sbox svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--muted);pointer-events:none}
 .sbox input{padding-left:36px}
 .fbtn[aria-expanded="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
@@ -1365,19 +1365,44 @@ async function sheetNames(d){const out={};const n=Math.min(d.numPages,80);
     if(best)out[i]=best.t.replace(' ','-');pg.cleanup()}catch(e){}}
   return out}
 const sheetName=(pl,n)=>(pl.sheets&&pl.sheets[n])||('Sheet '+n);
+const planList=pl=>Array.isArray(pl.list)&&pl.list.length?pl.list.map(Number):Array.from({length:+pl.pages||0},(_,i)=>i+1);
+/* import: read the PDF, then pick which sheets to keep and name them before uploading */
+const PLIMP={};
 async function addPlanFile(file,pid){
   if(!file)return;if(!/pdf/i.test(file.type)&&!/\.pdf$/i.test(file.name||'')){toast('Pick a PDF plan file.');return}
   if(file.size>50e6){toast('That PDF is over 50 MB. Split it into smaller sets and try again.',4500);return}
   if(AS&&OFFLINE()){toast('Connect to the internet to add plans.');return}
-  toast('Reading plans…',8000);let buf,pages=0,names={};
-  try{buf=await file.arrayBuffer();const L=await pdfLib();const d=await L.getDocument({data:new Uint8Array(buf.slice(0)),isEvalSupported:false}).promise;pages=d.numPages;names=await sheetNames(d);d.destroy()}
+  toast('Reading plans…',8000);let buf,d,names={};
+  try{buf=await file.arrayBuffer();const L=await pdfLib();d=await L.getDocument({data:new Uint8Array(buf.slice(0)),isEvalSupported:false}).promise;names=await sheetNames(d)}
   catch(e){toast(e&&e.message&&/viewer/.test(e.message)?e.message:'Couldn\'t open that PDF. Is it a plan set?',4000);return}
-  const id=uid(),doc={projectId:pid,kind:'plan',name:(file.name||'Plans').replace(/\.pdf$/i,'').slice(0,80),pages,sheets:names,createdAt:Date.now(),takenAt:Date.now(),by:ME.id,byName:ME.name,contentType:'application/pdf'};
-  if(AS){toast(`Uploading ${pages} sheet${pages===1?'':'s'}…`,15000);
-    try{const up=await AS.upload(new Blob([buf],{type:'application/pdf'}));await planBytesPut(up.id,buf.slice(0));await put('photos',{...doc,id,url:up.url,assetId:up.id})}
-    catch(e){toast(e&&e.code==='too_large'?'That PDF is too big to upload.':'Upload didn\'t finish. Check your signal and try again.',4000);return}}
+  if(PLIMP.doc)try{PLIMP.doc.destroy()}catch(_){}
+  Object.assign(PLIMP,{doc:d,buf,thumbs:{}});const n=d.numPages;
+  toast(n+' sheet'+(n===1?'':'s')+' found',1500);
+  openModal({kind:'planImport',pid,pages:n,names,sel:Array.from({length:n},(_,i)=>i+1),setName:(file.name||'Plans').replace(/\.pdf$/i,'').replace(/[_]+/g,' ').slice(0,80)})}
+function planImportSheet(){const n=M.pages,sel=new Set(M.sel),k=sel.size;
+  return sheet('Add Plans',`<form class="stack" data-sub="planImpGo">
+    <label class="f">Plan Set Name<input type="text" name="setName" value="${esc(M.setName)}" autocapitalize="words" placeholder="Architectural, Electrical, Rev 2…"></label>
+    <div class="row" style="align-items:center"><b style="flex:1" id="plimpn">${k} of ${n} sheet${n===1?'':'s'} selected</b><button type="button" class="btn sm" data-a="planImpAll" data-v="1">Select All</button><button type="button" class="btn sm" data-a="planImpAll" data-v="0">Clear</button></div>
+    <p class="note">Uncheck the sheets you don't need. Tap a sheet name to rename it.</p>
+    <div class="plgrid">${Array.from({length:n},(_,i)=>i+1).map(i=>`<div class="plt plimp${sel.has(i)?' on':''}"><label class="plck"><input type="checkbox" name="pg" value="${i}" ${sel.has(i)?'checked':''} data-ch="planImpCk" aria-label="Keep sheet ${i}"><span class="plim"><img data-pith="${i}" alt="Page ${i}"></span></label><input type="text" name="nm${i}" value="${esc(M.names[i]||'Sheet '+i)}" aria-label="Name for page ${i}" autocapitalize="characters" maxlength="60"></div>`).join('')}</div>
+    <button class="btn pri" type="submit" id="plimpgo" ${k?'':'disabled'}>Add ${k} Sheet${k===1?'':'s'}</button></form>`)}
+async function planImpThumbs(){const d=PLIMP.doc;if(!d)return;
+  for(const im of document.querySelectorAll('img[data-pith]')){const n=+im.dataset.pith;if(PLIMP.thumbs[n]){im.src=PLIMP.thumbs[n];continue}
+    if(!M||M.kind!=='planImport')return;
+    try{const pg=await d.getPage(n),v1=pg.getViewport({scale:1}),vp=pg.getViewport({scale:480/Math.max(v1.width,v1.height)}),c=document.createElement('canvas');c.width=Math.ceil(vp.width);c.height=Math.ceil(vp.height);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);
+      await pg.render({canvasContext:x,viewport:vp}).promise;pg.cleanup();PLIMP.thumbs[n]=c.toDataURL('image/jpeg',.8);const e=document.querySelector(`img[data-pith="${n}"]`);if(e)e.src=PLIMP.thumbs[n]}catch(e){}}}
+function planImpCount(){const f=$('form[data-sub=planImpGo]');if(!f)return;const ck=[...f.querySelectorAll('input[name=pg]')];const k=ck.filter(c=>c.checked).length;M.sel=ck.filter(c=>c.checked).map(c=>+c.value);
+  ck.forEach(c=>c.closest('.plt').classList.toggle('on',c.checked));const t=$('#plimpn');if(t)t.textContent=`${k} of ${ck.length} sheet${ck.length===1?'':'s'} selected`;const b=$('#plimpgo');if(b){b.disabled=!k;b.textContent=`Add ${k} Sheet${k===1?'':'s'}`}}
+async function planImpGo(f){const pick=[...f.querySelectorAll('input[name=pg]:checked')].map(c=>+c.value).sort((a,b)=>a-b);if(!pick.length){toast('Pick at least one sheet.');return}
+  const sheets={};for(let n=1;n<=M.pages;n++){const v=(f.elements['nm'+n]&&f.elements['nm'+n].value||M.names[n]||'').trim();if(v)sheets[n]=v.slice(0,60)}
+  const pid=M.pid,total=M.pages,id=uid(),buf=PLIMP.buf,thumbs=PLIMP.thumbs;
+  const doc={projectId:pid,kind:'plan',name:(f.elements.setName.value||'Plans').trim().slice(0,80)||'Plans',pages:total,list:pick,sheets,createdAt:Date.now(),takenAt:Date.now(),by:ME.id,byName:ME.name,contentType:'application/pdf'};
+  const b=$('#plimpgo');if(b){b.disabled=true;b.textContent='Uploading…'}
+  if(AS){try{const up=await AS.upload(new Blob([buf],{type:'application/pdf'}));await planBytesPut(up.id,buf.slice(0));await put('photos',{...doc,id,url:up.url,assetId:up.id})}
+    catch(e){if(b){b.disabled=false;b.textContent='Try Again'}toast(e&&e.code==='too_large'?'That PDF is too big to upload.':'Upload didn\'t finish. Check your signal and try again.',4000);return}}
   else{await planBytesPut(id,buf.slice(0));await put('photos',{...doc,id,localOnly:true})}
-  toast(`${pages} sheet${pages===1?'':'s'} added`);V.ptab='plans';render()}
+  pick.forEach(n=>{if(thumbs[n])PTH[id+':'+n]=thumbs[n]});try{PLIMP.doc&&PLIMP.doc.destroy()}catch(_){}PLIMP.doc=null;PLIMP.buf=null;
+  closeModal();V.ptab='plans';render();toast(`${pick.length} sheet${pick.length===1?'':'s'} added`)}
 /* small pictures of each sheet for the Plans tab */
 const PTH={};
 async function planThumbs(){const imgs=[...document.querySelectorAll('img[data-pth]')].filter(i=>!i.src||i.dataset.pth!==i.dataset.done);
@@ -1389,17 +1414,22 @@ async function planThumbs(){const imgs=[...document.querySelectorAll('img[data-p
     catch(e){im.alt='Couldn\'t open';im.dataset.done=im.dataset.pth;const t=im.closest('.plt');if(t)t.classList.add('plerr')}}}
 const pinsOn=(id,n)=>S.tasks.filter(t=>t.type==='punch'&&t.planId===id&&+t.planPage===+n);
 function ptPlans(p){const sets=allPlans(p.id);
-  const add=canPlans()?`<button class="btn pri" data-a="planAdd" data-pid="${p.id}">${I('doc')} Add Plans (PDF)</button>`:'';
-  if(!sets.length)return `<div class="row">${add}</div><div class="empty">${I('map')}<b>No plans yet</b><span>${canPlans()?'Add the PDF plan set. Each page becomes a sheet you can zoom into and pin punch items on.':'Ask the office to add the plan set.'}</span></div>`;
-  return `<div class="row">${add}<span class="sp"></span><span class="note">Tap a sheet to open it.</span></div>`+sets.map(pl=>`<div class="plset"><div class="pgh"><b>${esc(pl.name)}</b><span class="note">${pl.pages} sheet${pl.pages===1?'':'s'}</span><span class="sp"></span>${canInvite()?`<button class="ib" data-a="planDel" data-id="${pl.id}" aria-label="Remove ${esc(pl.name)}">${I('trash')}</button>`:''}</div>
-    <div class="plgrid">${Array.from({length:pl.pages},(_,i)=>i+1).map(n=>{const k=pinsOn(pl.id,n).filter(t=>pStatus(t)!=='closed').length;return `<button class="plt" data-a="planOpen" data-id="${pl.id}" data-n="${n}"><span class="plim"><img data-pth="${pl.id}:${n}" ${PTH[pl.id+':'+n]?`src="${PTH[pl.id+':'+n]}" data-done="${pl.id}:${n}"`:''} alt="${esc(sheetName(pl,n))}"></span><b>${esc(sheetName(pl,n))}</b>${k?`<span class="pill bad">${k} open</span>`:''}</button>`}).join('')}</div></div>`).join('');}
+  const add=canPlans()?`<button class="btn pri" data-a="planAdd" data-pid="${p.id}">${I('doc')} Import PDF Plans</button>`:'';
+  const where=canPlans()?`<span class="note">${DESK()?'Or drag a PDF onto this page.':'From Files, iCloud Drive, Google Drive or Dropbox.'}</span>`:'';
+  if(!sets.length)return `<div class="row" style="align-items:center">${add}${where}</div><div class="empty">${I('map')}<b>No plans yet</b><span>${canPlans()?'Import the PDF plan set. Pick the sheets you need, and each one becomes a sheet you can zoom into and pin punch items on.':'Ask the office to add the plan set.'}</span></div>`;
+  return `<div class="row" style="align-items:center">${add}${where}</div>`+sets.map(pl=>{const ed=V.plEdit===pl.id,list=planList(pl),hid=Array.from({length:+pl.pages||0},(_,i)=>i+1).filter(n=>!list.includes(n));
+    return `<div class="plset"><div class="pgh">${ed?`<input type="text" class="plsetn" value="${esc(pl.name)}" data-ch="planSetRen" data-id="${pl.id}" aria-label="Plan set name" autocapitalize="words" maxlength="80">`:`<b>${esc(pl.name)}</b><span class="note">${list.length} sheet${list.length===1?'':'s'}</span>`}<span class="sp"></span>${canPlans()?`<button class="btn sm ${ed?'pri':''}" data-a="planEdit" data-id="${pl.id}">${ed?'Done':I('pen')+' Rename'}</button>`:''}${canInvite()&&!ed?`<button class="ib" data-a="planDel" data-id="${pl.id}" aria-label="Remove ${esc(pl.name)}">${I('trash')}</button>`:''}</div>
+    <div class="plgrid">${list.map(n=>{const k=pinsOn(pl.id,n).filter(t=>pStatus(t)!=='closed').length,im=`<span class="plim"><img data-pth="${pl.id}:${n}" ${PTH[pl.id+':'+n]?`src="${PTH[pl.id+':'+n]}" data-done="${pl.id}:${n}"`:''} alt="${esc(sheetName(pl,n))}"></span>`;
+      return ed?`<div class="plt">${im}<div class="row" style="gap:4px;flex-wrap:nowrap"><input type="text" value="${esc(sheetName(pl,n))}" data-ch="planRen" data-id="${pl.id}" data-n="${n}" aria-label="Sheet name" autocapitalize="characters" maxlength="60" style="flex:1;min-width:0"><button class="ib" data-a="planHide" data-id="${pl.id}" data-n="${n}" aria-label="Remove ${esc(sheetName(pl,n))}">${I('trash')}</button></div></div>`
+        :`<button class="plt" data-a="planOpen" data-id="${pl.id}" data-n="${n}">${im}<b>${esc(sheetName(pl,n))}</b>${k?`<span class="pill bad">${k} open</span>`:''}</button>`}).join('')}</div>
+    ${ed&&hid.length?`<div class="row" style="flex-wrap:wrap;gap:6px;margin:-8px 0 16px"><span class="note">Removed sheets:</span>${hid.map(n=>`<button class="chip" data-a="planUnhide" data-id="${pl.id}" data-n="${n}">+ ${esc(sheetName(pl,n))}</button>`).join('')}</div>`:''}</div>`}).join('');}
 /* the sheet viewer */
 const PLV={};
 function planSheet(){const pl=S.photos.find(x=>x.id===M.id);if(!pl)return sheet('Plans','<div class="empty"><b>This plan was removed.</b></div>');
-  const n=M.n||1;const opts=Array.from({length:pl.pages},(_,i)=>i+1).map(i=>`<option value="${i}" ${i===n?'selected':''}>${esc(sheetName(pl,i))}</option>`).join('');
+  const list=planList(pl);if(!list.includes(M.n))M.n=list[0]||1;const n=M.n,ix=list.indexOf(n);const opts=list.map(i=>`<option value="${i}" ${i===n?'selected':''}>${esc(sheetName(pl,i))}</option>`).join('');
   const mode=M.mode||'';
   return `<div class="sheet mksheet plsheet" role="dialog" aria-modal="true" aria-label="Plan sheet"><div class="sh"><button class="ib" data-a="close" aria-label="Close">${I('x')}</button>
-    <button class="ib" data-a="planStep" data-d="-1" aria-label="Previous sheet" ${n<=1?'disabled':''}>${I('back')}</button><select class="plsel" data-ch="planPick" aria-label="Sheet">${opts}</select><button class="ib" data-a="planStep" data-d="1" aria-label="Next sheet" ${n>=pl.pages?'disabled':''}><span style="display:inline-flex;transform:scaleX(-1)">${I('back')}</span></button>
+    ${M.ren?`<input type="text" class="plsel" id="plren" value="${esc(sheetName(pl,n))}" aria-label="Sheet name" autocapitalize="characters" maxlength="60"><button class="btn sm pri" data-a="planRenSave">Save</button>`:`<button class="ib" data-a="planStep" data-d="-1" aria-label="Previous sheet" ${ix<=0?'disabled':''}>${I('back')}</button><select class="plsel" data-ch="planPick" aria-label="Sheet">${opts}</select><button class="ib" data-a="planStep" data-d="1" aria-label="Next sheet" ${ix>=list.length-1?'disabled':''}><span style="display:inline-flex;transform:scaleX(-1)">${I('back')}</span></button>${canPlans()?`<button class="ib" data-a="planRenStart" aria-label="Rename sheet">${I('pen')}</button>`:''}`}
     <span class="sp"></span></div>
     <div class="plw" id="plw"><div class="plst" id="plst"><canvas id="plbase"></canvas><canvas id="plsharp"></canvas><div id="plpins"></div></div><div class="plload" id="plload">Opening sheet…</div></div>
     <div class="plbar"><button class="btn ${mode==='photo'?'pri':''}" data-a="planMode" data-m="photo" aria-pressed="${mode==='photo'}">${I('camera')} Photo Here</button><button class="btn ${mode==='pin'?'pri':''}" data-a="planMode" data-m="pin" aria-pressed="${mode==='pin'}">${I('pin2')} Add Punch Pin</button></div><div class="plhint" id="plhint">${mode==='pin'?'Tap the spot that needs fixing.':mode==='photo'?'Tap where you\'re standing.':(DESK()?'Scroll to zoom, drag to move. Press and hold a spot to add a punch item.':'Pinch to zoom. Long-press a spot to add a punch item.')}</div><div class="plcard" id="plcard" hidden></div></div>`}
@@ -1460,11 +1490,26 @@ document.addEventListener('wheel',e=>{if(!M||M.kind!=='plan'||!e.target.closest|
 document.addEventListener('dblclick',e=>{if(!M||M.kind!=='plan'||!e.target.closest||!e.target.closest('#plw')||e.target.closest('.plpin'))return;plZoomAt(PLV.z>2.5?1:PLV.z*2.5,e.clientX,e.clientY)});
 addEventListener('resize',()=>{if(M&&M.kind==='plan'){PLV.placed=false;planInit()}});
 document.addEventListener('click',e=>{if(PLG.moved&&e.target.closest&&e.target.closest('#plw')){PLG.moved=false;e.stopPropagation();e.preventDefault()}},true);
+document.addEventListener('change',e=>{const k=e.target&&e.target.dataset&&e.target.dataset.ch;if(!k)return;
+  if(k==='planImpCk')planImpCount();
+  else if(k==='planRen'){const pl=S.photos.find(x=>x.id===e.target.dataset.id);if(pl){const v=e.target.value.trim().slice(0,60),n=+e.target.dataset.n;upd('photos',pl.id,{sheets:{...(pl.sheets||{}),[n]:v||('Sheet '+n)}})}}
+  else if(k==='planSetRen'){const v=e.target.value.trim().slice(0,80);if(v)upd('photos',e.target.dataset.id,{name:v})}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='plren'){e.preventDefault();PLAN_ACT.planRenSave()}});
+document.addEventListener('submit',e=>{const f=e.target;if(f&&f.dataset&&f.dataset.sub==='planImpGo'){e.preventDefault();e.stopImmediatePropagation();planImpGo(f)}},true);
+document.addEventListener('dragover',e=>{if(V.tab==='project'&&V.ptab==='plans'&&canPlans()&&e.dataTransfer&&[...e.dataTransfer.types].includes('Files')){e.preventDefault();document.body.classList.add('pldrop')}});
+document.addEventListener('dragleave',e=>{if(!e.relatedTarget)document.body.classList.remove('pldrop')});
+document.addEventListener('drop',e=>{document.body.classList.remove('pldrop');if(!(V.tab==='project'&&V.ptab==='plans'&&canPlans()))return;const f=e.dataTransfer&&[...e.dataTransfer.files].find(x=>/pdf/i.test(x.type)||/\.pdf$/i.test(x.name));if(!f)return;e.preventDefault();addPlanFile(f,V.pid)});
 document.addEventListener('change',e=>{if(e.target&&e.target.id==='in-plan'){const f=e.target.files&&e.target.files[0];const pid=e.target.dataset.pid;e.target.value='';addPlanFile(f,pid)}});
 const PLAN_ACT={
   planAdd:el=>{const i=$('#in-plan');i.dataset.pid=el.dataset.pid;i.click()},
   planOpen:el=>{PLV.key=null;PLV.placed=false;openModal({kind:'plan',id:el.dataset.id,n:+el.dataset.n||1})},
-  planStep:el=>{const pl=S.photos.find(x=>x.id===M.id);if(!pl)return;const n=Math.max(1,Math.min(pl.pages,(M.n||1)+(+el.dataset.d)));if(n===M.n)return;M.n=n;M.drop=null;PLV.placed=false;renderModal()},
+  planStep:el=>{const pl=S.photos.find(x=>x.id===M.id);if(!pl)return;const l=planList(pl),i=Math.max(0,Math.min(l.length-1,l.indexOf(M.n)+(+el.dataset.d))),n=l[i];if(n===M.n)return;M.n=n;M.drop=null;PLV.placed=false;renderModal()},
+  planRenStart:()=>{M.ren=true;renderModal();setTimeout(()=>{const i=$('#plren');if(i){i.focus();i.select()}},50)},
+  planRenSave:()=>{const pl=S.photos.find(x=>x.id===M.id),i=$('#plren');if(pl&&i){const v=i.value.trim().slice(0,60);upd('photos',pl.id,{sheets:{...(pl.sheets||{}),[M.n]:v||('Sheet '+M.n)}})}M.ren=false;renderModal()},
+  planEdit:el=>{V.plEdit=V.plEdit===el.dataset.id?null:el.dataset.id;render()},
+  planHide:el=>{const pl=S.photos.find(x=>x.id===el.dataset.id);if(!pl)return;const l=planList(pl);if(l.length<=1){toast('A plan set needs at least one sheet. Remove the whole set instead.');return}upd('photos',pl.id,{list:l.filter(n=>n!==+el.dataset.n)})},
+  planUnhide:el=>{const pl=S.photos.find(x=>x.id===el.dataset.id);if(!pl)return;upd('photos',pl.id,{list:[...planList(pl),+el.dataset.n].sort((a,b)=>a-b)})},
+  planImpAll:el=>{document.querySelectorAll('form[data-sub=planImpGo] input[name=pg]').forEach(c=>{c.checked=el.dataset.v==='1'});planImpCount()},
   planMode:el=>{M.mode=M.mode===el.dataset.m?'':el.dataset.m;const h=$('#plhint');if(h)h.textContent=M.mode==='pin'?'Tap the spot that needs fixing.':M.mode==='photo'?'Tap where you\'re standing.':(DESK()?'Scroll to zoom, drag to move. Press and hold a spot to add a punch item.':'Pinch to zoom. Long-press a spot to add a punch item.');
     document.querySelectorAll('[data-a=planMode]').forEach(b=>{const on=b.dataset.m===M.mode;b.classList.toggle('pri',on);b.setAttribute('aria-pressed',on)})},
   planPinOpen:el=>{const t=S.tasks.find(x=>x.id===el.dataset.id),c=$('#plcard');if(!t||!c)return;c.innerHTML=`<button class="ib plx" data-a="planCardX" aria-label="Close">${I('x')}</button>${punchCard(t)}`;c.hidden=false},
@@ -1593,14 +1638,14 @@ function projMap(ps){
   const g=ps.filter(p=>p.lat!=null);
   if(!g.length)return `<div class="empty">${I('map')}<b>No Projects have GPS yet</b><span>Look up each job's address in Job Info and they'll show here.</span></div>`;
   let a=Math.min(...g.map(p=>p.lat)),b=Math.max(...g.map(p=>p.lat)),c=Math.min(...g.map(p=>p.lng)),d=Math.max(...g.map(p=>p.lng));
-  const pv=Math.max((b-a)*.18,.01),ph=Math.max((d-c)*.18,.01);a-=pv;b+=pv;c-=ph;d+=ph;b+=(b-a)*.2;
+  const pv=Math.max((b-a)*.18,.01),ph=Math.max((d-c)*.18,.01);a-=pv;b+=pv;c-=ph;d+=ph;
   const W=600,H=440,X=x=>((x-c)/(d-c))*W,Y=y=>H-((y-a)/(b-a))*H,mi=Math.round(km(a,c,a,d)*0.621);
-  let svg=`<svg viewBox="0 0 ${W} ${H}" data-pz="${W} ${H}" role="img" aria-label="Projects by location"><rect width="${W}" height="${H}" fill="var(--sunk)"/>`;
-  for(let i=1;i<6;i++)svg+=`<line x1="${i*W/6}" y1="0" x2="${i*W/6}" y2="${H}" stroke="var(--line)" vector-effect="non-scaling-stroke"/><line x1="0" y1="${i*H/6}" x2="${W}" y2="${i*H/6}" stroke="var(--line)" vector-effect="non-scaling-stroke"/>`;
-  g.forEach(p=>{const x=X(p.lng),y=Y(p.lat);svg+=`<g class="pzp" data-x="${x}" data-y="${y}" transform="translate(${x},${y})" data-a="openProject" data-id="${p.id}" style="cursor:pointer"><circle r="18" fill="transparent"/><path d="M0 0c-7-9-11-14-11-19a11 11 0 0 1 22 0c0 5-4 10-11 19z" fill="${p.status==='Done'?'var(--muted)':'var(--accent)'}" stroke="var(--panel)" stroke-width="2"/><circle cy="-19" r="4" fill="var(--panel)"/><text y="16" text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink)" font-family="IBM Plex Sans,Arial">${esc(p.name).slice(0,24)}</text></g>`});
-  svg+=`<text class="pzs" data-w="${km(a,c,a,d)*0.621}" data-u="mi" x="10" y="${H-10}" font-size="12" fill="var(--muted)" font-family="IBM Plex Mono,monospace">Width ≈ ${mi} mi · North up</text></svg>`;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Projects by location"><rect width="${W}" height="${H}" fill="var(--sunk)"/>`;
+  for(let i=1;i<6;i++)svg+=`<line x1="${i*W/6}" y1="0" x2="${i*W/6}" y2="${H}" stroke="var(--line)"/><line x1="0" y1="${i*H/6}" x2="${W}" y2="${i*H/6}" stroke="var(--line)"/>`;
+  g.forEach(p=>{const x=X(p.lng),y=Y(p.lat);svg+=`<g transform="translate(${x},${y})" data-a="openProject" data-id="${p.id}" style="cursor:pointer"><circle r="18" fill="transparent"/><path d="M0 0c-7-9-11-14-11-19a11 11 0 0 1 22 0c0 5-4 10-11 19z" fill="${p.status==='Done'?'var(--muted)':'var(--accent)'}" stroke="var(--panel)" stroke-width="2"/><circle cy="-19" r="4" fill="var(--panel)"/><text y="16" text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink)" font-family="IBM Plex Sans,Arial">${esc(p.name).slice(0,24)}</text></g>`});
+  svg+=`<text x="10" y="${H-10}" font-size="12" fill="var(--muted)" font-family="IBM Plex Mono,monospace">Width ≈ ${mi} mi · North up</text></svg>`;
   const no=ps.length-g.length;
-  return `<div class="mapbox">${svg}${pzCtl()}</div><p class="note" style="margin-top:8px">Pinch or use + and − to zoom. Tap a pin to open the job.${no?` ${no} job${no>1?'s have':' has'} no GPS yet.`:''}</p>`;
+  return `<div class="mapbox">${svg}</div><p class="note" style="margin-top:8px">Tap a pin to open the job.${no?` ${no} job${no>1?'s have':' has'} no GPS yet.`:''}</p>`;
 }
 function pcard(p){
   const ph=allPhotos().filter(x=>x.projectId===p.id&&x.kind==='photo').sort(byNew),n=ph.length,cover=ph[0];
@@ -1617,7 +1662,7 @@ function scrProject(){
   let body='';
   switch(V.ptab){case 'photos':body=ptPhotos(p);break;case 'map':body=ptMap(p);break;case 'checklists':body=ptChecklists(p);break;case 'tasks':body=ptTasks(p);break;case 'punch':body=punchArea(p);break;case 'log':body=ptLog(p);break;case 'docs':body=ptDocs(p);break;case 'reports':body=ptReports(p);break;case 'info':body=ptInfo(p);break;case 'plans':body=ptPlans(p);setTimeout(planThumbs,30);break}
   const cv=lastPhoto(p.id),n=allPhotos().filter(x=>x.projectId===p.id&&x.kind!=='doc').length;
-  const cnt={photos:n,plans:allPlans(p.id).reduce((a,x)=>a+(+x.pages||0),0),docs:allPhotos().filter(x=>x.projectId===p.id&&x.kind==='doc').length,checklists:S.checklists.filter(c=>c.projectId===p.id).length,tasks:S.tasks.filter(t=>t.projectId===p.id&&!t.done&&t.type!=='punch').length,punch:S.tasks.filter(t=>t.projectId===p.id&&t.type==='punch'&&!t.done).length};
+  const cnt={photos:n,plans:allPlans(p.id).reduce((a,x)=>a+planList(x).length,0),docs:allPhotos().filter(x=>x.projectId===p.id&&x.kind==='doc').length,checklists:S.checklists.filter(c=>c.projectId===p.id).length,tasks:S.tasks.filter(t=>t.projectId===p.id&&!t.done&&t.type!=='punch').length,punch:S.tasks.filter(t=>t.projectId===p.id&&t.type==='punch'&&!t.done).length};
   const dir=p.lat!=null?`<a class="btn sm" href="https://www.google.com/maps/dir/?api=1&destination=${+p.lat},${+p.lng}" target="_blank" rel="noopener">${I('pin')} Directions</a>`:'';
   const desk=DESK()?`<div class="pdesk"><div class="pdtop"><button class="bkl" data-a="tab" data-t="projects">${I('back')} Projects</button><span class="sp"></span>${starBtn(p)}<button class="btn sm" data-a="pSel" data-id="${p.id}">${I('share')} Share</button><button class="btn sm" data-a="shareJob" data-pid="${p.id}">${I('link')} Guest Link</button>${canInvite()?`<button class="btn sm" data-a="jobInvite" data-pid="${p.id}">${I('plus')} Invite</button>`:''}<button class="btn sm" data-a="ptab" data-t="reports">${I('report')} Report</button>${dir}<button class="btn sm stamp" data-a="capture" data-pid="${p.id}">${I('camera')} Take Photos</button></div>
    <div class="pdhd2"><h1>${esc(p.name)}</h1>${p.address?`<a class="ad" href="${gmSearch(p.address)}" target="_blank" rel="noopener">${esc(p.address)}</a>`:'<span class="note">No address yet</span>'}</div><div class="row" style="margin-bottom:8px">${pstat(p)}${p.companyName?`<span class="note">${esc(p.companyName)}</span>`:''}${p.jobNumber?`<span class="note">Job ${esc(p.jobNumber)}</span>`:''}<button class="btn sm" data-a="ptab" data-t="info">${I('pen')} Edit Job Info</button></div></div>`:'';
@@ -1640,7 +1685,7 @@ function ptPhotos(p){
   const grp=(k,l,opts)=>opts.length?`<div class="fg"><span>${l}</span><div class="tagrow">${opts.map(o=>{const on=k==='tags'?f.tags.includes(o):f[k]===o;return `<button class="chip" data-a="pfPick" data-k="${k}" data-v="${esc(o)}" aria-pressed="${on}">${esc(o)}</button>`}).join('')}</div></div>`:'';
   const active=[...(q?[['q','',`“${f.q.trim()}”`]]:[]),...f.tags.map(t=>['tags',t,t]),...['zone','trade','by'].filter(k=>f[k]).map(k=>[k,f[k],f[k]])];
   const panel=V.pfOpen?`<div class="fpanel" id="pf-panel"><div class="fg"><span>Search</span><label class="sbox">${I('search')}<input type="search" id="phq" data-in="phq" value="${esc(f.q||'')}" placeholder="Notes, tags, zone, trade, who, date, or what's in the photo" autocomplete="off" aria-label="Search this job's photos"></label></div>${grp('tags','Tags',tags)}${grp('zone','Work Zone',zones)}${grp('trade','Trade Partner',trades)}${users.length>1?grp('by','Taken By',users):''}${!tags.length&&!zones.length&&!trades.length?'<p class="note" style="margin:0">No tags, zones or trades on this job\'s photos yet. Add them when you take a photo or open one.</p>':''}${nOn?`<div class="row"><button class="btn sm" data-a="pfClear">Clear All</button></div>`:''}</div>`:'';
-  return `<div class="psrch"><button class="btn sm fbtn" data-a="pfToggle" aria-expanded="${!!V.pfOpen}" aria-controls="pf-panel" aria-label="Filter">${I('search')}<span class="fl"> Filter</span>${nOn?`<span class="fn">${nOn}</span>`:''}</button><div class="seg sm" role="group" aria-label="View"><button data-a="ptab" data-t="photos" aria-pressed="true" aria-label="Photo grid">${I('feed')}</button><button data-a="ptab" data-t="map" aria-pressed="false" aria-label="Photo map">${I('map')}</button></div><button class="btn sm" data-a="selMode" aria-pressed="${!!V.selMode}">${V.selMode?'Cancel Select':'Select'}</button><button class="btn sm" data-a="albNew" data-pid="${p.id}" aria-label="New album">${I('plus')} Album</button><button class="btn sm pri psup" data-a="pickLib" data-pid="${p.id}">${I('plus')} Upload</button></div>
+  return `<div class="psrch"><button class="btn sm fbtn" data-a="pfToggle" aria-expanded="${!!V.pfOpen}" aria-controls="pf-panel">${I('search')} Filter${nOn?`<span class="fn">${nOn}</span>`:''}</button><div class="seg sm" role="group" aria-label="View"><button data-a="ptab" data-t="photos" aria-pressed="true" aria-label="Photo grid">${I('feed')}</button><button data-a="ptab" data-t="map" aria-pressed="false" aria-label="Photo map">${I('map')}</button></div><button class="btn sm" data-a="selMode" aria-pressed="${!!V.selMode}">${V.selMode?'Cancel Select':'Select'}</button><button class="btn sm" data-a="albNew" data-pid="${p.id}" aria-label="New album">${I('plus')} Album</button><button class="btn sm pri psup" data-a="pickLib" data-pid="${p.id}">${I('plus')} Upload</button></div>
   ${albs.length?`<div class="albrow" role="group" aria-label="Albums"><button class="chip" data-a="albPick" data-v="" aria-pressed="${!f.album}">All Photos <span class="n">${allN}</span></button>${albs.map(a=>`<button class="chip" data-a="albPick" data-v="${esc(a)}" aria-pressed="${f.album===a}">${I('album')}${esc(a)} <span class="n">${allPhotos().filter(x=>x.projectId===p.id&&(x.albums||[]).includes(a)).length}</span></button>`).join('')}</div>`:''}
   ${f.album?`<div class="row" style="margin:-2px 0 8px"><span class="note" style="flex:1">Album: <b>${esc(f.album)}</b></span><button class="btn sm" data-a="albPdf" data-pid="${p.id}" ${DL?'':'disabled'}>${I('report')} Album PDF</button><button class="btn sm" data-a="albSend" data-pid="${p.id}">${I('share')} Send in Text</button><button class="btn sm" data-a="shareAlb" data-pid="${p.id}">${I('link')} Share Link</button><button class="btn sm" data-a="albRen" data-pid="${p.id}">${I('pen')} Rename</button></div>`:''}
   ${panel}${!V.pfOpen&&active.length?`<div class="factive">${active.map(([k,v,l])=>`<button class="chip" data-a="pfPick" data-k="${k}" data-v="${esc(v)}" aria-label="Remove filter ${esc(l)}">${esc(l)} ✕</button>`).join('')}<button class="btn sm" data-a="pfClear">Clear</button></div>`:''}
@@ -1654,15 +1699,15 @@ function ptMap(p){
   const gm=p.lat!=null?`<a class="btn sm" href="https://www.google.com/maps?q=${+p.lat},${+p.lng}" target="_blank" rel="noopener">${I('pin')} Open Job in Google Maps</a>`:'';
   if(pts.length<1)return `<div class="empty">${I('map')}<b>Nothing to map yet</b><span>Set the job's GPS spot in Job Info. Photos with their own GPS show here as pins.</span><button class="btn" data-a="ptab" data-t="info">Go to Job Info</button></div>`;
   const la=pts.map(q=>q[0]),ln=pts.map(q=>q[1]);let a=Math.min(...la),b=Math.max(...la),c=Math.min(...ln),d=Math.max(...ln);
-  const padv=Math.max((b-a)*.15,0.0004),padh=Math.max((d-c)*.15,0.0004);a-=padv;b+=padv;c-=padh;d+=padh;b+=(b-a)*.2;
+  const padv=Math.max((b-a)*.15,0.0004),padh=Math.max((d-c)*.15,0.0004);a-=padv;b+=padv;c-=padh;d+=padh;
   const W=600,H=420,X=x=>((x-c)/(d-c))*W,Y=y=>H-((y-a)/(b-a))*H;
   const meters=Math.round(km(a,c,a,d)*1000);
-  let svg=`<svg viewBox="0 0 ${W} ${H}" data-pz="${W} ${H}" role="img" aria-label="Photo locations on site"><rect width="${W}" height="${H}" fill="var(--sunk)"/>`;
-  for(let i=1;i<6;i++)svg+=`<line x1="${i*W/6}" y1="0" x2="${i*W/6}" y2="${H}" stroke="var(--line)" vector-effect="non-scaling-stroke"/><line x1="0" y1="${i*H/6}" x2="${W}" y2="${i*H/6}" stroke="var(--line)" vector-effect="non-scaling-stroke"/>`;
-  if(p.lat!=null)svg+=`<g class="pzp" data-x="${X(p.lng)}" data-y="${Y(p.lat)}" transform="translate(${X(p.lng)},${Y(p.lat)})"><rect x="-9" y="-9" width="18" height="18" fill="var(--stamp)" stroke="var(--ink)" stroke-width="2" transform="rotate(45)"/><text y="28" text-anchor="middle" font-size="13" fill="var(--ink)" font-family="IBM Plex Sans,Arial">Job</text></g>`;
-  ps.forEach(x=>{svg+=`<g class="pzp" data-x="${X(x.lng)}" data-y="${Y(x.lat)}" transform="translate(${X(x.lng)},${Y(x.lat)})" data-a="openPhoto" data-id="${x.id}" style="cursor:pointer"><circle r="14" fill="transparent"/><circle r="8" fill="var(--accent)" stroke="var(--panel)" stroke-width="2.5"/></g>`});
-  svg+=`<text class="pzs" data-w="${km(a,c,a,d)*1000}" data-u="m" x="10" y="${H-10}" font-size="12" fill="var(--muted)" font-family="IBM Plex Mono,monospace">Width ≈ ${meters} m · North up</text></svg>`;
-  return `<div class="mapbox">${svg}${pzCtl()}</div><div class="row" style="margin-top:10px">${gm}<span class="note">${ps.length} photo${ps.length===1?'':'s'} with their own GPS. Pinch or use + and − to zoom. Tap a pin to open it.</span></div>`;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Photo locations on site"><rect width="${W}" height="${H}" fill="var(--sunk)"/>`;
+  for(let i=1;i<6;i++)svg+=`<line x1="${i*W/6}" y1="0" x2="${i*W/6}" y2="${H}" stroke="var(--line)"/><line x1="0" y1="${i*H/6}" x2="${W}" y2="${i*H/6}" stroke="var(--line)"/>`;
+  if(p.lat!=null)svg+=`<g transform="translate(${X(p.lng)},${Y(p.lat)})"><rect x="-9" y="-9" width="18" height="18" fill="var(--stamp)" stroke="var(--ink)" stroke-width="2" transform="rotate(45)"/><text y="28" text-anchor="middle" font-size="13" fill="var(--ink)" font-family="IBM Plex Sans,Arial">Job</text></g>`;
+  ps.forEach(x=>{svg+=`<g transform="translate(${X(x.lng)},${Y(x.lat)})" data-a="openPhoto" data-id="${x.id}" style="cursor:pointer"><circle r="14" fill="transparent"/><circle r="8" fill="var(--accent)" stroke="var(--panel)" stroke-width="2.5"/></g>`});
+  svg+=`<text x="10" y="${H-10}" font-size="12" fill="var(--muted)" font-family="IBM Plex Mono,monospace">Width ≈ ${meters} m · North up</text></svg>`;
+  return `<div class="mapbox">${svg}</div><div class="row" style="margin-top:10px">${gm}<span class="note">${ps.length} photo${ps.length===1?'':'s'} with their own GPS. Tap a pin to open it.</span></div>`;
 }
 function ptDocs(p){
   const ds=allPhotos().filter(x=>x.projectId===p.id&&x.kind==='doc').sort(byNew);
@@ -1968,6 +2013,7 @@ function renderModal(){
   else if(M.kind==='compare')h=compareSheet();
   else if(M.kind==='task')h=taskSheet();
   else if(M.kind==='plan')h=planSheet();
+  else if(M.kind==='planImport')h=planImportSheet();
   else if(M.kind==='member')h=memberSheet();
   else if(M.kind==='checklist')h=checklistSheet();
   else if(M.kind==='pickPhoto')h=pickSheet();
@@ -1988,6 +2034,7 @@ function renderModal(){
   el.innerHTML=h;
   if(M.kind==='markup')mkInit();
   if(M.kind==='plan')planInit();
+  if(M.kind==='planImport')setTimeout(planImpThumbs,30);
   if(M.kind==='compare')cmpInit();
   mwDrawAll();
 }
@@ -3106,27 +3153,6 @@ const ACT={
   dailyPdf:el=>savePdf(P(el.dataset.pid),{tpl:'daily',from:V.logDate,to:V.logDate,per:'4',inc:'notes'})
 };
 Object.assign(ACT,PLAN_ACT);
-/* map zoom: pinch, wheel, drag to move, + / − / Fit buttons. Pins keep their size. */
-function pzCtl(){return `<div class="pzc"><button type="button" data-pz="in" aria-label="Zoom in">+</button><button type="button" data-pz="out" aria-label="Zoom out">−</button><button type="button" data-pz="fit" aria-label="Show whole map">Fit</button></div>`}
-const PZ={st:new WeakMap(),moved:false};
-function pzS(svg){let o=PZ.st.get(svg);if(!o){const [W,H]=svg.dataset.pz.split(' ').map(Number);o={W,H,k:1,x:0,y:0,pts:new Map()};PZ.st.set(svg,o)}return o}
-function pzApply(svg){const o=pzS(svg);o.k=Math.min(40,Math.max(1,o.k));const w=o.W/o.k,h=o.H/o.k;o.x=Math.min(o.W-w,Math.max(0,o.x));o.y=Math.min(o.H-h,Math.max(0,o.y));
- svg.setAttribute('viewBox',`${o.x} ${o.y} ${w} ${h}`);svg.classList.toggle('zm',o.k>1.01);
- svg.querySelectorAll('.pzp').forEach(g=>g.setAttribute('transform',`translate(${g.dataset.x},${g.dataset.y}) scale(${1/o.k})`));
- const t=svg.querySelector('.pzs');if(t){t.setAttribute('x',o.x+10/o.k);t.setAttribute('y',o.y+h-10/o.k);t.setAttribute('font-size',12/o.k);const v=+t.dataset.w/o.k;t.textContent=`Width ≈ ${v>=10?Math.round(v):v>=1?v.toFixed(1):v.toFixed(2)} ${t.dataset.u} · North up`}}
-function pzAt(svg,f,cx,cy){const o=pzS(svg),r=svg.getBoundingClientRect();if(!r.width)return;const fx=(cx-r.left)/r.width,fy=(cy-r.top)/r.height;const px=o.x+fx*o.W/o.k,py=o.y+fy*o.H/o.k;o.k*=f;o.k=Math.min(40,Math.max(1,o.k));o.x=px-fx*o.W/o.k;o.y=py-fy*o.H/o.k;pzApply(svg)}
-document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.pzc button');if(!b)return;e.preventDefault();e.stopPropagation();const svg=b.closest('.mapbox').querySelector('svg[data-pz]');if(!svg)return;const r=svg.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
- if(b.dataset.pz==='in')pzAt(svg,2,cx,cy);else if(b.dataset.pz==='out')pzAt(svg,.5,cx,cy);else{const o=pzS(svg);o.k=1;o.x=0;o.y=0;pzApply(svg)}},true);
-document.addEventListener('click',e=>{if(PZ.moved&&e.target.closest&&e.target.closest('svg[data-pz]')){PZ.moved=false;e.stopPropagation();e.preventDefault()}},true);
-document.addEventListener('wheel',e=>{const svg=e.target.closest&&e.target.closest('svg[data-pz]');if(!svg||!(e.ctrlKey||e.metaKey||pzS(svg).k>1.01))return;e.preventDefault();pzAt(svg,Math.exp(-e.deltaY*(e.ctrlKey?.01:.002)),e.clientX,e.clientY)},{passive:false});
-['gesturestart','gesturechange'].forEach(n=>document.addEventListener(n,e=>{if(e.target.closest&&e.target.closest('svg[data-pz]'))e.preventDefault()},{passive:false}));
-document.addEventListener('pointerdown',e=>{const svg=e.target.closest&&e.target.closest('svg[data-pz]');if(!svg)return;const o=pzS(svg);if(e.isPrimary)o.pts.clear();o.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});o.d0=null;o.sx=e.clientX;o.sy=e.clientY;PZ.moved=false;PZ.cur=svg});
-document.addEventListener('pointermove',e=>{const svg=PZ.cur;if(!svg)return;const o=pzS(svg);const pr=o.pts.get(e.pointerId);if(!pr)return;const nx=e.clientX,ny=e.clientY;
- if(o.pts.size>=2){o.pts.set(e.pointerId,{x:nx,y:ny});const [p1,p2]=[...o.pts.values()];const d=Math.hypot(p1.x-p2.x,p1.y-p2.y),mx=(p1.x+p2.x)/2,my=(p1.y+p2.y)/2;
-  if(o.d0){pzAt(svg,d/o.d0,mx,my);const r=svg.getBoundingClientRect();o.x-=(mx-o.mx)/r.width*o.W/o.k;o.y-=(my-o.my)/r.height*o.H/o.k;pzApply(svg)}o.d0=d;o.mx=mx;o.my=my;PZ.moved=true;e.preventDefault();return}
- if(o.k>1.01){const r=svg.getBoundingClientRect();o.x-=(nx-pr.x)/r.width*o.W/o.k;o.y-=(ny-pr.y)/r.height*o.H/o.k;pzApply(svg);e.preventDefault()}
- if(Math.hypot(nx-o.sx,ny-o.sy)>6)PZ.moved=true;o.pts.set(e.pointerId,{x:nx,y:ny})},{passive:false});
-['pointerup','pointercancel'].forEach(n=>document.addEventListener(n,e=>{const svg=PZ.cur;if(!svg)return;const o=pzS(svg);o.pts.delete(e.pointerId);o.d0=null;if(!o.pts.size)PZ.cur=null}));
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;const f=ACT[el.dataset.a];if(f){e.preventDefault();f(el,e)}});
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 document.addEventListener('keydown',e=>{const t=e.target;

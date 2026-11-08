@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="312819a619">
+<meta name="bc-ver" content="178705f9ad">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-iLSEL61urXN8hhN21SMc31LHiI7631x+MVRfq1vlL10=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-CGY2SLsP3+VDvtoVnHXLvDA6xwGWUe89WX/XopKnMAY=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -574,6 +574,8 @@ a{color:var(--accent)}
 .phead p{color:#e9edf0;margin:2px 0 0;font-size:14px;text-shadow:0 1px 4px rgba(0,0,0,.7)}
 .phead p.mono{font-size:12px;color:#cfd6db}
 .flash{animation:flashbg 1.8s ease-out}@keyframes flashbg{0%,45%{box-shadow:0 0 0 3px var(--stamp)}100%{box-shadow:0 0 0 0 transparent}}
+.artog{flex:1;display:flex;align-items:center;gap:8px;background:none;border:0;padding:0;min-height:48px;text-align:left;color:inherit;font:inherit;cursor:pointer}.artog b{flex:1}
+.artog .chev{width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .15s;flex:none;margin:0 4px 0 2px}.artog[aria-expanded=true] .chev{transform:rotate(45deg)}.artog.noc .chev{visibility:hidden}
 .pacts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:var(--panel);border-bottom:1px solid var(--line);margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:8px max(8px,env(safe-area-inset-left,0px))}
 .pacts button,.pacts a{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:600;color:var(--ink);text-decoration:none;min-height:56px;justify-content:center;border-radius:8px}
 .pacts svg{width:24px;height:24px;color:var(--accent)}
@@ -2958,6 +2960,16 @@ function ctForm(p){const pool=ctPool(p),roles=['Owner','Owner Rep','Architect','
    <select id="ctn-role" aria-label="Role"><option value="">Role…</option>${roles.map(r=>`<option>${r}</option>`).join('')}</select>
    <input type="text" id="ctn-name" placeholder="Name" autocapitalize="words" aria-label="Contact name"><input type="tel" id="ctn-phone" placeholder="Phone" aria-label="Contact phone">
    <div class="row"><button type="button" class="btn sm pri" data-a="ctSave" data-pid="${p.id}">Add Contact</button><button type="button" class="btn sm" data-a="ctOpen" data-pid="${p.id}">Cancel</button></div></form>`}
+/* phone job info: each side section folds; tap its title to open it (remembered on this phone) */
+let ASO=null;try{ASO=new Set(JSON.parse(localStorage.getItem('pc-asopen')||'[]'))}catch(e){ASO=new Set()}
+function asFold(){if(DESK())return;document.querySelectorAll('.paside .acard .ar:not([data-fold])').forEach(ar=>{ar.dataset.fold='1';const b=ar.querySelector('b');if(!b)return;
+  const key=b.textContent.replace(/\s*\(\d+\)\s*$/,'').trim(),parts=[];let n=ar.nextElementSibling;while(n&&!n.classList.contains('ar')){parts.push(n);n=n.nextElementSibling}
+  const forced=(key==='Customer'&&V.custOpen)||(key==='Contacts'&&V.ctOpen),open=forced||ASO.has(key);
+  const t=document.createElement('button');t.type='button';t.className='artog';t.setAttribute('aria-expanded',open);t.innerHTML='<span class="chev" aria-hidden="true"></span>';t.appendChild(b);ar.prepend(t);
+  t.addEventListener('click',()=>{const o=t.getAttribute('aria-expanded')!=='true';t.setAttribute('aria-expanded',o);parts.forEach(x=>x.hidden=!o);o?ASO.add(key):ASO.delete(key);try{localStorage.setItem('pc-asopen',JSON.stringify([...ASO]))}catch(e){}});
+  if(!parts.length){t.classList.add('noc')}parts.forEach(x=>x.hidden=!open);
+  ar.querySelectorAll('[data-a=custOpen],[data-a=ctOpen]').forEach(x=>x.addEventListener('click',()=>{ASO.add(key)},true))})}
+new MutationObserver(()=>{if(document.querySelector('.paside .ar:not([data-fold])'))asFold()}).observe(document.getElementById('app')||document.body,{childList:true,subtree:true});
 /* jump to a spot on the page (Add GPS, add customer, add contact) and flash it */
 function goTo(g){let t=null;if(g==='gps')t=$('#pi-gpsmsg')&&$('#pi-gpsmsg').closest('.card');else if(g==='contact'){const b=$('[data-a=ctAdd]');if(b){ACT.ctAdd(b);setTimeout(()=>{const c=[...document.querySelectorAll('#main .card h2')].find(h=>h.textContent==='Job Contacts');if(c){const k=c.closest('.card');k.scrollIntoView({block:'center',behavior:'smooth'});k.classList.add('flash')}},180)}return}else t=$('#'+g);
   if(!t)return;t.scrollIntoView({block:'center',behavior:'smooth'});t.classList.remove('flash');void t.offsetWidth;t.classList.add('flash');if(t.matches('input,select,textarea'))setTimeout(()=>t.focus({preventScroll:true}),350)}

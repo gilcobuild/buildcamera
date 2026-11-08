@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="fb327b8ebf">
+<meta name="bc-ver" content="68a1b77f20">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-5t5mt4gwxkRpQzgDX+zVOcS4Yh+x0B2EfBS6dAeQUeU=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-ZnP6zipbX8zQpQ0T99L/My/G0hsngZM+fjhH4Yz6zzM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -450,6 +450,7 @@ fieldset .li .t>*{white-space:normal;overflow-wrap:anywhere}
 .plset .pgh .plsetn{font-weight:700;font-size:16px;flex:1 1 auto;width:100%;min-width:0}
 body.pldrop #main{outline:3px dashed var(--accent);outline-offset:-6px}
 .ptabs{display:flex;gap:4px;overflow-x:auto;margin:10px 0 12px;border-bottom:1px solid var(--line);scrollbar-width:none}
+@media (max-width:999px){.ptabs{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);padding-right:30px}}
 .ptab{flex:none;border:0;background:transparent;padding:9px 11px;font-weight:600;font-size:14px;color:var(--muted);border-bottom:3px solid transparent;min-height:44px}
 .ptab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
 .empty{border:1px dashed var(--line);border-radius:12px;padding:28px 18px;text-align:center;color:var(--muted);display:grid;gap:12px;justify-items:center;background:var(--panel)}
@@ -754,7 +755,7 @@ details.stl:not([open]){gap:0}details.stl[open]>summary{margin-bottom:4px}
 
 .dh{cursor:grab;user-select:none;color:var(--muted);font:700 15px/1 var(--f-ui,inherit);letter-spacing:-3px;padding:8px 6px 8px 2px;touch-action:none}.dh:hover{color:var(--ink)}.reo-drag{opacity:.9;box-shadow:0 6px 18px rgba(0,0,0,.18);background:var(--panel);position:relative;z-index:5;border-radius:8px}body.reo-on,body.reo-on *{cursor:grabbing!important;user-select:none}
 .pgby{display:inline-flex;align-items:center;gap:6px}.pgby select{width:auto;min-height:38px}.pgrp{margin-top:14px}.pgh{display:flex;align-items:center;gap:8px;margin:0 0 6px}.pgh b{font-size:16px}
-.pcard{display:flex;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px}.pimg{display:flex;gap:4px;flex:none}.pimg .tile{width:76px;aspect-ratio:1;border-radius:8px}.pimg .ph0{width:76px;aspect-ratio:1;border-radius:8px;background:var(--sunk);display:grid;place-items:center;color:var(--muted)}.pbody{flex:1;min-width:0;display:grid;gap:2px}.pbody b{font-size:15px}
+.pcard{display:flex;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px}.pimg{display:flex;gap:4px;flex:none}.pimg .tile{width:76px;aspect-ratio:1;border-radius:8px}.pimg .ph0{width:76px;aspect-ratio:1;border-radius:8px;background:var(--sunk);display:grid;place-items:center;color:var(--muted)}.pimg .ph0 svg{width:26px;height:26px;opacity:.55}.pbody{flex:1;min-width:0;display:grid;gap:2px}.pbody b{font-size:15px}
 @media (min-width:1000px){.sheet.pv .pvside .card{padding:10px 12px}.sheet.pv .pvside .card.stack{gap:6px!important}.sheet.pv .pvside textarea{min-height:52px}.sheet.pv .pvside .acts .btn{min-height:36px;padding:0 12px;font-size:14px}.sheet.pv .pvside .f{gap:4px}.sheet.pv .pvside input,.sheet.pv .pvside select{min-height:38px;padding-top:6px;padding-bottom:6px}.sheet.pv .pvside .btn.sm{min-height:34px}.sheet.pv .pvside .f>.row{flex-wrap:nowrap;gap:6px}.sheet.pv .pvside .f .linkb{font-size:11px;white-space:nowrap}.sheet.pv .pvside #cmts .note{margin:2px 0}.sheet.pv .pvside .chip{min-height:30px;padding:3px 10px}}
 .pvwho{display:flex;align-items:center;gap:10px}.pvwho .av{width:38px;height:38px;font-size:13px}
 .pvsec{display:flex;align-items:center;gap:8px;font-weight:600}.pvsec svg{width:18px;height:18px;color:var(--accent)}
@@ -859,6 +860,7 @@ nav.side{display:none}
 .cammode button{border:0;background:transparent;color:#fff;font-weight:600;font-size:13px;border-radius:999px;padding:6px 12px;min-height:34px}
 .cammode button[aria-pressed="true"]{background:#fff;color:#111}
 .campriv{display:flex;align-items:center;gap:6px;flex:none;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.4);border-radius:999px;color:#fff;font-weight:600;font-size:13px;padding:0 14px;min-height:40px}.campriv svg{width:16px;height:16px}.campriv[aria-pressed="true"]{background:#fff;color:#111;border-color:#fff}
+@media (max-width:440px){.campriv{width:44px;padding:0;justify-content:center}.campriv span{display:none}.campriv svg{width:20px;height:20px}.camsel>span{display:none}.camsel{padding-left:6px}}
 .camshut.vid span{background:#e5372f}
 .camshut.vid.on span{width:30px;height:30px;border-radius:7px}
 .camtimer{font-family:var(--f-mono);font-size:13px;font-weight:600;background:#e5372f;color:#fff;border-radius:999px;padding:3px 9px}
@@ -886,7 +888,9 @@ nav.side{display:none}
 .phc{display:flex;align-items:center;gap:8px;margin:0 0 10px}
 .phc .bk{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ink);display:grid;place-items:center;flex:none;padding:0}.phc .bk svg{width:20px;height:20px}
 .phc .nm{flex:1;min-width:0}
-.phc h1{font-size:22px;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.phc{align-items:flex-start}.phc .bk,.phc .starb{margin-top:2px}
+.phc h1{font-size:22px;line-height:1.2;margin:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
+.phc .adr{display:flex;align-items:center;gap:6px;margin-top:3px;min-width:0}.phc .adr .badge{flex:none}
 .phc .ad{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
 .pdhd2{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 6px}
 .pdhd2 h1{font-size:28px;margin:0}
@@ -1681,7 +1685,7 @@ function scrProject(){
   const dir=p.lat!=null?`<a class="btn sm" href="https://www.google.com/maps/dir/?api=1&destination=${+p.lat},${+p.lng}" target="_blank" rel="noopener">${I('pin')} Directions</a>`:'';
   const desk=DESK()?`<div class="pdesk"><div class="pdtop"><button class="bkl" data-a="tab" data-t="projects">${I('back')} Projects</button><span class="sp"></span>${starBtn(p)}<button class="btn sm" data-a="pSel" data-id="${p.id}">${I('share')} Share</button><button class="btn sm" data-a="shareJob" data-pid="${p.id}">${I('link')} Guest Link</button>${canInvite()?`<button class="btn sm" data-a="jobInvite" data-pid="${p.id}">${I('plus')} Invite</button>`:''}<button class="btn sm" data-a="ptab" data-t="reports">${I('report')} Report</button>${dir}<button class="btn sm stamp" data-a="capture" data-pid="${p.id}">${I('camera')} Take Photos</button></div>
    <div class="pdhd2"><h1>${esc(p.name)}</h1>${p.address?`<a class="ad" href="${gmSearch(p.address)}" target="_blank" rel="noopener">${esc(p.address)}</a>`:'<span class="note">No address yet</span>'}</div><div class="row" style="margin-bottom:8px">${pstat(p)}${p.companyName?`<span class="note">${esc(p.companyName)}</span>`:''}${p.jobNumber?`<span class="note">Job ${esc(p.jobNumber)}</span>`:''}<button class="btn sm" data-a="ptab" data-t="info">${I('pen')} Edit Job Info</button></div></div>`:'';
-  return `<div class="phc ph-only2"><button class="bk" data-a="tab" data-t="projects" aria-label="Back to Projects">${I('back')}</button><div class="nm"><h1>${esc(p.name)}</h1><span class="ad">${esc(p.address||'No address yet')}</span></div>${pstat(p)}${starBtn(p)}</div>
+  return `<div class="phc ph-only2"><button class="bk" data-a="tab" data-t="projects" aria-label="Back to Projects">${I('back')}</button><div class="nm"><h1>${esc(p.name)}</h1><span class="adr">${pstat(p)}<span class="ad">${esc(p.address||'No address yet')}</span></span></div>${starBtn(p)}</div>
   <div class="pacts"><button data-a="pickLib" data-pid="${p.id}">${I('img')}<span>Upload</span></button><button data-a="pSel" data-id="${p.id}">${I('share')}<span>Share</span></button><button data-a="ptab" data-t="reports">${I('report')}<span>Report</span></button>${p.lat!=null?`<a href="https://www.google.com/maps/dir/?api=1&destination=${+p.lat},${+p.lng}" target="_blank" rel="noopener">${I('pin')}<span>Directions</span></a>`:`<button data-a="ptab" data-t="info" data-go="gps">${I('pin')}<span>Add GPS</span></button>`}</div>
   ${desk}<div class="pwrap"><div class="pmain" style="min-width:0"><div class="ptabs" role="tablist">${tabs.map(([k,l])=>`<button class="ptab" role="tab" data-a="ptab" data-t="${k}" aria-selected="${V.ptab===k}">${l}${cnt[k]!=null?` <span class="cnt">(${cnt[k]})</span>`:''}</button>`).join('')}</div>${body}</div>${DESK()?`<aside class="paside" aria-label="Project details">${asideHtml(p)}</aside>`:''}</div>`;
 }

@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="178705f9ad">
+<meta name="bc-ver" content="9a151f6670">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-CGY2SLsP3+VDvtoVnHXLvDA6xwGWUe89WX/XopKnMAY=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-5t5mt4gwxkRpQzgDX+zVOcS4Yh+x0B2EfBS6dAeQUeU=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -545,6 +545,8 @@ a{color:var(--accent)}
 .stat b{display:block;font-family:var(--f-display);font-size:24px;font-variant-numeric:tabular-nums}
 .stat span{font-size:12px;color:var(--muted)}
 .tile .bdg i.q{background:var(--warn);color:#fff}
+.tile .bdg i.pv{background:#1f2937;color:#fff;display:inline-flex;align-items:center;gap:2px}.tile .bdg i.pv svg{width:10px;height:10px}
+.privc{display:flex;align-items:center;gap:10px;cursor:pointer}.privc input{width:22px;height:22px;flex:none;accent-color:var(--ink,#111)}.privc .t{flex:1;min-width:0}.privc .t b{display:flex;align-items:center;gap:6px}.privc .t b svg{width:16px;height:16px}
 .tile.on{outline:3px solid var(--accent);outline-offset:-3px}
 .tile.on img{opacity:.75}
 .selck{position:absolute;top:6px;left:6px;z-index:2;width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:rgba(0,0,0,.35);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:700}
@@ -848,6 +850,7 @@ nav.side{display:none}
 .cammode{display:flex;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:3px;flex:none}
 .cammode button{border:0;background:transparent;color:#fff;font-weight:600;font-size:13px;border-radius:999px;padding:6px 12px;min-height:34px}
 .cammode button[aria-pressed="true"]{background:#fff;color:#111}
+.campriv{display:flex;align-items:center;gap:6px;flex:none;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.4);border-radius:999px;color:#fff;font-weight:600;font-size:13px;padding:0 14px;min-height:40px}.campriv svg{width:16px;height:16px}.campriv[aria-pressed="true"]{background:#fff;color:#111;border-color:#fff}
 .camshut.vid span{background:#e5372f}
 .camshut.vid.on span{width:30px;height:30px;border-radius:7px}
 .camtimer{font-family:var(--f-mono);font-size:13px;font-weight:600;background:#e5372f;color:#fff;border-radius:999px;padding:3px 9px}
@@ -1079,7 +1082,7 @@ const ICON={
  pin:'<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
  pen:'<path d="M4 20l4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10z"/>',
  cmp:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M12 3v18"/>',
- flag:'<path d="M5 21V4m0 0h11l-2 4 2 4H5"/>', clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+ flag:'<path d="M5 21V4m0 0h11l-2 4 2 4H5"/>', lock:'<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>', clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
  search:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>', users:'<circle cx="9" cy="8.5" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 5.2a3.5 3.5 0 0 1 0 6.6M18.5 20a6.5 6.5 0 0 0-3-5.5"/>',
  shield:'<path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
  star:'<path d="M12 3.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L12 16.9l-5.3 2.7 1-5.8-4.2-4.1 5.9-.9z"/>',
@@ -1161,7 +1164,7 @@ async function qRun(){
   if(qBusy||!AS||!Q.items.length||OFFLINE())return; qBusy=true;
   for(const it of [...Q.items]){
     if(it.team&&it.team!==qTeam())continue; /* belongs to a different company signed in on this phone before */
-    try{const up=await upMedia(it.blob,it.thumb);await put('photos',{...it.doc,id:it.id,...up});delete PEND[it.id];await qDrop(it.id);if(hookOn())BC.hook('photo.created',hookPhoto({...it.doc,id:it.id,url:up.url}))}
+    try{const up=await upMedia(it.blob,it.thumb);await put('photos',{...it.doc,id:it.id,...up});delete PEND[it.id];await qDrop(it.id);if(hookOn()&&!it.doc.private)BC.hook('photo.created',hookPhoto({...it.doc,id:it.id,url:up.url}))}
     catch(e){break}
   }
   qBusy=false; scheduleRender();
@@ -1265,11 +1268,11 @@ async function processFile(file,ctx){
   let qual=null;
   if(kind==='photo'||kind==='doc'){const r=await stampImage(file,{takenAt,project:pr?.name,jobNumber:pr?.jobNumber,address:pr?.address,lat,lng,gpsSource,zone:ctx.zone,trade:ctx.trade,code,company:coName(pid),logo:await getLogo()},kind==='doc');blob=r.blob;thumb=r.thumb;qual=r.q&&(r.q.blurry||r.q.dark)?r.q:null}
   const id=uid();
-  const doc=clean({projectId:pid||null,kind,takenAt,createdAt:Date.now(),lat,lng,gpsSource,code,tags:ctx.tags||[],zone:ctx.zone||'',trade:ctx.trade||'',note:ctx.note||'',by:ME.id,byName:ME.name,beforeOf:ctx.beforeOf||null,markupOf:ctx.markupOf||null,portfolio:(ctx.tags||[]).includes('Portfolio'),tpTask:ctx.tpTask||'',contentType:blob.type||file.type,quality:qual,...(ctx.plan||{})});
+  const doc=clean({projectId:pid||null,kind,takenAt,createdAt:Date.now(),lat,lng,gpsSource,code,tags:ctx.tags||[],zone:ctx.zone||'',trade:ctx.trade||'',note:ctx.note||'',by:ME.id,byName:ME.name,beforeOf:ctx.beforeOf||null,markupOf:ctx.markupOf||null,portfolio:(ctx.tags||[]).includes('Portfolio'),tpTask:ctx.tpTask||'',private:ctx.private?true:undefined,contentType:blob.type||file.type,quality:qual,...(ctx.plan||{})});
   PEND[id]={...doc,id,url:URL.createObjectURL(blob),...(thumb?{thumb:URL.createObjectURL(thumb)}:{}),pending:true}; scheduleRender(); if(ctx.onAdd)ctx.onAdd(id);
   if(AS&&OFFLINE()){await qSave({id,blob,thumb,doc})}
   else if(AS){
-    try{const up=await upMedia(blob,thumb);await put('photos',{...doc,id,...up});delete PEND[id];if(kind==='photo')aiTag(id,blob);if(hookOn())BC.hook('photo.created',hookPhoto({...doc,id,url:up.url}))}
+    try{const up=await upMedia(blob,thumb);await put('photos',{...doc,id,...up});delete PEND[id];if(kind==='photo')aiTag(id,blob);if(hookOn()&&!doc.private)BC.hook('photo.created',hookPhoto({...doc,id,url:up.url}))}
     catch(e){await qSave({id,blob,thumb,doc});toast('No signal. Photo saved on this phone and will upload when you\'re back online.',3800)}
   }else{await put('photos',{...doc,id,url:PEND[id].url,localOnly:true});delete PEND[id]}
   if(moved)toast('Filed to '+moved+' by GPS');
@@ -1550,7 +1553,7 @@ function screen0(){
 function tile(p,showProj){
   const pr=P(p.projectId); const b=[];
   if(p.markupOf)b.push('<i>Marked</i>'); if((p.pins||[]).length)b.push('<i class="y">'+p.pins.length+' pin'+(p.pins.length>1?'s':'')+'</i>'); if(p.beforeOf||allPhotos().some(x=>x.beforeOf===p.id))b.push('<i class="y">B/A</i>');
-  if(S.tasks.some(t=>t.photoId===p.id&&t.type==='punch'))b.push('<i>Punch</i>'); if(p.portfolio)b.push('<i class="y">Portfolio</i>');if(p.quality)b.push(`<i class="q">${p.quality.blurry?'Blurry?':'Dark'}</i>`);
+  if(S.tasks.some(t=>t.photoId===p.id&&t.type==='punch'))b.push('<i>Punch</i>'); if(p.private)b.push('<i class="pv">'+I('lock')+' Private</i>');if(p.portfolio)b.push('<i class="y">Portfolio</i>');if(p.quality)b.push(`<i class="q">${p.quality.blurry?'Blurry?':'Dark'}</i>`);
   if(S.comments.some(c=>c.photoId===p.id))b.push('<i>'+S.comments.filter(c=>c.photoId===p.id).length+'</i>');
   const media=p.kind==='video'?`<span class="ph">${I('video')}</span>`:p.kind==='audio'?`<span class="ph">${I('mic')}</span>`:`<img src="${esc(p.thumb||p.url)}" alt="${esc(p.note||'Jobsite photo')}" loading="lazy">`;
   const sm=V.selMode&&V.tab==='project'&&!p.pending,on=sm&&V.sel.has(p.id);
@@ -2098,7 +2101,7 @@ function camHtml(){const c=M.cap,pr=P(c.pid),last=c.shot&&c.shot[0]&&PH(c.shot[0
   return `<div class="cam" role="dialog" aria-modal="true" aria-label="Camera"><video id="camv" playsinline autoplay muted></video><div class="camwait" id="camwait">Starting camera…</div><div class="camflash" id="camflash"></div>
   <div class="camtop"><button class="ib" data-a="camDone" aria-label="Close camera">${I('x')}</button><div class="camjob"><b>${esc(pr?pr.name:'')}</b><span>${esc([c.ctx.zone,c.ctx.trade].filter(Boolean).join(' · ')||'Tap Details to set zone and trade')}</span></div>${OFFLINE()?'<span class="offbadge">No-signal mode</span>':''}<span class="camtimer" id="camtimer" hidden>0:00</span><span class="camgps" id="camgps">GPS…</span><button class="ib" data-a="camDetails" aria-label="Photo details: work zone, trade partner, note" title="Details">${I('pen')}</button><button class="ib" data-a="camSnd" aria-pressed="${sndOn()}" aria-label="Shutter sound ${sndOn()?'on':'off'}">${I(sndOn()?'snd':'mute')}</button><button class="ib" id="camtorch" data-a="camTorch" aria-pressed="false" aria-label="Flashlight off">${I('torchoff')}</button>${MOTION_ASK?'':`<button class="ib" data-a="camLevel" aria-pressed="${lvlOn()}" aria-label="Level ${lvlOn()?'on':'off'}">${I('level')}</button>`}<button class="ib" data-a="camFlip" aria-label="Switch camera">${I('cmp')}</button></div><div class="camlvl" id="camlvl" ${lvlOn()&&!MOTION_ASK?'':'hidden'} aria-hidden="true"><i></i><b></b></div><div class="camtoast" id="camtoast" aria-live="polite">${I('check')}<span>Saved</span></div><div class="camzl" id="camzl" aria-hidden="true">1×</div>
   <div class="camstamp" id="camstamp" aria-label="Stamp preview">${stampPrevHtml(c)}</div><div class="camzoom" id="camzoom" role="group" aria-label="Zoom">${zoomBtns()}</div>
-  <div class="camtags"><div class="cammode" role="group" aria-label="Photo or video"><button data-a="camMode" data-m="photo" aria-pressed="${CAM.mode!=='video'}">Photo</button><button data-a="camMode" data-m="video" aria-pressed="${CAM.mode==='video'}">Video</button></div><label class="camsel"><span>Tag</span><select id="cam-tag" data-ch="camTagSel" aria-label="Tag for the next photos"><option value="">No tag</option>${tagList().map(t=>`<option ${c.ctx.tags[0]===t?'selected':''}>${esc(t)}</option>`).join('')}</select></label></div>
+  <div class="camtags"><div class="cammode" role="group" aria-label="Photo or video"><button data-a="camMode" data-m="photo" aria-pressed="${CAM.mode!=='video'}">Photo</button><button data-a="camMode" data-m="video" aria-pressed="${CAM.mode==='video'}">Video</button></div><label class="camsel"><span>Tag</span><select id="cam-tag" data-ch="camTagSel" aria-label="Tag for the next photos"><option value="">No tag</option>${tagList().map(t=>`<option ${c.ctx.tags[0]===t?'selected':''}>${esc(t)}</option>`).join('')}</select></label>${ME.id?`<button class="campriv" id="campriv" data-a="camPriv" aria-pressed="${!!c.ctx.private}" aria-label="Private: only you can see the next photos">${I('lock')}<span>Private</span></button>`:''}</div>
   <div class="cambot"><button class="camlast" data-a="camLast" aria-label="Open last photo">${last?`<img src="${esc(last.thumb||last.url)}" alt="">`:''}</button><button class="camshut${CAM.mode==='video'?' vid':''}" data-a="camShutter" aria-label="${CAM.mode==='video'?'Start recording':'Take photo'}"><span></span></button><button class="camdone" data-a="camDone"><b id="camcount">${c.count||0}</b><span>Done</span></button></div>
   <p class="camerr" id="camerr" hidden></p></div>`}
 /* ask for the sharpest camera the phone allows. Some iPhones answer a too-big request with their tiniest size (192×144), so check what we got and step down until it's sharp */
@@ -2187,7 +2190,7 @@ function shutterSound(){if(!sndOn())return;try{ACX=ACX||new (window.AudioContext
     const src=ACX.createBufferSource();src.buffer=buf;const f=ACX.createBiquadFilter();f.type='bandpass';f.frequency.value=hz;f.Q.value=.8;const g=ACX.createGain();g.gain.value=gain;src.connect(f);f.connect(g);g.connect(ACX.destination);src.start(t+at)};
   burst(0,.035,1.4,3200);burst(.065,.055,1,2200)}catch(e){}}
 function goJob(pid){if(pid&&P(pid)){V.selMode=false;V.sel=new Set();V.pid=pid;V.tab='project';V.ptab='photos';V.lastProject=pid;saveView();render();scrollTo(0,0)}}
-function camOnAdd(cap){return id=>{cap.shot=[id,...(cap.shot||[])];cap.count=(cap.count||0)+1;const n=$('#camcount');if(n){n.textContent=cap.count;n.classList.remove('bump');void n.offsetWidth;n.classList.add('bump')}const l=document.querySelector('.camlast');const p=PH(id);if(l&&p){l.innerHTML=p.kind==='video'?`<span class="ph" style="display:grid;place-items:center;height:100%;color:#fff">${I('video')}</span>`:`<img src="${esc(p.thumb||p.url)}" alt="">`;l.classList.remove('got');void l.offsetWidth;l.classList.add('got')}const ct=$('#camtoast');if(ct){ct.querySelector('span').textContent=p&&p.kind==='video'?'Video saved':cap.count>1?cap.count+' saved':'Saved';ct.classList.remove('go');void ct.offsetWidth;ct.classList.add('go')}}}
+function camOnAdd(cap){return id=>{cap.shot=[id,...(cap.shot||[])];cap.count=(cap.count||0)+1;const n=$('#camcount');if(n){n.textContent=cap.count;n.classList.remove('bump');void n.offsetWidth;n.classList.add('bump')}const l=document.querySelector('.camlast');const p=PH(id);if(l&&p){l.innerHTML=p.kind==='video'?`<span class="ph" style="display:grid;place-items:center;height:100%;color:#fff">${I('video')}</span>`:`<img src="${esc(p.thumb||p.url)}" alt="">`;l.classList.remove('got');void l.offsetWidth;l.classList.add('got')}const ct=$('#camtoast');if(ct){ct.querySelector('span').textContent=p&&p.kind==='video'?'Video saved':cap.count>1?cap.count+' saved':'Saved'+(cap.ctx.private?' · Private':'');ct.classList.remove('go');void ct.offsetWidth;ct.classList.add('go')}}}
 function stampTile(W,H,lines){const fs=Math.max(12,Math.round(Math.max(W,H)*.0168)),gap=fs*1.18,pad=Math.round(fs*1.1),c=document.createElement('canvas');c.width=W;c.height=Math.ceil(gap*lines.length+pad*2);const x=c.getContext('2d');
   const face='-apple-system,"SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif';x.textAlign='right';let y=c.height-pad;
   for(let k=lines.length-1;k>=0;k--){x.font=`${k===0?700:k===1?700:600} ${k===0?Math.round(fs*.78):k===3?Math.round(fs*.7):fs}px ${face}`;const t=lines[k];x.shadowColor='rgba(0,0,0,1)';x.shadowBlur=Math.max(6,fs*.7);x.fillStyle='rgba(0,0,0,.75)';x.fillText(t,W-pad,y);x.shadowBlur=0;x.shadowColor='transparent';x.lineJoin='round';x.strokeStyle='rgba(0,0,0,.65)';x.lineWidth=Math.max(1.5,fs*.08);x.strokeText(t,W-pad,y);x.fillStyle='#fff';x.fillText(t,W-pad,y);y-=gap}
@@ -2225,7 +2228,7 @@ async function camShoot(){const v=$('#camv');if(!v||CAM.busy)return;if(!v.videoW
   if(camIsBlack(c)){c.width=c.height=0;CAM.busy=false;toast('The camera went dark. Restarting it, take that one again.',3500);camRestart();return}
   const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));c.width=c.height=0;CAM.busy=false;
   const cap=M.cap,ctx={...cap.ctx,projectId:cap.pid,lockProject:false,fromCamera:true,gps:CAM.gps};
-  ctx.onAdd=id=>{cap.shot=[id,...(cap.shot||[])];cap.count=(cap.count||0)+1;const n=$('#camcount');if(n){n.textContent=cap.count;n.classList.remove('bump');void n.offsetWidth;n.classList.add('bump')}const l=document.querySelector('.camlast');const p=PH(id);if(l&&p){l.innerHTML=`<img src="${esc(p.thumb||p.url)}" alt="">`;l.classList.remove('got');void l.offsetWidth;l.classList.add('got')}const ct=$('#camtoast');if(ct){ct.querySelector('span').textContent=cap.count>1?cap.count+' saved':'Saved';ct.classList.remove('go');void ct.offsetWidth;ct.classList.add('go')}};
+  ctx.onAdd=id=>{cap.shot=[id,...(cap.shot||[])];cap.count=(cap.count||0)+1;const n=$('#camcount');if(n){n.textContent=cap.count;n.classList.remove('bump');void n.offsetWidth;n.classList.add('bump')}const l=document.querySelector('.camlast');const p=PH(id);if(l&&p){l.innerHTML=`<img src="${esc(p.thumb||p.url)}" alt="">`;l.classList.remove('got');void l.offsetWidth;l.classList.add('got')}const ct=$('#camtoast');if(ct){ct.querySelector('span').textContent=cap.count>1?cap.count+' saved':'Saved'+(cap.ctx.private?' · Private':'');ct.classList.remove('go');void ct.offsetWidth;ct.classList.add('go')}};
   CAM.q=(CAM.q||Promise.resolve()).then(()=>processFile(blob,ctx)).then(id=>{if(id)setLastZT(cap.pid,cap.ctx.zone,cap.ctx.trade,(cap.ctx.tags||[])[0])}).catch(()=>toast('Couldn\'t save that photo. Try again.'));
 }
 /* photo viewer */
@@ -2245,6 +2248,7 @@ function photoSheet(){
    <div class="pvwho">${avHtml(p.byName||'?','av',p.by)}<div style="flex:1;min-width:0"><b>${esc(p.byName||'Unknown')}</b><div class="note">${fmtFull(p.takenAt)}${list.length>1&&i>=0?` · ${i+1} of ${list.length}`:''}</div></div>${p.lat!=null?`<a class="btn sm" href="https://www.google.com/maps?q=${+p.lat},${+p.lng}" target="_blank" rel="noopener" aria-label="Show where it was taken">${I('map')}</a>`:''}</div>
    </div>
   ${p.pending?'<p class="callout">Waiting to upload. It\'s safe on this phone.</p>':''}
+  ${p.by&&ME.id&&p.by===ME.id&&!p.pending?`<label class="card privc"><input type="checkbox" id="ph-priv" data-ch="phPriv" data-id="${p.id}" ${p.private?'checked':''}><span class="t"><b>${I('lock')} Private</b><span class="note">${p.private?'Only you can see this photo. It stays out of share links, reports for others and your team\'s feeds.':'Turn on so only you can see it. Your team, office and share links won\'t.'}</span></span></label>`:''}
   ${p.quality?`<p class="callout">This photo ${p.quality.blurry?'might be blurry':'is very dark'}. It's saved either way; take another if you need a clearer one.</p>`:''}
   ${p.suggest&&!p.suggest.done&&(p.suggest.tags.length||p.suggest.trade||p.suggest.caption)?`<div class="callout info stack" style="gap:6px"><b>${I('sparkle')} AI suggests</b><span>${esc([p.suggest.tags.join(', '),p.suggest.trade&&'Trade: '+p.suggest.trade,p.suggest.caption&&'Note: '+p.suggest.caption].filter(Boolean).join(' · '))}</span><div class="row"><button class="btn sm pri" data-a="aiAccept" data-id="${p.id}">Accept</button><button class="btn sm" data-a="aiDismiss" data-id="${p.id}">Dismiss</button></div></div>`:''}
   <div class="card stack" style="gap:10px"><div class="two"><label class="f"><span class="row" style="justify-content:space-between">Work Zone<button type="button" class="linkb edic" data-a="editList" data-k="zones" aria-label="Edit work zone list" title="Edit work zone list">${I('pen')}</button></span><input type="text" id="ph-zone" list="dl-zones" value="${esc(p.zone||'')}" data-ch="phF" data-id="${p.id}" data-k="zone" placeholder="Building, area or level" autocapitalize="words"></label><label class="f"><span class="row" style="justify-content:space-between">Trade Partner<button type="button" class="linkb edic" data-a="editList" data-k="trades" aria-label="Edit trade partner list" title="Edit trade partner list">${I('pen')}</button></span><input type="text" id="ph-trade" list="dl-trades" value="${esc(p.trade||'')}" data-ch="phF" data-id="${p.id}" data-k="trade" autocapitalize="words"></label></div>
@@ -2893,7 +2897,7 @@ async function makeReel(a,b,msg){
 /* select photos and send in a text */
 function selBar(){
   if(!V.selMode||V.tab!=='project')return '';const n=V.sel.size;
-  return `<style>main{padding-bottom:calc(180px + env(safe-area-inset-bottom,0px))!important}</style><div class="selbar"><div class="in"><b>${n} selected</b><span class="sp"></span><button class="btn sm" data-a="selAll">All</button><button class="btn sm" data-a="shareSel" ${n?'':'disabled'}>${I('link')} Link</button><button class="btn sm pri" data-a="bulkOpen" ${n?'':'disabled'}>${I('pen')} Edit</button><button class="btn sm stamp" data-a="sendText" ${n?'':'disabled'}>${I('share')} Send in Text</button><button class="btn sm" data-a="selPdf" ${n&&DL?'':'disabled'}>${I('report')} PDF</button><button class="btn sm bad" data-a="selDel" ${n?'':'disabled'}>${I('trash')}</button><button class="btn sm" data-a="selDone">Done</button></div></div>`;
+  return `<style>main{padding-bottom:calc(180px + env(safe-area-inset-bottom,0px))!important}</style><div class="selbar"><div class="in"><b>${n} selected</b><span class="sp"></span><button class="btn sm" data-a="selAll">All</button><button class="btn sm" data-a="shareSel" ${n?'':'disabled'}>${I('link')} Link</button><button class="btn sm pri" data-a="bulkOpen" ${n?'':'disabled'}>${I('pen')} Edit</button><button class="btn sm stamp" data-a="sendText" ${n?'':'disabled'}>${I('share')} Send in Text</button><button class="btn sm" data-a="selPdf" ${n&&DL?'':'disabled'}>${I('report')} PDF</button><button class="btn sm" data-a="selPriv" ${n?'':'disabled'} title="Only you can see">${I('lock')} Private</button><button class="btn sm bad" data-a="selDel" ${n?'':'disabled'}>${I('trash')}</button><button class="btn sm" data-a="selDone">Done</button></div></div>`;
 }
 function bulkSheet(){
   const ps=M.ids.map(PH).filter(p=>p&&!p.pending),n=ps.length;
@@ -3011,6 +3015,7 @@ const ACT={
   backCam:()=>{const b=M&&M.back;if(b){M=b;renderModal()}else closeModal()},
   camShutter:()=>{if(CAM.mode==='video'){CAM.rec?recStop():recStart();return}camShoot()},
   camMode:el=>camMode(el.dataset.m),
+  camPriv:el=>{const c=M&&M.cap;if(!c)return;c.ctx.private=!c.ctx.private;el.setAttribute('aria-pressed',c.ctx.private);haptic&&haptic();const t=$('#camtoast');if(t){t.querySelector('span').textContent=c.ctx.private?'Private on':'Private off';t.classList.remove('go');void t.offsetWidth;t.classList.add('go')}},
   camSnd:el=>{const on=!sndOn();try{localStorage.setItem('pc-snd',on?'on':'off')}catch(e){}el.setAttribute('aria-pressed',on);el.setAttribute('aria-label','Shutter sound '+(on?'on':'off'));el.innerHTML=I(on?'snd':'mute');if(on)shutterSound();toast(on?'Shutter sound on':'Shutter sound off')},
   camFallback:()=>{const b=M&&M.back;camStop();CAM.ok=false;if(b){M=b;renderModal()}$('#in-photo').click()},
   camFlip:()=>{CAM.facing=CAM.facing==='environment'?'user':'environment';CAM.zoom=CAM.facing==='user'?1:zoomStart();camStop();lvlStart();camStart()},
@@ -3207,6 +3212,9 @@ const ACT={
   sxDrop:el=>{if(!M||M.kind!=='sendText')return;const m=$('#sx-msg');if(m)M.msg=m.value;M.ids=M.ids.filter(i=>i!==el.dataset.id);renderModal()},
   sxSave:()=>sxSave(),
   selPdf:()=>{const ids=[...V.sel];const ps=ids.map(PH).filter(Boolean);if(!ps.length)return;const days=ps.map(x=>dayKey(x.takenAt)).sort();savePdf(P(V.pid),{tpl:'custom',from:days[0],to:days[days.length-1],per:ps.length>2?'4':'2',inc:'notes',only:ids})},
+  selPriv:async el=>{const all=[...V.sel].map(PH).filter(p=>p&&!p.pending);const mine=all.filter(p=>p.by&&p.by===ME.id);if(!mine.length){toast('You can only make your own photos private.');return}
+    const on=!mine.every(p=>p.private);for(const p of mine)await upd('photos',p.id,{private:on});const skip=all.length-mine.length;
+    toast((on?mine.length+' photo'+(mine.length===1?'':'s')+' now private':mine.length+' photo'+(mine.length===1?'':'s')+' visible to your team again')+(skip?' · '+skip+' taken by others left as is':''),3600);render()},
   selDel:el=>{const ids=[...V.sel].filter(id=>PH(id)&&!PH(id).pending);V.sel=new Set();V.selMode=false;if(ids.length)photosUndoable(ids,ids.length+' photo'+(ids.length===1?'':'s')+' deleted');else render()},
   mapZ:el=>{const svg=el.closest('.mzoom').querySelector('svg');const s=mapState(svg),f=+el.dataset.z;if(!f)mapView(svg,1,+svg.dataset.w/2,+svg.dataset.h/2);else mapView(svg,s.z*f,s.cx,s.cy)},
   dailyPdf:el=>savePdf(P(el.dataset.pid),{tpl:'daily',from:V.logDate,to:V.logDate,per:'4',inc:'notes'})
@@ -3250,6 +3258,7 @@ document.addEventListener('change',async e=>{const el=e.target,k=el.dataset.ch;i
   else if(k==='capF'){M.ctx[el.dataset.k]=el.value}
   else if(k==='capTagSel'){M.ctx.tags=el.value?[el.value]:[]}
   else if(k==='camTagSel'){if(M&&M.cap){M.cap.ctx.tags=el.value?[el.value]:[];setLastZT(M.cap.pid,M.cap.ctx.zone,M.cap.ctx.trade,el.value)}}
+  else if(k==='phPriv'){const p=PH(el.dataset.id);if(p&&!p.pending&&p.by===ME.id){upd('photos',p.id,{private:el.checked});toast(el.checked?'Private. Only you can see this photo.':'Your team can see this photo again.');setTimeout(renderModal,30)}}
   else if(k==='phF'){const p=PH(el.dataset.id);if(p&&!p.pending)upd('photos',p.id,{[el.dataset.k]:el.value})}
   else if(k==='phMove'){upd('photos',el.dataset.id,{projectId:el.value});toast('Moved to '+(P(el.value)?.name||''))}
   else if(k==='taskDone'){const t=S.tasks.find(x=>x.id===el.dataset.id);if(t.type==='punch'&&el.checked&&!t.fixPhotoId){el.checked=false;toast('Add a Fixed photo to close a punch item.',3200);return}upd('tasks',t.id,{done:el.checked,doneAt:el.checked?Date.now():null})}

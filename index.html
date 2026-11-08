@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="f9d93f7cc8">
+<meta name="bc-ver" content="32210bc347">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-NthJEkf/Qb66t1adUMDACFhwQ8cNxvy/i+i/gPcEx9s=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-qMDnOFmjUM+QU5IxeladVLz3vI3PmGztvo6vYyKm57Q=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -573,6 +573,7 @@ a{color:var(--accent)}
 .phead h1{color:#fff;margin:0;font-size:26px;text-shadow:0 1px 6px rgba(0,0,0,.6)}
 .phead p{color:#e9edf0;margin:2px 0 0;font-size:14px;text-shadow:0 1px 4px rgba(0,0,0,.7)}
 .phead p.mono{font-size:12px;color:#cfd6db}
+.flash{animation:flashbg 1.8s ease-out}@keyframes flashbg{0%,45%{box-shadow:0 0 0 3px var(--stamp)}100%{box-shadow:0 0 0 0 transparent}}
 .pacts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:var(--panel);border-bottom:1px solid var(--line);margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:8px max(8px,env(safe-area-inset-left,0px))}
 .pacts button,.pacts a{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:600;color:var(--ink);text-decoration:none;min-height:56px;justify-content:center;border-radius:8px}
 .pacts svg{width:24px;height:24px;color:var(--accent)}
@@ -1668,7 +1669,7 @@ function scrProject(){
   const desk=DESK()?`<div class="pdesk"><div class="pdtop"><button class="bkl" data-a="tab" data-t="projects">${I('back')} Projects</button><span class="sp"></span>${starBtn(p)}<button class="btn sm" data-a="pSel" data-id="${p.id}">${I('share')} Share</button><button class="btn sm" data-a="shareJob" data-pid="${p.id}">${I('link')} Guest Link</button>${canInvite()?`<button class="btn sm" data-a="jobInvite" data-pid="${p.id}">${I('plus')} Invite</button>`:''}<button class="btn sm" data-a="ptab" data-t="reports">${I('report')} Report</button>${dir}<button class="btn sm stamp" data-a="capture" data-pid="${p.id}">${I('camera')} Take Photos</button></div>
    <div class="pdhd2"><h1>${esc(p.name)}</h1>${p.address?`<a class="ad" href="${gmSearch(p.address)}" target="_blank" rel="noopener">${esc(p.address)}</a>`:'<span class="note">No address yet</span>'}</div><div class="row" style="margin-bottom:8px">${pstat(p)}${p.companyName?`<span class="note">${esc(p.companyName)}</span>`:''}${p.jobNumber?`<span class="note">Job ${esc(p.jobNumber)}</span>`:''}<button class="btn sm" data-a="ptab" data-t="info">${I('pen')} Edit Job Info</button></div></div>`:'';
   return `<div class="phc ph-only2"><button class="bk" data-a="tab" data-t="projects" aria-label="Back to Projects">${I('back')}</button><div class="nm"><h1>${esc(p.name)}</h1><span class="ad">${esc(p.address||'No address yet')}</span></div>${pstat(p)}${starBtn(p)}</div>
-  <div class="pacts"><button data-a="pickLib" data-pid="${p.id}">${I('img')}<span>Upload</span></button><button data-a="pSel" data-id="${p.id}">${I('share')}<span>Share</span></button><button data-a="ptab" data-t="reports">${I('report')}<span>Report</span></button>${p.lat!=null?`<a href="https://www.google.com/maps/dir/?api=1&destination=${+p.lat},${+p.lng}" target="_blank" rel="noopener">${I('pin')}<span>Directions</span></a>`:`<button data-a="ptab" data-t="info">${I('pin')}<span>Add GPS</span></button>`}</div>
+  <div class="pacts"><button data-a="pickLib" data-pid="${p.id}">${I('img')}<span>Upload</span></button><button data-a="pSel" data-id="${p.id}">${I('share')}<span>Share</span></button><button data-a="ptab" data-t="reports">${I('report')}<span>Report</span></button>${p.lat!=null?`<a href="https://www.google.com/maps/dir/?api=1&destination=${+p.lat},${+p.lng}" target="_blank" rel="noopener">${I('pin')}<span>Directions</span></a>`:`<button data-a="ptab" data-t="info" data-go="gps">${I('pin')}<span>Add GPS</span></button>`}</div>
   ${desk}<div class="pwrap"><div class="pmain" style="min-width:0"><div class="ptabs" role="tablist">${tabs.map(([k,l])=>`<button class="ptab" role="tab" data-a="ptab" data-t="${k}" aria-selected="${V.ptab===k}">${l}${cnt[k]!=null?` <span class="cnt">(${cnt[k]})</span>`:''}</button>`).join('')}</div>${body}</div>${DESK()?`<aside class="paside" aria-label="Project details">${asideHtml(p)}</aside>`:''}</div>`;
 }
 function ptPhotos(p){
@@ -1713,7 +1714,7 @@ function ptMap(p){
   ps.forEach(x=>{svg+=`<g class="mpin" data-x="${X(x.lng)}" data-y="${Y(x.lat)}" transform="translate(${X(x.lng)},${Y(x.lat)})" data-a="openPhoto" data-id="${x.id}" style="cursor:pointer"><circle r="20" fill="transparent"/><circle r="11" fill="var(--accent)" stroke="var(--panel)" stroke-width="3"/></g>`});
   svg+=`</svg>`;
   const tip=`<span class="note">${ps.length} photo${ps.length===1?'':'s'} with their own GPS. Tap a pin to open it. Pinch or use + and − to zoom.${far?` ${far} photo${far===1?' was':'s were'} taken away from the job site and ${far===1?'isn\'t':'aren\'t'} shown.`:''}</span>`;
-  const nogps=p.lat==null?`<p class="callout" style="margin:0 0 10px">This job has no GPS spot yet, so photos can't file themselves to it by location. <button class="linkb" data-a="ptab" data-t="info">Set it in Job Info</button></p>`:'';
+  const nogps=p.lat==null?`<p class="callout" style="margin:0 0 10px">This job has no GPS spot yet, so photos can't file themselves to it by location. <button class="linkb" data-a="ptab" data-t="info" data-go="gps">Set it in Job Info</button></p>`:'';
   return `${nogps}<div class="mapbox mzoom">${svg}<div class="mzb"><button class="ib" data-a="mapZ" data-z="1.6" aria-label="Zoom in">${I('zoomin')}</button><button class="ib" data-a="mapZ" data-z="0" aria-label="Fit">${I('expand')}</button><button class="ib" data-a="mapZ" data-z="0.625" aria-label="Zoom out">${I('zoomout')}</button></div><div class="mscale" data-scale></div></div><div class="row" style="margin-top:10px">${gm}${tip}</div>`;
 }
 /* zoom and drag inside the job map (changes the drawing's view, not the page) */
@@ -1742,9 +1743,9 @@ function asideHtml(p){
   const users=[...new Set(allPhotos().filter(x=>x.projectId===p.id).map(x=>x.byName).filter(Boolean))];
   const open=vis(S.tasks.filter(t=>t.projectId===p.id&&!t.done),'tasks').sort((a,b)=>(a.due||'9')<(b.due||'9')?-1:1);
   const cs=p.contacts||[];
-  return `<div class="acard"><div class="ar"><b>Customer</b><button class="ib" data-a="ptab" data-t="info" aria-label="${p.customer?'Edit':'Add'} customer">${I(p.customer?'pen':'plus')}</button></div>${p.customer?`<div class="body">${esc(p.customer)}${p.phone?`<br><a href="tel:${esc(p.phone)}">${esc(p.phone)}</a>`:''}</div>`:''}</div>
+  return `<div class="acard"><div class="ar"><b>Customer</b><button class="ib" data-a="ptab" data-t="info" data-go="pi-cust" aria-label="${p.customer?'Edit':'Add'} customer">${I(p.customer?'pen':'plus')}</button></div>${p.customer?`<div class="body">${esc(p.customer)}${p.phone?`<br><a href="tel:${esc(p.phone)}">${esc(p.phone)}</a>`:''}</div>`:''}</div>
   <div class="acard"><div class="ar"><b>Project Users (${users.length})</b></div>${users.length?`<div class="avs">${users.map(u=>`<span class="av" title="${esc(u)}" aria-label="${esc(u)}">${esc(ini(u))}</span>`).join('')}</div>`:''}
-   <div class="ar"><b>Contacts (${cs.length})</b><button class="ib" data-a="ptab" data-t="info" aria-label="Add contact">${I('plus')}</button></div>${cs.length?`<div class="body">${cs.map(c=>`<div>${esc(c.name||'')}${c.role?` <span class="note">· ${esc(c.role)}</span>`:''}${c.phone?` <a href="tel:${esc(c.phone)}">${esc(c.phone)}</a>`:''}</div>`).join('')}</div>`:''}
+   <div class="ar"><b>Contacts (${cs.length})</b><button class="ib" data-a="ptab" data-t="info" data-go="contact" aria-label="Add contact">${I('plus')}</button></div>${cs.length?`<div class="body">${cs.map(c=>`<div>${esc(c.name||'')}${c.role?` <span class="note">· ${esc(c.role)}</span>`:''}${c.phone?` <a href="tel:${esc(c.phone)}">${esc(c.phone)}</a>`:''}</div>`).join('')}</div>`:''}
    <div class="ar"><b>Description</b></div><div class="body"><textarea id="pd-desc" data-ch="pDesc" data-id="${p.id}" placeholder="Add a description…" style="min-height:70px">${esc(p.description||'')}</textarea></div></div>
   <div class="acard"><div class="ar"><b>Tasks</b><button class="ib" data-a="newTask" data-pid="${p.id}" aria-label="New task">${I('plus')}</button></div><div class="body">${open.length?open.slice(0,6).map(t=>`<label class="mtask"><input type="checkbox" data-ch="taskDone" data-id="${t.id}"><span class="t">${esc(t.title)}<span>${t.type==='punch'?'Punch item':'Task'}${t.due?' · due '+esc(t.due):''}${M_(t.assignee)?' · '+esc(M_(t.assignee).name):''}</span></span></label>`).join('')+(open.length>6?`<button class="btn sm" data-a="ptab" data-t="tasks">See all ${open.length}</button>`:''):`<button class="btn sm" data-a="newTask" data-pid="${p.id}">${I('plus')} New Task</button><p class="note" style="margin:6px 0 0">Add to-dos to keep the job on track.</p>`}</div></div>
   ${jobTeamCard(p)}
@@ -2944,11 +2945,14 @@ async function sxSave(){
 
 /* ---------- actions ---------- */
 let afterShot=null; // callback after capture
+/* jump to a spot on the page (Add GPS, add customer, add contact) and flash it */
+function goTo(g){let t=null;if(g==='gps')t=$('#pi-gpsmsg')&&$('#pi-gpsmsg').closest('.card');else if(g==='contact'){const b=$('[data-a=ctAdd]');if(b){ACT.ctAdd(b);setTimeout(()=>{const c=[...document.querySelectorAll('#main .card h2')].find(h=>h.textContent==='Job Contacts');if(c){const k=c.closest('.card');k.scrollIntoView({block:'center',behavior:'smooth'});k.classList.add('flash')}},180)}return}else t=$('#'+g);
+  if(!t)return;t.scrollIntoView({block:'center',behavior:'smooth'});t.classList.remove('flash');void t.offsetWidth;t.classList.add('flash');if(t.matches('input,select,textarea'))setTimeout(()=>t.focus({preventScroll:true}),350)}
 const ACT={
   tab:el=>{V.tab=el.dataset.t;render();scrollTo(0,0);if(V.tab==='about')usage();if(V.tab==='search')setTimeout(()=>$('#q')?.focus(),50)},
   feedF:el=>{V.feedF=el.dataset.f;render()},
   taskF:el=>{V.taskF=el.dataset.f;render()},
-  ptab:el=>{V.ptab=el.dataset.t;render()},
+  ptab:el=>{V.ptab=el.dataset.t;render();const g=el.dataset.go;if(g)setTimeout(()=>goTo(g),60)},
   openProject:el=>{V.selMode=false;V.sel=new Set();V.pid=el.dataset.id;V.tab='project';V.ptab='photos';V.pf={zone:'',trade:'',tag:'',by:'',tags:[],q:'',album:''};V.pfOpen=false;V.lastProject=V.pid;saveView();render();scrollTo(0,0)},
   openProjTab:el=>{V.selMode=false;V.sel=new Set();V.pid=el.dataset.id;V.tab='project';V.ptab=el.dataset.t||'photos';V.pf={zone:'',trade:'',tag:'',by:'',tags:[],q:'',album:''};V.pfOpen=false;V.lastProject=V.pid;saveView();render();scrollTo(0,0)},
   newProject:()=>openModal({kind:'newProject'}),

@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="32210bc347">
+<meta name="bc-ver" content="312819a619">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-qMDnOFmjUM+QU5IxeladVLz3vI3PmGztvo6vYyKm57Q=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-iLSEL61urXN8hhN21SMc31LHiI7631x+MVRfq1vlL10=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -1743,9 +1743,9 @@ function asideHtml(p){
   const users=[...new Set(allPhotos().filter(x=>x.projectId===p.id).map(x=>x.byName).filter(Boolean))];
   const open=vis(S.tasks.filter(t=>t.projectId===p.id&&!t.done),'tasks').sort((a,b)=>(a.due||'9')<(b.due||'9')?-1:1);
   const cs=p.contacts||[];
-  return `<div class="acard"><div class="ar"><b>Customer</b><button class="ib" data-a="ptab" data-t="info" data-go="pi-cust" aria-label="${p.customer?'Edit':'Add'} customer">${I(p.customer?'pen':'plus')}</button></div>${p.customer?`<div class="body">${esc(p.customer)}${p.phone?`<br><a href="tel:${esc(p.phone)}">${esc(p.phone)}</a>`:''}</div>`:''}</div>
+  return `<div class="acard"><div class="ar"><b>Customer</b><button class="ib" data-a="custOpen" data-pid="${p.id}" aria-expanded="${V.custOpen===p.id}" aria-label="${p.customer?'Edit':'Add'} customer">${I(V.custOpen===p.id?'x':p.customer?'pen':'plus')}</button></div>${V.custOpen===p.id?custForm(p):p.customer?`<div class="body">${esc(p.customer)}${p.phone?`<br><a href="tel:${esc(p.phone)}">${esc(p.phone)}</a>`:''}</div>`:''}</div>
   <div class="acard"><div class="ar"><b>Project Users (${users.length})</b></div>${users.length?`<div class="avs">${users.map(u=>`<span class="av" title="${esc(u)}" aria-label="${esc(u)}">${esc(ini(u))}</span>`).join('')}</div>`:''}
-   <div class="ar"><b>Contacts (${cs.length})</b><button class="ib" data-a="ptab" data-t="info" data-go="contact" aria-label="Add contact">${I('plus')}</button></div>${cs.length?`<div class="body">${cs.map(c=>`<div>${esc(c.name||'')}${c.role?` <span class="note">· ${esc(c.role)}</span>`:''}${c.phone?` <a href="tel:${esc(c.phone)}">${esc(c.phone)}</a>`:''}</div>`).join('')}</div>`:''}
+   <div class="ar"><b>Contacts (${cs.length})</b><button class="ib" data-a="ctOpen" data-pid="${p.id}" aria-expanded="${V.ctOpen===p.id}" aria-label="Add contact">${I(V.ctOpen===p.id?'x':'plus')}</button></div>${V.ctOpen===p.id?ctForm(p):''}${cs.length?`<div class="body">${cs.map(c=>`<div>${esc(c.name||'')}${c.role?` <span class="note">· ${esc(c.role)}</span>`:''}${c.phone?` <a href="tel:${esc(c.phone)}">${esc(c.phone)}</a>`:''}</div>`).join('')}</div>`:''}
    <div class="ar"><b>Description</b></div><div class="body"><textarea id="pd-desc" data-ch="pDesc" data-id="${p.id}" placeholder="Add a description…" style="min-height:70px">${esc(p.description||'')}</textarea></div></div>
   <div class="acard"><div class="ar"><b>Tasks</b><button class="ib" data-a="newTask" data-pid="${p.id}" aria-label="New task">${I('plus')}</button></div><div class="body">${open.length?open.slice(0,6).map(t=>`<label class="mtask"><input type="checkbox" data-ch="taskDone" data-id="${t.id}"><span class="t">${esc(t.title)}<span>${t.type==='punch'?'Punch item':'Task'}${t.due?' · due '+esc(t.due):''}${M_(t.assignee)?' · '+esc(M_(t.assignee).name):''}</span></span></label>`).join('')+(open.length>6?`<button class="btn sm" data-a="ptab" data-t="tasks">See all ${open.length}</button>`:''):`<button class="btn sm" data-a="newTask" data-pid="${p.id}">${I('plus')} New Task</button><p class="note" style="margin:6px 0 0">Add to-dos to keep the job on track.</p>`}</div></div>
   ${jobTeamCard(p)}
@@ -2945,10 +2945,27 @@ async function sxSave(){
 
 /* ---------- actions ---------- */
 let afterShot=null; // callback after capture
+/* customer: edit right in the side card; pick a customer from other jobs or type a new one */
+function custList(){const m=new Map();S.projects.forEach(x=>{if(x.customer&&!m.has(x.customer))m.set(x.customer,x.phone||'')});return [...m.entries()].sort((a,b)=>a[0].localeCompare(b[0]))}
+function custForm(p){const cl=custList().filter(([n])=>n!==p.customer);
+  return `<form class="stack cform" data-pid="${p.id}" style="gap:8px;padding:4px 0 12px">${cl.length?`<select id="cu-pick" data-ch="custPick" aria-label="Pick a customer"><option value="">Pick a customer from another job…</option>${cl.map(([n,ph])=>`<option value="${esc(n)}" data-ph="${esc(ph)}">${esc(n)}</option>`).join('')}</select>`:''}
+   <input type="text" id="cu-name" value="${esc(p.customer||'')}" placeholder="Customer name" autocapitalize="words" aria-label="Customer name"><input type="tel" id="cu-phone" value="${esc(p.phone||'')}" placeholder="Phone" aria-label="Customer phone">
+   <div class="row"><button type="button" class="btn sm pri" data-a="custSave" data-pid="${p.id}">Save</button><button type="button" class="btn sm" data-a="custOpen" data-pid="${p.id}">Cancel</button></div></form>`}
+/* contacts: add right in the side card; pick someone from another job or type a new one */
+function ctPool(p){const have=new Set((p.contacts||[]).map(c=>(c.name||'').toLowerCase()));const m=new Map();S.projects.forEach(x=>(x.contacts||[]).forEach(c=>{const k=(c.name||'').trim();if(k&&!have.has(k.toLowerCase())&&!m.has(k))m.set(k,c)}));return [...m.values()].sort((a,b)=>a.name.localeCompare(b.name))}
+function ctForm(p){const pool=ctPool(p),roles=['Owner','Owner Rep','Architect','Engineer','GC Super','GC PM','Inspector','Subcontractor','Supplier'];
+  return `<form class="stack" style="gap:8px;padding:4px 0 12px">${pool.length?`<select data-ch="ctPick" aria-label="Pick a contact"><option value="">Pick someone from another job…</option>${pool.map((c,i)=>`<option value="${i}">${esc(c.name)}${c.role?' · '+esc(c.role):''}</option>`).join('')}</select>`:''}
+   <select id="ctn-role" aria-label="Role"><option value="">Role…</option>${roles.map(r=>`<option>${r}</option>`).join('')}</select>
+   <input type="text" id="ctn-name" placeholder="Name" autocapitalize="words" aria-label="Contact name"><input type="tel" id="ctn-phone" placeholder="Phone" aria-label="Contact phone">
+   <div class="row"><button type="button" class="btn sm pri" data-a="ctSave" data-pid="${p.id}">Add Contact</button><button type="button" class="btn sm" data-a="ctOpen" data-pid="${p.id}">Cancel</button></div></form>`}
 /* jump to a spot on the page (Add GPS, add customer, add contact) and flash it */
 function goTo(g){let t=null;if(g==='gps')t=$('#pi-gpsmsg')&&$('#pi-gpsmsg').closest('.card');else if(g==='contact'){const b=$('[data-a=ctAdd]');if(b){ACT.ctAdd(b);setTimeout(()=>{const c=[...document.querySelectorAll('#main .card h2')].find(h=>h.textContent==='Job Contacts');if(c){const k=c.closest('.card');k.scrollIntoView({block:'center',behavior:'smooth'});k.classList.add('flash')}},180)}return}else t=$('#'+g);
   if(!t)return;t.scrollIntoView({block:'center',behavior:'smooth'});t.classList.remove('flash');void t.offsetWidth;t.classList.add('flash');if(t.matches('input,select,textarea'))setTimeout(()=>t.focus({preventScroll:true}),350)}
 const ACT={
+  ctOpen:el=>{V.ctOpen=V.ctOpen===el.dataset.pid?null:el.dataset.pid;render();if(V.ctOpen)setTimeout(()=>{const i=$('#ctn-name');if(i)i.focus()},60)},
+  ctSave:el=>{const p=P(el.dataset.pid);if(!p)return;const n=(($('#ctn-name')||{}).value||'').trim(),ph=(($('#ctn-phone')||{}).value||'').trim(),r=(($('#ctn-role')||{}).value||'').trim();if(!n&&!ph){toast('Add a name or phone number.');return}upd('projects',p.id,{contacts:[...(p.contacts||[]),{role:r,name:n,phone:ph}]});V.ctOpen=null;render();toast('Contact added')},
+  custOpen:el=>{V.custOpen=V.custOpen===el.dataset.pid?null:el.dataset.pid;render();if(V.custOpen)setTimeout(()=>{const i=$('#cu-name');if(i&&!i.value)i.focus()},60)},
+  custSave:el=>{const n=($('#cu-name')||{}).value||'',ph=($('#cu-phone')||{}).value||'';upd('projects',el.dataset.pid,{customer:n.trim(),phone:ph.trim()});V.custOpen=null;render();toast(n.trim()?'Customer saved':'Customer removed')},
   tab:el=>{V.tab=el.dataset.t;render();scrollTo(0,0);if(V.tab==='about')usage();if(V.tab==='search')setTimeout(()=>$('#q')?.focus(),50)},
   feedF:el=>{V.feedF=el.dataset.f;render()},
   taskF:el=>{V.taskF=el.dataset.f;render()},
@@ -3209,6 +3226,8 @@ document.addEventListener('input',e=>{const el=e.target;if(el.closest&&el.closes
   if(el.matches('input[autocapitalize="words"]')&&el.type==='text'){const p=el.selectionStart,v=titleCase(el.value);if(v!==el.value){el.value=v;try{el.setSelectionRange(p,p)}catch(_){}}}
 });
 document.addEventListener('change',async e=>{const el=e.target,k=el.dataset.ch;if(!k)return;
+  if(k==='ctPick'){const c=ctPool(P(V.pid)||{})[+el.value];if(c){const n=$('#ctn-name'),ph=$('#ctn-phone'),r=$('#ctn-role');if(n)n.value=c.name||'';if(ph)ph.value=c.phone||'';if(r){if(c.role&&![...r.options].some(o=>o.value===c.role))r.add(new Option(c.role,c.role));r.value=c.role||''}}return}
+  if(k==='custPick'){const o=el.selectedOptions[0];if(o&&o.value){const n=$('#cu-name'),ph=$('#cu-phone');if(n)n.value=o.value;if(ph&&o.dataset.ph)ph.value=o.dataset.ph}return}
   if(k==='albSel'){ACT.albPick({dataset:{v:el.value}});return}
   if(k==='planPick'){if(M&&M.kind==='plan'){M.n=+el.value;M.drop=null;PLV.placed=false;renderModal()}return}
   if(k==='jiWho'){const n=$('#ji-new');if(n)n.hidden=!!el.value;const m=M_(el.value);const ph=el.form&&el.form.phone;if(ph&&m&&m.phone)ph.value=m.phone}

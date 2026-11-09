@@ -15,6 +15,7 @@ jobs:
           mkdir -p tmp pdfjs && cd tmp
           npm pack pdfjs-dist@3.11.174 >/dev/null && tar xzf pdfjs-dist-3.11.174.tgz
           cp package/legacy/build/pdf.min.js package/legacy/build/pdf.worker.min.js ../pdfjs/
-          cd .. && rm -rf tmp && sha256sum pdfjs/* > pdfjs/SHA256SUMS && ls -la pdfjs
+          rm -rf package && npm pack pdf-lib@1.17.1 >/dev/null && tar xzf pdf-lib-1.17.1.tgz && mkdir -p ../pdflib && cp package/dist/pdf-lib.min.js ../pdflib/
+          cd .. && rm -rf tmp && sha256sum pdfjs/* > pdfjs/SHA256SUMS && sha256sum pdflib/* > pdflib/SHA256SUMS && ls -la pdfjs pdflib
           git config user.name "github-actions" && git config user.email "actions@github.com"
-          git add pdfjs && git commit -m "pdf.js 3.11.174 legacy build [vendored]" && git push
+          git add pdfjs pdflib && git commit -m "pdf.js 3.11.174 + pdf-lib 1.17.1 [vendored]" && git push

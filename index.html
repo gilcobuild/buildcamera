@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="4fc72e7883">
+<meta name="bc-ver" content="877c5e5e3b">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-m3Nt79It+1ALcleFItl1a49Lee6ZB9YlPjHgmjLhv4k=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-7343MfuaPMbIoX8TRfqV7Uf6T2xIRNTQfvDyQbg2D6c=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -401,6 +401,11 @@ h3.day{font-family:var(--f-mono);font-size:12px;font-weight:500;letter-spacing:.
 .li .t span{display:block;color:var(--muted);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .li svg{width:20px;height:20px;color:var(--muted);flex:none}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;margin-inline:-6px}
+@media (max-width:999px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.grid .tav{width:20px;height:20px;font-size:8px;left:3px;bottom:3px;border-width:1.5px}
+.grid .tile .lab{font-size:9.5px;padding:12px 3px 4px}.grid .tile .tav~.lab{padding-left:26px}
+.grid .tile .bdg i{font-size:8.5px}}
+
 @media (min-width:640px){.grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
 .tile{position:relative;aspect-ratio:1;border:0;padding:0;background:var(--sunk);border-radius:2px;overflow:hidden;max-width:100%}
 .tile img{width:100%;height:100%;object-fit:cover}
@@ -1616,7 +1621,7 @@ function scrFeed(){
   if(f==='portfolio')ps=ps.filter(p=>p.portfolio);
   if(f==='punch'){const ids=new Set(S.tasks.filter(t=>t.type==='punch').map(t=>t.photoId));ps=ps.filter(p=>ids.has(p.id))}
   const chip=(k,l)=>`<button class="chip" data-a="feedF" data-f="${k}" aria-pressed="${f===k}">${l}</button>`;
-  const head=`<h1>Photos</h1><p class="sub">Every photo from every job, newest first.</p><div class="chips">${chip('all','All Jobs')}${chip('today','Today')}${chip('mine','My Photos')}${chip('punch','Punch Items')}${chip('portfolio','Portfolio')}</div>`;
+  const head=`<h1>Photos</h1><div class="chips">${chip('all','All Jobs')}${chip('today','Today')}${chip('mine','My Photos')}${chip('punch','Punch Items')}${chip('portfolio','Portfolio')}</div>`;
   if(!S.projects.length&&!ps.length)return head+`<div class="empty">${I('folder')}<b>Start with your first Project</b><span>Add a job with its address so photos file themselves to it by GPS.</span><button class="btn pri" data-a="newProject">${I('plus')} New Project</button></div>`;
   if(!ps.length)return head+`<div class="empty">${I('camera')}<b>No photos here yet</b><span>Tap the yellow camera button to take one. It gets the date, time and GPS stamped on it.</span><button class="btn stamp" data-a="capture">${I('camera')} Take a Photo</button></div>`;
   return head+grouped(ps,true);
@@ -1866,12 +1871,12 @@ function scrChecklists(){
 }
 function scrDocs(){
   const ds=allPhotos().filter(x=>x.kind==='doc').sort(byNew),by={};ds.forEach(d=>{(by[d.projectId]=by[d.projectId]||[]).push(d)});
-  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:6px">Documents</h1><p class="sub">Delivery tickets, inspection cards and signed change orders scanned on every job.</p>
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:6px">Documents</h1>
   ${ds.length?Object.keys(by).map(pid=>`<h3 class="day"><span>${esc(P(pid)?.name||'No Project')}</span><span>· ${by[pid].length}</span><span class="sp"></span><button class="btn sm" data-a="scanDoc" data-pid="${pid}">${I('doc')} Scan</button></h3><div class="grid">${by[pid].map(d=>tile(d,false)).join('')}</div>`).join(''):`<div class="empty">${I('doc')}<b>No documents yet</b><span>Open a Project, go to Documents, and tap Scan a Document.</span></div>`}`;
 }
 function scrReportsAll(){
   const ps=visProjects().sort((a,b)=>(a.status==='Done')-(b.status==='Done')||lastAct(b.id)-lastAct(a.id));
-  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:6px">Reports</h1><p class="sub">Pick a job to make a branded PDF: Daily, Inspection, Damage, Closeout, Before & After, Weekly Update or Insurance Claim.</p>
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:6px">Reports</h1>
   <div class="hcard" style="margin-top:12px">${ps.map(p=>{const cv=lastPhoto(p.id),n=allPhotos().filter(x=>x.projectId===p.id&&x.kind==='photo').length;return `<button class="mini" data-a="openProjTab" data-id="${p.id}" data-t="reports">${cv?`<img src="${esc(cv.thumb||cv.url)}" alt="" loading="lazy">`:`<span class="ph0">${I('camera')}</span>`}<span class="t"><b>${esc(p.name)}</b><span>${n} photo${n===1?'':'s'} · ${esc(ago(lastAct(p.id))||'no photos yet')}</span></span><span class="btn sm">${I('report')} Make Report</span></button>`}).join('')||'<p class="note">Add a Project first.</p>'}</div>`;
 }
 function scrMapAll(){
@@ -1999,7 +2004,7 @@ function scrVerify(){
   if(c){const p=allPhotos().find(x=>x.code===c||x.code===('PC-'+c.replace(/^PC-?/,'').replace(/(.{4})(.{4})/,'$1-$2')));
     r=p?`<div class="card stack" style="border-color:var(--good)"><div class="row"><span class="pill good">Matches our record</span><span class="code">${esc(p.code)}</span></div>${p.kind==='photo'||p.kind==='doc'?`<img src="${esc(p.url)}" alt="Verified photo" style="border-radius:8px">`:''}<dl class="kv"><dt>Taken</dt><dd>${fmtFull(p.takenAt)}</dd><dt>Where</dt><dd>${p.lat!=null?fmtGps(p.lat,p.lng)+(p.gpsSource==='project'?' (job location)':' (from the phone)'):'No GPS'}</dd><dt>Project</dt><dd>${esc(P(p.projectId)?.name||'')}</dd><dt>By</dt><dd>${esc(p.byName||'')}</dd></dl><p class="note">If the stamp on someone's copy shows a different time or place than this record, the copy was changed.</p></div>`
      :`<div class="card" style="border-color:var(--bad)"><span class="pill bad">No photo with that code</span><p class="note">Check the code for typos. Codes look like PC-7F3K-92QD.</p></div>`}
-  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Verify a Photo</h1><p class="sub">Each photo's proof code is kept in its record (open the photo to see it). Type a code here to see the original record.</p><form data-sub="verify" class="row" style="margin:10px 0"><input type="text" id="vcode" name="code" value="${esc(V.vcode||'')}" placeholder="PC-XXXX-XXXX" autocapitalize="characters" style="flex:1;min-width:200px"><button class="btn pri" type="submit">${I('shield')} Verify</button></form>${r}`;
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Verify a Photo</h1><form data-sub="verify" class="row" style="margin:10px 0"><input type="text" id="vcode" name="code" value="${esc(V.vcode||'')}" placeholder="PC-XXXX-XXXX" autocapitalize="characters" style="flex:1;min-width:200px"><button class="btn pri" type="submit">${I('shield')} Verify</button></form>${r}`;
 }
 function scrTeam(){
   const ms=[...S.members].sort((a,b)=>ROLES.indexOf(a.role)-ROLES.indexOf(b.role)||(a.name||'').localeCompare(b.name||''));
@@ -2017,7 +2022,7 @@ function scrTime(){
 }
 function scrPortfolio(){
   const ps=allPhotos().filter(p=>p.portfolio).sort(byNew);
-  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Portfolio</h1><p class="sub">Photos tagged Portfolio. Your best work, ready for your website and social media.</p>${ps.length?grouped(ps,true):`<div class="empty">${I('star')}<b>Nothing tagged yet</b><span>Open any photo and turn on Portfolio.</span></div>`}`;
+  return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">Portfolio</h1>${ps.length?grouped(ps,true):`<div class="empty">${I('star')}<b>Nothing tagged yet</b><span>Open any photo and turn on Portfolio.</span></div>`}`;
 }
 function scrAbout(){
   return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><h1 style="margin-top:10px">About This Version</h1><p class="sub">Build Camera preview, built ${fmtDay(Date.now())}.</p>

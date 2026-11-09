@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="877c5e5e3b">
+<meta name="bc-ver" content="8b2850e288">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-7343MfuaPMbIoX8TRfqV7Uf6T2xIRNTQfvDyQbg2D6c=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-SNKrJlZMQmWEOEuoBwsKIs1vg2WbWn6uuubi1vZN4Ew=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -962,6 +962,13 @@ nav.side{display:none}
   .sheet.pv .pvimg img,.sheet.pv .pvimg video{max-height:100%}
   .sheet.pv .pvside{gap:8px;overflow:auto;padding:12px 14px 14px;border-left:1px solid var(--line);background:var(--panel);min-height:0}
 }
+.tgrps{display:grid;gap:10px;margin-top:12px}
+.tgrp{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tgrp summary{list-style:none;display:flex;align-items:center;gap:8px;padding:10px 10px 10px 14px;cursor:pointer;min-height:58px}.tgrp summary::-webkit-details-marker{display:none}
+.tgrp summary .t{flex:1;min-width:0;display:grid}.tgrp summary .t b{font-size:16px}.tgrp summary .t span{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tgrp .chev{display:grid;place-items:center;color:var(--muted);transition:transform .15s}.tgrp .chev svg{width:18px;height:18px}.tgrp[open] .chev{transform:rotate(90deg)}
+.tgrp .list{border:0;border-top:1px solid var(--line);border-radius:0;margin:0}
+@media (prefers-reduced-motion:reduce){.tgrp .chev{transition:none}}
 .billpick{display:grid;gap:8px;margin:12px 0}.billbtn{display:flex;justify-content:space-between;align-items:center;text-align:left;width:100%;min-height:58px;padding:10px 14px}.billbtn small{display:block;font-weight:400;opacity:.75;font-size:12.5px}.billbtn>b small{display:inline;font-size:12px}
 .meter{height:10px;border-radius:6px;background:rgba(127,127,127,.22);overflow:hidden}.meter i{display:block;height:100%;border-radius:6px}
 </style>
@@ -2010,8 +2017,19 @@ function scrTeam(){
   const ms=[...S.members].sort((a,b)=>ROLES.indexOf(a.role)-ROLES.indexOf(b.role)||(a.name||'').localeCompare(b.name||''));
   return `<button class="btn sm bkm" data-a="tab" data-t="more">${I('back')} Menu</button><div class="row" style="margin-top:10px"><h1 style="flex:1">Team & Trade Partners</h1><button class="btn pri" data-a="editMember">${I('plus')} Add</button></div>${window.BC?BC.teamCard():''}
   <div class="card stack"><label class="f">View the App As<select id="viewas" data-ch="viewAs"><option value="">Owner (sees everything)</option>${S.members.filter(m=>m.role==='Trade Partner').map(m=>`<option value="${m.id}" ${V.viewAs===m.id?'selected':''}>${esc(m.company||m.name)} (Trade Partner)</option>`).join('')}</select></label><p class="note">A Trade Partner sees only photos for their trade and tasks assigned to them. Use this to check what they'll see.</p></div>
-  ${ms.length?`<div class="list" style="margin-top:12px">${ms.map(m=>`<button class="li" data-a="editMember" data-id="${m.id}">${I('users')}<span class="t"><b>${esc(m.name)}</b><span>${esc([m.role,m.company,m.trade,m.phone].filter(Boolean).join(' · '))}</span></span></button>`).join('')}</div>`:`<div class="empty" style="margin-top:12px">${I('users')}<b>No one added yet</b><span>Add supers, crew and Trade Partners so you can assign tasks and @mention them.</span></div>`}`;
+  ${ms.length?teamGroups(ms):`<div class="empty" style="margin-top:12px">${I('users')}<b>No one added yet</b><span>Add supers, crew and Trade Partners so you can assign tasks and @mention them.</span></div>`}`;
 }
+/* team, grouped by company: your own people first, then each Trade Partner company with its crew. Each company folds open; the phone remembers which are open. */
+function teamGroups(ms){
+  const own=(SET().name||DEFCO()).trim(),ok=own.toLowerCase();const G=new Map();
+  ms.forEach(m=>{const co=(m.company||'').trim(),k=!co||co.toLowerCase()===ok?'\u0000own':co.toLowerCase();if(!G.has(k))G.set(k,{name:k==='\u0000own'?own:co,own:k==='\u0000own',ms:[]});G.get(k).ms.push(m)});
+  const gs=[...G.entries()].sort((a,b)=>a[1].own?-1:b[1].own?1:a[1].name.localeCompare(b[1].name));
+  let open={};try{open=JSON.parse(localStorage.getItem('pc-teamopen')||'{}')}catch(e){}
+  return `<div class="tgrps">${gs.map(([k,g])=>{const trades=[...new Set(g.ms.map(m=>m.trade).filter(Boolean))].join(', ');
+    return `<details class="tgrp" data-k="${esc(k)}" ${open[k]?'open':''}><summary><span class="t"><b>${esc(g.name)}</b><span>${g.ms.length} ${g.ms.length===1?'person':'people'}${trades?' · '+esc(trades):''}</span></span><button type="button" class="ib" data-a="addToCo" data-co="${g.own?'':esc(g.name)}" aria-label="Add a person to ${esc(g.name)}">${I('plus')}</button><span class="chev" aria-hidden="true">${I('fwd')}</span></summary>
+    <div class="list">${g.ms.map(m=>`<button class="li" data-a="editMember" data-id="${m.id}">${avHtml(m.name,'av',m.userId||m.id)}<span class="t"><b>${esc(m.name)}</b><span>${esc([m.role,m.trade,m.phone].filter(Boolean).join(' · '))}</span></span></button>`).join('')}</div></details>`}).join('')}</div>`;
+}
+document.addEventListener('toggle',e=>{const d=e.target;if(!d.classList||!d.classList.contains('tgrp'))return;let o={};try{o=JSON.parse(localStorage.getItem('pc-teamopen')||'{}')}catch(_){}if(d.open)o[d.dataset.k]=1;else delete o[d.dataset.k];try{localStorage.setItem('pc-teamopen',JSON.stringify(o))}catch(_){}},true);
 function scrTime(){
   const open=S.time.filter(t=>!t.out), today=S.time.filter(t=>dayKey(t.in)===dayKey(Date.now())).sort((a,b)=>b.in-a.in);
   const ps=visProjects().filter(p=>p.status!=='Done');
@@ -2138,7 +2156,12 @@ function lvlMotion(e){const g=e.accelerationIncludingGravity;if(!g||g.x==null)re
 function lvlDraw(){CAM.lraf=0;const el=$('#camlvl');if(!el||el.hidden||!CAM.g)return;const[x,y]=CAM.g;let d;
   if(Math.abs(y)>=Math.abs(x)){const s=y>=0?1:-1;d=Math.atan2(s*x,s*y)}else{const s=x>=0?1:-1;d=Math.atan2(-s*y,s*x)}
   d=d*180/Math.PI;const ok=Math.abs(d)<1.5;el.classList.toggle('ok',ok);el.querySelector('i').style.transform=`rotate(${ok?0:d.toFixed(1)}deg)`;el.querySelector('b').textContent=ok?'Level':Math.abs(d)<25?Math.round(Math.abs(d))+'°':''}
-function lvlStart(){if(CAM.lvl||MOTION_ASK)return;try{if(window.DeviceMotionEvent){CAM.lvl=1;addEventListener('devicemotion',lvlMotion)}}catch(e){}}
+/* iPhone: ask for motion once, on the first tap after the app opens (iPhone only allows asking after a tap). It's used to tell which way the phone is held, so landscape photos save right side up. */
+let MOTION_OK=false;
+if(MOTION_ASK){const ask=()=>{removeEventListener('click',ask,true);try{if(localStorage.getItem('pc-motion')==='denied')return}catch(e){}
+  try{DeviceMotionEvent.requestPermission().then(st=>{MOTION_OK=st==='granted';try{localStorage.setItem('pc-motion',MOTION_OK?'granted':'denied')}catch(e){}if(MOTION_OK&&M&&M.kind==='cam')lvlStart()}).catch(()=>{})}catch(e){}};
+  addEventListener('click',ask,true)}
+function lvlStart(){if(CAM.lvl||(MOTION_ASK&&!MOTION_OK))return;try{if(window.DeviceMotionEvent){CAM.lvl=1;addEventListener('devicemotion',lvlMotion)}}catch(e){}}
 function lvlStop(){if(CAM.lvl){removeEventListener('devicemotion',lvlMotion);CAM.lvl=0}}
 function camOri(){if(!CAM.g)return 0;const[x,y]=CAM.g;if(Math.abs(x)<5||Math.abs(x)<Math.abs(y)*1.2)return 0;const s=CAM.ys||1;return x*s>0?-90:90}
 function turnCanvas(c,deg){const r=document.createElement('canvas');r.width=c.height;r.height=c.width;const x=r.getContext('2d');if(deg===90){x.translate(r.width,0);x.rotate(Math.PI/2)}else{x.translate(0,r.height);x.rotate(-Math.PI/2)}x.drawImage(c,0,0);return r}
@@ -3085,6 +3108,7 @@ const ACT={
   pickThis:el=>{const cb=afterShot;afterShot=null;closeModal();cb&&cb(el.dataset.id)},
   pickNew:()=>{const pid=M.pid,why='Photo for checklist item: '+(M.ckTitle||'');const keep=afterShot;openModal({kind:'capture',pid,lockProject:true,single:true,title:'Checklist Photo',why,ctx:{tags:['Inspection'],zone:'',trade:'',note:M.ckTitle||''}});afterShot=keep},
   editMember:el=>openModal({kind:'member',m:el.dataset.id?M_(el.dataset.id):{}}),
+  addToCo:el=>openModal({kind:'member',m:el.dataset.co?{company:el.dataset.co,role:'Trade Partner'}:{role:'Crew'}}),
   delMember:el=>{del('members',el.dataset.id);if(V.viewAs===el.dataset.id){V.viewAs='';saveView()}closeModal()},
   clockOut:el=>{const t=S.time.find(x=>x.id===el.dataset.id);upd('time',t.id,{out:Date.now()});afterShot=null;openModal({kind:'capture',pid:t.projectId,lockProject:true,title:'End of Day Photos',why:`Clocked out ${t.who}. Take a few photos of where the work stands. Close this when you're done.`,ctx:{tags:['End of Day'],zone:'',trade:'',note:''}})},
   gpsFromPhoto:el=>{const ph=allPhotos().filter(x=>x.projectId===el.dataset.id&&x.gpsSource==='photo').sort(byNew)[0];if(ph){$('#pi-lat').value=ph.lat.toFixed(6);$('#pi-lng').value=ph.lng.toFixed(6);gpsMsg('pi','From photo','gpsok');toast('Filled in. Tap Save Job Info.')}},

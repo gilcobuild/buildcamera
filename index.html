@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="8aa1ac5469">
+<meta name="bc-ver" content="f97d57235c">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-i9yoZJlfQ/2uEW8KQ7QnONXpWXrZmhHJfmAMTRenQ5M=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-8C4W0am8N6DGw2N909dwx/Ibr00Whq0uMmVZgT1OtBQ=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -1426,6 +1426,10 @@ async function addPlanFile(file,pid){
   Object.assign(PLIMP,{doc:d,buf,thumbs:{}});const n=d.numPages;
   toast(n+' sheet'+(n===1?'':'s')+' found',1500);
   openModal({kind:'planImport',pid,pages:n,names,sel:Array.from({length:n},(_,i)=>i+1),setName:(file.name||'Plans').replace(/\.pdf$/i,'').replace(/[_]+/g,' ').slice(0,80)})}
+/* Add Punch Item: pick the sheet where the problem is, then tap the spot */
+function punchPickSheet(){const sets=S.photos.filter(x=>x.kind==='plan'&&x.projectId===M.pid).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  return sheet('Where Is It?',`<p class="note" style="margin:0">Pick the sheet, then tap the spot that needs fixing.</p>${sets.map(pl=>`<div class="plset"><div class="pgh"><b>${esc(pl.name)}</b></div><div class="plgrid">${planList(pl).map(n=>{const k=pinsOn(pl.id,n).filter(t=>pStatus(t)!=='closed').length;return `<button class="plt" data-a="punchOnSheet" data-id="${pl.id}" data-n="${n}"><span class="plim"><img data-pth="${pl.id}:${n}" ${PTH[pl.id+':'+n]?`src="${PTH[pl.id+':'+n]}" data-done="${pl.id}:${n}"`:''} alt=""></span><b>${esc(sheetName(pl,n))}</b>${k?`<span class="pill bad">${k} open</span>`:''}</button>`}).join('')}</div></div>`).join('')}
+  <button class="btn" data-a="punchShot" data-pid="${M.pid}">${I('camera')} Not on a Plan, Just Take a Photo</button>`)}
 function planImportSheet(){const n=M.pages,sel=new Set(M.sel),k=sel.size;
   return sheet('Add Plans',`<form class="stack" data-sub="planImpGo">
     <label class="f">Plan Set Name<input type="text" name="setName" value="${esc(M.setName)}" autocapitalize="words" placeholder="Architectural, Electrical, Rev 2…"></label>
@@ -1761,7 +1765,7 @@ function scrProject(){
   const desk=DESK()?`<div class="pdesk"><div class="pdtop"><button class="bkl" data-a="tab" data-t="projects">${I('back')} Projects</button><span class="sp"></span>${isAdminMe()?`<a class="btn sm" href="/admin/devices/?src=${encodeURIComponent('/?job='+p.id)}" title="See this job on iPhone, iPad and laptop">${I('phone')} iPhone View</a>`:''}${starBtn(p)}<button class="btn sm" data-a="pSel" data-id="${p.id}">${I('share')} Share</button><button class="btn sm" data-a="shareJob" data-pid="${p.id}">${I('link')} Guest Link</button>${canInvite()?`<button class="btn sm" data-a="jobInvite" data-pid="${p.id}">${I('plus')} Invite</button>`:''}<button class="btn sm" data-a="ptab" data-t="reports">${I('report')} Report</button>${dir}<button class="btn sm stamp" data-a="capture" data-pid="${p.id}">${I('camera')} Take Photos</button></div>
    <div class="pdhd2"><h1>${esc(p.name)}</h1>${p.address?`<a class="ad" href="${gmSearch(p.address)}" target="_blank" rel="noopener">${esc(p.address)}</a>`:'<span class="note">No address yet</span>'}</div><div class="row" style="margin-bottom:8px">${pstat(p)}${p.companyName?`<span class="note">${esc(p.companyName)}</span>`:''}${p.jobNumber?`<span class="note">Job ${esc(p.jobNumber)}</span>`:''}<button class="btn sm" data-a="ptab" data-t="info">${I('pen')} Edit Job Info</button></div></div>`:'';
   return `<div class="phc ph-only2"><button class="bk" data-a="tab" data-t="projects" aria-label="Back to Projects">${I('back')}</button><div class="nm"><h1>${esc(p.name)}</h1><span class="adr">${pstat(p)}<span class="ad">${esc(p.address||'No address yet')}</span></span></div>${starBtn(p)}</div>
-  <div class="pacts1"><button class="btn pri" data-a="punchShot" data-pid="${p.id}">${I('flag')} Add Punch Item</button></div>
+  <div class="pacts1"><button class="btn pri" data-a="punchStart" data-pid="${p.id}">${I('flag')} Add Punch Item</button></div>
   ${desk}<div class="pwrap"><div class="pmain" style="min-width:0"><div class="ptabs" role="tablist">${tabs.map(([k,l])=>`<button class="ptab" role="tab" data-a="ptab" data-t="${k}" aria-selected="${V.ptab===k}">${l}${cnt[k]!=null?` <span class="cnt">(${cnt[k]})</span>`:''}</button>`).join('')}</div>${body}</div>${DESK()?`<aside class="paside" aria-label="Project details">${asideHtml(p)}</aside>`:''}</div>`;
 }
 function ptPhotos(p){
@@ -2142,6 +2146,7 @@ function renderModal(){
   else if(M.kind==='task')h=taskSheet();
   else if(M.kind==='plan')h=planSheet();
   else if(M.kind==='planImport')h=planImportSheet();
+  else if(M.kind==='punchPick')h=punchPickSheet();
   else if(M.kind==='member')h=memberSheet();
   else if(M.kind==='checklist')h=checklistSheet();
   else if(M.kind==='pickPhoto')h=pickSheet();
@@ -3167,6 +3172,8 @@ const ACT={
   ckDelItem:el=>{const c=S.checklists.find(x=>x.id===el.dataset.id);const items=c.items.filter((_,i)=>i!=el.dataset.i);upd('checklists',c.id,{items});renderModal()},
   ckDel:el=>{if(!el.classList.contains('armed')){el.classList.add('armed');el.innerHTML=I('trash')+' Tap Again to Delete';return}del('checklists',el.dataset.id);closeModal()},
   ckPhoto:el=>{const c=S.checklists.find(x=>x.id===el.dataset.id),i=+el.dataset.i;afterShot=id=>{const items=c.items.map((it,j)=>j===i?{...it,photoId:id}:it);upd('checklists',c.id,{items});toast('Photo attached. You can check it off now.')};openModal({kind:'pickPhoto',pid:c.projectId,ckTitle:c.items[i].t})},
+  punchStart:el=>{const pid=el.dataset.pid;const sets=S.photos.filter(x=>x.kind==='plan'&&x.projectId===pid);if(!sets.length){ACT.punchShot(el);return}openModal({kind:'punchPick',pid});setTimeout(planThumbs,0)},
+  punchOnSheet:el=>{PLV.key=null;PLV.placed=false;openModal({kind:'plan',id:el.dataset.id,n:+el.dataset.n||1,mode:'pin'})},
   capSkip:()=>{const t=M.skipTask,back=M.back;afterShot=null;openModal({kind:'task',task:{...t},back})},
   pickThis:el=>{const cb=afterShot;afterShot=null;closeModal();cb&&cb(el.dataset.id)},
   pickNew:()=>{const pid=M.pid,why='Photo for checklist item: '+(M.ckTitle||'');const keep=afterShot;openModal({kind:'capture',pid,lockProject:true,single:true,title:'Checklist Photo',why,ctx:{tags:['Inspection'],zone:'',trade:'',note:M.ckTitle||''}});afterShot=keep},

@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="6a083d170b">
+<meta name="bc-ver" content="737c344010">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-hbmjngmVFm1J4WRAZeZ369gTnWXw6OjCeb3tPCcmRQ0=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-nlv1G76lJbtq5yVex+N9onhM7Y0FiDLe+LO+aD1wS2k=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -970,6 +970,7 @@ nav.side{display:none}
 .tgrp .list{border:0;border-top:1px solid var(--line);border-radius:0;margin:0}
 @media (prefers-reduced-motion:reduce){.tgrp .chev{transition:none}}
 a.si{text-decoration:none}
+img[data-pith]:not([src]),img[data-pth]:not([src]){visibility:hidden}
 .billpick{display:grid;gap:8px;margin:12px 0}.billbtn{display:flex;justify-content:space-between;align-items:center;text-align:left;width:100%;min-height:58px;padding:10px 14px}.billbtn small{display:block;font-weight:400;opacity:.75;font-size:12.5px}.billbtn>b small{display:inline;font-size:12px}
 .meter{height:10px;border-radius:6px;background:rgba(127,127,127,.22);overflow:hidden}.meter i{display:block;height:100%;border-radius:6px}
 </style>
@@ -1403,7 +1404,8 @@ const planList=pl=>Array.isArray(pl.list)&&pl.list.length?pl.list.map(Number):Ar
 const PLIMP={};
 async function addPlanFile(file,pid){
   if(!file)return;if(!/pdf/i.test(file.type)&&!/\.pdf$/i.test(file.name||'')){toast('Pick a PDF plan file.');return}
-  if(file.size>50e6){toast('That PDF is over 50 MB. Split it into smaller sets and try again.',4500);return}
+  if(file.size>600e6){toast('That PDF is over 600 MB. Split it into smaller sets and try again.',4500);return}
+  if(file.size>150e6&&!DESK())toast('That\'s a big plan set. It may take a minute to open on a phone.',5000);
   if(AS&&OFFLINE()){toast('Connect to the internet to add plans.');return}
   toast('Reading plans…',8000);let buf,d,names={};
   try{buf=await file.arrayBuffer();const L=await pdfLib();d=await L.getDocument({data:new Uint8Array(buf.slice(0)),isEvalSupported:false}).promise;names=await sheetNames(d)}
@@ -1430,12 +1432,40 @@ async function planImpGo(f){const pick=[...f.querySelectorAll('input[name=pg]:ch
   const sheets={};for(let n=1;n<=M.pages;n++){const v=(f.elements['nm'+n]&&f.elements['nm'+n].value||M.names[n]||'').trim();if(v)sheets[n]=v.slice(0,60)}
   const pid=M.pid,total=M.pages,id=uid(),buf=PLIMP.buf,thumbs=PLIMP.thumbs;
   const doc={projectId:pid,kind:'plan',name:(f.elements.setName.value||'Plans').trim().slice(0,80)||'Plans',pages:total,list:pick,sheets,createdAt:Date.now(),takenAt:Date.now(),by:ME.id,byName:ME.name,contentType:'application/pdf'};
-  const b=$('#plimpgo');if(b){b.disabled=true;b.textContent='Uploading…'}
-  if(AS){try{const up=await AS.upload(new Blob([buf],{type:'application/pdf'}));await planBytesPut(up.id,buf.slice(0));await put('photos',{...doc,id,url:up.url,assetId:up.id})}
-    catch(e){if(b){b.disabled=false;b.textContent='Try Again'}toast(e&&e.code==='too_large'?'That PDF is too big to upload.':'Upload didn\'t finish. Check your signal and try again.',4000);return}}
-  else{await planBytesPut(id,buf.slice(0));await put('photos',{...doc,id,localOnly:true})}
-  pick.forEach(n=>{if(thumbs[n])PTH[id+':'+n]=thumbs[n]});try{PLIMP.doc&&PLIMP.doc.destroy()}catch(_){}PLIMP.doc=null;PLIMP.buf=null;
-  closeModal();V.ptab='plans';render();toast(`${pick.length} sheet${pick.length===1?'':'s'} added`)}
+  const b=$('#plimpgo');const say=t=>{if(b){b.disabled=true;b.textContent=t}};say('Getting sheets ready…');
+  /* keep only the picked sheets in a new, smaller PDF. If that's still over the upload limit, split it into parts that fit. */
+  let parts=null,skipped=[];
+  if(AS){try{parts=await planSplit(buf,pick,say);skipped=parts.skipped}catch(e){parts=null}
+    if(!parts){if(buf.byteLength>PLAN_MAX){if(b){b.disabled=false;b.textContent='Try Again'}toast('Couldn\'t make that plan set smaller to upload. Try saving it again as a PDF from your plan program.',5000);return}
+      parts={list:[{bytes:new Uint8Array(buf),pages:pick}]}}
+    else if(!parts.list.length){if(b){b.disabled=false;b.textContent='Try Again'}toast('Those sheets are too big to upload, even one at a time.',5000);return}}
+  const added=[];
+  try{if(AS){const np=parts.list.length;for(let i=0;i<np;i++){const pt=parts.list[i];say(np>1?`Uploading part ${i+1} of ${np}…`:'Uploading…');
+      const same=pt.bytes.byteLength===buf.byteLength&&!pt.newDoc;const pid2=i?uid():id;
+      const sh={},list=[];pt.pages.forEach((orig,j)=>{const nn=same?orig:j+1;list.push(nn);const v=sheets[orig]||('Sheet '+orig);sh[nn]=v});
+      const up=await AS.upload(new Blob([pt.bytes],{type:'application/pdf'}));await planBytesPut(up.id,pt.bytes.buffer.slice(pt.bytes.byteOffset,pt.bytes.byteOffset+pt.bytes.byteLength));
+      await put('photos',{...doc,id:pid2,name:np>1?`${doc.name} (Part ${i+1} of ${np})`:doc.name,pages:same?total:pt.pages.length,list,sheets:sh,url:up.url,assetId:up.id});
+      pt.pages.forEach((orig,j)=>{if(thumbs[orig])PTH[pid2+':'+(same?orig:j+1)]=thumbs[orig]});added.push(pid2)}}
+    else{await planBytesPut(id,buf.slice(0));await put('photos',{...doc,id,localOnly:true});pick.forEach(n=>{if(thumbs[n])PTH[id+':'+n]=thumbs[n]})}}
+  catch(e){if(b){b.disabled=false;b.textContent='Try Again'}toast(e&&e.code==='too_large'?'That PDF is too big to upload.':'Upload didn\'t finish. Check your signal and try again.',4000);return}
+  if(skipped.length)toast(`${skipped.length} sheet${skipped.length===1?' was':'s were'} too big to upload: ${skipped.map(n=>sheets[n]||'Sheet '+n).join(', ')}`,6000);try{PLIMP.doc&&PLIMP.doc.destroy()}catch(_){}PLIMP.doc=null;PLIMP.buf=null;
+  closeModal();V.ptab='plans';render();if(!skipped.length)toast(`${pick.length-skipped.length} sheet${pick.length-skipped.length===1?'':'s'} added`)}
+/* pdf-lib, kept on our own site, to copy just the picked sheets into a new PDF */
+const PLAN_MAX=45e6;let PDFLIBP=null;
+function pdfLibW(){return PDFLIBP||(PDFLIBP=new Promise((res,rej)=>{if(window.PDFLib)return res(window.PDFLib);const s=document.createElement('script');s.src='/vend/pdflib/pdf-lib.min.js';s.onload=()=>window.PDFLib?res(window.PDFLib):rej(new Error('pdf-lib'));s.onerror=()=>{PDFLIBP=null;rej(new Error('pdf-lib'))};document.head.appendChild(s)}))}
+async function planSplit(buf,pick,say){
+  if(pick.length===planTotal(buf)&&buf.byteLength<=PLAN_MAX)return {list:[{bytes:new Uint8Array(buf),pages:pick}],skipped:[]};
+  const L=await pdfLibW();const src=await L.PDFDocument.load(buf,{ignoreEncryption:true,updateMetadata:false});
+  const make=async pages=>{const d=await L.PDFDocument.create();const cp=await d.copyPages(src,pages.map(n=>n-1));cp.forEach(p=>d.addPage(p));return d.save({useObjectStreams:true})};
+  const all=await make(pick);if(all.byteLength<=PLAN_MAX)return {list:[{bytes:all,pages:pick,newDoc:true}],skipped:[]};
+  /* too big together: weigh each sheet alone, then pack sheets into parts under the limit */
+  const sz={},skipped=[];let k=0;for(const n of pick){say(`Sizing sheet ${++k} of ${pick.length}…`);const b1=await make([n]);sz[n]=b1.byteLength;if(sz[n]>PLAN_MAX)skipped.push(n)}
+  const groups=[];let cur=[],tot=0;for(const n of pick){if(skipped.includes(n))continue;if(cur.length&&tot+sz[n]>PLAN_MAX*0.9){groups.push(cur);cur=[];tot=0}cur.push(n);tot+=sz[n]}if(cur.length)groups.push(cur);
+  const list=[];for(let i=0;i<groups.length;i++){say(`Building part ${i+1} of ${groups.length}…`);let g=groups[i];let bytes=await make(g);
+    while(bytes.byteLength>PLAN_MAX&&g.length>1){const half=g.slice(Math.ceil(g.length/2));g=g.slice(0,Math.ceil(g.length/2));groups.splice(i+1,0,half);bytes=await make(g)}
+    if(bytes.byteLength>PLAN_MAX){skipped.push(...g);continue}list.push({bytes,pages:g,newDoc:true})}
+  return {list,skipped}}
+const planTotal=()=>(M&&M.pages)||0;
 /* small pictures of each sheet for the Plans tab */
 const PTH={};
 async function planThumbs(){const imgs=[...document.querySelectorAll('img[data-pth]')].filter(i=>!i.src||i.dataset.pth!==i.dataset.done);

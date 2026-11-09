@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Xc4brWDNbmNQWzC3fYkXst/vg9CJB+hM5clyG3KFqtg=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RmfsNLfgHBO3kPsCztPsfyTUpugTQpYoV/r6SltM4AM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Device Preview · Build Camera</title>
@@ -63,8 +63,8 @@ var WIFI='<svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 2.3c2.4 
 var BAT='<svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="#000" opacity=".35"/><rect x="2" y="2" width="15" height="9" rx="2"/><path d="M25 4.5v4c.8-.3 1.4-1.1 1.4-2s-.6-1.7-1.4-2z" opacity=".4"/></svg>';
 var D={phone:{w:390,h:844,name:'iPhone 15 · 390 × 844'},tab:{w:820,h:1180,name:'iPad Air · 820 × 1180'},lap:{w:1440,h:900,name:'Laptop · 1440 × 900'}};
 var sbw=(function(){var d=document.createElement('div');d.style.cssText='width:100px;height:100px;overflow:scroll;position:absolute;top:-999px';document.body.appendChild(d);var w=d.offsetWidth-d.clientWidth;d.remove();return w})();
-var cur='phone',src='/';
-try{cur=localStorage.getItem('bc-dev')||'phone'}catch(e){}
+var cur='phone',src='/';try{var q=new URLSearchParams(location.search).get('src');if(q&&/^\/(?!\/)/.test(q)&&q.indexOf('\\')<0)src=q;if(q)cur='phone'}catch(e){}
+if(src==='/'){try{cur=localStorage.getItem('bc-dev')||'phone'}catch(e){}}
 if(!D[cur])cur='phone';
 function clock(){var d=new Date(),h=d.getHours()%12||12;return h+':'+String(d.getMinutes()).padStart(2,'0')}
 function frame(w){return '<div class="fw"><iframe id="app" title="Build Camera" src="'+src+'" style="width:'+(w+sbw)+'px" allow="camera;microphone;geolocation;clipboard-write"></iframe></div>'}

@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="68a1b77f20">
+<meta name="bc-ver" content="4fc72e7883">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-ZnP6zipbX8zQpQ0T99L/My/G0hsngZM+fjhH4Yz6zzM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-m3Nt79It+1ALcleFItl1a49Lee6ZB9YlPjHgmjLhv4k=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -618,7 +618,7 @@ div.cam{position:fixed;inset:0;background:#000;z-index:55;display:flex;flex-dire
 .camtags{position:relative;margin-top:auto;display:flex;gap:6px;overflow-x:auto;padding:8px max(10px,env(safe-area-inset-left,0px));scrollbar-width:none}
 .camtags .chip{background:rgba(0,0,0,.45);color:#fff;border-color:rgba(255,255,255,.4)}.camtags .chip[aria-pressed="true"]{background:var(--stamp);color:var(--stamp-ink);border-color:var(--stamp)}
 .cambot{position:relative;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:14px max(20px,env(safe-area-inset-left,0px)) calc(env(safe-area-inset-bottom,0px) + 18px);background:linear-gradient(transparent,rgba(0,0,0,.7))}
-.camshut{width:78px;height:78px;border-radius:50%;border:4px solid #fff;background:transparent;display:grid;place-items:center;padding:0}
+.camshut{width:78px;height:78px;border-radius:50%;border:4px solid #fff;background:transparent;display:grid;place-items:center;padding:0;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .camshut span{width:62px;height:62px;border-radius:50%;background:#fff;transition:transform .08s}.camshut:active span{transform:scale(.88)}
 .camlast{justify-self:start;width:56px;height:56px;border-radius:10px;border:2px solid #fff;background:rgba(255,255,255,.12);padding:0;overflow:hidden}.camlast img{width:100%;height:100%;object-fit:cover}
 .camdone{justify-self:end;border:0;background:rgba(0,0,0,.45);color:#fff;border-radius:12px;padding:6px 14px;display:grid;justify-items:center;min-width:64px;min-height:56px}.camdone b{font-size:20px;line-height:1}.camdone span{font-size:12px;font-weight:600}
@@ -1635,7 +1635,7 @@ function scrProjects(){
   const fb=(k,l)=>`<button data-a="pfilt" data-f="${k}" aria-pressed="${f===k}">${l}</button>`;
   const tog=`<div class="seg sm" role="group" aria-label="View"><button data-a="pview" data-v="list" aria-pressed="${V.pview!=='map'}" aria-label="List">${I('feed')}</button><button data-a="pview" data-v="map" aria-pressed="${V.pview==='map'}" aria-label="Map">${I('map')}</button></div>`;
   let h=`<div class="row"><h1 style="flex:1">Projects</h1><button class="ib" data-a="importOpen" aria-label="Import Projects">${I('doc')}</button><button class="btn pri dk-create" data-a="newProject">${I('plus')} Create</button></div>
-  <div class="ptop2"><input type="search" id="pq" value="${esc(V.pq||'')}" data-in="pq" placeholder="Find a project…" autocomplete="off"><div class="pfr"><div class="seg sm" role="group" aria-label="Show">${fb('all','All')}${fb('starred','Starred')}${fb('mine','My Projects')}${fb('archived','Archived')}</div><span class="sp"></span>${tog}</div></div>`;
+  <div class="ptop2">${S.projects.length>5||V.pq?`<input type="search" id="pq" value="${esc(V.pq||'')}" data-in="pq" placeholder="Find a project…" autocomplete="off">`:''}<div class="pfr"><div class="seg sm" role="group" aria-label="Show">${fb('all','All')}${fb('starred','Starred')}${fb('mine','My Projects')}${fb('archived','Archived')}</div><span class="sp"></span>${tog}</div></div>`;
   if(!visProjects().length)return h+`<div class="empty">${I('folder')}<b>No Projects yet</b><span>Add your first job. Give it an address so crew photos file themselves.</span><button class="btn pri" data-a="newProject">${I('plus')} New Project</button></div>`;
   if(!ps.length)return h+`<div class="empty"><b>${q?`No Projects match "${esc(V.pq)}"`:f==='starred'?'No starred Projects':f==='archived'?'No archived Projects':f==='mine'?'You haven\'t taken photos on any Project yet':'No active Projects'}</b>${f==='starred'?'<span>Tap the star next to a Project to keep it here.</span>':''}</div>`;
   if(V.pview==='map')return h+projMap(ps);
@@ -2107,7 +2107,7 @@ function capThumb(id){const p=PH(id);if(!p)return '';const tg=(p.tags||[]).lengt
 function capStrip(){const el=$('#cap-strip');if(!el||!M||M.kind!=='capture')return;el.innerHTML=(M.shot||[]).map(capThumb).join('');el.hidden=!(M.shot||[]).length}
 /* in-app camera: live view, one tap per photo, no retake step */
 const CAM={mode:'photo',rec:null,audio:null,raf:0,tick:0,stream:null,facing:'environment',gps:null,watch:null,busy:false,ok:!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)&&!/claudeusercontent|claude\.ai/.test(location.host)&&window.isSecureContext};
-function openCam(){if(!M||M.kind!=='capture')return;lvlStart();CAM.zoom=CAM.facing==='user'?1:zoomStart();['zone','trade','note'].forEach(k=>{const i=$('#cap-'+k);if(i)M.ctx[k]=i.value});const sp=$('#cap-p');if(sp)M.pid=sp.value;
+function openCam(){if(!M||M.kind!=='capture')return;CAM.again=0;CAM.busy=false;lvlStart();CAM.zoom=CAM.facing==='user'?1:zoomStart();['zone','trade','note'].forEach(k=>{const i=$('#cap-'+k);if(i)M.ctx[k]=i.value});const sp=$('#cap-p');if(sp)M.pid=sp.value;
   const cap=M;M={kind:'cam',cap,back:cap};renderModal()}
 function camHtml(){const c=M.cap,pr=P(c.pid),last=c.shot&&c.shot[0]&&PH(c.shot[0]);
   return `<div class="cam" role="dialog" aria-modal="true" aria-label="Camera"><video id="camv" playsinline autoplay muted></video><div class="camwait" id="camwait">Starting camera…</div><div class="camflash" id="camflash"></div>
@@ -2231,17 +2231,19 @@ function recStart(){const v=$('#camv');if(!v||!v.videoWidth||!window.MediaRecord
   CAM.tick=setInterval(()=>{const s=Math.floor((Date.now()-t0)/1000);const el=$('#camtimer');if(el)el.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} / 1:00`;if(s>=60)recStop()},250)}
 function recStop(quiet){const r=CAM.rec;if(!r)return;CAM.rec=null;cancelAnimationFrame(CAM.raf);clearInterval(CAM.tick);try{r.rec.state!=='inactive'&&r.rec.stop()}catch(e){}
   const sh=document.querySelector('.camshut');if(sh){sh.classList.remove('on');sh.setAttribute('aria-label','Start recording')}const tm=$('#camtimer');if(tm)tm.hidden=true;if(!quiet)shutterSound()}
-async function camShoot(){const v=$('#camv');if(!v||CAM.busy)return;if(!v.videoWidth){toast('Camera is still starting.');return}if(v.videoWidth*v.videoHeight<3e5){toast('Camera is still starting. Try again in a second.');return}CAM.busy=true;
+/* shutter: react the moment a finger touches it (not on lift), give the flash and sound right away, grab the frame, then let the next tap through. Saving happens behind the scenes. */
+async function camShoot(){const v=$('#camv');if(!v)return;if(CAM.busy){CAM.again=(CAM.again||0)+1;return}if(!v.videoWidth){toast('Camera is still starting.');return}if(v.videoWidth*v.videoHeight<3e5){toast('Camera is still starting. Try again in a second.');return}CAM.busy=true;
+  shutterSound();{const f=$('#camflash');if(f){f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}}haptic('shot');
   let c=null;const tr=CAM.stream&&CAM.stream.getVideoTracks()[0];
   if(window.ImageCapture&&tr){try{const bm=await createImageBitmap(await new ImageCapture(tr).takePhoto());const z=!CAM.hwz&&CAM.zoom>1?CAM.zoom:1,sw=Math.round(bm.width/z),sh=Math.round(bm.height/z);c=document.createElement('canvas');c.width=sw;c.height=sh;c.getContext('2d').drawImage(bm,Math.round((bm.width-sw)/2),Math.round((bm.height-sh)/2),sw,sh,0,0,sw,sh)}catch(e){c=null}}
   if(!c){const zc=zoomCrop(v);c=document.createElement('canvas');c.width=zc.sw;c.height=zc.sh;c.getContext('2d').drawImage(v,zc.sx,zc.sy,zc.sw,zc.sh,0,0,zc.sw,zc.sh)}
-  shutterSound();const f=$('#camflash');if(f){f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}haptic('shot');
-  {const o=camOri();if(o&&c.height>c.width){const r=turnCanvas(c,o);c.width=c.height=0;c=r}}
-  if(camIsBlack(c)){c.width=c.height=0;CAM.busy=false;toast('The camera went dark. Restarting it, take that one again.',3500);camRestart();return}
-  const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));c.width=c.height=0;CAM.busy=false;
+  const o=camOri();CAM.busy=false;if(CAM.again){CAM.again--;setTimeout(camShoot,0)}
+  const mkBlob=async()=>{let cc=c;if(o&&cc.height>cc.width){const r=turnCanvas(cc,o);cc.width=cc.height=0;cc=r}
+    if(camIsBlack(cc)){cc.width=cc.height=0;toast('The camera went dark. Restarting it, take that one again.',3500);camRestart();return null}
+    const b=await new Promise(r=>cc.toBlob(r,'image/jpeg',.92));cc.width=cc.height=0;return b};
   const cap=M.cap,ctx={...cap.ctx,projectId:cap.pid,lockProject:false,fromCamera:true,gps:CAM.gps};
   ctx.onAdd=id=>{cap.shot=[id,...(cap.shot||[])];cap.count=(cap.count||0)+1;const n=$('#camcount');if(n){n.textContent=cap.count;n.classList.remove('bump');void n.offsetWidth;n.classList.add('bump')}const l=document.querySelector('.camlast');const p=PH(id);if(l&&p){l.innerHTML=`<img src="${esc(p.thumb||p.url)}" alt="">`;l.classList.remove('got');void l.offsetWidth;l.classList.add('got')}const ct=$('#camtoast');if(ct){ct.querySelector('span').textContent=cap.count>1?cap.count+' saved':'Saved'+(cap.ctx.private?' · Private':'');ct.classList.remove('go');void ct.offsetWidth;ct.classList.add('go')}};
-  CAM.q=(CAM.q||Promise.resolve()).then(()=>processFile(blob,ctx)).then(id=>{if(id)setLastZT(cap.pid,cap.ctx.zone,cap.ctx.trade,(cap.ctx.tags||[])[0])}).catch(()=>toast('Couldn\'t save that photo. Try again.'));
+  CAM.q=(CAM.q||Promise.resolve()).then(()=>new Promise(r=>setTimeout(r,350))).then(mkBlob).then(blob=>blob&&processFile(blob,ctx)).then(id=>{if(id)setLastZT(cap.pid,cap.ctx.zone,cap.ctx.trade,(cap.ctx.tags||[])[0])}).catch(()=>toast('Couldn\'t save that photo. Try again.'));
 }
 /* photo viewer */
 function phList(p){return allPhotos().filter(x=>x.projectId===p.projectId&&x.kind!=='doc'&&x.kind!=='audio').sort(byNew)}
@@ -3025,7 +3027,7 @@ const ACT={
   markup:el=>{const p=PH(el.dataset.id);if(p.pending){toast('Wait for the upload to finish, then mark it up.');return}openModal({kind:'markup',id:p.id,back:M&&M.back})},
   capPhoto:el=>{const back=M;openModal({kind:'photo',id:el.dataset.id,back})},
   backCam:()=>{const b=M&&M.back;if(b){M=b;renderModal()}else closeModal()},
-  camShutter:()=>{if(CAM.mode==='video'){CAM.rec?recStop():recStart();return}camShoot()},
+  camShutter:()=>{if(Date.now()-(CAM.downAt||0)<900)return;if(CAM.mode==='video'){CAM.rec?recStop():recStart();return}camShoot()},
   camMode:el=>camMode(el.dataset.m),
   camPriv:el=>{const c=M&&M.cap;if(!c)return;c.ctx.private=!c.ctx.private;el.setAttribute('aria-pressed',c.ctx.private);haptic&&haptic();const t=$('#camtoast');if(t){t.querySelector('span').textContent=c.ctx.private?'Private on':'Private off';t.classList.remove('go');void t.offsetWidth;t.classList.add('go')}},
   camSnd:el=>{const on=!sndOn();try{localStorage.setItem('pc-snd',on?'on':'off')}catch(e){}el.setAttribute('aria-pressed',on);el.setAttribute('aria-label','Shutter sound '+(on?'on':'off'));el.innerHTML=I(on?'snd':'mute');if(on)shutterSound();toast(on?'Shutter sound on':'Shutter sound off')},
@@ -3232,6 +3234,7 @@ const ACT={
   dailyPdf:el=>savePdf(P(el.dataset.pid),{tpl:'daily',from:V.logDate,to:V.logDate,per:'4',inc:'notes'})
 };
 Object.assign(ACT,PLAN_ACT);
+document.addEventListener('pointerdown',e=>{if(e.button>0||!e.isPrimary)return;const b=e.target.closest&&e.target.closest('.camshut');if(!b||!M||M.kind!=='cam')return;CAM.downAt=Date.now();if(CAM.mode==='video'){CAM.rec?recStop():recStart()}else camShoot()});
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;const f=ACT[el.dataset.a];if(f){e.preventDefault();f(el,e)}});
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 document.addEventListener('keydown',e=>{const t=e.target;
@@ -3242,7 +3245,7 @@ document.addEventListener('keydown',e=>{const t=e.target;
 document.addEventListener('input',e=>{const el=e.target;if(el.closest&&el.closest('#main')&&(el.tagName==='TEXTAREA'||el.type==='text')&&el.id!=='q')el.dataset.dirty='1';
   if(el.dataset.in==='q'){V.q=el.value;const pos=el.selectionStart;dirty=false;$('#main').innerHTML=screen();const q=$('#q');q.focus();try{q.setSelectionRange(pos,pos)}catch(_){}}
   if(el.dataset.in==='phq'){V.pf.q=el.value;const pos=el.selectionStart;dirty=false;$('#main').innerHTML=screen();const q=$('#phq');q.focus();try{q.setSelectionRange(pos,pos)}catch(_){}}
-  if(el.dataset.in==='pq'){V.pq=el.value;const pos=el.selectionStart;dirty=false;$('#main').innerHTML=screen();const q=$('#pq');q.focus();try{q.setSelectionRange(pos,pos)}catch(_){}}
+  if(el.dataset.in==='pq'){V.pq=el.value;const pos=el.selectionStart;dirty=false;$('#main').innerHTML=screen();const q=$('#pq');if(q){q.focus();try{q.setSelectionRange(pos,pos)}catch(_){}}}
   if(el.dataset.in==='mkText')MK.text=el.value;
   if(el.dataset.in==='mkTextEd'){const t=MK.sel!=null&&MK.shapes[MK.sel];if(t&&t.t==='text'){t.s=el.value;mkDraw()}}
   if(el.dataset.in==='addr'){const pre=el.dataset.pre;const g=$('#'+pre+'-gm');if(g)g.href=gmSearch(el.value);const pg=parseGps(el.value);if(pg&&/^[-\d.\s,°NSEWnsew]+$/.test(el.value.trim())){$('#'+pre+'-lat').value=pg.lat;$('#'+pre+'-lng').value=pg.lng;el.value='';gpsMsg(pre,'Set from GPS','gpsok');return}setTimeout(()=>showSuggest(pre),0);acQuery(pre)}

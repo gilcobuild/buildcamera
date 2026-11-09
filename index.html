@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="1afcb14ab7">
+<meta name="bc-ver" content="cc7372bd20">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-zEk4IY+xjXHrWDY/M7c69pOh6iWLTmFwuAHqmuwHoVY=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-3FX+hDxqhzfjp3UONNq5N0+mspwj3YC0BIuBDl/OIwk=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -1560,7 +1560,10 @@ function plPlace(cx,cy){const p=plPoint(cx,cy);if(p.x<0||p.x>1||p.y<0||p.y>1)ret
   const at={planId:pl.id,planPage:n,px:+p.x.toFixed(4),py:+p.y.toFixed(4)},back={kind:'plan',id:pl.id,n};
   if(M.mode==='photo'){M.mode='';const pid=pl.projectId;openModal({kind:'capture',pid,lockProject:true,title:'Photo on '+sheetName(pl,n),why:'Pick the room, then take the photo. It\'s pinned where you tapped.',ctx:{...ctxFor(pid),plan:at},back});return}
   M.mode='';M.drop={x:at.px,y:at.py};planPins();const z=lastZT(pl.projectId).zone||'';
-  setTimeout(()=>openModal({kind:'task',task:{projectId:pl.projectId,type:'punch',title:'',zone:z,...at},back}),180)}
+  /* punch pin: drop the pin, take a photo of the problem, then say what needs fixing and who fixes it */
+  const task={projectId:pl.projectId,type:'punch',title:'',zone:z,...at};
+  afterShot=id=>{const ph=PH(id);setTimeout(()=>openModal({kind:'task',task:{...task,photoId:id,zone:(ph&&ph.zone)||z,trade:(ph&&ph.trade)||''},back}),300)};
+  setTimeout(()=>openModal({kind:'capture',pid:pl.projectId,lockProject:true,single:true,title:'Punch Photo',why:'Pin dropped on '+sheetName(pl,n)+'. Take a photo of the problem, then pick what needs fixing and who fixes it.',ctx:{tags:['Punch'],zone:z,trade:'',note:''},skipTask:task,back}),180)}
 function plDown(e){const w=e.target.closest&&e.target.closest('#plw');if(!w||e.target.closest('.plpin'))return;PLG.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});try{w.setPointerCapture(e.pointerId)}catch(_){}
   const st=PLV;PLG.start={z:st.z,tx:st.tx,ty:st.ty,pts:[...PLG.pts.values()].map(p=>({...p}))};PLG.moved=false;clearTimeout(PLG.lp);
   if(PLG.pts.size===1){const x=e.clientX,y=e.clientY;PLG.lp=setTimeout(()=>{if(!PLG.moved&&PLG.pts.size===1){PLG.moved=true;haptic('ok');plPlace(x,y)}},550)}}
@@ -2174,7 +2177,7 @@ function captureBody(){
   M.pid=pid; const c=M.ctx||(M.ctx={tags:[],zone:'',trade:'',note:''});
   if(!M.ztInit){const d=lastZT(pid);if(!c.zone)c.zone=d.zone;if(!c.trade)c.trade=d.trade;if(!c.tags.length&&d.tag)c.tags=[d.tag];M.ztInit=true}
   if(!ps.length&&!M.lockProject)return `<div class="empty">${I('folder')}<b>Add a Project first</b><span>Photos need a job to file into.</span><button class="btn pri" data-a="newProject">${I('plus')} New Project</button></div>`;
-  return `${M.lockProject?`<p class="callout info">${esc(M.why||'')}</p>`:`<label class="f">Project<select id="cap-p" data-ch="capP">${ps.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><p class="note">If the photo has its own GPS and it's near a different job, it files to that job instead.</p>`}
+  return `${M.lockProject?`<p class="callout info">${esc(M.why||'')}</p>${M.skipTask?`<button type="button" class="linkb" data-a="capSkip" style="justify-self:start">Skip the photo</button>`:''}`:`<label class="f">Project<select id="cap-p" data-ch="capP">${ps.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><p class="note">If the photo has its own GPS and it's near a different job, it files to that job instead.</p>`}
   <div class="two"><label class="f"><span class="row" style="justify-content:space-between">Work Zone<button type="button" class="linkb edic" data-a="editList" data-k="zones" aria-label="Edit work zone list" title="Edit work zone list">${I('pen')}</button></span><input type="text" id="cap-zone" list="dl-zones" value="${esc(c.zone)}" data-ch="capF" data-k="zone" placeholder="Building B, Level 2" autocapitalize="words"></label><label class="f"><span class="row" style="justify-content:space-between">Trade Partner<button type="button" class="linkb edic" data-a="editList" data-k="trades" aria-label="Edit trade partner list" title="Edit trade partner list">${I('pen')}</button></span><input type="text" id="cap-trade" list="dl-trades" value="${esc(c.trade)}" data-ch="capF" data-k="trade" placeholder="Drywall" autocapitalize="words"></label></div>
   <label class="f"><span class="row" style="justify-content:space-between">Tag<button type="button" class="linkb edic" data-a="editTags" aria-label="Edit tag list" title="Edit tag list">${I('pen')}</button></span><select id="cap-tag" data-ch="capTagSel"><option value="">No tag</option>${tagList().map(t=>`<option ${c.tags[0]===t?'selected':''}>${esc(t)}</option>`).join('')}</select></label>
   ${c.zone||c.trade||c.tags.length?'<p class="note" style="margin-top:-6px">Work Zone, Trade Partner and Tag carry over from your last photo on this job. Change them any time.</p>':''}
@@ -3164,6 +3167,7 @@ const ACT={
   ckDelItem:el=>{const c=S.checklists.find(x=>x.id===el.dataset.id);const items=c.items.filter((_,i)=>i!=el.dataset.i);upd('checklists',c.id,{items});renderModal()},
   ckDel:el=>{if(!el.classList.contains('armed')){el.classList.add('armed');el.innerHTML=I('trash')+' Tap Again to Delete';return}del('checklists',el.dataset.id);closeModal()},
   ckPhoto:el=>{const c=S.checklists.find(x=>x.id===el.dataset.id),i=+el.dataset.i;afterShot=id=>{const items=c.items.map((it,j)=>j===i?{...it,photoId:id}:it);upd('checklists',c.id,{items});toast('Photo attached. You can check it off now.')};openModal({kind:'pickPhoto',pid:c.projectId,ckTitle:c.items[i].t})},
+  capSkip:()=>{const t=M.skipTask,back=M.back;afterShot=null;openModal({kind:'task',task:{...t},back})},
   pickThis:el=>{const cb=afterShot;afterShot=null;closeModal();cb&&cb(el.dataset.id)},
   pickNew:()=>{const pid=M.pid,why='Photo for checklist item: '+(M.ckTitle||'');const keep=afterShot;openModal({kind:'capture',pid,lockProject:true,single:true,title:'Checklist Photo',why,ctx:{tags:['Inspection'],zone:'',trade:'',note:M.ckTitle||''}});afterShot=keep},
   editMember:el=>openModal({kind:'member',m:el.dataset.id?M_(el.dataset.id):{}}),

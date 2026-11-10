@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="63a8f6579f">
+<meta name="bc-ver" content="8549689e0f">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-nZ9eNkWAiTXpT47QCTxx1gbZsRBDIY716PRWiLDJ25A=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-VKP0kN9J94+2ZMMwFVkm5k5VS8ezJu2yaDP33nHRyKQ=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -452,7 +452,7 @@ fieldset .li .t>*{white-space:normal;overflow-wrap:anywhere}
 .plareas polygon{fill:rgba(29,92,143,.10);stroke:var(--accent);stroke-width:2;vector-effect:non-scaling-stroke}
 .plareas.on polygon{fill:rgba(29,92,143,.18)}.plareas polygon.sel{fill:rgba(242,183,5,.32);stroke:#b88a00}
 .plareas .drw{fill:rgba(242,183,5,.18);stroke:#b88a00;stroke-width:2.5;stroke-dasharray:6 4;vector-effect:non-scaling-stroke}
-.plzlab{position:absolute;transform:translate(-50%,-50%) scale(calc(1/var(--z)));background:rgba(255,255,255,.88);color:#1d5c8f;font:600 12px var(--f-body);padding:2px 6px;border-radius:6px;border:1px solid rgba(29,92,143,.35);white-space:nowrap;pointer-events:none;z-index:1}
+.plzlab{max-width:calc(var(--aw) * var(--z,1));overflow:hidden;text-overflow:ellipsis;position:absolute;transform:translate(-50%,-50%) scale(calc(1/var(--z)));background:rgba(255,255,255,.88);color:#1d5c8f;font:600 12px var(--f-body);padding:2px 6px;border-radius:6px;border:1px solid rgba(29,92,143,.35);white-space:nowrap;pointer-events:none;z-index:1}
 .plzh{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:#f2b705;border:3px solid #1b2024;transform:scale(calc(1/var(--z)));z-index:3;cursor:grab;touch-action:none;box-shadow:0 1px 4px rgba(0,0,0,.4)}
 .plzh.on{background:#fff;border-color:#b3261e;box-shadow:0 0 0 3px rgba(179,38,30,.35)}
 .plzm{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:rgba(255,255,255,.9);border:2px solid #b88a00;transform:scale(calc(1/var(--z)));z-index:3;cursor:copy;touch-action:none}
@@ -1542,16 +1542,22 @@ function plToolsHtml(){const m=M&&M.mode||'';
   if(m==='zone'){const pl=S.photos.find(x=>x.id===M.id),n=M.n||1;
     if(M.zSel){const a=plAreas(pl,n).find(x=>x.id===M.zSel);return `<div class="plzrow"><input type="text" id="plzname" list="plzdl" value="${esc(a?a.zone:'')}" aria-label="Work zone" autocapitalize="words"><datalist id="plzdl">${zoneList().map(z=>`<option value="${esc(z)}">`).join('')}</datalist><button class="btn pri" data-a="plzRename">Save</button><button class="btn bad" data-a="plzDel" aria-label="Delete area">${I('trash')}</button><button class="btn" data-a="plzDesel">Done</button></div><div class="plzrow"><button class="btn" data-a="plzNodeDel" ${M.zNode!=null&&a&&a.pts.length>3?'':'disabled'}>Delete Corner</button><span class="note" style="flex:1;margin:0">Tap a corner to pick it. Drag a small dot to add a corner.</span></div>`}
     if(M.zPick)return `<div class="plzrow"><input type="text" id="plzname" list="plzdl" placeholder="Work zone, e.g. Level 2 Corridor" aria-label="Work zone" autocapitalize="words"><datalist id="plzdl">${zoneList().map(z=>`<option value="${esc(z)}">`).join('')}</datalist><button class="btn pri" data-a="plzSave">Save Area</button><button class="btn" data-a="plzBack">Back</button></div>`;
-    const k=(M.zDraw||[]).length;return `${k?'':`<div class="plzrow"><button class="btn stamp" data-a="plzFind" id="plzfind">${I('sparkle')} Find Rooms</button>${M.zAuto&&M.zAuto.length?`<button class="btn" data-a="plzUnfind">Remove Found</button>`:''}</div>`}<div class="plzrow"><button class="btn" data-a="plzUndo" ${k?'':'disabled'}>Undo</button><button class="btn pri" data-a="plzFinish" ${k>=3?'':'disabled'}>Finish Area</button><button class="btn" data-a="plzDone">Done</button></div>`}
+    const k=(M.zDraw||[]).length;return `${k?'':`<div class="plzrow"><button class="btn stamp" data-a="plzFind" id="plzfind">${I('sparkle')} Find Rooms</button>${M.zAuto&&M.zAuto.length?`<button class="btn" data-a="plzUnfind">Remove Found</button>`:plAreas(pl,n).length?`<button class="btn" data-a="plzClear">${M.zClear?'Tap Again to Clear':'Clear All'}</button>`:''}</div>`}<div class="plzrow"><button class="btn" data-a="plzUndo" ${k?'':'disabled'}>Undo</button><button class="btn pri" data-a="plzFinish" ${k>=3?'':'disabled'}>Finish Area</button><button class="btn" data-a="plzDone">Done</button></div>`}
   return `<button class="btn ${m==='photo'?'pri':''}" data-a="planMode" data-m="photo" aria-pressed="${m==='photo'}">${I('camera')} Photo Here</button><button class="btn ${m==='pin'?'pri':''}" data-a="planMode" data-m="pin" aria-pressed="${m==='pin'}">${I('pin2')} Add Punch Pin</button>${canPlans()?`<button class="btn" data-a="planMode" data-m="zone" style="grid-column:1/-1">${I('pen')} Draw Work Zones</button>`:''}`}
 function planBar(){const b=$('#plbar'),h=$('#plhint');if(b){b.innerHTML=plToolsHtml();b.classList.toggle('z',M&&M.mode==='zone')}if(h)h.textContent=planHint();planPins()}
 /* Find Rooms: read the sheet's lines, close doorways by thickening the walls, find each enclosed space, and name it from the room number printed inside it */
-async function planFindRooms(pl,n,strength){
-  const d=await planDoc(pl),pg=await d.getPage(n),v1=pg.getViewport({scale:1}),sc=2200/Math.max(v1.width,v1.height),vp=pg.getViewport({scale:sc});
+async function planFindRooms(pl,n,strength,dark){
+  const d=await planDoc(pl),pg=await d.getPage(n),v1=pg.getViewport({scale:1}),sc=2600/Math.max(v1.width,v1.height),vp=pg.getViewport({scale:sc});
   const W=Math.ceil(vp.width),H=Math.ceil(vp.height),c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d',{willReadFrequently:true});x.fillStyle='#fff';x.fillRect(0,0,W,H);
   await pg.render({canvasContext:x,viewport:vp}).promise;const px=x.getImageData(0,0,W,H).data;c.width=c.height=0;
-  const N=W*H,wall=new Uint8Array(N);for(let i=0,j=0;i<N;i++,j+=4){if(px[j]*.3+px[j+1]*.59+px[j+2]*.11<170)wall[i]=1}
+  /* walls are dark, gray-black lines. Light grid lines, colored tags and printed words don't count as walls. */
+  const N=W*H,wall=new Uint8Array(N);for(let i=0,j=0;i<N;i++,j+=4){const R=px[j],G=px[j+1],B=px[j+2],mx=Math.max(R,G,B),mn=Math.min(R,G,B);if(R*.3+G*.59+B*.11<(dark||190)&&mx-mn<70)wall[i]=1}
+  let TC=null;try{TC=await pg.getTextContent()}catch(e){}
+  if(TC)for(const it of TC.items){if(!(it.str||'').trim())continue;const tr=it.transform,h=Math.hypot(tr[2],tr[3])||Math.abs(tr[3])||8,w=it.width||h*(it.str.length*.6);
+    const rc=vp.convertToViewportRectangle([tr[4]-h*.15,tr[5]-h*.3,tr[4]+w+h*.15,tr[5]+h*1.05]);const xa=Math.max(0,Math.floor(Math.min(rc[0],rc[2]))-2),xb=Math.min(W-1,Math.ceil(Math.max(rc[0],rc[2]))+2),ya=Math.max(0,Math.floor(Math.min(rc[1],rc[3]))-2),yb=Math.min(H-1,Math.ceil(Math.max(rc[1],rc[3]))+2);
+    if((xb-xa)*(yb-ya)>N*0.01)continue;for(let yy=ya;yy<=yb;yy++)wall.fill(0,yy*W+xa,yy*W+xb+1)}
   /* thicken walls so door openings close up */
+  dashStrip(wall,W,H);
   const r=Math.max(2,Math.round(Math.max(W,H)*0.0072*(strength||1)));const tmp=new Uint8Array(N),dil=new Uint8Array(N);
   for(let y=0;y<H;y++){const o=y*W;let prev=-1e9;for(let xx=0;xx<W;xx++){if(wall[o+xx])prev=xx;tmp[o+xx]=xx-prev<=r?1:0}
     prev=1e9;for(let xx=W-1;xx>=0;xx--){if(wall[o+xx])prev=xx;if(prev-xx<=r)tmp[o+xx]=1}}
@@ -1567,20 +1573,37 @@ async function planFindRooms(pl,n,strength){
   const keep=comps.filter(k=>k.id&&!k.edge&&k.cnt>=N*0.0006&&k.cnt<=N*0.45&&Math.min(k.x1-k.x0,k.y1-k.y0)>r*3&&k.cnt/((k.x1-k.x0+1)*(k.y1-k.y0+1))>0.35);
   const byId=new Map(keep.map(k=>[k.id,k]));
   /* text printed on the sheet: find which space each word sits in */
-  try{const tc=await pg.getTextContent();for(const it of tc.items){const s=(it.str||'').trim();if(!s||s.length>40)continue;const tr=it.transform;const p0=vp.convertToViewportPoint(tr[4]+(it.width||0)/2,tr[5]+(it.height||Math.abs(tr[3])||0)/2);
+  try{const tc=TC||{items:[]};for(const it of tc.items){const s=(it.str||'').trim();if(!s||s.length>40)continue;const tr=it.transform;const p0=vp.convertToViewportPoint(tr[4]+(it.width||0)/2,tr[5]+(it.height||Math.abs(tr[3])||0)/2);
       const cx=Math.round(p0[0]),cy=Math.round(p0[1]);let hit=0;for(let rad=0;rad<=r*3&&!hit;rad+=2){for(let a=0;a<8&&!hit;a++){const xx=cx+Math.round(Math.cos(a*Math.PI/4)*rad),yy=cy+Math.round(Math.sin(a*Math.PI/4)*rad);if(xx<0||yy<0||xx>=W||yy>=H)continue;const L=lab[yy*W+xx];if(L&&byId.has(L))hit=L}if(!rad&&!hit){}}
       if(hit)byId.get(hit).texts.push({s,y:cy,x:cx})}}catch(e){}
   const NUM=/^(?:(?:RM|ROOM)\.?\s*)?([A-Z]?\d{2,4}[A-Z]?)$/i;
   const TAILN=/^([A-Za-z][A-Za-z .&/-]{2,30}?)\s+(?:RM\.?\s*|ROOM\s*)?([A-Z]?\d{2,4}[A-Z]?)$/i;
   keep.forEach(k=>{k.texts.sort((a,b)=>a.y-b.y||a.x-b.x);let nu=k.texts.map(t=>t.s.match(NUM)).find(Boolean),both=!nu&&k.texts.map(t=>t.s.match(TAILN)).find(Boolean);
-    k.num=nu?nu[1].toUpperCase():both?both[2].toUpperCase():'';k.name=both?both[1].trim():k.texts.filter(t=>!NUM.test(t.s)&&/[A-Za-z]{3,}/.test(t.s)&&!/[:=@#]|\d'|"/.test(t.s)).slice(0,2).map(t=>t.s).join(' ')});
+    k.num=nu?nu[1].toUpperCase():both?both[2].toUpperCase():'';
+    /* the room name is the word printed right above the room number (skip tags like EX, SIM, TYP) */
+    const nt=k.texts.find(t=>NUM.test(t.s)||TAILN.test(t.s));const cand=k.texts.filter(t=>/^[A-Za-z][A-Za-z .&/'-]{2,29}$/.test(t.s)&&!/^(EX|SIM|TYP|NIC|EQ|ROOM NAME)\b/i.test(t.s));
+    if(both)k.name=both[1].trim();else if(nt&&cand.length){cand.sort((a,b)=>{const da=Math.abs(a.x-nt.x)+Math.abs(a.y-nt.y)+(a.y>nt.y?60:0),db=Math.abs(b.x-nt.x)+Math.abs(b.y-nt.y)+(b.y>nt.y?60:0);return da-db});k.name=cand[0].s}else k.name=cand.length?cand[0].s:''});
   const withNum=keep.filter(k=>k.num).length,withText=keep.filter(k=>k.texts.length).length;
   let rooms=withNum>=3?keep.filter(k=>k.num):withText>=3?keep.filter(k=>k.texts.length):keep;
   /* outline each space, simplify it, then push it back out to the wall line */
-  const out=[];let k2=0;for(const k of rooms){const pts=traceComp(lab,W,H,k);if(pts.length<3)continue;let sp=dpSimplify(pts,Math.max(1.5,r*0.7));if(sp.length<3)continue;sp=offsetPoly(sp,r);
+  const out=[];let k2=0;for(const k of rooms){let sp;const fill=k.cnt/((k.x1-k.x0+1)*(k.y1-k.y0+1));
+    if(fill>0.72)sp=[[k.x0,k.y0],[k.x1,k.y0],[k.x1,k.y1],[k.x0,k.y1]];
+    else{const pts=traceComp(lab,W,H,k);if(pts.length<3)continue;sp=orthoPoly(dpSimplify(pts,Math.max(2,r*0.9)));if(sp.length<3)continue}
+    sp=offsetPoly(sp,r);
     const zone=k.num?(k.name?titleCase(k.name.toLowerCase())+' '+k.num:'Room '+k.num):(k.name?titleCase(k.name.toLowerCase()):'Area '+(++k2));
     out.push({id:uid(),zone:zone.slice(0,60),auto:true,pts:sp.map(p=>[+(Math.min(1,Math.max(0,p[0]/W))).toFixed(4),+(Math.min(1,Math.max(0,p[1]/H))).toFixed(4)])})}
   return out}
+/* column grid lines are dashed and run right through rooms: drop short thin dashes that repeat in a line, keep solid walls */
+function dashStrip(wall,W,H){const N=W*H,hr=new Uint16Array(N),vr=new Uint16Array(N);
+  for(let y=0;y<H;y++){const o=y*W;let x=0;while(x<W){if(!wall[o+x]){x++;continue}let e=x;while(e<W&&wall[o+e])e++;for(let k=x;k<e;k++)hr[o+k]=e-x;x=e}}
+  for(let x=0;x<W;x++){let y=0;while(y<H){if(!wall[y*W+x]){y++;continue}let e=y;while(e<H&&wall[e*W+x])e++;for(let k=y;k<e;k++)vr[k*W+x]=e-y;y=e}}
+  const kill=[],dash=(runs,push)=>{for(let k=0;k<runs.length;k++){const a=runs[k];if(a[1]-a[0]>=70)continue;const p=runs[k-1],n=runs[k+1],gp=p?a[0]-p[1]-1:99,gn=n?n[0]-a[1]-1:99;if((gp>=2&&gp<=10&&p[1]-p[0]<70)||(gn>=2&&gn<=10&&n[1]-n[0]<70))push(a)}};
+  for(let x=0;x<W;x++){const runs=[];let y=0;while(y<H){const i=y*W+x;if(wall[i]&&hr[i]<=3){let e=y;while(e<H&&wall[e*W+x]&&hr[e*W+x]<=3)e++;runs.push([y,e-1]);y=e}else y++}dash(runs,a=>kill.push([0,x,a[0],a[1]]))}
+  for(let y=0;y<H;y++){const o=y*W,runs=[];let x=0;while(x<W){const i=o+x;if(wall[i]&&vr[i]<=3){let e=x;while(e<W&&wall[o+e]&&vr[o+e]<=3)e++;runs.push([x,e-1]);x=e}else x++}dash(runs,a=>kill.push([1,y,a[0],a[1]]))}
+  for(const [o,c,a,b] of kill){if(o===0)for(let y=a;y<=b;y++)wall[y*W+c]=0;else wall.fill(0,c*W+a,c*W+b+1)}}
+/* most rooms are square: straighten nearly level or plumb edges */
+function orthoPoly(p){const q=p.map(a=>[...a]);for(let pass=0;pass<2;pass++)for(let i=0;i<q.length;i++){const a=q[i],b=q[(i+1)%q.length],dx=Math.abs(b[0]-a[0]),dy=Math.abs(b[1]-a[1]);if(dx<dy*0.2){const m=(a[0]+b[0])/2;a[0]=b[0]=m}else if(dy<dx*0.2){const m=(a[1]+b[1])/2;a[1]=b[1]=m}}
+  return q.filter((a,i)=>{const b=q[(i+1)%q.length];return Math.hypot(a[0]-b[0],a[1]-b[1])>1})}
 function traceComp(lab,W,H,k){const L=k.id,at=(x,y)=>x>=0&&y>=0&&x<W&&y<H&&lab[y*W+x]===L;let sx=-1,sy=-1;
   for(let y=k.y0;y<=k.y1&&sx<0;y++)for(let x=k.x0;x<=k.x1;x++)if(at(x,y)){sx=x;sy=y;break}
   const dx=[1,1,0,-1,-1,-1,0,1],dy=[0,1,1,1,0,-1,-1,-1];const pts=[[sx,sy]];let cx=sx,cy=sy,dir=7,guard=0;
@@ -1632,7 +1655,7 @@ function planPins(){const box=$('#plpins'),st=PLV;if(!box||!M||M.kind!=='plan')r
   const ts=pinsOn(M.id,n),ps=allPhotos().filter(p=>p.planId===M.id&&+p.planPage===+n&&p.px!=null);
   const pl=S.photos.find(x=>x.id===M.id),ars=plAreas(pl,n),W=st.W,H=st.H,zm=M.mode==='zone',dr=M.zDraw||[];
   const areaSvg=(ars.length||dr.length)?`<svg class="plareas${zm?' on':''}" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${ars.map(a=>({...a,pts:M.zLive&&a.id===M.zSel?M.zLive:a.pts})).map(a=>`<polygon points="${a.pts.map(p=>(p[0]*W).toFixed(1)+','+(p[1]*H).toFixed(1)).join(' ')}" class="${M.zSel===a.id?'sel':''}"/>`).join('')}${dr.length?`<polyline class="drw" points="${dr.map(p=>(p[0]*W).toFixed(1)+','+(p[1]*H).toFixed(1)).join(' ')}${dr.length>2?' '+(dr[0][0]*W).toFixed(1)+','+(dr[0][1]*H).toFixed(1):''}"/>`:''}</svg>`
-    +ars.map(a=>{const P=M.zLive&&a.id===M.zSel?M.zLive:a.pts,xs=P.map(p=>p[0]),ys=P.map(p=>p[1]),cx=(Math.min(...xs)+Math.max(...xs))/2,y0=Math.min(...ys),cy=y0+(Math.max(...ys)-y0)*0.14;return `<span class="plzlab" style="left:${cx*W}px;top:${cy*H}px">${esc(a.zone)}</span>`}).join('')
+    +ars.map(a=>{const P=M.zLive&&a.id===M.zSel?M.zLive:a.pts,xs=P.map(p=>p[0]),ys=P.map(p=>p[1]),cx=(Math.min(...xs)+Math.max(...xs))/2,y0=Math.min(...ys),cy=y0+(Math.max(...ys)-y0)*0.14;return `<span class="plzlab" style="left:${cx*W}px;top:${cy*H}px;--aw:${Math.max(30,(Math.max(...xs)-Math.min(...xs))*W)}px">${esc(a.zone)}</span>`}).join('')
     +dr.map(p=>`<span class="plzdot" style="left:${p[0]*W}px;top:${p[1]*H}px"></span>`).join(''):'';
   const selA=zm&&M.zSel&&ars.find(a=>a.id===M.zSel);const HP=selA?(M.zLive||selA.pts):[];const handles=selA?HP.map((p,i)=>{const q=HP[(i+1)%HP.length];return `<span class="plzm" data-i="${i}" style="left:${(p[0]+q[0])/2*W}px;top:${(p[1]+q[1])/2*H}px" aria-hidden="true"></span>`}).join('')+HP.map((p,i)=>`<span class="plzh${M.zNode===i?' on':''}" data-i="${i}" style="left:${p[0]*W}px;top:${p[1]*H}px" aria-hidden="true"></span>`).join(''):'';
   box.innerHTML=areaSvg+handles+ps.map(p=>`<button class="plpin cam" style="left:${p.px*st.W}px;top:${p.py*st.H}px" data-a="openPhoto" data-id="${p.id}" aria-label="Photo taken here">${I('camera')}</button>`).join('')
@@ -1707,6 +1730,7 @@ const PLAN_ACT={
       if(!M||M.kind!=='plan')return;if(!found.length){toast('No new rooms found on this sheet. You can still tap corners to draw them.',4500);planBar();return}
       await planAreasPut(pl,n,[...ex,...found]);M.zAuto=found.map(a=>a.id);planBar();toast(`Found ${found.length} room${found.length===1?'':'s'}. Tap any room to fix its name or drag its corners.`,5000)}
     catch(e){toast('Couldn\'t read the rooms on this sheet.');planBar()}},
+  plzClear:async()=>{if(!M.zClear){M.zClear=true;planBar();setTimeout(()=>{if(M&&M.zClear){M.zClear=false;planBar()}},4000);return}M.zClear=false;const pl=S.photos.find(x=>x.id===M.id),n=M.n||1;await planAreasPut(pl,n,[]);M.zSel=null;planBar();toast('All areas cleared on this sheet')},
   plzUnfind:async()=>{const pl=S.photos.find(x=>x.id===M.id),n=M.n||1,ids=new Set(M.zAuto||[]);await planAreasPut(pl,n,plAreas(pl,n).filter(a=>!ids.has(a.id)));M.zAuto=null;M.zSel=null;planBar();toast('Found rooms removed')},
   plzDesel:()=>{M.zSel=null;M.zLive=null;M.zNode=null;planBar()},
   plzNodeDel:async()=>{const pl=S.photos.find(x=>x.id===M.id),n=M.n||1,a=plAreas(pl,n).find(x=>x.id===M.zSel);if(!a||M.zNode==null||a.pts.length<=3)return;const pts=a.pts.filter((_,i)=>i!==M.zNode);M.zNode=null;await planAreasPut(pl,n,plAreas(pl,n).map(x=>x.id===a.id?{...x,pts,auto:false}:x));planBar();toast('Corner deleted')},

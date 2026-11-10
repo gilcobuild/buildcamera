@@ -16,6 +16,7 @@ jobs:
           npm pack pdfjs-dist@3.11.174 >/dev/null && tar xzf pdfjs-dist-3.11.174.tgz
           cp package/legacy/build/pdf.min.js package/legacy/build/pdf.worker.min.js ../pdfjs/
           rm -rf package && npm pack pdf-lib@1.17.1 >/dev/null && tar xzf pdf-lib-1.17.1.tgz && mkdir -p ../pdflib && cp package/dist/pdf-lib.min.js ../pdflib/
-          cd .. && rm -rf tmp && sha256sum pdfjs/* > pdfjs/SHA256SUMS && sha256sum pdflib/* > pdflib/SHA256SUMS && ls -la pdfjs pdflib
+          rm -rf package && npm pack qrcode-generator@1.4.4 >/dev/null && tar xzf qrcode-generator-1.4.4.tgz && mkdir -p ../qr && cp package/qrcode.js ../qr/qrcode.js && cp package/LICENSE ../qr/LICENSE 2>/dev/null || true
+          cd .. && rm -rf tmp && sha256sum pdfjs/* > pdfjs/SHA256SUMS && sha256sum pdflib/* > pdflib/SHA256SUMS && sha256sum qr/qrcode.js > qr/SHA256SUMS && ls -la pdfjs pdflib qr
           git config user.name "github-actions" && git config user.email "actions@github.com"
-          git add pdfjs pdflib && git commit -m "pdf.js 3.11.174 + pdf-lib 1.17.1 [vendored]" && git push
+          git add pdfjs pdflib qr && git commit -m "pdf.js 3.11.174 + pdf-lib 1.17.1 + qrcode-generator 1.4.4 [vendored]" && git push

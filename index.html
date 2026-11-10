@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="57b4a593ba">
+<meta name="bc-ver" content="157165971c">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-GcEFknzrtPa4y2A+HQr7tHf3UjuTV8KhLO5KXwH28XM=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-JzJnbeT+QtlB4/z/6xRdL8KfexpfUjufAg04/5pHh9s=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -447,12 +447,13 @@ fieldset .li .t>*{white-space:normal;overflow-wrap:anywhere}
 .plpin.cam svg{width:15px;height:15px}
 .plpin.drop{pointer-events:none}
 .plbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 10px 0;background:var(--bg)}.plbar .btn{justify-content:center}.plbar.z{grid-template-columns:1fr}
-.plzrow{display:flex;gap:8px;align-items:center}.plzrow input{flex:1;min-width:0}.plzrow .btn{flex:none}.plzrow .btn.pri{flex:1}
+.plbar.z{display:grid;gap:8px}.plzrow{display:flex;gap:8px;align-items:center}.plzrow .btn.stamp{flex:1}.plzrow input{flex:1;min-width:0}.plzrow .btn{flex:none}.plzrow .btn.pri{flex:1}
 .plareas{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
 .plareas polygon{fill:rgba(29,92,143,.10);stroke:var(--accent);stroke-width:2;vector-effect:non-scaling-stroke}
 .plareas.on polygon{fill:rgba(29,92,143,.18)}.plareas polygon.sel{fill:rgba(242,183,5,.32);stroke:#b88a00}
 .plareas .drw{fill:rgba(242,183,5,.18);stroke:#b88a00;stroke-width:2.5;stroke-dasharray:6 4;vector-effect:non-scaling-stroke}
 .plzlab{position:absolute;transform:translate(-50%,-50%) scale(calc(1/var(--z)));background:rgba(255,255,255,.88);color:#1d5c8f;font:600 12px var(--f-body);padding:2px 6px;border-radius:6px;border:1px solid rgba(29,92,143,.35);white-space:nowrap;pointer-events:none;z-index:1}
+.plzh{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:#f2b705;border:3px solid #1b2024;transform:scale(calc(1/var(--z)));z-index:3;cursor:grab;touch-action:none;box-shadow:0 1px 4px rgba(0,0,0,.4)}
 .plzdot{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:#f2b705;border:2px solid #1b2024;transform:scale(calc(1/var(--z)));pointer-events:none;z-index:2}
 .plhint{padding:6px 14px calc(8px + env(safe-area-inset-bottom,0px));font-size:13px;color:var(--muted);text-align:center;background:var(--bg)}
 .plcard{position:absolute;left:10px;right:10px;bottom:calc(104px + env(safe-area-inset-bottom,0px));z-index:5;max-width:560px;margin:0 auto;box-shadow:0 6px 24px rgba(0,0,0,.3);border-radius:14px;background:var(--panel)}
@@ -1533,15 +1534,64 @@ function inPoly(x,y,pts){let c=false;for(let i=0,j=pts.length-1;i<pts.length;j=i
 const polyArea=pts=>Math.abs(pts.reduce((a,p,i)=>{const q=pts[(i+1)%pts.length];return a+p[0]*q[1]-q[0]*p[1]},0)/2);
 function planZoneAt(pl,n,x,y){const hit=plAreas(pl,n).filter(a=>a.pts&&a.pts.length>2&&inPoly(x,y,a.pts)).sort((a,b)=>polyArea(a.pts)-polyArea(b.pts));return hit.length?hit[0].zone:''}
 function planHint(){const m=M&&M.mode||'';if(m==='pin')return 'Tap the spot that needs fixing.';if(m==='photo')return 'Tap where you\'re standing.';
-  if(m==='zone'){if(M.zSel)return 'Change the zone for this area, or delete it.';if(M.zPick)return 'Name this area with its work zone.';const k=(M.zDraw||[]).length;return k?(k<3?'Keep tapping corners. 3 or more make an area.':'Tap more corners, or tap Finish.'):'Tap the corners of a room or area. Tap an area you drew to change it.'}
+  if(m==='zone'){if(M.zSel)return 'Drag the yellow corners to fit the room. Change the name or delete it.';if(M.zPick)return 'Name this area with its work zone.';const k=(M.zDraw||[]).length;return k?(k<3?'Keep tapping corners. 3 or more make an area.':'Tap more corners, or tap Finish.'):'Tap Find Rooms, or tap the corners of a room. Tap any area to change it.'}
   return DESK()?'Scroll to zoom, drag to move. Press and hold a spot to add a punch item.':'Pinch to zoom. Long-press a spot to add a punch item.'}
 function plToolsHtml(){const m=M&&M.mode||'';
   if(m==='zone'){const pl=S.photos.find(x=>x.id===M.id),n=M.n||1;
-    if(M.zSel){const a=plAreas(pl,n).find(x=>x.id===M.zSel);return `<div class="plzrow"><input type="text" id="plzname" list="plzdl" value="${esc(a?a.zone:'')}" aria-label="Work zone" autocapitalize="words"><datalist id="plzdl">${zoneList().map(z=>`<option value="${esc(z)}">`).join('')}</datalist><button class="btn pri" data-a="plzRename">Save</button><button class="btn bad" data-a="plzDel" aria-label="Delete area">${I('trash')}</button><button class="btn" data-a="plzDone">Done</button></div>`}
+    if(M.zSel){const a=plAreas(pl,n).find(x=>x.id===M.zSel);return `<div class="plzrow"><input type="text" id="plzname" list="plzdl" value="${esc(a?a.zone:'')}" aria-label="Work zone" autocapitalize="words"><datalist id="plzdl">${zoneList().map(z=>`<option value="${esc(z)}">`).join('')}</datalist><button class="btn pri" data-a="plzRename">Save</button><button class="btn bad" data-a="plzDel" aria-label="Delete area">${I('trash')}</button><button class="btn" data-a="plzDesel">Done</button></div>`}
     if(M.zPick)return `<div class="plzrow"><input type="text" id="plzname" list="plzdl" placeholder="Work zone, e.g. Level 2 Corridor" aria-label="Work zone" autocapitalize="words"><datalist id="plzdl">${zoneList().map(z=>`<option value="${esc(z)}">`).join('')}</datalist><button class="btn pri" data-a="plzSave">Save Area</button><button class="btn" data-a="plzBack">Back</button></div>`;
-    const k=(M.zDraw||[]).length;return `<div class="plzrow"><button class="btn" data-a="plzUndo" ${k?'':'disabled'}>Undo</button><button class="btn pri" data-a="plzFinish" ${k>=3?'':'disabled'}>Finish Area</button><button class="btn" data-a="plzDone">Done</button></div>`}
+    const k=(M.zDraw||[]).length;return `${k?'':`<div class="plzrow"><button class="btn stamp" data-a="plzFind" id="plzfind">${I('sparkle')} Find Rooms</button>${M.zAuto&&M.zAuto.length?`<button class="btn" data-a="plzUnfind">Remove Found</button>`:''}</div>`}<div class="plzrow"><button class="btn" data-a="plzUndo" ${k?'':'disabled'}>Undo</button><button class="btn pri" data-a="plzFinish" ${k>=3?'':'disabled'}>Finish Area</button><button class="btn" data-a="plzDone">Done</button></div>`}
   return `<button class="btn ${m==='photo'?'pri':''}" data-a="planMode" data-m="photo" aria-pressed="${m==='photo'}">${I('camera')} Photo Here</button><button class="btn ${m==='pin'?'pri':''}" data-a="planMode" data-m="pin" aria-pressed="${m==='pin'}">${I('pin2')} Add Punch Pin</button>${canPlans()?`<button class="btn" data-a="planMode" data-m="zone" style="grid-column:1/-1">${I('pen')} Draw Work Zones</button>`:''}`}
 function planBar(){const b=$('#plbar'),h=$('#plhint');if(b){b.innerHTML=plToolsHtml();b.classList.toggle('z',M&&M.mode==='zone')}if(h)h.textContent=planHint();planPins()}
+/* Find Rooms: read the sheet's lines, close doorways by thickening the walls, find each enclosed space, and name it from the room number printed inside it */
+async function planFindRooms(pl,n,strength){
+  const d=await planDoc(pl),pg=await d.getPage(n),v1=pg.getViewport({scale:1}),sc=2200/Math.max(v1.width,v1.height),vp=pg.getViewport({scale:sc});
+  const W=Math.ceil(vp.width),H=Math.ceil(vp.height),c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d',{willReadFrequently:true});x.fillStyle='#fff';x.fillRect(0,0,W,H);
+  await pg.render({canvasContext:x,viewport:vp}).promise;const px=x.getImageData(0,0,W,H).data;c.width=c.height=0;
+  const N=W*H,wall=new Uint8Array(N);for(let i=0,j=0;i<N;i++,j+=4){if(px[j]*.3+px[j+1]*.59+px[j+2]*.11<170)wall[i]=1}
+  /* thicken walls so door openings close up */
+  const r=Math.max(2,Math.round(Math.max(W,H)*0.0072*(strength||1)));const tmp=new Uint8Array(N),dil=new Uint8Array(N);
+  for(let y=0;y<H;y++){const o=y*W;let prev=-1e9;for(let xx=0;xx<W;xx++){if(wall[o+xx])prev=xx;tmp[o+xx]=xx-prev<=r?1:0}
+    prev=1e9;for(let xx=W-1;xx>=0;xx--){if(wall[o+xx])prev=xx;if(prev-xx<=r)tmp[o+xx]=1}}
+  for(let xx=0;xx<W;xx++){let prev=-1e9;for(let y=0;y<H;y++){const i=y*W+xx;if(tmp[i])prev=y;dil[i]=y-prev<=r?1:0}
+    prev=1e9;for(let y=H-1;y>=0;y--){const i=y*W+xx;if(tmp[i])prev=y;if(prev-y<=r)dil[i]=1}}
+  /* label each open space */
+  const lab=new Int32Array(N),q=new Int32Array(N),comps=[{}];let nl=0;
+  for(let s=0;s<N;s++){if(dil[s]||lab[s])continue;nl++;let h=0,t=0;q[t++]=s;lab[s]=nl;let cnt=0,x0=W,y0=H,x1=0,y1=0,edge=false;
+    while(h<t){const i=q[h++];cnt++;const yy=(i/W)|0,xx=i-yy*W;if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(yy<y0)y0=yy;if(yy>y1)y1=yy;if(!xx||!yy||xx===W-1||yy===H-1)edge=true;
+      if(xx>0&&!dil[i-1]&&!lab[i-1]){lab[i-1]=nl;q[t++]=i-1}if(xx<W-1&&!dil[i+1]&&!lab[i+1]){lab[i+1]=nl;q[t++]=i+1}
+      if(yy>0&&!dil[i-W]&&!lab[i-W]){lab[i-W]=nl;q[t++]=i-W}if(yy<H-1&&!dil[i+W]&&!lab[i+W]){lab[i+W]=nl;q[t++]=i+W}}
+    comps.push({id:nl,cnt,x0,y0,x1,y1,edge,start:s,texts:[]})}
+  const keep=comps.filter(k=>k.id&&!k.edge&&k.cnt>=N*0.0006&&k.cnt<=N*0.2&&Math.min(k.x1-k.x0,k.y1-k.y0)>r*3&&k.cnt/((k.x1-k.x0+1)*(k.y1-k.y0+1))>0.35);
+  const byId=new Map(keep.map(k=>[k.id,k]));
+  /* text printed on the sheet: find which space each word sits in */
+  try{const tc=await pg.getTextContent();for(const it of tc.items){const s=(it.str||'').trim();if(!s||s.length>40)continue;const tr=it.transform;const p0=vp.convertToViewportPoint(tr[4]+(it.width||0)/2,tr[5]+(it.height||Math.abs(tr[3])||0)/2);
+      const cx=Math.round(p0[0]),cy=Math.round(p0[1]);let hit=0;for(let rad=0;rad<=r*3&&!hit;rad+=2){for(let a=0;a<8&&!hit;a++){const xx=cx+Math.round(Math.cos(a*Math.PI/4)*rad),yy=cy+Math.round(Math.sin(a*Math.PI/4)*rad);if(xx<0||yy<0||xx>=W||yy>=H)continue;const L=lab[yy*W+xx];if(L&&byId.has(L))hit=L}if(!rad&&!hit){}}
+      if(hit)byId.get(hit).texts.push({s,y:cy,x:cx})}}catch(e){}
+  const NUM=/^(?:(?:RM|ROOM)\.?\s*)?([A-Z]?\d{2,4}[A-Z]?)$/i;
+  const TAILN=/^([A-Za-z][A-Za-z .&/-]{2,30}?)\s+(?:RM\.?\s*|ROOM\s*)?([A-Z]?\d{2,4}[A-Z]?)$/i;
+  keep.forEach(k=>{k.texts.sort((a,b)=>a.y-b.y||a.x-b.x);let nu=k.texts.map(t=>t.s.match(NUM)).find(Boolean),both=!nu&&k.texts.map(t=>t.s.match(TAILN)).find(Boolean);
+    k.num=nu?nu[1].toUpperCase():both?both[2].toUpperCase():'';k.name=both?both[1].trim():k.texts.filter(t=>!NUM.test(t.s)&&/[A-Za-z]{3,}/.test(t.s)&&!/[:=@#]|\d'|"/.test(t.s)).slice(0,2).map(t=>t.s).join(' ')});
+  const withNum=keep.filter(k=>k.num).length,withText=keep.filter(k=>k.texts.length).length;
+  let rooms=withNum>=3?keep.filter(k=>k.num):withText>=3?keep.filter(k=>k.texts.length):keep;
+  /* outline each space, simplify it, then push it back out to the wall line */
+  const out=[];let k2=0;for(const k of rooms){const pts=traceComp(lab,W,H,k);if(pts.length<3)continue;let sp=dpSimplify(pts,Math.max(1.5,r*0.7));if(sp.length<3)continue;sp=offsetPoly(sp,r);
+    const zone=k.num?(k.name?titleCase(k.name.toLowerCase())+' '+k.num:'Room '+k.num):(k.name?titleCase(k.name.toLowerCase()):'Area '+(++k2));
+    out.push({id:uid(),zone:zone.slice(0,60),auto:true,pts:sp.map(p=>[+(Math.min(1,Math.max(0,p[0]/W))).toFixed(4),+(Math.min(1,Math.max(0,p[1]/H))).toFixed(4)])})}
+  return out}
+function traceComp(lab,W,H,k){const L=k.id,at=(x,y)=>x>=0&&y>=0&&x<W&&y<H&&lab[y*W+x]===L;let sx=-1,sy=-1;
+  for(let y=k.y0;y<=k.y1&&sx<0;y++)for(let x=k.x0;x<=k.x1;x++)if(at(x,y)){sx=x;sy=y;break}
+  const dx=[1,1,0,-1,-1,-1,0,1],dy=[0,1,1,1,0,-1,-1,-1];const pts=[[sx,sy]];let cx=sx,cy=sy,dir=7,guard=0;
+  do{let found=false;for(let i=0;i<8;i++){const d=(dir+6+i)%8,nx=cx+dx[d],ny=cy+dy[d];if(at(nx,ny)){cx=nx;cy=ny;dir=d;found=true;break}}if(!found)break;pts.push([cx,cy])}while((cx!==sx||cy!==sy)&&++guard<400000);
+  return pts}
+function dpSimplify(pts,eps){if(pts.length<4)return pts;const z=pts[0],e=pts[pts.length-1];if(z[0]===e[0]&&z[1]===e[1]){const p=pts.slice(0,-1);let f=0,fd=-1;p.forEach((q,i)=>{const d=Math.hypot(q[0]-z[0],q[1]-z[1]);if(d>fd){fd=d;f=i}});if(f<2||f>p.length-2)return p;const A=dpOpen(p.slice(0,f+1),eps),B=dpOpen([...p.slice(f),z],eps);return [...A.slice(0,-1),...B.slice(0,-1)]}return dpOpen(pts,eps)}
+function dpOpen(pts,eps){if(pts.length<3)return pts;const keep=new Uint8Array(pts.length);keep[0]=keep[pts.length-1]=1;const st=[[0,pts.length-1]];
+  while(st.length){const[a,b]=st.pop();let mx=0,mi=-1;const[ax,ay]=pts[a],[bx,by]=pts[b],L=Math.hypot(bx-ax,by-ay)||1;for(let i=a+1;i<b;i++){const d=Math.abs((bx-ax)*(ay-pts[i][1])-(ax-pts[i][0])*(by-ay))/L;if(d>mx){mx=d;mi=i}}if(mx>eps&&mi>0){keep[mi]=1;st.push([a,mi],[mi,b])}}
+  return pts.filter((_,i)=>keep[i])}
+function offsetPoly(p,d){const n=p.length;let a=0;for(let i=0;i<n;i++){const q=p[(i+1)%n];a+=p[i][0]*q[1]-q[0]*p[i][1]}const s=a>0?1:-1;
+  return p.map((c,i)=>{const pr=p[(i-1+n)%n],nx=p[(i+1)%n];const e1=[c[0]-pr[0],c[1]-pr[1]],e2=[nx[0]-c[0],nx[1]-c[1]];const l1=Math.hypot(...e1)||1,l2=Math.hypot(...e2)||1;
+    const n1=[s*e1[1]/l1,-s*e1[0]/l1],n2=[s*e2[1]/l2,-s*e2[0]/l2];let bx=n1[0]+n2[0],by=n1[1]+n2[1];const bl=Math.hypot(bx,by);if(bl<1e-6)return c;bx/=bl;by/=bl;const cs=Math.max(.35,bx*n1[0]+by*n1[1]);return [c[0]+bx*d/cs,c[1]+by*d/cs]})}
+
 async function planAreasPut(pl,n,arr){await upd('photos',pl.id,{areas:{...(pl.areas||{}),[n]:arr}})}
 function planSheet(){const pl=S.photos.find(x=>x.id===M.id);if(!pl)return sheet('Plans','<div class="empty"><b>This plan was removed.</b></div>');
   const list=planList(pl);if(!list.includes(M.n))M.n=list[0]||1;const n=M.n,ix=list.indexOf(n);const opts=list.map(i=>`<option value="${i}" ${i===n?'selected':''}>${esc(sheetName(pl,i))}</option>`).join('');
@@ -1579,10 +1629,11 @@ const PST_COL={open:'#d93025',ready:'#f2b705',closed:'#2e7d4f'};
 function planPins(){const box=$('#plpins'),st=PLV;if(!box||!M||M.kind!=='plan')return;const n=M.n||1;
   const ts=pinsOn(M.id,n),ps=allPhotos().filter(p=>p.planId===M.id&&+p.planPage===+n&&p.px!=null);
   const pl=S.photos.find(x=>x.id===M.id),ars=plAreas(pl,n),W=st.W,H=st.H,zm=M.mode==='zone',dr=M.zDraw||[];
-  const areaSvg=(ars.length||dr.length)?`<svg class="plareas${zm?' on':''}" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${ars.map(a=>`<polygon points="${a.pts.map(p=>(p[0]*W).toFixed(1)+','+(p[1]*H).toFixed(1)).join(' ')}" class="${M.zSel===a.id?'sel':''}"/>`).join('')}${dr.length?`<polyline class="drw" points="${dr.map(p=>(p[0]*W).toFixed(1)+','+(p[1]*H).toFixed(1)).join(' ')}${dr.length>2?' '+(dr[0][0]*W).toFixed(1)+','+(dr[0][1]*H).toFixed(1):''}"/>`:''}</svg>`
-    +ars.map(a=>{const cx=a.pts.reduce((s,p)=>s+p[0],0)/a.pts.length,cy=a.pts.reduce((s,p)=>s+p[1],0)/a.pts.length;return `<span class="plzlab" style="left:${cx*W}px;top:${cy*H}px">${esc(a.zone)}</span>`}).join('')
+  const areaSvg=(ars.length||dr.length)?`<svg class="plareas${zm?' on':''}" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${ars.map(a=>({...a,pts:M.zLive&&a.id===M.zSel?M.zLive:a.pts})).map(a=>`<polygon points="${a.pts.map(p=>(p[0]*W).toFixed(1)+','+(p[1]*H).toFixed(1)).join(' ')}" class="${M.zSel===a.id?'sel':''}"/>`).join('')}${dr.length?`<polyline class="drw" points="${dr.map(p=>(p[0]*W).toFixed(1)+','+(p[1]*H).toFixed(1)).join(' ')}${dr.length>2?' '+(dr[0][0]*W).toFixed(1)+','+(dr[0][1]*H).toFixed(1):''}"/>`:''}</svg>`
+    +ars.map(a=>{const P=M.zLive&&a.id===M.zSel?M.zLive:a.pts,xs=P.map(p=>p[0]),ys=P.map(p=>p[1]),cx=(Math.min(...xs)+Math.max(...xs))/2,y0=Math.min(...ys),cy=y0+(Math.max(...ys)-y0)*0.14;return `<span class="plzlab" style="left:${cx*W}px;top:${cy*H}px">${esc(a.zone)}</span>`}).join('')
     +dr.map(p=>`<span class="plzdot" style="left:${p[0]*W}px;top:${p[1]*H}px"></span>`).join(''):'';
-  box.innerHTML=areaSvg+ps.map(p=>`<button class="plpin cam" style="left:${p.px*st.W}px;top:${p.py*st.H}px" data-a="openPhoto" data-id="${p.id}" aria-label="Photo taken here">${I('camera')}</button>`).join('')
+  const selA=zm&&M.zSel&&ars.find(a=>a.id===M.zSel);const handles=selA?(M.zLive||selA.pts).map((p,i)=>`<span class="plzh" data-i="${i}" style="left:${p[0]*W}px;top:${p[1]*H}px" aria-hidden="true"></span>`).join(''):'';
+  box.innerHTML=areaSvg+handles+ps.map(p=>`<button class="plpin cam" style="left:${p.px*st.W}px;top:${p.py*st.H}px" data-a="openPhoto" data-id="${p.id}" aria-label="Photo taken here">${I('camera')}</button>`).join('')
    +ts.map((t,i)=>`<button class="plpin" style="left:${t.px*st.W}px;top:${t.py*st.H}px;--pc:${PST_COL[pStatus(t)]}" data-a="planPinOpen" data-id="${t.id}" aria-label="${esc(t.title)}"><i data-n="${i+1}"></i></button>`).join('')
    +(M.drop?`<span class="plpin drop" style="left:${M.drop.x*st.W}px;top:${M.drop.y*st.H}px;--pc:#2f80ed"><i data-n="+"></i></span>`:'')}
 /* gestures: drag to move, pinch or wheel to zoom, long-press or a tap in Add Pin / Photo Here mode to place */
@@ -1592,7 +1643,7 @@ function plZoomAt(nz,cx,cy){const st=PLV,r=st.el.getBoundingClientRect();nz=Math
 function plPlace(cx,cy){const p=plPoint(cx,cy);if(p.x<0||p.x>1||p.y<0||p.y>1)return;const pl=S.photos.find(x=>x.id===M.id);if(!pl)return;const n=M.n||1;
   const at={planId:pl.id,planPage:n,px:+p.x.toFixed(4),py:+p.y.toFixed(4)},back={kind:'plan',id:pl.id,n};
   if(M.mode==='zone'){if(!(M.zDraw||[]).length&&!M.zPick){const hit=plAreas(pl,n).filter(a=>inPoly(p.x,p.y,a.pts)).sort((a,b)=>polyArea(a.pts)-polyArea(b.pts))[0];if(hit){M.zSel=hit.id;planBar();return}}
-    if(M.zSel||M.zPick)return;M.zDraw=[...(M.zDraw||[]),[+p.x.toFixed(4),+p.y.toFixed(4)]];planBar();return}
+    if(M.zSel){M.zSel=null;planBar();return}if(M.zPick)return;M.zDraw=[...(M.zDraw||[]),[+p.x.toFixed(4),+p.y.toFixed(4)]];planBar();return}
   const za=planZoneAt(pl,n,p.x,p.y);
   if(M.mode==='photo'){M.mode='';const pid=pl.projectId,cx=ctxFor(pid);openModal({kind:'capture',pid,lockProject:true,title:'Photo on '+sheetName(pl,n),why:za?`Work Zone: ${za}. Take the photo; it's pinned where you tapped.`:'Pick the room, then take the photo. It\'s pinned where you tapped.',ctx:{...cx,...(za?{zone:za}:{}),plan:at},back});return}
   M.mode='';M.drop={x:at.px,y:at.py};planPins();const z=za||lastZT(pl.projectId).zone||'';
@@ -1600,15 +1651,20 @@ function plPlace(cx,cy){const p=plPoint(cx,cy);if(p.x<0||p.x>1||p.y<0||p.y>1)ret
   const task={projectId:pl.projectId,type:'punch',title:'',zone:z,...at};
   afterShot=id=>{const ph=PH(id);setTimeout(()=>openModal({kind:'task',task:{...task,photoId:id,zone:za||(ph&&ph.zone)||z,trade:(ph&&ph.trade)||''},back}),300)};
   setTimeout(()=>openModal({kind:'capture',pid:pl.projectId,lockProject:true,single:true,title:'Punch Photo',why:'Pin dropped on '+sheetName(pl,n)+(za?' in '+za:'')+'. Take a photo of the problem, then pick what needs fixing and who fixes it.',ctx:{tags:['Punch'],zone:z,trade:'',note:''},skipTask:task,back}),180)}
-function plDown(e){const w=e.target.closest&&e.target.closest('#plw');if(!w||e.target.closest('.plpin'))return;PLG.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});try{w.setPointerCapture(e.pointerId)}catch(_){}
+const PLZ={i:-1};
+function plDown(e){const w=e.target.closest&&e.target.closest('#plw');const h=e.target.closest&&e.target.closest('.plzh');
+  if(h&&M.zSel){const pl=S.photos.find(x=>x.id===M.id),a=plAreas(pl,M.n||1).find(x=>x.id===M.zSel);if(a){PLZ.i=+h.dataset.i;PLZ.id=e.pointerId;M.zLive=a.pts.map(p=>[...p]);try{h.setPointerCapture(e.pointerId)}catch(_){}e.preventDefault();return}}
+  if(!w||e.target.closest('.plpin'))return;PLG.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});try{w.setPointerCapture(e.pointerId)}catch(_){}
   const st=PLV;PLG.start={z:st.z,tx:st.tx,ty:st.ty,pts:[...PLG.pts.values()].map(p=>({...p}))};PLG.moved=false;clearTimeout(PLG.lp);
   if(PLG.pts.size===1&&M.mode!=='zone'){const x=e.clientX,y=e.clientY;PLG.lp=setTimeout(()=>{if(!PLG.moved&&PLG.pts.size===1){PLG.moved=true;haptic('ok');plPlace(x,y)}},550)}}
-function plMove(e){if(!PLG.pts.has(e.pointerId))return;PLG.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});const st=PLV,s=PLG.start,pts=[...PLG.pts.values()];
+function plMove(e){if(PLZ.i>=0&&e.pointerId===PLZ.id){const p=plPoint(e.clientX,e.clientY);M.zLive[PLZ.i]=[+Math.min(1,Math.max(0,p.x)).toFixed(4),+Math.min(1,Math.max(0,p.y)).toFixed(4)];planPins();return}
+  if(!PLG.pts.has(e.pointerId))return;PLG.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});const st=PLV,s=PLG.start,pts=[...PLG.pts.values()];
   if(pts.length===1&&s.pts.length===1){const dx=pts[0].x-s.pts[0].x,dy=pts[0].y-s.pts[0].y;if(Math.hypot(dx,dy)>8)PLG.moved=true;if(PLG.moved){clearTimeout(PLG.lp);st.tx=s.tx+dx;st.ty=s.ty+dy;planApply()}}
   else if(pts.length>=2&&s.pts.length>=2){clearTimeout(PLG.lp);PLG.moved=true;const d0=Math.hypot(s.pts[0].x-s.pts[1].x,s.pts[0].y-s.pts[1].y)||1,d1=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
     const m0={x:(s.pts[0].x+s.pts[1].x)/2,y:(s.pts[0].y+s.pts[1].y)/2},m1={x:(pts[0].x+pts[1].x)/2,y:(pts[0].y+pts[1].y)/2},r=st.el.getBoundingClientRect();
     const nz=Math.max(1,Math.min(24,s.z*d1/d0)),px=(m0.x-r.left-s.tx)/s.z,py=(m0.y-r.top-s.ty)/s.z;st.z=nz;st.tx=m1.x-r.left-px*nz;st.ty=m1.y-r.top-py*nz;planApply()}}
-function plUp(e){if(!PLG.pts.has(e.pointerId))return;const was=PLG.pts.size,p=PLG.pts.get(e.pointerId);PLG.pts.delete(e.pointerId);clearTimeout(PLG.lp);
+function plUp(e){if(PLZ.i>=0&&e.pointerId===PLZ.id){PLZ.i=-1;const pl=S.photos.find(x=>x.id===M.id),n=M.n||1,live=M.zLive;M.zLive=null;if(pl&&live)planAreasPut(pl,n,plAreas(pl,n).map(a=>a.id===M.zSel?{...a,pts:live,auto:false}:a)).then(planPins);return}
+  if(!PLG.pts.has(e.pointerId))return;const was=PLG.pts.size,p=PLG.pts.get(e.pointerId);PLG.pts.delete(e.pointerId);clearTimeout(PLG.lp);
   if(was===1&&!PLG.moved&&M&&M.kind==='plan'&&M.mode&&e.type==='pointerup'){plPlace(p.x,p.y);return}
   if(PLG.pts.size){const st=PLV;PLG.start={z:st.z,tx:st.tx,ty:st.ty,pts:[...PLG.pts.values()].map(q=>({...q}))}}else planSharpSoon()}
 document.addEventListener('pointerdown',e=>{if(M&&M.kind==='plan')plDown(e)});
@@ -1640,6 +1696,14 @@ const PLAN_ACT={
   planImpView:el=>planImpView(+el.dataset.n),
   planImpAll:el=>{document.querySelectorAll('form[data-sub=planImpGo] input[name=pg]').forEach(c=>{c.checked=el.dataset.v==='1'});planImpCount()},
   planMode:el=>{M.mode=M.mode===el.dataset.m?'':el.dataset.m;M.zDraw=null;M.zPick=false;M.zSel=null;planBar()},
+  plzFind:async el=>{const pl=S.photos.find(x=>x.id===M.id),n=M.n||1;if(!pl)return;el.disabled=true;el.textContent='Finding rooms…';await new Promise(r=>setTimeout(r,30));
+    try{const ex=plAreas(pl,n);let found=await planFindRooms(pl,n,1);
+      found=found.filter(a=>{const cx=a.pts.reduce((s,p)=>s+p[0],0)/a.pts.length,cy=a.pts.reduce((s,p)=>s+p[1],0)/a.pts.length;return !ex.some(e=>inPoly(cx,cy,e.pts))});
+      if(!M||M.kind!=='plan')return;if(!found.length){toast('No new rooms found on this sheet. You can still tap corners to draw them.',4500);planBar();return}
+      await planAreasPut(pl,n,[...ex,...found]);M.zAuto=found.map(a=>a.id);planBar();toast(`Found ${found.length} room${found.length===1?'':'s'}. Tap any room to fix its name or drag its corners.`,5000)}
+    catch(e){toast('Couldn\'t read the rooms on this sheet.');planBar()}},
+  plzUnfind:async()=>{const pl=S.photos.find(x=>x.id===M.id),n=M.n||1,ids=new Set(M.zAuto||[]);await planAreasPut(pl,n,plAreas(pl,n).filter(a=>!ids.has(a.id)));M.zAuto=null;M.zSel=null;planBar();toast('Found rooms removed')},
+  plzDesel:()=>{M.zSel=null;M.zLive=null;planBar()},
   plzUndo:()=>{(M.zDraw||[]).pop();planBar()},
   plzFinish:()=>{if((M.zDraw||[]).length<3)return;M.zPick=true;planBar();setTimeout(()=>{const i=$('#plzname');if(i)i.focus()},50)},
   plzBack:()=>{M.zPick=false;planBar()},

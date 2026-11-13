@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="a993c33d54">
+<meta name="bc-ver" content="8836f19149">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-zwHc5YfnPQQDrhqwOKjVUuhtDV2/Lr3dOIV+CmvapPI=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-ugPRC3wXGnMj4EaRfIcj/idd17ESku16Cg8gZQ6QvFo=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -447,7 +447,7 @@ fieldset .li .t>*{white-space:normal;overflow-wrap:anywhere}
 .plpin.cam svg{width:15px;height:15px}
 .plpin.drop{pointer-events:none}
 .plbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 10px 0;background:var(--bg)}.plbar .btn{justify-content:center}.plbar.z{grid-template-columns:1fr}
-.plbar.z{display:grid;gap:8px}.plzrow{display:flex;gap:8px;align-items:center}.plzrow .btn.stamp{flex:1}.plzrow input{flex:1;min-width:0}.plzrow .btn{flex:none}.plzrow .btn.pri{flex:1}
+.frow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:8px 0;border-bottom:1px solid var(--line)}.frow .t{flex:1;min-width:180px;display:grid}.plbar.z{display:grid;gap:8px;width:100%;max-width:620px;margin:0 auto;box-sizing:border-box}.plbar:not(.z){max-width:620px;margin:0 auto;width:100%;box-sizing:border-box}.plzrow{justify-content:center;flex-wrap:wrap}.plzrow .btn{min-width:84px}.zlist{max-height:30vh;overflow:auto;display:grid;gap:6px;padding:2px}.zlrow{display:grid;grid-template-columns:4.6em 1fr 1fr;gap:6px}.plz2 .f{flex:1;min-width:0;margin:0;font-size:12px}.plz2 .f input{width:100%}.plzlab i{display:block;font-style:normal;font-weight:500;font-size:.8em;opacity:.75}.zlrow input{min-width:0}.zlh{font-size:12px;color:var(--muted);font-weight:600}.plzrow{display:flex;gap:8px;align-items:center}.plzrow .btn.stamp{flex:none}.plzrow input{flex:1;min-width:0}.plzrow .btn{flex:none}.plzrow .btn.pri{flex:none;min-width:120px}
 .plareas{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
 .plareas polygon{fill:rgba(29,92,143,.10);stroke:var(--accent);stroke-width:2;vector-effect:non-scaling-stroke}
 .plareas.on polygon{fill:rgba(29,92,143,.18)}.plareas polygon.sel{fill:rgba(242,183,5,.32);stroke:#b88a00}
@@ -455,7 +455,7 @@ fieldset .li .t>*{white-space:normal;overflow-wrap:anywhere}
 .plzlab{max-width:calc(var(--aw) * var(--z,1));overflow:hidden;text-overflow:ellipsis;position:absolute;transform:translate(-50%,-50%) scale(calc(1/var(--z)));background:rgba(255,255,255,.88);color:#1d5c8f;font:600 12px var(--f-body);padding:2px 6px;border-radius:6px;border:1px solid rgba(29,92,143,.35);white-space:nowrap;pointer-events:none;z-index:1}
 .plzh{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:#f2b705;border:3px solid #1b2024;transform:scale(calc(1/var(--z)));z-index:3;cursor:grab;touch-action:none;box-shadow:0 1px 4px rgba(0,0,0,.4)}
 .plzh.on{background:#fff;border-color:#b3261e;box-shadow:0 0 0 3px rgba(179,38,30,.35)}
-.plzm{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:rgba(255,255,255,.9);border:2px solid #b88a00;transform:scale(calc(1/var(--z)));z-index:3;cursor:copy;touch-action:none}
+.plzm{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:rgba(255,255,255,.9);border:2px solid #b88a00;transform:scale(calc(1/var(--z)));z-index:3;cursor:move;touch-action:none}
 .plzdot{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:#f2b705;border:2px solid #1b2024;transform:scale(calc(1/var(--z)));pointer-events:none;z-index:2}
 .plhint{padding:6px 14px calc(8px + env(safe-area-inset-bottom,0px));font-size:13px;color:var(--muted);text-align:center;background:var(--bg)}
 .plcard{position:absolute;left:10px;right:10px;bottom:calc(104px + env(safe-area-inset-bottom,0px));z-index:5;max-width:560px;margin:0 auto;box-shadow:0 6px 24px rgba(0,0,0,.3);border-radius:14px;background:var(--panel)}
@@ -1383,6 +1383,15 @@ function renderTop(){
 }
 function syncState(){const n=Q.items.length+wqGet().filter(x=>x.team===qTeam()).length;if(OFFLINE())return ['wait',n?n+' saved on phone · No-signal mode':'No-signal mode on'];return !READY?['','Connecting…']:!DB?['off','Preview: not saving']:n?['wait',n+' waiting to upload']:['ok','Saved']}
 const NAV=[['home','home','Home','Recent jobs, live photo feed, your to-dos'],['projects','folder','Projects','Every job with its photos'],['feed','feed','Photos','Every photo from every job'],['checklists','check','Checklists','All checklists and their progress'],['punch','pin2','Punch List','Punch items by trade: open, ready to check, closed'],['tasks','flag','Tasks','Open tasks and to-dos'],['reports','report','Reports','Branded PDF reports for any job'],['docs','doc','Documents','Scanned tickets, cards and change orders'],['map','map','Map','Every job on a map'],['team','users','Team','People, roles and Trade Partners'],['time','clock','Time Tracking','Clock in and out at a job'],['portfolio','star','Portfolio','Photos for the website and ads'],['dash','chart','Activity','Photos, punch items and who is posting'],['uploads','cloud','Uploads','Photos waiting to upload, no-signal mode'],['onsite','here','On Site Today','Who is clocked in where'],['alerts','flag','Alerts','@mentions and assigned punch items'],['verify','shield','Verify a Photo','Check a photo\'s proof code']];
+/* Features: the owner or office can turn whole sections of the app on, limit them to Owner/Office/Super, or turn them off */
+const FEATS=[['plans','Plans','Plan sheets, Find Rooms, work zones, room signs'],['punch','Punch List','Punch items, punch pins, room QR codes'],['checklists','Checklists','Job checklists'],['tasks','Tasks','Tasks and to-dos'],['log','Daily Log','Daily log on each job'],['reports','Reports','Branded PDF reports'],['docs','Documents','Scanned tickets, cards, change orders'],['map','Map','Jobs and photos on a map'],['time','Time Tracking','Clock in and out at a job'],['portfolio','Portfolio','Photos for the website and ads'],['dash','Activity','Who is posting and what']];
+const featModes=()=>{const t=(typeof S!=='undefined'&&S.settings||[]).find(x=>x.id==='features');return t&&t.modes&&typeof t.modes==='object'?t.modes:{}};
+const featMode=k=>featModes()[k]||'on';
+const featOn=k=>{if(!FEATS.some(f=>f[0]===k))return true;const m=featMode(k);return m==='off'?false:m==='office'?(!(window.BC&&BC.role)||['Owner','Office','Super'].includes(BC.role())):true};
+function featCard(){if(!canInvite())return '';const md=featModes();const n=FEATS.filter(f=>(md[f[0]]||'on')!=='on').length;
+  return `<details class="card stack stl" id="st-feat" data-k="feat" ${stOpen('feat')?'open':''}>${stSum('feat','Features',n?n+' turned off or limited':'All on',n?FEATS.filter(f=>(md[f[0]]||'on')!=='on').map(f=>f[1]+': '+((md[f[0]]==='off')?'Off':'Office Only')).join(', '):'Turn sections off until your team is ready for them.')}
+   <p class="note" style="margin:0">Turn a section off to hide it for everyone, or set it to Office Only so only the Owner, Office and Supers see it. Nothing is deleted; turn it back on any time.</p>
+   <div class="list">${FEATS.map(([k,l,d])=>{const m=md[k]||'on';return `<div class="frow"><span class="t"><b>${l}</b><span class="note">${d}</span></span><div class="seg sm" role="group" aria-label="${l}">${[['on','On'],['office','Office Only'],['off','Off']].map(([v,t])=>`<button type="button" data-a="featSet" data-k="${k}" data-v="${v}" aria-pressed="${m===v}">${t}</button>`).join('')}</div></div>`}).join('')}</div></details>`}
 const isAdminMe=()=>ME.id==='945c030f-3830-4daf-bf5d-44cdde0d0e37'&&!NATIVE_APP;
 function sideHtml(){
   const cur=V.tab==='project'?'projects':V.tab, me=myMember(), al=me?S.alerts.filter(a=>a.to===me&&!a.read).length:0, s=syncState();
@@ -1390,7 +1399,7 @@ function sideHtml(){
   return `<nav class="side" aria-label="Main"><div class="sdh"><span class="slogo">${I('camera')}</span><span class="sname">Build Camera</span><button class="sib" data-a="newProject" aria-label="New Project">${I('plus')}</button></div>
   <button class="scam" data-a="capture">${I('camera')} Take Photos</button>
   <button class="ssearch" data-a="tab" data-t="search">${I('search')}<span>Search</span><kbd class="kk">${/Mac|iPhone|iPad/.test(navigator.platform)?'⌘K':'Ctrl K'}</kbd></button>
-  <div class="sco">${esc(coName())}</div>${NAV.map(it).join('')}
+  <div class="sco">${esc(coName())}</div>${NAV.filter(n=>featOn(n[0])).map(it).join('')}
   <div class="sfoot"><button class="si" data-a="tab" data-t="settings">${avHtml(ME.name,'av',ME.id)}<span>${esc(ME.name)}</span></button>${it(['settings','info','Settings'])}${isAdminMe()?`<a class="si" href="/admin/devices/">${I('phone')}<span>Device Preview</span></a><a class="si" href="/admin/">${I('chart')}<span>Admin</span></a>`:''}${it(['about','info','About This Version'])}<button class="sync ${s[0]}" data-a="tab" data-t="uploads" style="cursor:pointer">${esc(s[1])}</button></div></nav>`;
 }
 const AVS=()=>(S.settings.find(x=>x.id==='avatars')||{}).map||{};
@@ -1555,16 +1564,31 @@ const PLV={};
 const plAreas=(pl,n)=>((pl&&pl.areas)||{})[n]||[];
 function inPoly(x,y,pts){let c=false;for(let i=0,j=pts.length-1;i<pts.length;j=i++){const[xi,yi]=pts[i],[xj,yj]=pts[j];if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/((yj-yi)||1e-9)+xi))c=!c}return c}
 const polyArea=pts=>Math.abs(pts.reduce((a,p,i)=>{const q=pts[(i+1)%pts.length];return a+p[0]*q[1]-q[0]*p[1]},0)/2);
-function planZoneAt(pl,n,x,y){const hit=plAreas(pl,n).filter(a=>a.pts&&a.pts.length>2&&inPoly(x,y,a.pts)).sort((a,b)=>polyArea(a.pts)-polyArea(b.pts));return hit.length?hit[0].zone:''}
+/* each outlined area has a Room Name and a Work Zone. Older found rooms kept the room name in zone. */
+const aRoom=a=>a?('room' in a?a.room||'':a.auto?a.zone||'':''):'';
+const aZone=a=>a?('room' in a||!a.auto?a.zone||'':''):'';
+const aLabel=a=>aRoom(a)||aZone(a);
+function planHits(pl,n,x,y){return plAreas(pl,n).filter(a=>a.pts&&a.pts.length>2&&inPoly(x,y,a.pts)).sort((a,b)=>polyArea(a.pts)-polyArea(b.pts))}
+/* smallest area with a zone wins, so a big zone drawn around a wing covers the rooms inside it */
+function planZoneAt(pl,n,x,y){const h=planHits(pl,n,x,y).find(a=>aZone(a));return h?aZone(h):''}
+function planRoomAt(pl,n,x,y){const h=planHits(pl,n,x,y).find(a=>aRoom(a));return h?aRoom(h):''}
 function planHint(){const m=M&&M.mode||'';if(m==='pin')return 'Tap the spot that needs fixing.';if(m==='photo')return 'Tap where you\'re standing.';
   if(m==='zone'){if(M.zSel)return 'Drag the yellow corners to fit the room. Change the name or delete it.';if(M.zPick)return 'Name this area with its work zone.';const k=(M.zDraw||[]).length;return k?(k<3?'Keep tapping corners. 3 or more make an area.':'Tap more corners, or tap Finish.'):'Tap Find Rooms, or tap the corners of a room. Tap any area to change it.'}
   return DESK()?'Scroll to zoom, drag to move. Press and hold a spot to add a punch item.':'Pinch to zoom. Long-press a spot to add a punch item.'}
 function plToolsHtml(){const m=M&&M.mode||'';
   if(m==='zone'){const pl=S.photos.find(x=>x.id===M.id),n=M.n||1;
-    if(M.zSel){const a=plAreas(pl,n).find(x=>x.id===M.zSel);return `<div class="plzrow"><input type="text" id="plzname" list="plzdl" value="${esc(a?a.zone:'')}" aria-label="Work zone" autocapitalize="words"><datalist id="plzdl">${zoneList().map(z=>`<option value="${esc(z)}">`).join('')}</datalist><button class="btn pri" data-a="plzRename">Save</button><button class="btn bad" data-a="plzDel" aria-label="Delete area">${I('trash')}</button><button class="btn" data-a="plzDesel">Done</button></div><div class="plzrow"><button class="btn" data-a="plzNodeDel" ${M.zNode!=null&&a&&a.pts.length>3?'':'disabled'}>Delete Corner</button><span class="note" style="flex:1;margin:0">Tap a corner to pick it. Drag a small dot to add a corner.</span></div>`}
-    if(M.zPick)return `<div class="plzrow"><input type="text" id="plzname" list="plzdl" placeholder="Work zone, e.g. Level 2 Corridor" aria-label="Work zone" autocapitalize="words"><datalist id="plzdl">${zoneList().map(z=>`<option value="${esc(z)}">`).join('')}</datalist><button class="btn pri" data-a="plzSave">Save Area</button><button class="btn" data-a="plzBack">Back</button></div>`;
-    const k=(M.zDraw||[]).length;return `${k?'':`<div class="plzrow"><button class="btn stamp" data-a="plzFind" id="plzfind">${I('sparkle')} Find Rooms</button>${M.zAuto&&M.zAuto.length?`<button class="btn" data-a="plzUnfind">Remove Found</button>`:plAreas(pl,n).length?`<button class="btn" data-a="plzClear">${M.zClear?'Tap Again to Clear':'Clear All'}</button>`:''}${plAreas(pl,n).length?`<button class="btn" data-a="signsOpen" data-pid="${pl.projectId}">Signs</button>`:''}</div>`}<div class="plzrow"><button class="btn" data-a="plzUndo" ${k?'':'disabled'}>Undo</button><button class="btn pri" data-a="plzFinish" ${k>=3?'':'disabled'}>Finish Area</button><button class="btn" data-a="plzDone">Done</button></div>`}
-  return `<button class="btn ${m==='photo'?'pri':''}" data-a="planMode" data-m="photo" aria-pressed="${m==='photo'}">${I('camera')} Photo Here</button><button class="btn ${m==='pin'?'pri':''}" data-a="planMode" data-m="pin" aria-pressed="${m==='pin'}">${I('pin2')} Add Punch Pin</button>${canPlans()?`<button class="btn" data-a="planMode" data-m="zone" style="grid-column:1/-1">${I('pen')} Draw Work Zones</button>`:''}`}
+    if(M.zList){const rs=plAreas(pl,n).map(a=>({a,...zSplit(aRoom(a))})).sort((x,y)=>(x.num||'~').localeCompare(y.num||'~',undefined,{numeric:true})||x.name.localeCompare(y.name));
+      return `<div class="plzrow"><b style="flex:1">Rooms (${rs.length})</b><button class="btn pri" data-a="plzListSave">Save All</button><button class="btn" data-a="plzListClose">Cancel</button></div><div class="zlist"><div class="zlrow zlh"><span>Number</span><span>Room Name</span><span>Work Zone</span></div>${rs.map(r=>`<div class="zlrow"><input type="text" id="zl-r-${r.a.id}" data-zid="${r.a.id}" value="${esc(r.num)}" placeholder="No." aria-label="Room number" autocapitalize="characters"><input type="text" id="zl-n-${r.a.id}" data-zid="${r.a.id}" value="${esc(r.name)}" list="zlnames" placeholder="e.g. Classroom" aria-label="Room name" autocapitalize="words"><input type="text" id="zl-z-${r.a.id}" data-zid="${r.a.id}" value="${esc(aZone(r.a))}" list="plzdl" placeholder="e.g. East Wing" aria-label="Work zone" autocapitalize="words"></div>`).join('')}</div><datalist id="plzdl">${zoneList().map(z=>`<option value="${esc(z)}">`).join('')}</datalist><div class="plzrow"><input type="text" id="zl-all" list="plzdl" placeholder="Same work zone for every room…" aria-label="Work zone for every room" autocapitalize="words"><button class="btn" data-a="plzListZoneAll">Fill All</button></div><datalist id="zlnames">${ROOM_NAMES.map(z=>`<option value="${z}">`).join('')}</datalist><span class="note" style="margin:0">Tap a box to see that room light up on the plan.</span>`}
+    if(M.zSel){const a=plAreas(pl,n).find(x=>x.id===M.zSel);return `<div class="plzrow plz2">${zrInputs(aRoom(a),aZone(a))}</div><div class="plzrow"><button class="btn pri" data-a="plzRename">Save</button><button class="btn bad" data-a="plzDel" aria-label="Delete area">${I('trash')}</button><button class="btn" data-a="plzDesel">Done</button></div><div class="plzrow"><button class="btn" data-a="plzNodeDel" ${M.zNode!=null&&a&&a.pts.length>3?'':'disabled'}>Delete Corner</button><span class="note" style="flex:1;margin:0">Drag a big dot to move a corner. Drag a small dot to slide that whole side. Tap a small dot to add a corner.</span></div>`}
+    if(M.zPick)return `<div class="plzrow plz2">${zrInputs('','')}</div><div class="plzrow"><button class="btn pri" data-a="plzSave">Save Area</button><button class="btn" data-a="plzBack">Back</button></div>`;
+    const k=(M.zDraw||[]).length;return `${k?'':`<div class="plzrow"><button class="btn stamp" data-a="plzFind" id="plzfind">${I('sparkle')} Find Rooms</button>${M.zAuto&&M.zAuto.length?`<button class="btn" data-a="plzUnfind">Remove Found</button>`:plAreas(pl,n).length?`<button class="btn" data-a="plzClear">${M.zClear?'Tap Again to Clear':'Clear All'}</button>`:''}${plAreas(pl,n).length?`<button class="btn" data-a="plzList">Names</button><button class="btn" data-a="signsOpen" data-pid="${pl.projectId}">Signs</button>`:''}</div>`}<div class="plzrow"><button class="btn" data-a="plzUndo" ${k?'':'disabled'}>Undo</button><button class="btn pri" data-a="plzFinish" ${k>=3?'':'disabled'}>Finish Area</button><button class="btn" data-a="plzDone">Done</button></div>`}
+  return `<button class="btn ${m==='photo'?'pri':''}" data-a="planMode" data-m="photo" aria-pressed="${m==='photo'}">${I('camera')} Photo Here</button>${featOn('punch')?`<button class="btn ${m==='pin'?'pri':''}" data-a="planMode" data-m="pin" aria-pressed="${m==='pin'}">${I('pin2')} Add Punch Pin</button>`:''}${canPlans()?`<button class="btn" data-a="planMode" data-m="zone" style="grid-column:1/-1">${I('pen')} Draw Work Zones</button>`:''}`}
+function zrInputs(room,zone){return `<label class="f">Room Name<input type="text" id="plzroom" list="zlnames" value="${esc(room)}" placeholder="e.g. Classroom 101" aria-label="Room name" autocapitalize="words"></label><label class="f">Work Zone<input type="text" id="plzname" list="plzdl" value="${esc(zone)}" placeholder="e.g. East Wing" aria-label="Work zone" autocapitalize="words"></label><datalist id="plzdl">${zoneList().map(z=>`<option value="${esc(z)}">`).join('')}</datalist><datalist id="zlnames">${ROOM_NAMES.map(z=>`<option value="${z}">`).join('')}</datalist>`}
+const zrVal=()=>{const r=$('#plzroom'),z=$('#plzname');return {room:titleCase((r&&r.value||'').trim()).slice(0,60),zone:titleCase((z&&z.value||'').trim()).slice(0,60)}};
+const ROOM_NAMES=['Classroom','Corridor','Restroom','Boys Restroom','Girls Restroom','Janitor Closet','Storage','Closet','Mechanical','Electrical','Office','Work Room','Stair','Elevator','Vestibule','Lobby','Gym','Cafeteria','Kitchen','Library','Lab','Conference Room','Nurse','Locker Room','Data Room'];
+function projRooms(pid){const r=new Set();S.photos.filter(x=>x.kind==='plan'&&x.projectId===pid).forEach(pl=>planList(pl).forEach(n=>plAreas(pl,n).forEach(a=>{if(aRoom(a))r.add(aRoom(a))})));return [...r].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}))}
+function zSplit(z){const m=String(z||'').match(/^(.*?)\s*\b([A-Z]{0,2}-?\d{2,4}[A-Z]?(?:-\d{1,2})?)$/i);if(!m)return{name:String(z||''),num:''};const nm=m[1].trim();return{name:/^(room|rm\.?|area)$/i.test(nm)?'':nm,num:m[2].toUpperCase()}}
+document.addEventListener('focusin',e=>{const id=e.target&&e.target.dataset&&e.target.dataset.zid;if(!id)return;document.querySelectorAll('.plareas polygon').forEach(p=>p.classList.toggle('sel',p.dataset.id===id))});
 function planBar(){const b=$('#plbar'),h=$('#plhint');if(b){b.innerHTML=plToolsHtml();b.classList.toggle('z',M&&M.mode==='zone')}if(h)h.textContent=planHint();planPins()}
 /* Find Rooms: read the sheet's walls, close doorways, and outline every room that has a room number printed in it.
    Small rooms (closets, restrooms) are retried with thinner walls so their doors close without filling the room. */
@@ -1616,7 +1640,8 @@ async function planFindRooms(pl,n,strength,dark){
     nums.forEach((nu,i)=>{if(seen.has(nu))return;const poly=rectiOutline((x,y)=>x>=k.x0&&y>=k.y0&&x<=k.x1&&y<=k.y1&&m[(y-k.y0)*bw+x-k.x0]&&own(x,y)===i,W,H,k,p.r);if(!poly)return;const nl=pts[i][0];
       const cand=words.filter(w=>NAMEOK(w.s)&&Math.abs(w.x-nl.x)<120&&Math.abs(w.y-nl.y)<80).sort((a,b)=>(Math.abs(a.x-nl.x)+Math.abs(a.y-nl.y)+(a.y>nl.y?60:0))-(Math.abs(b.x-nl.x)+Math.abs(b.y-nl.y)+(b.y>nl.y?60:0)));const name=nl.name||(cand[0]&&cand[0].s)||'';
       if((nu.match(/\d/g)||[]).length<3)return;pts[i].forEach(l=>l.done=true);seen.add(nu);rooms.push({poly,zone:name?roomName(name)+' '+nu:'Room '+nu})})}
-  for(const rm of rooms)out.push({id:uid(),zone:rm.zone.slice(0,60),auto:true,pts:rm.poly.map(p=>[+(Math.min(1,Math.max(0,p[0]/W))).toFixed(4),+(Math.min(1,Math.max(0,p[1]/H))).toFixed(4)])});
+  for(const rm of rooms)rm.poly=snapWalls(rm.poly,wall,W,H,r0);
+  for(const rm of rooms)out.push({id:uid(),room:rm.zone.slice(0,60),zone:'',auto:true,pts:rm.poly.map(p=>[+(Math.min(1,Math.max(0,p[0]/W))).toFixed(4),+(Math.min(1,Math.max(0,p[1]/H))).toFixed(4)])});
   return out}
 const SMALLW=/^(CLOSET|STOR|JAN|CUSTODIAL|MECH|ELEC|IDF|MDF|DATA|TEL|RESTROOM|TOILET|WOMEN|MEN|BOYS|GIRLS|UNISEX|FAMILY|RISER|SUPPLY|PUMP|SPRINKLER|FIRE RISER|SHOWER|COPY|MAIL|PANTRY|SERVER|ELEV)/i;
 /* spell out plan shorthand: Jan. becomes Janitor, Elec. becomes Electrical, Girls becomes Girls Restroom */
@@ -1633,8 +1658,37 @@ function roomComps(wall,W,H,r){const N=W*H,tmp=new Uint8Array(N),dil=new Uint8Ar
     comps.push({id:nl,cnt,x0,y0,x1,y1,edge})}
   return {lab,comps}}
 /* rooms are square, rectangular or L-shaped: outline the space on a grid so every edge is level or plumb, then push it back out to the wall line */
+/* morphological closing on a cell grid (grow then shrink by q cells): fills dents and notches, keeps the outside edges where they were */
+function closeGrid(fill,nx,ny,q){const P=q+1,mx=nx+2*P,my=ny+2*P;let g=new Uint8Array(mx*my);for(let j=0;j<ny;j++)for(let i=0;i<nx;i++)g[(j+P)*mx+i+P]=fill[j*nx+i];
+  const pass=(src,grow,horiz)=>{const o=new Uint8Array(mx*my);for(let j=0;j<my;j++)for(let i=0;i<mx;i++){let v=grow?0:1;for(let d=-q;d<=q;d++){const ii=horiz?i+d:i,jj=horiz?j:j+d;const c=ii<0||jj<0||ii>=mx||jj>=my?0:src[jj*mx+ii];if(grow?c:!c){v=grow?1:0;break}}o[j*mx+i]=v}return o};
+  g=pass(pass(g,1,1),1,0);g=pass(pass(g,0,1),0,0);for(let j=0;j<ny;j++)for(let i=0;i<nx;i++)if(g[(j+P)*mx+i+P])fill[j*nx+i]=1}
+/* rooms are boxes: cut off thin bumps that leak out through a doorway, then fill the notches that door swings bite out of the edges and corners.
+   Only pieces up to about 1.6 doors across are touched, so real L-shaped rooms and wall jogs stay. */
+function squareUp(fill,nx,ny,q){const tot=fill.reduce((a,b)=>a+b,0);if(!tot)return;
+  /* 1. bumps: a filled cell whose run across is shorter than a door, in both directions, at the edge of the room */
+  const lim=Math.round(q*1.6);
+  const runs=(horiz)=>{const r=new Uint16Array(nx*ny);if(horiz)for(let j=0;j<ny;j++){let i=0;while(i<nx){if(!fill[j*nx+i]){i++;continue}let e=i;while(e<nx&&fill[j*nx+e])e++;for(let t=i;t<e;t++)r[j*nx+t]=e-i;i=e}}else for(let i=0;i<nx;i++){let j=0;while(j<ny){if(!fill[j*nx+i]){j++;continue}let e=j;while(e<ny&&fill[e*nx+i])e++;for(let t=j;t<e;t++)r[t*nx+i]=e-j;j=e}}return r};
+  {const rh=runs(1),rv=runs(0),mh=Math.max(...rh),mv=Math.max(...rv);const cut=[];for(let v=0;v<nx*ny;v++)if(fill[v]&&((rh[v]<=lim&&rh[v]<mh*0.5)||(rv[v]<=lim&&rv[v]<mv*0.5)))cut.push(v);if(cut.length<tot*0.25)cut.forEach(v=>fill[v]=0)}
+  /* 2. notches: empty pieces inside the room's box that touch the box edge and are no bigger than a door */
+  let x0=nx,y0=ny,x1=-1,y1=-1;for(let j=0;j<ny;j++)for(let i=0;i<nx;i++)if(fill[j*nx+i]){if(i<x0)x0=i;if(i>x1)x1=i;if(j<y0)y0=j;if(j>y1)y1=j}if(x1<0)return;
+  const seen=new Uint8Array(nx*ny);for(let j=y0;j<=y1;j++)for(let i=x0;i<=x1;i++){const s0=j*nx+i;if(fill[s0]||seen[s0])continue;const st=[s0],cells=[];seen[s0]=1;let a=i,b=i,c=j,d=j;
+    while(st.length){const v=st.pop();cells.push(v);const ii=v%nx,jj=(v/nx)|0;if(ii<a)a=ii;if(ii>b)b=ii;if(jj<c)c=jj;if(jj>d)d=jj;for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const xi=ii+dx,yj=jj+dy;if(xi<x0||xi>x1||yj<y0||yj>y1)continue;const u=yj*nx+xi;if(!fill[u]&&!seen[u]){seen[u]=1;st.push(u)}}}
+    const w=b-a+1,h=d-c+1,edge=a===x0||b===x1||c===y0||d===y1,hole=!edge;if(hole||(w<=lim&&h<=lim)||(Math.min(w,h)<=Math.max(1,q>>1)&&Math.max(w,h)<=lim*2))cells.forEach(v=>fill[v]=1)}}
+/* slide each straight side of a room out to the face of its wall, stepping over door swings and openings */
+function snapWalls(poly,wall,W,H,r){if(!poly||poly.length<4)return poly;const P=poly.map(p=>[Math.round(p[0]),Math.round(p[1])]),n=P.length,maxOut=Math.round(Math.max(W,H)*0.022),back=Math.round(r*3);
+  const isW=(x,y)=>x>=0&&y>=0&&x<W&&y<H&&wall[y*W+x];
+  for(let i=0;i<n;i++){const a=P[i],b=P[(i+1)%n],hz=a[1]===b[1],vt=a[0]===b[0];if(!hz&&!vt)continue;
+    const len=hz?Math.abs(b[0]-a[0]):Math.abs(b[1]-a[1]);if(len<6)continue;
+    const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,dx=hz?0:1,dy=hz?1:0;const out=inPoly(mx+dx*3,my+dy*3,P)?-1:1;
+    const lo=hz?Math.min(a[0],b[0]):Math.min(a[1],b[1]),s0=lo+len*0.08,s1=lo+len*0.92,st=Math.max(1,len/60);
+    const frac=t=>{let c=0,m=0;for(let u=s0;u<=s1;u+=st){m++;const x=hz?Math.round(u):Math.round(mx+out*t),y=hz?Math.round(my+out*t):Math.round(u);if(isW(x,y))c++}return c/m};
+    let best=null;for(let t=-back;t<=maxOut;t++){if(frac(t)>=0.4){best=t-1;break}}
+    if(best==null||best===0)continue;if(hz){a[1]+=out*best;b[1]+=out*best}else{a[0]+=out*best;b[0]+=out*best}}
+  return P}
 function rectiOutline(inside,W,H,k,r){const g=Math.max(3,Math.round(r*0.6)),cx=k.x0,cy=k.y0,nx=Math.ceil((k.x1-k.x0+1)/g),ny=Math.ceil((k.y1-k.y0+1)/g);
   const fill=new Uint8Array(nx*ny);for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){let c=0,t=0;for(let y=cy+j*g;y<Math.min(cy+(j+1)*g,H);y++)for(let x=cx+i*g;x<Math.min(cx+(i+1)*g,W);x++){t++;if(inside(x,y))c++}fill[j*nx+i]=c*2>=t?1:0}
+  /* door swings and leaves cut notches into a room's corners: fill any dent up to about a door wide so the outline runs straight along the walls */
+  {const D=Math.max(W,H)*0.013,q=Math.max(1,Math.round(D/g));squareUp(fill,nx,ny,q)}
   const F=(i,j)=>i>=0&&j>=0&&i<nx&&j<ny&&fill[j*nx+i];
   /* keep the biggest piece only */
   const seen=new Uint8Array(nx*ny);let best=null;for(let s=0;s<nx*ny;s++){if(!fill[s]||seen[s])continue;const st=[s],cells=[];seen[s]=1;while(st.length){const v=st.pop();cells.push(v);const i=v%nx,j=(v/nx)|0;for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]]){const u=(j+b)*nx+(i+a);if(F(i+a,j+b)&&!seen[u]){seen[u]=1;st.push(u)}}}if(!best||cells.length>best.length)best=cells}
@@ -1696,8 +1750,8 @@ const PST_COL={open:'#d93025',ready:'#f2b705',closed:'#2e7d4f'};
 function planPins(){const box=$('#plpins'),st=PLV;if(!box||!M||M.kind!=='plan')return;const n=M.n||1;
   const ts=pinsOn(M.id,n),ps=allPhotos().filter(p=>p.planId===M.id&&+p.planPage===+n&&p.px!=null);
   const pl=S.photos.find(x=>x.id===M.id),ars=plAreas(pl,n),W=st.W,H=st.H,zm=M.mode==='zone',dr=M.zDraw||[];
-  const areaSvg=(ars.length||dr.length)?`<svg class="plareas${zm?' on':''}" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${ars.map(a=>({...a,pts:M.zLive&&a.id===M.zSel?M.zLive:a.pts})).map(a=>`<polygon points="${a.pts.map(p=>(p[0]*W).toFixed(1)+','+(p[1]*H).toFixed(1)).join(' ')}" class="${M.zSel===a.id?'sel':''}"/>`).join('')}${dr.length?`<polyline class="drw" points="${dr.map(p=>(p[0]*W).toFixed(1)+','+(p[1]*H).toFixed(1)).join(' ')}${dr.length>2?' '+(dr[0][0]*W).toFixed(1)+','+(dr[0][1]*H).toFixed(1):''}"/>`:''}</svg>`
-    +ars.map(a=>{const P=M.zLive&&a.id===M.zSel?M.zLive:a.pts,xs=P.map(p=>p[0]),ys=P.map(p=>p[1]),cx=(Math.min(...xs)+Math.max(...xs))/2,y0=Math.min(...ys),cy=y0+(Math.max(...ys)-y0)*0.14;return `<span class="plzlab" style="left:${cx*W}px;top:${cy*H}px;--aw:${Math.max(30,(Math.max(...xs)-Math.min(...xs))*W)}px">${esc(a.zone)}</span>`}).join('')
+  const areaSvg=(ars.length||dr.length)?`<svg class="plareas${zm?' on':''}" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${ars.map(a=>({...a,pts:M.zLive&&a.id===M.zSel?M.zLive:a.pts})).map(a=>`<polygon data-id="${a.id}" points="${a.pts.map(p=>(p[0]*W).toFixed(1)+','+(p[1]*H).toFixed(1)).join(' ')}" class="${M.zSel===a.id?'sel':''}"/>`).join('')}${dr.length?`<polyline class="drw" points="${dr.map(p=>(p[0]*W).toFixed(1)+','+(p[1]*H).toFixed(1)).join(' ')}${dr.length>2?' '+(dr[0][0]*W).toFixed(1)+','+(dr[0][1]*H).toFixed(1):''}"/>`:''}</svg>`
+    +ars.map(a=>{const P=M.zLive&&a.id===M.zSel?M.zLive:a.pts,xs=P.map(p=>p[0]),ys=P.map(p=>p[1]),cx=(Math.min(...xs)+Math.max(...xs))/2,y0=Math.min(...ys),cy=y0+(Math.max(...ys)-y0)*0.14;return `<span class="plzlab" style="left:${cx*W}px;top:${cy*H}px;--aw:${Math.max(30,(Math.max(...xs)-Math.min(...xs))*W)}px">${esc(aLabel(a))}${aRoom(a)&&aZone(a)&&a.id===M.zSel?`<i>${esc(aZone(a))}</i>`:''}</span>`}).join('')
     +dr.map(p=>`<span class="plzdot" style="left:${p[0]*W}px;top:${p[1]*H}px"></span>`).join(''):'';
   const selA=zm&&M.zSel&&ars.find(a=>a.id===M.zSel);const HP=selA?(M.zLive||selA.pts):[];const handles=selA?HP.map((p,i)=>{const q=HP[(i+1)%HP.length];return `<span class="plzm" data-i="${i}" style="left:${(p[0]+q[0])/2*W}px;top:${(p[1]+q[1])/2*H}px" aria-hidden="true"></span>`}).join('')+HP.map((p,i)=>`<span class="plzh${M.zNode===i?' on':''}" data-i="${i}" style="left:${p[0]*W}px;top:${p[1]*H}px" aria-hidden="true"></span>`).join(''):'';
   box.innerHTML=areaSvg+handles+ps.map(p=>`<button class="plpin cam" style="left:${p.px*st.W}px;top:${p.py*st.H}px" data-a="openPhoto" data-id="${p.id}" aria-label="Photo taken here">${I('camera')}</button>`).join('')
@@ -1711,31 +1765,34 @@ function plPlace(cx,cy){const p=plPoint(cx,cy);if(p.x<0||p.x>1||p.y<0||p.y>1)ret
   const at={planId:pl.id,planPage:n,px:+p.x.toFixed(4),py:+p.y.toFixed(4)},back={kind:'plan',id:pl.id,n};
   if(M.mode==='zone'){if(!(M.zDraw||[]).length&&!M.zPick){const hit=plAreas(pl,n).filter(a=>inPoly(p.x,p.y,a.pts)).sort((a,b)=>polyArea(a.pts)-polyArea(b.pts))[0];if(hit){M.zSel=hit.id;M.zNode=null;planBar();return}}
     if(M.zSel){M.zSel=null;planBar();return}if(M.zPick)return;M.zDraw=[...(M.zDraw||[]),[+p.x.toFixed(4),+p.y.toFixed(4)]];planBar();return}
-  const za=planZoneAt(pl,n,p.x,p.y);
-  if(M.mode==='photo'){M.mode='';const pid=pl.projectId,cx=ctxFor(pid);openModal({kind:'capture',pid,lockProject:true,title:'Photo on '+sheetName(pl,n),why:za?`Work Zone: ${za}. Take the photo; it's pinned where you tapped.`:'Pick the room, then take the photo. It\'s pinned where you tapped.',ctx:{...cx,...(za?{zone:za}:{}),plan:at},back});return}
+  const za=planZoneAt(pl,n,p.x,p.y),ra=planRoomAt(pl,n,p.x,p.y),where=[ra,za].filter(Boolean).join(' · ');
+  if(M.mode==='photo'){M.mode='';const pid=pl.projectId,cx=ctxFor(pid);openModal({kind:'capture',pid,lockProject:true,title:'Photo on '+sheetName(pl,n),why:where?`${where}. Take the photo; it's pinned where you tapped.`:'Pick the room, then take the photo. It\'s pinned where you tapped.',ctx:{...cx,...(za?{zone:za}:{}),plan:at},back});return}
   M.mode='';M.drop={x:at.px,y:at.py};planPins();const z=za||lastZT(pl.projectId).zone||'';
   /* punch pin: drop the pin, take a photo of the problem, then say what needs fixing and who fixes it */
-  const task={projectId:pl.projectId,type:'punch',title:'',zone:z,...at};
+  const task={projectId:pl.projectId,type:'punch',title:'',zone:z,room:ra,...at};
   afterShot=id=>{const ph=PH(id);setTimeout(()=>openModal({kind:'task',task:{...task,photoId:id,zone:za||(ph&&ph.zone)||z,trade:(ph&&ph.trade)||''},back}),300)};
-  setTimeout(()=>openModal({kind:'capture',pid:pl.projectId,lockProject:true,single:true,title:'Punch Photo',why:'Pin dropped on '+sheetName(pl,n)+(za?' in '+za:'')+'. Take a photo of the problem, then pick what needs fixing and who fixes it.',ctx:{tags:['Punch'],zone:z,trade:'',note:''},skipTask:task,back}),180)}
+  setTimeout(()=>openModal({kind:'capture',pid:pl.projectId,lockProject:true,single:true,title:'Punch Photo',why:'Pin dropped on '+sheetName(pl,n)+(where?' in '+where:'')+'. Take a photo of the problem, then pick what needs fixing and who fixes it.',ctx:{tags:['Punch'],zone:z,trade:'',note:''},skipTask:task,back}),180)}
 const PLZ={i:-1};
 function plDown(e){const w=e.target.closest&&e.target.closest('#plw');const h=e.target.closest&&e.target.closest('.plzh');
   const mh=e.target.closest&&e.target.closest('.plzm');
   if((h||mh)&&M.zSel){const pl=S.photos.find(x=>x.id===M.id),a=plAreas(pl,M.n||1).find(x=>x.id===M.zSel);if(a){M.zLive=a.pts.map(p=>[...p]);
-    if(mh){const i=+mh.dataset.i,p=M.zLive[i],q=M.zLive[(i+1)%M.zLive.length];M.zLive.splice(i+1,0,[+((p[0]+q[0])/2).toFixed(4),+((p[1]+q[1])/2).toFixed(4)]);PLZ.i=i+1;PLZ.added=true}else{PLZ.i=+h.dataset.i;PLZ.added=false}
+    /* middle dot: drag to slide the whole side straight across; tap to add a corner there */
+    if(mh){const i=+mh.dataset.i;PLZ.edge=i;PLZ.orig=M.zLive.map(p=>[...p]);PLZ.p0=plPoint(e.clientX,e.clientY);PLZ.i=i;PLZ.added=false}else{PLZ.edge=-1;PLZ.i=+h.dataset.i;PLZ.added=false}
     PLZ.id=e.pointerId;PLZ.x=e.clientX;PLZ.y=e.clientY;PLZ.moved=false;M.zNode=PLZ.i;try{(h||mh).setPointerCapture(e.pointerId)}catch(_){}e.preventDefault();planPins();return}}
   if(!w||e.target.closest('.plpin'))return;PLG.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});try{w.setPointerCapture(e.pointerId)}catch(_){}
   const st=PLV;PLG.start={z:st.z,tx:st.tx,ty:st.ty,pts:[...PLG.pts.values()].map(p=>({...p}))};PLG.moved=false;clearTimeout(PLG.lp);
   if(PLG.pts.size===1&&M.mode!=='zone'){const x=e.clientX,y=e.clientY;PLG.lp=setTimeout(()=>{if(!PLG.moved&&PLG.pts.size===1){PLG.moved=true;haptic('ok');plPlace(x,y)}},550)}}
-function plMove(e){if(PLZ.i>=0&&e.pointerId===PLZ.id){if(!PLZ.moved&&Math.hypot(e.clientX-PLZ.x,e.clientY-PLZ.y)<5)return;PLZ.moved=true;const p=plPoint(e.clientX,e.clientY);M.zLive[PLZ.i]=[+Math.min(1,Math.max(0,p.x)).toFixed(4),+Math.min(1,Math.max(0,p.y)).toFixed(4)];planPins();return}
+function plMove(e){if(PLZ.i>=0&&e.pointerId===PLZ.id){if(!PLZ.moved&&Math.hypot(e.clientX-PLZ.x,e.clientY-PLZ.y)<5)return;PLZ.moved=true;const p=plPoint(e.clientX,e.clientY);if(PLZ.edge>=0){const o=PLZ.orig,i=PLZ.edge,j=(i+1)%o.length,ex=o[j][0]-o[i][0],ey=o[j][1]-o[i][1],L=Math.hypot(ex,ey)||1,nx=-ey/L,ny=ex/L,d=(p.x-PLZ.p0.x)*nx+(p.y-PLZ.p0.y)*ny;const mv=q=>[+Math.min(1,Math.max(0,q[0]+nx*d)).toFixed(4),+Math.min(1,Math.max(0,q[1]+ny*d)).toFixed(4)];M.zLive=o.map((q,k)=>k===i||k===j?mv(q):[...q]);planPins();return}M.zLive[PLZ.i]=[+Math.min(1,Math.max(0,p.x)).toFixed(4),+Math.min(1,Math.max(0,p.y)).toFixed(4)];planPins();return}
   if(!PLG.pts.has(e.pointerId))return;PLG.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});const st=PLV,s=PLG.start,pts=[...PLG.pts.values()];
   if(pts.length===1&&s.pts.length===1){const dx=pts[0].x-s.pts[0].x,dy=pts[0].y-s.pts[0].y;if(Math.hypot(dx,dy)>8)PLG.moved=true;if(PLG.moved){clearTimeout(PLG.lp);st.tx=s.tx+dx;st.ty=s.ty+dy;planApply()}}
   else if(pts.length>=2&&s.pts.length>=2){clearTimeout(PLG.lp);PLG.moved=true;const d0=Math.hypot(s.pts[0].x-s.pts[1].x,s.pts[0].y-s.pts[1].y)||1,d1=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
     const m0={x:(s.pts[0].x+s.pts[1].x)/2,y:(s.pts[0].y+s.pts[1].y)/2},m1={x:(pts[0].x+pts[1].x)/2,y:(pts[0].y+pts[1].y)/2},r=st.el.getBoundingClientRect();
     const nz=Math.max(1,Math.min(24,s.z*d1/d0)),px=(m0.x-r.left-s.tx)/s.z,py=(m0.y-r.top-s.ty)/s.z;st.z=nz;st.tx=m1.x-r.left-px*nz;st.ty=m1.y-r.top-py*nz;planApply()}}
-function plUp(e){if(PLZ.i>=0&&e.pointerId===PLZ.id){PLZ.i=-1;const pl=S.photos.find(x=>x.id===M.id),n=M.n||1,live=M.zLive;M.zLive=null;if(!PLZ.moved&&!PLZ.added){planBar();return}if(pl&&live)planAreasPut(pl,n,plAreas(pl,n).map(a=>a.id===M.zSel?{...a,pts:live,auto:false}:a)).then(planPins);return}
+function plUp(e){if(PLZ.i>=0&&e.pointerId===PLZ.id){PLZ.i=-1;const pl=S.photos.find(x=>x.id===M.id),n=M.n||1;let live=M.zLive;M.zLive=null;if(PLZ.edge>=0){if(!PLZ.moved){const o=PLZ.orig,i=PLZ.edge,p=o[i],q=o[(i+1)%o.length];live=o.map(x=>[...x]);live.splice(i+1,0,[+((p[0]+q[0])/2).toFixed(4),+((p[1]+q[1])/2).toFixed(4)]);M.zNode=i+1}PLZ.edge=-1}else if(!PLZ.moved){planBar();return}if(pl&&live)planAreasPut(pl,n,plAreas(pl,n).map(a=>a.id===M.zSel?{...a,pts:live,auto:false}:a)).then(planPins);return}
   if(!PLG.pts.has(e.pointerId))return;const was=PLG.pts.size,p=PLG.pts.get(e.pointerId);PLG.pts.delete(e.pointerId);clearTimeout(PLG.lp);
   if(was===1&&!PLG.moved&&M&&M.kind==='plan'&&M.mode&&e.type==='pointerup'){plPlace(p.x,p.y);return}
+  /* tap inside a room (no tool picked): open its Room Name and Work Zone to edit */
+  if(was===1&&!PLG.moved&&M&&M.kind==='plan'&&!M.mode&&e.type==='pointerup'&&canPlans()&&!(e.target.closest&&e.target.closest('[data-a],button,a,.plpin'))){const q=plPoint(p.x,p.y),pl=S.photos.find(x=>x.id===M.id);if(pl&&q.x>=0&&q.x<=1&&q.y>=0&&q.y<=1){const hit=planHits(pl,M.n||1,q.x,q.y)[0];if(hit){M.mode='zone';M.zSel=hit.id;M.zNode=null;M.zList=false;planBar();planPins();return}}}
   if(PLG.pts.size){const st=PLV;PLG.start={z:st.z,tx:st.tx,ty:st.ty,pts:[...PLG.pts.values()].map(q=>({...q}))}}else planSharpSoon()}
 document.addEventListener('pointerdown',e=>{if(M&&M.kind==='plan')plDown(e)});
 document.addEventListener('pointermove',e=>{if(M&&M.kind==='plan')plMove(e)});
@@ -1783,10 +1840,15 @@ const PLAN_ACT={
   plzUndo:()=>{(M.zDraw||[]).pop();planBar()},
   plzFinish:()=>{if((M.zDraw||[]).length<3)return;M.zPick=true;planBar();setTimeout(()=>{const i=$('#plzname');if(i)i.focus()},50)},
   plzBack:()=>{M.zPick=false;planBar()},
-  plzDone:()=>{M.mode='';M.zDraw=null;M.zPick=false;M.zSel=null;planBar()},
-  plzSave:async()=>{const pl=S.photos.find(x=>x.id===M.id),n=M.n||1,i=$('#plzname'),z=titleCase((i&&i.value||'').trim()).slice(0,60);if(!z){toast('Type the work zone for this area.');return}
-    await planAreasPut(pl,n,[...plAreas(pl,n),{id:uid(),zone:z,pts:M.zDraw}]);M.zDraw=null;M.zPick=false;planBar();toast('Area saved: '+z)},
-  plzRename:async()=>{const pl=S.photos.find(x=>x.id===M.id),n=M.n||1,i=$('#plzname'),z=titleCase((i&&i.value||'').trim()).slice(0,60);if(!z)return;await planAreasPut(pl,n,plAreas(pl,n).map(a=>a.id===M.zSel?{...a,zone:z}:a));M.zSel=null;planBar();toast('Zone changed to '+z)},
+  plzDone:()=>{M.mode='';M.zList=false;M.zDraw=null;M.zPick=false;M.zSel=null;planBar()},
+  plzSave:async()=>{const pl=S.photos.find(x=>x.id===M.id),n=M.n||1,v=zrVal();if(!v.room&&!v.zone){toast('Type a room name or a work zone.');return}
+    await planAreasPut(pl,n,[...plAreas(pl,n),{id:uid(),room:v.room,zone:v.zone,pts:M.zDraw}]);M.zDraw=null;M.zPick=false;planBar();toast('Saved: '+[v.room,v.zone].filter(Boolean).join(' · '))},
+  plzList:()=>{M.zList=true;M.zSel=null;planBar()},
+  plzListZoneAll:()=>{const v=($('#zl-all')||{}).value||'';document.querySelectorAll('input[id^=zl-z-]').forEach(i=>i.value=v);toast(v?'Work zone filled in. Tap Save All.':'Work zones cleared. Tap Save All.')},
+  plzListClose:()=>{M.zList=false;planBar();document.querySelectorAll(".plareas polygon.sel").forEach(p=>p.classList.remove("sel"))},
+  plzListSave:async()=>{const pl=S.photos.find(x=>x.id===M.id),n=M.n||1;let ch=0;const next=plAreas(pl,n).map(a=>{const ri=$('#zl-r-'+a.id),ni=$('#zl-n-'+a.id);if(!ri||!ni)return a;const zi=$('#zl-z-'+a.id),num=ri.value.trim().toUpperCase().slice(0,12),nm=titleCase(ni.value.trim().toLowerCase()).slice(0,45);const room=(nm?nm+(num?' '+num:''):num?'Room '+num:'').slice(0,60),zone=titleCase((zi?zi.value:aZone(a)).trim()).slice(0,60);if(room===aRoom(a)&&zone===aZone(a)&&'room' in a)return a;if(room!==aRoom(a)||zone!==aZone(a))ch++;return {...a,room,zone}});
+    if(ch)await planAreasPut(pl,n,next);M.zList=false;planBar();document.querySelectorAll('.plareas polygon.sel').forEach(p=>p.classList.remove('sel'));toast(ch?ch+' room'+(ch>1?'s':'')+' updated':'No changes')},
+  plzRename:async()=>{const pl=S.photos.find(x=>x.id===M.id),n=M.n||1,v=zrVal();if(!v.room&&!v.zone){toast('Type a room name or a work zone.');return}await planAreasPut(pl,n,plAreas(pl,n).map(a=>a.id===M.zSel?{...a,room:v.room,zone:v.zone}:a));M.zSel=null;planBar();toast('Saved: '+[v.room,v.zone].filter(Boolean).join(' · '))},
   plzDel:async()=>{const pl=S.photos.find(x=>x.id===M.id),n=M.n||1;await planAreasPut(pl,n,plAreas(pl,n).filter(a=>a.id!==M.zSel));M.zSel=null;planBar();toast('Area deleted')},
   planPinOpen:el=>{const t=S.tasks.find(x=>x.id===el.dataset.id),c=$('#plcard');if(!t||!c)return;c.innerHTML=`<button class="ib plx" data-a="planCardX" aria-label="Close">${I('x')}</button>${punchCard(t)}`;c.hidden=false},
   planCardX:()=>{const c=$('#plcard');if(c)c.hidden=true},
@@ -1811,6 +1873,7 @@ async function planCheck(){
 setTimeout(planCheck,4000);setTimeout(planCheck,20000);setInterval(()=>{if(!document.hidden)planCheck()},30*60*1000);
 function screen(){return planBarHtml()+screen0()}
 function screen0(){
+  if(!featOn(V.tab))V.tab='home';
   switch(V.tab){
     case 'dash':return scrDash(); case 'uploads':return scrUploads();
     case 'home':return scrHome(); case 'checklists':return scrChecklists(); case 'docs':return scrDocs(); case 'reports':return scrReportsAll(); case 'map':return scrMapAll();
@@ -1934,7 +1997,7 @@ function pcard(p){
 }
 function scrProject(){
   const p=P(V.pid); if(!p){if(!S.projects.length&&V.pid)return '<p class="note" style="padding:20px 0">Opening the job…</p>';V.tab='projects';return scrProjects()}
-  const tabs=[['photos','Photos'],['plans','Plans'],['punch','Punch List'],['docs','Documents'],['checklists','Checklists'],['tasks','Tasks'],['log','Daily Log'],['reports','Reports'],['map','Map'],['info','Job Info']];
+  const tabs=[['photos','Photos'],['plans','Plans'],['punch','Punch List'],['docs','Documents'],['checklists','Checklists'],['tasks','Tasks'],['log','Daily Log'],['reports','Reports'],['map','Map'],['info','Job Info']].filter(([k])=>featOn(k));if(!featOn(V.ptab))V.ptab='photos';
   let body='';
   switch(V.ptab){case 'photos':body=ptPhotos(p);break;case 'map':body=ptMap(p);setTimeout(mapInitAll,0);break;case 'checklists':body=ptChecklists(p);break;case 'tasks':body=ptTasks(p);break;case 'punch':body=punchArea(p);break;case 'log':body=ptLog(p);break;case 'docs':body=ptDocs(p);break;case 'reports':body=ptReports(p);break;case 'info':body=ptInfo(p);break;case 'plans':body=ptPlans(p);setTimeout(planThumbs,30);break}
   const cv=lastPhoto(p.id),n=allPhotos().filter(x=>x.projectId===p.id&&x.kind!=='doc').length;
@@ -1943,7 +2006,7 @@ function scrProject(){
   const desk=DESK()?`<div class="pdesk"><div class="pdtop"><button class="bkl" data-a="tab" data-t="projects">${I('back')} Projects</button><span class="sp"></span>${isAdminMe()?`<a class="btn sm" href="/admin/devices/?src=${encodeURIComponent('/?job='+p.id)}" title="See this job on iPhone, iPad and laptop">${I('phone')} iPhone View</a>`:''}${starBtn(p)}<button class="btn sm" data-a="pSel" data-id="${p.id}">${I('share')} Share</button><button class="btn sm" data-a="shareJob" data-pid="${p.id}">${I('link')} Guest Link</button>${canInvite()?`<button class="btn sm" data-a="jobInvite" data-pid="${p.id}">${I('plus')} Invite</button>`:''}<button class="btn sm" data-a="ptab" data-t="reports">${I('report')} Report</button>${dir}<button class="btn sm stamp" data-a="capture" data-pid="${p.id}">${I('camera')} Take Photos</button></div>
    <div class="pdhd2"><h1>${esc(p.name)}</h1>${p.address?`<a class="ad" href="${gmSearch(p.address)}" target="_blank" rel="noopener">${esc(p.address)}</a>`:'<span class="note">No address yet</span>'}</div><div class="row" style="margin-bottom:8px">${pstat(p)}${p.companyName?`<span class="note">${esc(p.companyName)}</span>`:''}${p.jobNumber?`<span class="note">Job ${esc(p.jobNumber)}</span>`:''}<button class="btn sm" data-a="ptab" data-t="info">${I('pen')} Edit Job Info</button></div></div>`:'';
   return `<div class="phc ph-only2"><button class="bk" data-a="tab" data-t="projects" aria-label="Back to Projects">${I('back')}</button><div class="nm"><h1>${esc(p.name)}</h1><span class="adr">${pstat(p)}<span class="ad">${esc(p.address||'No address yet')}</span></span></div>${starBtn(p)}</div>
-  <div class="pacts1"><button class="btn pri" data-a="punchStart" data-pid="${p.id}">${I('flag')} Add Punch Item</button></div>
+  ${featOn('punch')?`<div class="pacts1"><button class="btn pri" data-a="punchStart" data-pid="${p.id}">${I('flag')} Add Punch Item</button></div>`:''}
   ${desk}<div class="pwrap"><div class="pmain" style="min-width:0"><div class="ptabs" role="tablist">${tabs.map(([k,l])=>`<button class="ptab" role="tab" data-a="ptab" data-t="${k}" aria-selected="${V.ptab===k}">${l}${cnt[k]!=null?` <span class="cnt">(${cnt[k]})</span>`:''}</button>`).join('')}</div>${body}</div>${DESK()?`<aside class="paside" aria-label="Project details">${asideHtml(p)}</aside>`:''}</div>`;
 }
 function ptPhotos(p){
@@ -2157,7 +2220,7 @@ function punchTrade(t){const as=M_(t.assignee);return t.trade||(as&&(as.trade||a
 function scrPunch(){return `<div class="row"><h1 style="flex:1">Punch List</h1></div>${punchArea(null)}`}
 function punchArea(p){
   const rm=p&&V.punchRoom?V.punchRoom.toLowerCase():'';
-  const all=vis(S.tasks.filter(t=>t.type==='punch'&&(!p||t.projectId===p.id)&&(!rm||(t.zone||'').toLowerCase()===rm)),'tasks');
+  const all=vis(S.tasks.filter(t=>t.type==='punch'&&(!p||t.projectId===p.id)&&(!rm||(t.room||t.zone||'').toLowerCase()===rm)),'tasks');
   const n={open:0,ready:0,closed:0};all.forEach(t=>n[pStatus(t)]++);
   const f=V.punchF||'open',g=V.punchG||'trade';
   const list=all.filter(t=>(f==='all'||pStatus(t)===f)).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
@@ -2175,7 +2238,7 @@ function punchCard(t){
   const due=t.due&&st!=='closed'?(t.due<dayKey(Date.now())?`<span class="pill bad">Late · ${esc(t.due)}</span>`:`<span class="pill mut">Due ${esc(t.due)}</span>`):'';
   const act=st==='open'?`<button class="btn sm pri" data-a="fixPhoto" data-id="${t.id}">${I('camera')} Fixed: Add Photo</button>`:st==='ready'?(canVerify()?`<button class="btn sm pri" data-a="punchClose" data-id="${t.id}">${I('check')} Looks Good, Close</button><button class="btn sm" data-a="punchReopen" data-id="${t.id}">Not Fixed</button>`:'<span class="note">Waiting for the office or super to check it</span>'):(canVerify()?`<button class="btn sm" data-a="punchReopen" data-id="${t.id}">Reopen</button>`:'');
   return `<div class="pcard"><div class="pimg">${ph?`<button class="tile" data-a="openPhoto" data-id="${ph.id}"><img src="${esc(ph.thumb||ph.url)}" alt="Problem photo" loading="lazy"></button>`:`<span class="ph0">${I('pin2')}</span>`}${fx?`<button class="tile" data-a="openPhoto" data-id="${fx.id}"><img src="${esc(fx.thumb||fx.url)}" alt="Fixed photo" loading="lazy"></button>`:''}</div>
-   <div class="pbody"><div class="row" style="gap:6px"><span class="pill ${sc}">${sl}</span>${due}</div><b>${esc(t.title)}</b><span class="note">${[t.zone,as?as.name+(as.company?' · '+as.company:''):t.assigneeText,V.tab!=='project'&&pr?pr.name:''].filter(Boolean).map(esc).join(' · ')}</span><div class="row" style="gap:6px;margin-top:4px">${act}${t.planId&&!(M&&M.kind==='plan')?`<button class="btn sm" data-a="planShow" data-id="${t.id}">${I('map')} Plan</button>`:''}<span class="sp"></span><button class="ib" data-a="delTask" data-id="${t.id}" aria-label="Remove punch item">${I('trash')}</button></div></div></div>`;
+   <div class="pbody"><div class="row" style="gap:6px"><span class="pill ${sc}">${sl}</span>${due}</div><b>${esc(t.title)}</b><span class="note">${[t.room,t.zone,as?as.name+(as.company?' · '+as.company:''):t.assigneeText,V.tab!=='project'&&pr?pr.name:''].filter(Boolean).map(esc).join(' · ')}</span><div class="row" style="gap:6px;margin-top:4px">${act}${t.planId&&!(M&&M.kind==='plan')?`<button class="btn sm" data-a="planShow" data-id="${t.id}">${I('map')} Plan</button>`:''}<span class="sp"></span><button class="ib" data-a="delTask" data-id="${t.id}" aria-label="Remove punch item">${I('trash')}</button></div></div></div>`;
 }
 function scrTasks(){return `<div class="row"><h1 style="flex:1">Tasks</h1><button class="btn pri" data-a="newTask">${I('plus')} New Task</button></div>${taskList(vis(S.tasks.filter(t=>t.type!=='punch'),'tasks'))}`}
 
@@ -2234,7 +2297,7 @@ function ptReports(p){
 /* more */
 function scrMore(){
   const it=(t,ic,l,s)=>`<button class="li" data-a="tab" data-t="${t}">${I(ic)}<span class="t"><b>${l}</b><span>${s}</span></span></button>`;
-  return `<h1>Menu</h1><div class="list">${it('search','search','Search','Projects, photos, notes, codes, tasks')}${NAV.filter(n=>!['projects','feed'].includes(n[0])).map(n=>it(...n)).join('')}${it('settings','info','Settings','Company name, logo, AI help, address search')}<button class="li" data-a="onbShow">${I('info')}<span class="t"><b>Getting Started</b><span>See the quick walkthrough again</span></span></button>${it('about','info','About This Version','What works now and what comes next')}</div>`;
+  return `<h1>Menu</h1><div class="list">${it('search','search','Search','Projects, photos, notes, codes, tasks')}${NAV.filter(n=>!['projects','feed'].includes(n[0])&&featOn(n[0])).map(n=>it(...n)).join('')}${it('settings','info','Settings','Company name, logo, AI help, address search')}<button class="li" data-a="onbShow">${I('info')}<span class="t"><b>Getting Started</b><span>See the quick walkthrough again</span></span></button>${it('about','info','About This Version','What works now and what comes next')}</div>`;
 }
 function scrMoreOld(){
   const it=(t,ic,l,s)=>`<button class="li" data-a="tab" data-t="${t}">${I(ic)}<span class="t"><b>${l}</b><span>${s}</span></span></button>`;
@@ -2644,6 +2707,7 @@ function taskSheet(){
   return sheet(t.type==='punch'?'New Punch Item':'New Task',`<form class="stack" data-sub="saveTask">
    ${t.type==='punch'?`<div class="two"><label class="f"><span class="row" style="justify-content:space-between">Trade Partner<button type="button" class="linkb edic" data-a="editList" data-k="trades" aria-label="Edit trade partner list" title="Edit trade partner list">${I('pen')}</button></span><select id="tk-trade" name="trade" data-ch="pTrade"><option value="">Pick a trade</option>${[...new Set([...tradeList(),...(t.trade?[t.trade]:[])])].map(x=>`<option ${x===t.trade?'selected':''}>${esc(x)}</option>`).join('')}</select></label>
    <label class="f"><span class="row" style="justify-content:space-between">Work Zone<button type="button" class="linkb edic" data-a="editList" data-k="zones" aria-label="Edit work zone list" title="Edit work zone list">${I('pen')}</button></span><input type="text" id="tk-zone" name="zone" list="dl-zones" value="${esc(t.zone||'')}" autocapitalize="words" placeholder="Building B, Level 2"></label></div>
+   <label class="f">Room<input type="text" id="tk-room" name="room" list="dl-rooms" value="${esc(t.room||'')}" autocapitalize="words" placeholder="e.g. Classroom 101"><datalist id="dl-rooms">${projRooms(t.projectId).map(r=>`<option value="${esc(r)}">`).join('')}</datalist></label>
    <div class="f"><span class="row" style="justify-content:space-between"><span>What Needs Fixing</span><button type="button" class="linkb edic" data-a="editPunchLib" aria-label="Edit common punch items" title="Edit common punch items">${I('pen')}</button></span>
    <details class="fixdd" id="fixdd"><summary id="fixsum">Pick what needs fixing</summary><div class="fixlist" id="fixlist">${fixRows(t.trade||'')}</div></details>
    <input type="text" id="tk-title" name="title" autocapitalize="words" value="${esc(t.title||'')}" placeholder="Something else? Type it here"><span class="note">Check as many as apply. Each one becomes its own punch item so it can be closed on its own.</span></div>`:`<label class="f">Task<input type="text" id="tk-title" name="title" required autocapitalize="words" value="${esc(t.title||'')}" placeholder="Order Trusses"></label>`}
@@ -2864,7 +2928,7 @@ async function roomSignsPdf(p,rooms){await Promise.all([loadJsPdf(),loadQr()]);c
     /* room name, as big as it fits */
     const tw=qx-m-24;doc.setTextColor(27,32,36);doc.setFont('helvetica','bold');let fs=54,lines;do{doc.setFontSize(fs);lines=doc.splitTextToSize(rm.zone,tw);fs-=2}while((lines.length>3||rm.zone.split(/\s+/).some(w=>doc.getTextWidth(w)>tw))&&fs>20);
     doc.text(lines,m,120);const ly=120+lines.length*fs*1.05;
-    doc.setFont('helvetica','normal');doc.setFontSize(12);doc.setTextColor(90,98,106);if(rm.sheet)doc.text(rm.sheet,m,ly+14);
+    doc.setFont('helvetica','normal');doc.setFontSize(12);doc.setTextColor(90,98,106);{const sub=[rm.wz,rm.sheet].filter(Boolean).join('  ·  ');if(sub)doc.text(sub,m,ly+14)}
     doc.setFontSize(12);doc.setTextColor(27,32,36);doc.text(doc.splitTextToSize('Trade partners: scan with your phone camera to see your open punch items here. When an item is fixed, tap Fixed: Add Photo.',tw),m,H-86);
     doc.setDrawColor(215,219,213);doc.line(m,H-34,W-m,H-34);doc.setFontSize(9);doc.setTextColor(120,128,136);doc.text('Build Camera',m,H-20);doc.text(p.name+' · '+rm.zone,W-m,H-20,{align:'right'})});
   return doc.output('blob')}
@@ -2872,7 +2936,7 @@ function roomSignsSheet(){const p=P(M.pid),sets=S.photos.filter(x=>x.kind==='pla
   const groups=sets.flatMap(pl=>planList(pl).map(n=>({pl,n,ars:plAreas(pl,n)}))).filter(g=>g.ars.length);const total=groups.reduce((s,g)=>s+g.ars.length,0),k=sel.size;
   return sheet('Room Signs',`<p class="note" style="margin:0">One 8.5 × 5.5 sign per room with a QR code. Tape it to the door. Trade partners scan it to see that room's punch list and check items off.</p>
    ${groups.length?`<div class="row"><b style="flex:1">${k} of ${total} rooms</b><button type="button" class="btn sm" data-a="signAll" data-v="1">Select All</button><button type="button" class="btn sm" data-a="signAll" data-v="0">Clear</button></div>
-   ${groups.map(g=>`<div class="card stack" style="gap:6px"><b>${esc(sheetName(g.pl,g.n))}</b>${g.ars.map(a=>`<label class="signck"><input type="checkbox" data-ch="signCk" data-id="${a.id}" ${sel.has(a.id)?'checked':''}> ${esc(a.zone)}</label>`).join('')}</div>`).join('')}
+   ${groups.map(g=>`<div class="card stack" style="gap:6px"><b>${esc(sheetName(g.pl,g.n))}</b>${g.ars.map(a=>`<label class="signck"><input type="checkbox" data-ch="signCk" data-id="${a.id}" ${sel.has(a.id)?'checked':''}> ${esc(aLabel(a))}${aRoom(a)&&aZone(a)?` <span class="note">${esc(aZone(a))}</span>`:''}</label>`).join('')}</div>`).join('')}
    <button class="btn pri" data-a="signMake" ${k?'':'disabled'}>${I('report')} Make ${k} Sign${k===1?'':'s'} (PDF)</button>`:`<div class="empty">${I('map')}<b>No rooms yet</b><span>Open a plan sheet, tap Draw Work Zones, then Find Rooms. Each room gets a sign.</span></div>`}`)}
 function loadJsPdf(){if(window.jspdf)return Promise.resolve();return jsPdfP=jsPdfP||new Promise((res,rej)=>{const s=document.createElement('script');s.src='/vend/jspdf/jspdf.umd.min.js';s.onload=res;s.onerror=()=>{jsPdfP=null;rej()};document.head.appendChild(s)})}
 async function imgData(url,max=1400){const img=await imgFromUrl(url);const sc=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));const c=document.createElement('canvas');c.width=Math.round(img.naturalWidth*sc);c.height=Math.round(img.naturalHeight*sc);c.getContext('2d').drawImage(img,0,0,c.width,c.height);return {d:c.toDataURL('image/jpeg',.82),w:c.width,h:c.height}}
@@ -3110,7 +3174,7 @@ function scrSettingsRaw(){
    <div class="list" id="tg-list">${tagRowsHtml()}</div>
    <form data-sub="tagAdd" class="row"><input type="text" id="tg-new" name="t" placeholder="New tag, e.g. Waterproofing" autocapitalize="words" style="flex:1;min-width:180px"><button class="btn pri" type="submit" data-keepfocus>${I('plus')} Add Tag</button></form>
    <div class="row"><button class="btn sm" data-a="tagReset">Reset to the Original List</button></div></details>
-  ${listCard('zones','Work Zone List')}${listCard('trades','Trade Partner List')}${plCard()}
+  ${featCard()}${listCard('zones','Work Zone List')}${listCard('trades','Trade Partner List')}${plCard()}
   <div class="card stack"><h2>Company</h2><label class="f">Default Company Name<input type="text" id="st-name" value="${esc(coName())}" data-ch="setName" autocapitalize="words"></label>
    <div class="row">${s.logoUrl?`<img src="${esc(s.logoUrl)}" alt="Company logo" style="height:56px;width:auto;background:#fff;border-radius:8px;padding:6px;border:1px solid var(--line)">`:'<span class="note">No logo yet. Photos and PDFs use the company name.</span>'}</div>
    <div class="row"><button class="btn pri" data-a="logoPick" ${AS?'':'disabled'}>${I('img')} ${s.logoUrl?'Replace':'Upload'} Logo</button>${s.logoUrl?'<button class="btn" data-a="logoClear">Remove Logo</button>':''}</div><p class="note">The logo goes on every new photo stamp, every PDF report and the before and after reel. A PNG with a clear background looks best.</p></div>
@@ -3384,10 +3448,11 @@ const ACT={
   punchStart:el=>{const pid=el.dataset.pid;const sets=S.photos.filter(x=>x.kind==='plan'&&x.projectId===pid);if(!sets.length){ACT.punchShot(el);return}openModal({kind:'punchPick',pid});setTimeout(planThumbs,0)},
   punchOnSheet:el=>{PLV.key=null;PLV.placed=false;openModal({kind:'plan',id:el.dataset.id,n:+el.dataset.n||1,mode:'pin'})},
   sheetRen:el=>{const bk=M&&M.kind==='punchPick'?{...M}:null;openModal({kind:'sheetRen',id:el.dataset.id,n:+el.dataset.n,back:bk});setTimeout(()=>{const i=$('#sr-name');if(i){i.focus();i.select()}},60)},
+  featSet:async el=>{if(!canInvite())return;V.stOpen={...(V.stOpen||{}),feat:true};const m={...featModes(),[el.dataset.k]:el.dataset.v};if(m[el.dataset.k]==='on')delete m[el.dataset.k];await put('settings',{id:'features',modes:m});const f=FEATS.find(x=>x[0]===el.dataset.k);toast(f[1]+': '+(el.dataset.v==='off'?'Off':el.dataset.v==='office'?'Office Only':'On'));render()},
   punchRoomAll:()=>{V.punchRoom=null;render()},
   signsOpen:el=>{const pid=el.dataset.pid;const ids=S.photos.filter(x=>x.kind==='plan'&&x.projectId===pid).flatMap(pl=>planList(pl).flatMap(n=>plAreas(pl,n).map(a=>a.id)));openModal({kind:'roomSigns',pid,sel:new Set(ids),back:M&&M.kind==='plan'?{...M}:null})},
   signAll:el=>{const on=el.dataset.v==='1';if(on){S.photos.filter(x=>x.kind==='plan'&&x.projectId===M.pid).forEach(pl=>planList(pl).forEach(n=>plAreas(pl,n).forEach(a=>M.sel.add(a.id))))}else M.sel.clear();renderModal()},
-  signMake:async el=>{if(!DL){toast('Downloads aren\'t available in this view.');return}const p=P(M.pid);const rooms=[];S.photos.filter(x=>x.kind==='plan'&&x.projectId===M.pid).forEach(pl=>planList(pl).forEach(n=>plAreas(pl,n).forEach(a=>{if(M.sel.has(a.id))rooms.push({zone:a.zone,sheet:sheetName(pl,n)})})));
+  signMake:async el=>{if(!DL){toast('Downloads aren\'t available in this view.');return}const p=P(M.pid);const rooms=[];S.photos.filter(x=>x.kind==='plan'&&x.projectId===M.pid).forEach(pl=>planList(pl).forEach(n=>plAreas(pl,n).forEach(a=>{if(M.sel.has(a.id))rooms.push({zone:aLabel(a),wz:aRoom(a)?aZone(a):'',sheet:sheetName(pl,n)})})));
     const seen=new Set(),list=rooms.filter(r=>{const k=r.zone.toLowerCase();if(seen.has(k))return false;seen.add(k);return true});
     el.disabled=true;el.textContent='Making signs…';try{const blob=await roomSignsPdf(p,list);await DL.save({filename:`${p.name.replace(/[^\w]+/g,'-')}-Room-Signs.pdf`,data:blob});toast(`${list.length} room sign${list.length===1?'':'s'} saved`)}catch(e){toast(e&&e.code==='declined'?'Download cancelled':'Couldn\'t make the signs. Check your signal and try again.')}el.disabled=false;renderModal()},
   capSkip:()=>{const t=M.skipTask,back=M.back;afterShot=null;openModal({kind:'task',task:{...t},back})},
@@ -3687,8 +3752,8 @@ document.addEventListener('submit',async e=>{const f=e.target,k=f.dataset.sub;if
     catch(e){b.disabled=false;b.textContent='Make the Link';toast(/office/i.test(e&&e.message||'')?'Only the owner, office or a super can make guest links. Ask the office.':'Couldn\'t make the link. Check your signal and try again.',4200)}}
   else if(k==='pcomment'){const t=v.text.trim();if(!t)return;const pid=f.dataset.id;await put('comments',{photoId:null,projectId:pid,text:t,by:ME.id,byName:ME.name,at:Date.now()});S.members.filter(m=>m.name&&t.includes('@'+m.name)).forEach(m=>alertFor(m.id,`${ME.name} mentioned you on ${P(pid)?.name||'a job'}: "${t.slice(0,120)}"`,{projectId:pid}));f.reset();const c=$('#pconv');if(c)c.innerHTML=pconvHtml(pid)}
   else if(k==='saveTask'&&v.type==='punch'){const t=M.task;M.saving=true;const fixes=[...f.querySelectorAll('input[name=fix]:checked')].map(x=>x.value);const other=(v.title||'').trim();if(other)fixes.push(titleCase(other));
-    if(!fixes.length){M.saving=false;toast('Check what needs fixing, or type it.');return}const zone=(v.zone||'').trim(),trade=(v.trade||'').trim();let first=null;if(v.assignee==='__new')v.assignee='';
-    for(const fx of fixes){const tid=await put('tasks',{projectId:v.pid,title:fx,type:'punch',zone,trade,status:'open',assignee:v.assignee||null,assigneeText:(v.assigneeText||'').trim(),due:v.due||'',photoId:t.photoId||null,done:false,createdAt:Date.now(),by:ME.name,...(t.planId?{planId:t.planId,planPage:t.planPage,px:t.px,py:t.py}:{})});first=first||tid;if(hookOn())BC.hook('task.created',{title:fx,type:'punch',project:P(v.pid)?.name||'',due:v.due||'',assignee:M_(v.assignee)?.name||v.assigneeText||''})}
+    if(!fixes.length){M.saving=false;toast('Check what needs fixing, or type it.');return}const zone=(v.zone||'').trim(),trade=(v.trade||'').trim(),room=titleCase((v.room||'').trim()).slice(0,60);let first=null;if(v.assignee==='__new')v.assignee='';
+    for(const fx of fixes){const tid=await put('tasks',{projectId:v.pid,title:fx,type:'punch',zone,...(room?{room}:{}),trade,status:'open',assignee:v.assignee||null,assigneeText:(v.assigneeText||'').trim(),due:v.due||'',photoId:t.photoId||null,done:false,createdAt:Date.now(),by:ME.name,...(t.planId?{planId:t.planId,planPage:t.planPage,px:t.px,py:t.py}:{})});first=first||tid;if(hookOn())BC.hook('task.created',{title:fx,type:'punch',project:P(v.pid)?.name||'',due:v.due||'',assignee:M_(v.assignee)?.name||v.assigneeText||''})}
     if(v.assignee)alertFor(v.assignee,`${ME.name} assigned you ${fixes.length>1?fixes.length+' punch items':'a punch item'}: ${fixes.join(', ')} (${P(v.pid)?.name||''})`,{taskId:first,photoId:t.photoId||null,projectId:v.pid});
     closeModal();if(t.planId)openModal({kind:'plan',id:t.planId,n:t.planPage});toast(fixes.length>1?fixes.length+' punch items added':'Punch item added')}
   else if(k==='saveTask'){const t=M.task;if(hookOn())BC.hook('task.created',{title:v.title.trim(),type:v.type,project:P(v.pid)?.name||'',due:v.due||'',assignee:M_(v.assignee)?.name||v.assigneeText||''});const tid=await put('tasks',{projectId:v.pid,title:v.title.trim(),type:v.type,...(v.type==='punch'?{zone:(v.zone||'').trim(),trade:(v.trade||'').trim(),status:'open'}:{}),assignee:v.assignee||null,assigneeText:v.assigneeText.trim(),due:v.due||'',photoId:t.photoId||null,done:false,createdAt:Date.now(),by:ME.name});if(v.assignee)alertFor(v.assignee,`${ME.name} assigned you a ${v.type==='punch'?'punch item':'task'}: ${v.title.trim()} (${P(v.pid)?.name||''})`,{taskId:tid,photoId:t.photoId||null,projectId:v.pid});closeModal();toast(v.type==='punch'?'Punch item added':'Task added')}

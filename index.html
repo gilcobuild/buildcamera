@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="8549689e0f">
+<meta name="bc-ver" content="a993c33d54">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-VKP0kN9J94+2ZMMwFVkm5k5VS8ezJu2yaDP33nHRyKQ=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-zwHc5YfnPQQDrhqwOKjVUuhtDV2/Lr3dOIV+CmvapPI=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -994,6 +994,8 @@ nav.side{display:none}
 @media (prefers-reduced-motion:reduce){.tgrp .chev{transition:none}}
 a.si{text-decoration:none}
 img[data-pith]:not([src]),img[data-pth]:not([src]){visibility:hidden}
+.signck{display:flex;align-items:center;gap:10px;min-height:40px;font-size:15px;cursor:pointer}.signck input{width:22px;height:22px;flex:none}
+.roombar{display:flex;align-items:center;gap:10px;margin:0 0 10px}.roombar b{font-size:18px}
 .billpick{display:grid;gap:8px;margin:12px 0}.billbtn{display:flex;justify-content:space-between;align-items:center;text-align:left;width:100%;min-height:58px;padding:10px 14px}.billbtn small{display:block;font-weight:400;opacity:.75;font-size:12.5px}.billbtn>b small{display:inline;font-size:12px}
 .meter{height:10px;border-radius:6px;background:rgba(127,127,127,.22);overflow:hidden}.meter i{display:block;height:100%;border-radius:6px}
 </style>
@@ -1173,16 +1175,34 @@ async function put(col,obj){
   const i=S[col].findIndex(x=>x.id===id); const full={...doc,id};
   if(i>=0)S[col][i]=full;else S[col].push(full);
   scheduleRender();
-  if(DB){try{await DB.collection(col).doc(id).set(clean(doc))}catch(e){toast('Couldn\'t save. Check your signal and try again.')}}
+  if(DB)await wqWrite('set',col,id,clean(doc));
   else saveLocal();
   return id;
 }
 async function upd(col,id,patch){
+  /* a photo still waiting to upload: change it on the phone; the upload carries the change */
+  if(col==='photos'&&PEND[id]){Object.assign(PEND[id],patch);const it=Q.items.find(x=>x.id===id);if(it){it.doc={...it.doc,...patch};try{Q.db=Q.db||await idb();if(Q.db)Q.db.transaction('q','readwrite').objectStore('q').put(it)}catch(e){}}scheduleRender();return}
   const i=S[col].findIndex(x=>x.id===id); if(i<0)return;
   S[col][i]={...S[col][i],...patch}; scheduleRender();
-  if(DB){try{await DB.collection(col).doc(id).update(clean(patch))}catch(e){toast('Couldn\'t save. Check your signal and try again.')}}
+  if(DB)await wqWrite('update',col,id,clean(patch));
   else saveLocal();
 }
+/* changes save on the phone first. If there's no signal (or the save fails), they wait here and go up on their own when signal comes back */
+const WQK='pc-wq';
+function wqGet(){try{return JSON.parse(localStorage.getItem(WQK)||'[]')}catch(e){return []}}
+function wqPut(l){try{localStorage.setItem(WQK,JSON.stringify(l))}catch(e){}renderTop&&renderTop()}
+function wqAdd(op,col,id,data){const l=wqGet(),team=qTeam(),j=l.findIndex(x=>x.col===col&&x.id===id&&x.team===team);
+  if(j>=0){const o=l[j];if(op==='del')l[j]={op,col,id,team};else if(op==='update'&&o.op!=='del')o.data={...o.data,...data};else l[j]={op,col,id,team,data}}else l.push({op,col,id,team,data});wqPut(l)}
+let WQT=0;function wqNote(){if(Date.now()-WQT>30000){WQT=Date.now();toast('Saved on this phone. It uploads when you have signal.',3500)}}
+async function wqWrite(op,col,id,data){
+  if(OFFLINE()||navigator.onLine===false||wqGet().some(x=>x.team===qTeam())){wqAdd(op,col,id,data);wqNote();wqFlush();return}
+  try{const r=DB.collection(col).doc(id);await (op==='set'?r.set(data):op==='update'?r.update(data):r.delete())}catch(e){wqAdd(op,col,id,data);wqNote()}}
+let wqBusy=false;
+async function wqFlush(){if(wqBusy||!DB||OFFLINE()||navigator.onLine===false)return;wqBusy=true;
+  try{for(const w of wqGet()){if(w.team!==qTeam())continue;const r=DB.collection(w.col).doc(w.id);
+      try{await (w.op==='set'?r.set(w.data):w.op==='update'?r.update(w.data):r.delete())}catch(e){break}
+      wqPut(wqGet().filter(x=>!(x.col===w.col&&x.id===w.id&&x.team===w.team)))}}finally{wqBusy=false}}
+addEventListener('online',()=>setTimeout(wqFlush,800));setInterval(wqFlush,20000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)wqFlush()});
 /* one-tap delete with Undo: the change waits 6 seconds (or until the app is closed), then really happens */
 const UNDO={t:null,commit:null,revert:null};
 function undoFlush(){const c=UNDO.commit;clearTimeout(UNDO.t);UNDO.commit=UNDO.revert=null;const b=$('#undobar');if(b)b.hidden=true;if(c)try{c()}catch(e){}}
@@ -1192,7 +1212,7 @@ function photosUndoable(ids,msg){const keep=ids.map(id=>S.photos.find(x=>x.id===
   undoable(msg,()=>{for(const p of keep){del('photos',p.id);if(AS&&p.assetId&&!allPhotos().some(x=>x.assetId===p.assetId&&x.id!==p.id))delAsset(p)}},()=>{for(const p of keep)if(!S.photos.some(x=>x.id===p.id))S.photos.push(p);scheduleRender()})}
 async function del(col,id){
   S[col]=S[col].filter(x=>x.id!==id); scheduleRender();
-  if(DB){try{await DB.collection(col).doc(id).delete()}catch(e){toast('Couldn\'t remove it. Try again.')}}
+  if(DB)await wqWrite('del',col,id);
   else saveLocal();
 }
 function clean(o){const r={};for(const k in o){if(o[k]!==undefined)r[k]=o[k]}return r}
@@ -1209,14 +1229,15 @@ async function qSave(item){if(!item.team&&qTeam())item.team=qTeam();Q.items.push
 async function qDrop(id){Q.items=Q.items.filter(x=>x.id!==id);try{if(Q.db)Q.db.transaction('q','readwrite').objectStore('q').delete(id)}catch(e){}renderTop()}
 async function qLoad(){try{Q.db=await idb();if(!Q.db)return;const r=Q.db.transaction('q').objectStore('q').getAll();r.onsuccess=()=>{(r.result||[]).forEach(it=>{if(!Q.items.some(x=>x.id===it.id)){Q.items.push(it);PEND[it.id]={...it.doc,id:it.id,url:URL.createObjectURL(it.blob),pending:true}}});renderTop();scheduleRender();qRun()}}catch(e){}}
 let qBusy=false;
+const pendEdits=id=>{const p=PEND[id];if(!p)return {};const o={...p};delete o.url;delete o.thumb;delete o.pending;delete o.id;return o};
 async function qRun(){
   if(qBusy||!AS||!Q.items.length||OFFLINE())return; qBusy=true;
   for(const it of [...Q.items]){
     if(it.team&&it.team!==qTeam())continue; /* belongs to a different company signed in on this phone before */
-    try{const up=await upMedia(it.blob,it.thumb);await put('photos',{...it.doc,id:it.id,...up});delete PEND[it.id];await qDrop(it.id);if(hookOn()&&!it.doc.private)BC.hook('photo.created',hookPhoto({...it.doc,id:it.id,url:up.url}))}
+    try{const up=await upMedia(it.blob,it.thumb);await put('photos',{...it.doc,...pendEdits(it.id),id:it.id,...up});delete PEND[it.id];await qDrop(it.id);if(hookOn()&&!it.doc.private)BC.hook('photo.created',hookPhoto({...it.doc,id:it.id,url:up.url}))}
     catch(e){break}
   }
-  qBusy=false; scheduleRender();
+  qBusy=false; scheduleRender();wqFlush();
 }
 addEventListener('online',qRun); setInterval(qRun,30000);
 
@@ -1319,10 +1340,10 @@ async function processFile(file,ctx){
   const id=uid();
   const doc=clean({projectId:pid||null,kind,takenAt,createdAt:Date.now(),lat,lng,gpsSource,code,tags:ctx.tags||[],zone:ctx.zone||'',trade:ctx.trade||'',note:ctx.note||'',by:ME.id,byName:ME.name,beforeOf:ctx.beforeOf||null,markupOf:ctx.markupOf||null,portfolio:(ctx.tags||[]).includes('Portfolio'),tpTask:ctx.tpTask||'',private:ctx.private?true:undefined,contentType:blob.type||file.type,quality:qual,...(ctx.plan||{})});
   PEND[id]={...doc,id,url:URL.createObjectURL(blob),...(thumb?{thumb:URL.createObjectURL(thumb)}:{}),pending:true}; scheduleRender(); if(ctx.onAdd)ctx.onAdd(id);
-  if(AS&&OFFLINE()){await qSave({id,blob,thumb,doc})}
+  if(AS&&(OFFLINE()||navigator.onLine===false)){await qSave({id,blob,thumb,doc:{...doc,...pendEdits(id)}})}
   else if(AS){
-    try{const up=await upMedia(blob,thumb);await put('photos',{...doc,id,...up});delete PEND[id];if(kind==='photo')aiTag(id,blob);if(hookOn()&&!doc.private)BC.hook('photo.created',hookPhoto({...doc,id,url:up.url}))}
-    catch(e){await qSave({id,blob,thumb,doc});toast('No signal. Photo saved on this phone and will upload when you\'re back online.',3800)}
+    try{const up=await upMedia(blob,thumb);await put('photos',{...doc,...pendEdits(id),id,...up});delete PEND[id];if(kind==='photo')aiTag(id,blob);if(hookOn()&&!doc.private)BC.hook('photo.created',hookPhoto({...doc,id,url:up.url}))}
+    catch(e){await qSave({id,blob,thumb,doc:{...doc,...pendEdits(id)}});toast('No signal. Photo saved on this phone and will upload when you\'re back online.',3800)}
   }else{await put('photos',{...doc,id,url:PEND[id].url,localOnly:true});delete PEND[id]}
   if(moved)toast('Filed to '+moved+' by GPS');
   return id;
@@ -1360,7 +1381,7 @@ function renderTop(){
   const va=V.viewAs&&M_(V.viewAs);
   t.innerHTML=`<div class="brand"><b>Build Camera</b><small>${esc(SET().name||DEFCO())}</small></div><span class="sp"></span>${va?`<span class="sync wait">Viewing as ${esc(va.company||va.name)}</span>`:''}${(()=>{const me=myMember();const n=me?S.alerts.filter(a=>a.to===me&&!a.read).length:0;return n?`<button class="sync wait" data-a="tab" data-t="alerts" style="background:transparent;cursor:pointer">${n} alert${n>1?'s':''}</button>`:''})()}<button class="sync ${s[0]}" data-a="tab" data-t="uploads" style="background:transparent;cursor:pointer">${esc(s[1])}</button>`;
 }
-function syncState(){const n=Q.items.length;if(OFFLINE())return ['wait',n?n+' saved on phone · No-signal mode':'No-signal mode on'];return !READY?['','Connecting…']:!DB?['off','Preview: not saving']:n?['wait',n+' waiting to upload']:['ok','Saved']}
+function syncState(){const n=Q.items.length+wqGet().filter(x=>x.team===qTeam()).length;if(OFFLINE())return ['wait',n?n+' saved on phone · No-signal mode':'No-signal mode on'];return !READY?['','Connecting…']:!DB?['off','Preview: not saving']:n?['wait',n+' waiting to upload']:['ok','Saved']}
 const NAV=[['home','home','Home','Recent jobs, live photo feed, your to-dos'],['projects','folder','Projects','Every job with its photos'],['feed','feed','Photos','Every photo from every job'],['checklists','check','Checklists','All checklists and their progress'],['punch','pin2','Punch List','Punch items by trade: open, ready to check, closed'],['tasks','flag','Tasks','Open tasks and to-dos'],['reports','report','Reports','Branded PDF reports for any job'],['docs','doc','Documents','Scanned tickets, cards and change orders'],['map','map','Map','Every job on a map'],['team','users','Team','People, roles and Trade Partners'],['time','clock','Time Tracking','Clock in and out at a job'],['portfolio','star','Portfolio','Photos for the website and ads'],['dash','chart','Activity','Photos, punch items and who is posting'],['uploads','cloud','Uploads','Photos waiting to upload, no-signal mode'],['onsite','here','On Site Today','Who is clocked in where'],['alerts','flag','Alerts','@mentions and assigned punch items'],['verify','shield','Verify a Photo','Check a photo\'s proof code']];
 const isAdminMe=()=>ME.id==='945c030f-3830-4daf-bf5d-44cdde0d0e37'&&!NATIVE_APP;
 function sideHtml(){
@@ -1523,7 +1544,7 @@ function ptPlans(p){const sets=allPlans(p.id);
   const where=canPlans()?`<span class="note">${DESK()?'Or drag a PDF onto this page.':'From Files, iCloud Drive, Google Drive or Dropbox.'}</span>`:'';
   if(!sets.length)return `<div class="row" style="align-items:center">${add}${where}</div><div class="empty">${I('map')}<b>No plans yet</b><span>${canPlans()?'Import the PDF plan set. Pick the sheets you need, and each one becomes a sheet you can zoom into and pin punch items on.':'Ask the office to add the plan set.'}</span></div>`;
   return `<div class="row" style="align-items:center">${add}${where}</div>`+sets.map(pl=>{const ed=V.plEdit===pl.id,list=planList(pl),hid=Array.from({length:+pl.pages||0},(_,i)=>i+1).filter(n=>!list.includes(n));
-    return `<div class="plset"><div class="pgh">${ed?`<input type="text" class="plsetn" value="${esc(pl.name)}" data-ch="planSetRen" data-id="${pl.id}" aria-label="Plan set name" autocapitalize="words" maxlength="80">`:`<b>${esc(pl.name)}</b><span class="note">${list.length} sheet${list.length===1?'':'s'}</span>`}<span class="sp"></span>${canPlans()?`<button class="btn sm ${ed?'pri':''}" data-a="planEdit" data-id="${pl.id}">${ed?'Done':I('pen')+' Rename'}</button>`:''}${canInvite()&&!ed?`<button class="ib" data-a="planDel" data-id="${pl.id}" aria-label="Remove ${esc(pl.name)}">${I('trash')}</button>`:''}</div>
+    return `<div class="plset"><div class="pgh">${ed?`<input type="text" class="plsetn" value="${esc(pl.name)}" data-ch="planSetRen" data-id="${pl.id}" aria-label="Plan set name" autocapitalize="words" maxlength="80">`:`<b>${esc(pl.name)}</b><span class="note">${list.length} sheet${list.length===1?'':'s'}</span>`}<span class="sp"></span>${canPlans()?`<button class="btn sm ${ed?'pri':''}" data-a="planEdit" data-id="${pl.id}">${ed?'Done':I('pen')+' Rename'}</button>`:''}${!ed&&planList(pl).some(n=>plAreas(pl,n).length)?`<button class="btn sm" data-a="signsOpen" data-pid="${pl.projectId}">${I('report')} Room Signs</button>`:''}${canInvite()&&!ed?`<button class="ib" data-a="planDel" data-id="${pl.id}" aria-label="Remove ${esc(pl.name)}">${I('trash')}</button>`:''}</div>
     <div class="plgrid">${list.map(n=>{const k=pinsOn(pl.id,n).filter(t=>pStatus(t)!=='closed').length,im=`<span class="plim"><img data-pth="${pl.id}:${n}" ${PTH[pl.id+':'+n]?`src="${PTH[pl.id+':'+n]}" data-done="${pl.id}:${n}"`:''} alt="${esc(sheetName(pl,n))}"></span>`;
       return ed?`<div class="plt">${im}<div class="row" style="gap:4px;flex-wrap:nowrap"><input type="text" value="${esc(sheetName(pl,n))}" data-ch="planRen" data-id="${pl.id}" data-n="${n}" aria-label="Sheet name" autocapitalize="characters" maxlength="60" style="flex:1;min-width:0"><button class="ib" data-a="planHide" data-id="${pl.id}" data-n="${n}" aria-label="Remove ${esc(sheetName(pl,n))}">${I('trash')}</button></div></div>`
         :`<div class="pltw"><button class="plt" data-a="planOpen" data-id="${pl.id}" data-n="${n}">${im}<b>${esc(sheetName(pl,n))}</b>${k?`<span class="pill bad">${k} open</span>`:''}</button>${canPlans()?`<button class="ib plren" data-a="sheetRen" data-id="${pl.id}" data-n="${n}" aria-label="Rename ${esc(sheetName(pl,n))}">${I('pen')}</button>`:''}</div>`}).join('')}</div>
@@ -1542,57 +1563,90 @@ function plToolsHtml(){const m=M&&M.mode||'';
   if(m==='zone'){const pl=S.photos.find(x=>x.id===M.id),n=M.n||1;
     if(M.zSel){const a=plAreas(pl,n).find(x=>x.id===M.zSel);return `<div class="plzrow"><input type="text" id="plzname" list="plzdl" value="${esc(a?a.zone:'')}" aria-label="Work zone" autocapitalize="words"><datalist id="plzdl">${zoneList().map(z=>`<option value="${esc(z)}">`).join('')}</datalist><button class="btn pri" data-a="plzRename">Save</button><button class="btn bad" data-a="plzDel" aria-label="Delete area">${I('trash')}</button><button class="btn" data-a="plzDesel">Done</button></div><div class="plzrow"><button class="btn" data-a="plzNodeDel" ${M.zNode!=null&&a&&a.pts.length>3?'':'disabled'}>Delete Corner</button><span class="note" style="flex:1;margin:0">Tap a corner to pick it. Drag a small dot to add a corner.</span></div>`}
     if(M.zPick)return `<div class="plzrow"><input type="text" id="plzname" list="plzdl" placeholder="Work zone, e.g. Level 2 Corridor" aria-label="Work zone" autocapitalize="words"><datalist id="plzdl">${zoneList().map(z=>`<option value="${esc(z)}">`).join('')}</datalist><button class="btn pri" data-a="plzSave">Save Area</button><button class="btn" data-a="plzBack">Back</button></div>`;
-    const k=(M.zDraw||[]).length;return `${k?'':`<div class="plzrow"><button class="btn stamp" data-a="plzFind" id="plzfind">${I('sparkle')} Find Rooms</button>${M.zAuto&&M.zAuto.length?`<button class="btn" data-a="plzUnfind">Remove Found</button>`:plAreas(pl,n).length?`<button class="btn" data-a="plzClear">${M.zClear?'Tap Again to Clear':'Clear All'}</button>`:''}</div>`}<div class="plzrow"><button class="btn" data-a="plzUndo" ${k?'':'disabled'}>Undo</button><button class="btn pri" data-a="plzFinish" ${k>=3?'':'disabled'}>Finish Area</button><button class="btn" data-a="plzDone">Done</button></div>`}
+    const k=(M.zDraw||[]).length;return `${k?'':`<div class="plzrow"><button class="btn stamp" data-a="plzFind" id="plzfind">${I('sparkle')} Find Rooms</button>${M.zAuto&&M.zAuto.length?`<button class="btn" data-a="plzUnfind">Remove Found</button>`:plAreas(pl,n).length?`<button class="btn" data-a="plzClear">${M.zClear?'Tap Again to Clear':'Clear All'}</button>`:''}${plAreas(pl,n).length?`<button class="btn" data-a="signsOpen" data-pid="${pl.projectId}">Signs</button>`:''}</div>`}<div class="plzrow"><button class="btn" data-a="plzUndo" ${k?'':'disabled'}>Undo</button><button class="btn pri" data-a="plzFinish" ${k>=3?'':'disabled'}>Finish Area</button><button class="btn" data-a="plzDone">Done</button></div>`}
   return `<button class="btn ${m==='photo'?'pri':''}" data-a="planMode" data-m="photo" aria-pressed="${m==='photo'}">${I('camera')} Photo Here</button><button class="btn ${m==='pin'?'pri':''}" data-a="planMode" data-m="pin" aria-pressed="${m==='pin'}">${I('pin2')} Add Punch Pin</button>${canPlans()?`<button class="btn" data-a="planMode" data-m="zone" style="grid-column:1/-1">${I('pen')} Draw Work Zones</button>`:''}`}
 function planBar(){const b=$('#plbar'),h=$('#plhint');if(b){b.innerHTML=plToolsHtml();b.classList.toggle('z',M&&M.mode==='zone')}if(h)h.textContent=planHint();planPins()}
-/* Find Rooms: read the sheet's lines, close doorways by thickening the walls, find each enclosed space, and name it from the room number printed inside it */
+/* Find Rooms: read the sheet's walls, close doorways, and outline every room that has a room number printed in it.
+   Small rooms (closets, restrooms) are retried with thinner walls so their doors close without filling the room. */
 async function planFindRooms(pl,n,strength,dark){
   const d=await planDoc(pl),pg=await d.getPage(n),v1=pg.getViewport({scale:1}),sc=2600/Math.max(v1.width,v1.height),vp=pg.getViewport({scale:sc});
   const W=Math.ceil(vp.width),H=Math.ceil(vp.height),c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d',{willReadFrequently:true});x.fillStyle='#fff';x.fillRect(0,0,W,H);
   await pg.render({canvasContext:x,viewport:vp}).promise;const px=x.getImageData(0,0,W,H).data;c.width=c.height=0;
-  /* walls are dark, gray-black lines. Light grid lines, colored tags and printed words don't count as walls. */
+  /* walls are dark gray-black lines; colored tags, printed words and dashed grid lines don't count */
   const N=W*H,wall=new Uint8Array(N);for(let i=0,j=0;i<N;i++,j+=4){const R=px[j],G=px[j+1],B=px[j+2],mx=Math.max(R,G,B),mn=Math.min(R,G,B);if(R*.3+G*.59+B*.11<(dark||190)&&mx-mn<70)wall[i]=1}
-  let TC=null;try{TC=await pg.getTextContent()}catch(e){}
-  if(TC)for(const it of TC.items){if(!(it.str||'').trim())continue;const tr=it.transform,h=Math.hypot(tr[2],tr[3])||Math.abs(tr[3])||8,w=it.width||h*(it.str.length*.6);
+  let TC=null;try{TC=await pg.getTextContent()}catch(e){}const words=[];
+  if(TC)for(const it of TC.items){const s=(it.str||'').trim();if(!s)continue;const tr=it.transform,h=Math.hypot(tr[2],tr[3])||Math.abs(tr[3])||8,w=it.width||h*(s.length*.6);
     const rc=vp.convertToViewportRectangle([tr[4]-h*.15,tr[5]-h*.3,tr[4]+w+h*.15,tr[5]+h*1.05]);const xa=Math.max(0,Math.floor(Math.min(rc[0],rc[2]))-2),xb=Math.min(W-1,Math.ceil(Math.max(rc[0],rc[2]))+2),ya=Math.max(0,Math.floor(Math.min(rc[1],rc[3]))-2),yb=Math.min(H-1,Math.ceil(Math.max(rc[1],rc[3]))+2);
-    if((xb-xa)*(yb-ya)>N*0.01)continue;for(let yy=ya;yy<=yb;yy++)wall.fill(0,yy*W+xa,yy*W+xb+1)}
-  /* thicken walls so door openings close up */
+    if((xb-xa)*(yb-ya)>N*0.01)continue;for(let yy=ya;yy<=yb;yy++)wall.fill(0,yy*W+xa,yy*W+xb+1);if(s.length<=40)words.push({s,x:(xa+xb)>>1,y:(ya+yb)>>1})}
   dashStrip(wall,W,H);
-  const r=Math.max(2,Math.round(Math.max(W,H)*0.0072*(strength||1)));const tmp=new Uint8Array(N),dil=new Uint8Array(N);
-  for(let y=0;y<H;y++){const o=y*W;let prev=-1e9;for(let xx=0;xx<W;xx++){if(wall[o+xx])prev=xx;tmp[o+xx]=xx-prev<=r?1:0}
-    prev=1e9;for(let xx=W-1;xx>=0;xx--){if(wall[o+xx])prev=xx;if(prev-xx<=r)tmp[o+xx]=1}}
-  for(let xx=0;xx<W;xx++){let prev=-1e9;for(let y=0;y<H;y++){const i=y*W+xx;if(tmp[i])prev=y;dil[i]=y-prev<=r?1:0}
-    prev=1e9;for(let y=H-1;y>=0;y--){const i=y*W+xx;if(tmp[i])prev=y;if(prev-y<=r)dil[i]=1}}
-  /* label each open space */
-  const lab=new Int32Array(N),q=new Int32Array(N),comps=[{}];let nl=0;
+  const NUM=/^(?:(?:RM|ROOM)\.?\s*)?([A-Z]{0,2}-?\d{2,4}[A-Z]?(?:-\d{1,2})?)$/i,TAILN=/^([A-Za-z][A-Za-z .&/-]{2,30}?)\s+(?:RM\.?\s*|ROOM\s*)?([A-Z]{0,2}-?\d{2,4}[A-Z]?(?:-\d{1,2})?)$/i;
+  const NAMEOK=s=>/^[A-Za-z][A-Za-z .&/'-]{2,29}$/.test(s)&&!/^(EX|SIM|TYP|NIC|EQ|ROOM NAME|SCALE|NORTH|PLAN|LEVEL)\b/i.test(s);
+  const labels=[];for(const w of words){let m=w.s.match(NUM);if(m){if((m[1].match(/\d/g)||[]).length>=3)labels.push({num:m[1].toUpperCase(),x:w.x,y:w.y});continue}m=w.s.match(TAILN);if(m&&(m[2].match(/\d/g)||[]).length>=3)labels.push({num:m[2].toUpperCase(),name:m[1].trim(),x:w.x,y:w.y})}
+  /* rooms with no number printed (closets, storage, stairs, restrooms): use the room word itself */
+  const RW=/^(CLOSET|STOR(AGE|\.)?|JAN(ITOR|\.)?( CLOSET| CLO\.?)?|CUSTODIAL|MECH(ANICAL|\.)?( ROOM| RM\.?)?|ELEC(TRICAL|\.)?( ROOM| RM\.?| CLOSET)?|IDF|MDF|DATA( ROOM)?|TEL(ECOM|E)?( ROOM)?|RESTROOMS?|TOILET|WOMEN'?S?|MEN'?S?|BOYS|GIRLS|UNISEX|FAMILY|STAIRS?( \w+)?|ELEV(ATOR|\.)?|VEST(IBULE|\.)?|LOBBY|CORRIDOR|HALL(WAY)?|OFFICE|CONF(ERENCE|\.)?( ROOM)?|BREAK( ROOM)?|KITCHEN|LOUNGE|SHOWERS?|LOCKERS?( ROOM)?|MACHINE( ROOM)?|RISER|SUPPLY|LAB|GYM|CAFETERIA|LIBRARY|NURSE|RECEPTION|WAITING|ENTRY|FOYER|COPY|MAIL|PANTRY|SERVER|PUMP( ROOM)?|SPRINKLER( ROOM)?|FIRE RISER|AUDITORIUM|STAGE|CLASSROOM|[A-Z]+ ?ROOM)$/i;
+  for(const w of words){if(!RW.test(w.s))continue;if(labels.some(l=>Math.abs(l.x-w.x)<90&&Math.abs(l.y-w.y)<45))continue;labels.push({num:'',name:w.s,x:w.x,y:w.y,key:'n'+w.x+'_'+w.y})}
+  const r0=Math.max(2,Math.round(Math.max(W,H)*0.0072*(strength||1)));const out=[];
+  const seen=new Set();const rooms=[],pend=[];
+  /* try thick walls first (closes wide doors), then thinner for small rooms */
+  const RS=[r0,Math.round(r0*0.6),Math.max(2,Math.round(r0*0.35))];for(const r of RS){const last=r===RS[RS.length-1];
+    const todo=labels.filter(l=>!l.done);if(!todo.length&&labels.length)break;
+    const {lab,comps}=roomComps(wall,W,H,r);
+    const ok=k=>k&&!k.edge&&k.cnt>=N*0.00012&&k.cnt<=N*0.45&&Math.min(k.x1-k.x0,k.y1-k.y0)>r*1.5;
+    const at=(l)=>{for(let rad=0;rad<=r*2+6;rad+=2)for(let a=0;a<8;a++){const xx=Math.round(l.x+Math.cos(a*Math.PI/4)*rad),yy=Math.round(l.y+Math.sin(a*Math.PI/4)*rad);if(xx<0||yy<0||xx>=W||yy>=H)continue;const L=lab[yy*W+xx];if(L)return L}return 0};
+    if(labels.length){const byC=new Map();for(const l of todo){const L=at(l);if(!L)continue;if(!byC.has(L))byC.set(L,[]);byC.get(L).push(l)}
+      for(const [L,lsAll] of byC){const k=comps[L];if(!ok(k))continue;const numd=lsAll.filter(l=>l.num);
+        if(!numd.length){if(lsAll.length>1&&!last&&new Set(lsAll.map(l=>l.name.toUpperCase())).size>1)continue;const nl=lsAll[0];
+          /* a closet word sitting in a big open space means the closet door didn't close yet: wait for thinner walls */
+          if(SMALLW.test(nl.name)&&k.cnt>N*0.012)continue;const poly=rectiOutline((x,y)=>lab[y*W+x]===L,W,H,k,r);if(!poly)continue;lsAll.forEach(l=>l.done=true);rooms.push({poly,zone:roomName(nl.name)});continue}
+        const words0=lsAll.filter(l=>!l.num);let ls=numd;const nums=new Set(ls.map(l=>l.num));
+        /* two room numbers in one space: wait for thinner walls to split them; on the last try give it to the number nearest the middle */
+        if(nums.size>1&&!last){if(!pend.some(p=>p.ls.some(l=>ls.includes(l)))){const bw=k.x1-k.x0+1,bh=k.y1-k.y0+1,m=new Uint8Array(bw*bh);for(let y=k.y0;y<=k.y1;y++)for(let x=k.x0;x<=k.x1;x++)if(lab[y*W+x]===L)m[(y-k.y0)*bw+x-k.x0]=1;pend.push({k,r,m,bw,ls:[...ls]})}continue}
+        if(nums.size>1){const mx=(k.x0+k.x1)/2,my=(k.y0+k.y1)/2;ls=[...ls].sort((a,b)=>Math.hypot(a.x-mx,a.y-my)-Math.hypot(b.x-mx,b.y-my));ls=ls.filter(l=>l.num===ls[0].num)}
+        if(seen.has(ls[0].num))continue;
+        const inRoom=words.filter(w=>w.x>=k.x0-r&&w.x<=k.x1+r&&w.y>=k.y0-r&&w.y<=k.y1+r&&lab[Math.min(H-1,Math.max(0,w.y))*W+Math.min(W-1,Math.max(0,w.x))]!==-1);
+        const nl=ls[0];let name=nl.name||'';if(!name){const cand=inRoom.filter(w=>NAMEOK(w.s)&&Math.abs(w.x-nl.x)<(k.x1-k.x0)&&Math.abs(w.y-nl.y)<(k.y1-k.y0));cand.sort((a,b)=>(Math.abs(a.x-nl.x)+Math.abs(a.y-nl.y)+(a.y>nl.y?60:0))-(Math.abs(b.x-nl.x)+Math.abs(b.y-nl.y)+(b.y>nl.y?60:0)));name=cand.length?cand[0].s:''}
+        if((nl.num.match(/\d/g)||[]).length<3)continue; /* short codes like B11 are grid or column marks, not rooms */
+        const poly=rectiOutline((x,y)=>lab[y*W+x]===L,W,H,k,r);if(!poly)continue;ls.forEach(l=>l.done=true);if(nums.size===1)words0.forEach(l=>l.done=true);seen.add(nl.num);
+        rooms.push({poly,zone:(name?roomName(name)+' '+nl.num:'Room '+nl.num)})}}
+    else{/* no printed room numbers (a scanned sheet): keep every closed space of room size */
+      let i=0;for(let L=1;L<comps.length;L++){const k=comps[L];if(!ok(k)||k.cnt<N*0.0006||k.cnt/((k.x1-k.x0+1)*(k.y1-k.y0+1))<0.35)continue;const poly=rectiOutline((x,y)=>lab[y*W+x]===L,W,H,k,r);if(poly)rooms.push({poly,zone:'Area '+(++i)})}break}}
+  /* rooms that only ever showed up sharing a space with another number (stairs, mech rooms off a corridor): split that space between the numbers, each part going to the nearest number */
+  for(const p of pend){const ls=p.ls;const nums=[...new Set(ls.map(l=>l.num))];if(nums.every(nu=>seen.has(nu)))continue;const k=p.k,{bw,m}=p,pts=nums.map(nu=>ls.filter(l=>l.num===nu));
+    const hz=(k.x1-k.x0)>=(k.y1-k.y0);/* split straight across the long way so each part stays square */const own=(x,y)=>{let b=-1,bd=1e18;for(let i=0;i<pts.length;i++)for(const l of pts[i]){const d=hz?Math.abs(l.x-x):Math.abs(l.y-y);if(d<bd){bd=d;b=i}}return b};
+    nums.forEach((nu,i)=>{if(seen.has(nu))return;const poly=rectiOutline((x,y)=>x>=k.x0&&y>=k.y0&&x<=k.x1&&y<=k.y1&&m[(y-k.y0)*bw+x-k.x0]&&own(x,y)===i,W,H,k,p.r);if(!poly)return;const nl=pts[i][0];
+      const cand=words.filter(w=>NAMEOK(w.s)&&Math.abs(w.x-nl.x)<120&&Math.abs(w.y-nl.y)<80).sort((a,b)=>(Math.abs(a.x-nl.x)+Math.abs(a.y-nl.y)+(a.y>nl.y?60:0))-(Math.abs(b.x-nl.x)+Math.abs(b.y-nl.y)+(b.y>nl.y?60:0)));const name=nl.name||(cand[0]&&cand[0].s)||'';
+      if((nu.match(/\d/g)||[]).length<3)return;pts[i].forEach(l=>l.done=true);seen.add(nu);rooms.push({poly,zone:name?roomName(name)+' '+nu:'Room '+nu})})}
+  for(const rm of rooms)out.push({id:uid(),zone:rm.zone.slice(0,60),auto:true,pts:rm.poly.map(p=>[+(Math.min(1,Math.max(0,p[0]/W))).toFixed(4),+(Math.min(1,Math.max(0,p[1]/H))).toFixed(4)])});
+  return out}
+const SMALLW=/^(CLOSET|STOR|JAN|CUSTODIAL|MECH|ELEC|IDF|MDF|DATA|TEL|RESTROOM|TOILET|WOMEN|MEN|BOYS|GIRLS|UNISEX|FAMILY|RISER|SUPPLY|PUMP|SPRINKLER|FIRE RISER|SHOWER|COPY|MAIL|PANTRY|SERVER|ELEV)/i;
+/* spell out plan shorthand: Jan. becomes Janitor, Elec. becomes Electrical, Girls becomes Girls Restroom */
+function roomName(s){const t=titleCase(String(s).toLowerCase().trim()),u=t.toUpperCase().replace(/\.$/,'');const M_={JAN:'Janitor','JAN CLOSET':'Janitor Closet',ELEC:'Electrical','ELEC ROOM':'Electrical Room','ELEC CLOSET':'Electrical Closet',MECH:'Mechanical','MECH ROOM':'Mechanical Room',STOR:'Storage',CONF:'Conference',VEST:'Vestibule',ELEV:'Elevator',TEL:'Telecom',TELE:'Telecom',GIRLS:'Girls Restroom',BOYS:'Boys Restroom',MEN:"Men's Restroom",MENS:"Men's Restroom","MEN'S":"Men's Restroom",WOMEN:"Women's Restroom",WOMENS:"Women's Restroom","WOMEN'S":"Women's Restroom",UNISEX:'Unisex Restroom',FAMILY:'Family Restroom'};return M_[u]||M_[u.replace(/\./g,'')]||t}
+/* thicken walls by r so doorways close, then number each open space */
+function roomComps(wall,W,H,r){const N=W*H,tmp=new Uint8Array(N),dil=new Uint8Array(N);
+  for(let y=0;y<H;y++){const o=y*W;let prev=-1e9;for(let xx=0;xx<W;xx++){if(wall[o+xx])prev=xx;tmp[o+xx]=xx-prev<=r?1:0}prev=1e9;for(let xx=W-1;xx>=0;xx--){if(wall[o+xx])prev=xx;if(prev-xx<=r)tmp[o+xx]=1}}
+  for(let xx=0;xx<W;xx++){let prev=-1e9;for(let y=0;y<H;y++){const i=y*W+xx;if(tmp[i])prev=y;dil[i]=y-prev<=r?1:0}prev=1e9;for(let y=H-1;y>=0;y--){const i=y*W+xx;if(tmp[i])prev=y;if(prev-y<=r)dil[i]=1}}
+  const lab=new Int32Array(N),q=new Int32Array(N),comps=[null];let nl=0;
   for(let s=0;s<N;s++){if(dil[s]||lab[s])continue;nl++;let h=0,t=0;q[t++]=s;lab[s]=nl;let cnt=0,x0=W,y0=H,x1=0,y1=0,edge=false;
     while(h<t){const i=q[h++];cnt++;const yy=(i/W)|0,xx=i-yy*W;if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(yy<y0)y0=yy;if(yy>y1)y1=yy;if(!xx||!yy||xx===W-1||yy===H-1)edge=true;
       if(xx>0&&!dil[i-1]&&!lab[i-1]){lab[i-1]=nl;q[t++]=i-1}if(xx<W-1&&!dil[i+1]&&!lab[i+1]){lab[i+1]=nl;q[t++]=i+1}
       if(yy>0&&!dil[i-W]&&!lab[i-W]){lab[i-W]=nl;q[t++]=i-W}if(yy<H-1&&!dil[i+W]&&!lab[i+W]){lab[i+W]=nl;q[t++]=i+W}}
-    comps.push({id:nl,cnt,x0,y0,x1,y1,edge,start:s,texts:[]})}
-  const keep=comps.filter(k=>k.id&&!k.edge&&k.cnt>=N*0.0006&&k.cnt<=N*0.45&&Math.min(k.x1-k.x0,k.y1-k.y0)>r*3&&k.cnt/((k.x1-k.x0+1)*(k.y1-k.y0+1))>0.35);
-  const byId=new Map(keep.map(k=>[k.id,k]));
-  /* text printed on the sheet: find which space each word sits in */
-  try{const tc=TC||{items:[]};for(const it of tc.items){const s=(it.str||'').trim();if(!s||s.length>40)continue;const tr=it.transform;const p0=vp.convertToViewportPoint(tr[4]+(it.width||0)/2,tr[5]+(it.height||Math.abs(tr[3])||0)/2);
-      const cx=Math.round(p0[0]),cy=Math.round(p0[1]);let hit=0;for(let rad=0;rad<=r*3&&!hit;rad+=2){for(let a=0;a<8&&!hit;a++){const xx=cx+Math.round(Math.cos(a*Math.PI/4)*rad),yy=cy+Math.round(Math.sin(a*Math.PI/4)*rad);if(xx<0||yy<0||xx>=W||yy>=H)continue;const L=lab[yy*W+xx];if(L&&byId.has(L))hit=L}if(!rad&&!hit){}}
-      if(hit)byId.get(hit).texts.push({s,y:cy,x:cx})}}catch(e){}
-  const NUM=/^(?:(?:RM|ROOM)\.?\s*)?([A-Z]?\d{2,4}[A-Z]?)$/i;
-  const TAILN=/^([A-Za-z][A-Za-z .&/-]{2,30}?)\s+(?:RM\.?\s*|ROOM\s*)?([A-Z]?\d{2,4}[A-Z]?)$/i;
-  keep.forEach(k=>{k.texts.sort((a,b)=>a.y-b.y||a.x-b.x);let nu=k.texts.map(t=>t.s.match(NUM)).find(Boolean),both=!nu&&k.texts.map(t=>t.s.match(TAILN)).find(Boolean);
-    k.num=nu?nu[1].toUpperCase():both?both[2].toUpperCase():'';
-    /* the room name is the word printed right above the room number (skip tags like EX, SIM, TYP) */
-    const nt=k.texts.find(t=>NUM.test(t.s)||TAILN.test(t.s));const cand=k.texts.filter(t=>/^[A-Za-z][A-Za-z .&/'-]{2,29}$/.test(t.s)&&!/^(EX|SIM|TYP|NIC|EQ|ROOM NAME)\b/i.test(t.s));
-    if(both)k.name=both[1].trim();else if(nt&&cand.length){cand.sort((a,b)=>{const da=Math.abs(a.x-nt.x)+Math.abs(a.y-nt.y)+(a.y>nt.y?60:0),db=Math.abs(b.x-nt.x)+Math.abs(b.y-nt.y)+(b.y>nt.y?60:0);return da-db});k.name=cand[0].s}else k.name=cand.length?cand[0].s:''});
-  const withNum=keep.filter(k=>k.num).length,withText=keep.filter(k=>k.texts.length).length;
-  let rooms=withNum>=3?keep.filter(k=>k.num):withText>=3?keep.filter(k=>k.texts.length):keep;
-  /* outline each space, simplify it, then push it back out to the wall line */
-  const out=[];let k2=0;for(const k of rooms){let sp;const fill=k.cnt/((k.x1-k.x0+1)*(k.y1-k.y0+1));
-    if(fill>0.72)sp=[[k.x0,k.y0],[k.x1,k.y0],[k.x1,k.y1],[k.x0,k.y1]];
-    else{const pts=traceComp(lab,W,H,k);if(pts.length<3)continue;sp=orthoPoly(dpSimplify(pts,Math.max(2,r*0.9)));if(sp.length<3)continue}
-    sp=offsetPoly(sp,r);
-    const zone=k.num?(k.name?titleCase(k.name.toLowerCase())+' '+k.num:'Room '+k.num):(k.name?titleCase(k.name.toLowerCase()):'Area '+(++k2));
-    out.push({id:uid(),zone:zone.slice(0,60),auto:true,pts:sp.map(p=>[+(Math.min(1,Math.max(0,p[0]/W))).toFixed(4),+(Math.min(1,Math.max(0,p[1]/H))).toFixed(4)])})}
-  return out}
+    comps.push({id:nl,cnt,x0,y0,x1,y1,edge})}
+  return {lab,comps}}
+/* rooms are square, rectangular or L-shaped: outline the space on a grid so every edge is level or plumb, then push it back out to the wall line */
+function rectiOutline(inside,W,H,k,r){const g=Math.max(3,Math.round(r*0.6)),cx=k.x0,cy=k.y0,nx=Math.ceil((k.x1-k.x0+1)/g),ny=Math.ceil((k.y1-k.y0+1)/g);
+  const fill=new Uint8Array(nx*ny);for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){let c=0,t=0;for(let y=cy+j*g;y<Math.min(cy+(j+1)*g,H);y++)for(let x=cx+i*g;x<Math.min(cx+(i+1)*g,W);x++){t++;if(inside(x,y))c++}fill[j*nx+i]=c*2>=t?1:0}
+  const F=(i,j)=>i>=0&&j>=0&&i<nx&&j<ny&&fill[j*nx+i];
+  /* keep the biggest piece only */
+  const seen=new Uint8Array(nx*ny);let best=null;for(let s=0;s<nx*ny;s++){if(!fill[s]||seen[s])continue;const st=[s],cells=[];seen[s]=1;while(st.length){const v=st.pop();cells.push(v);const i=v%nx,j=(v/nx)|0;for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]]){const u=(j+b)*nx+(i+a);if(F(i+a,j+b)&&!seen[u]){seen[u]=1;st.push(u)}}}if(!best||cells.length>best.length)best=cells}
+  if(!best||best.length<2)return null;const keep=new Uint8Array(nx*ny);best.forEach(v=>keep[v]=1);const K=(i,j)=>i>=0&&j>=0&&i<nx&&j<ny&&keep[j*nx+i];
+  const E=new Map();const add=(a,b)=>{const k1=a[0]+','+a[1];if(!E.has(k1))E.set(k1,[]);E.get(k1).push(b)};
+  for(const v of best){const i=v%nx,j=(v/nx)|0;if(!K(i,j-1))add([i,j],[i+1,j]);if(!K(i+1,j))add([i+1,j],[i+1,j+1]);if(!K(i,j+1))add([i+1,j+1],[i,j+1]);if(!K(i-1,j))add([i,j+1],[i,j])}
+  let loops=[];while(E.size){const k0=E.keys().next().value;let cur=k0.split(',').map(Number);const loop=[cur];let guard=0;
+    while(guard++<100000){const kk=cur[0]+','+cur[1],l=E.get(kk);if(!l||!l.length)break;const nxp=l.pop();if(!l.length)E.delete(kk);cur=nxp;if(cur[0]+','+cur[1]===k0)break;loop.push(cur)}loops.push(loop)}
+  let lp=loops.sort((a,b)=>b.length-a.length)[0];if(!lp||lp.length<4)return null;
+  lp=lp.filter((p,i)=>{const a=lp[(i-1+lp.length)%lp.length],b=lp[(i+1)%lp.length];return !((a[0]===p[0]&&p[0]===b[0])||(a[1]===p[1]&&p[1]===b[1]))});
+  const poly=lp.map(p=>[cx+p[0]*g,cy+p[1]*g]);if(poly.length<4)return null;
+  return offsetPoly(poly,Math.max(0,r-g/2))}
 /* column grid lines are dashed and run right through rooms: drop short thin dashes that repeat in a line, keep solid walls */
 function dashStrip(wall,W,H){const N=W*H,hr=new Uint16Array(N),vr=new Uint16Array(N);
   for(let y=0;y<H;y++){const o=y*W;let x=0;while(x<W){if(!wall[o+x]){x++;continue}let e=x;while(e<W&&wall[o+e])e++;for(let k=x;k<e;k++)hr[o+k]=e-x;x=e}}
@@ -1601,18 +1655,6 @@ function dashStrip(wall,W,H){const N=W*H,hr=new Uint16Array(N),vr=new Uint16Arra
   for(let x=0;x<W;x++){const runs=[];let y=0;while(y<H){const i=y*W+x;if(wall[i]&&hr[i]<=3){let e=y;while(e<H&&wall[e*W+x]&&hr[e*W+x]<=3)e++;runs.push([y,e-1]);y=e}else y++}dash(runs,a=>kill.push([0,x,a[0],a[1]]))}
   for(let y=0;y<H;y++){const o=y*W,runs=[];let x=0;while(x<W){const i=o+x;if(wall[i]&&vr[i]<=3){let e=x;while(e<W&&wall[o+e]&&vr[o+e]<=3)e++;runs.push([x,e-1]);x=e}else x++}dash(runs,a=>kill.push([1,y,a[0],a[1]]))}
   for(const [o,c,a,b] of kill){if(o===0)for(let y=a;y<=b;y++)wall[y*W+c]=0;else wall.fill(0,c*W+a,c*W+b+1)}}
-/* most rooms are square: straighten nearly level or plumb edges */
-function orthoPoly(p){const q=p.map(a=>[...a]);for(let pass=0;pass<2;pass++)for(let i=0;i<q.length;i++){const a=q[i],b=q[(i+1)%q.length],dx=Math.abs(b[0]-a[0]),dy=Math.abs(b[1]-a[1]);if(dx<dy*0.2){const m=(a[0]+b[0])/2;a[0]=b[0]=m}else if(dy<dx*0.2){const m=(a[1]+b[1])/2;a[1]=b[1]=m}}
-  return q.filter((a,i)=>{const b=q[(i+1)%q.length];return Math.hypot(a[0]-b[0],a[1]-b[1])>1})}
-function traceComp(lab,W,H,k){const L=k.id,at=(x,y)=>x>=0&&y>=0&&x<W&&y<H&&lab[y*W+x]===L;let sx=-1,sy=-1;
-  for(let y=k.y0;y<=k.y1&&sx<0;y++)for(let x=k.x0;x<=k.x1;x++)if(at(x,y)){sx=x;sy=y;break}
-  const dx=[1,1,0,-1,-1,-1,0,1],dy=[0,1,1,1,0,-1,-1,-1];const pts=[[sx,sy]];let cx=sx,cy=sy,dir=7,guard=0;
-  do{let found=false;for(let i=0;i<8;i++){const d=(dir+6+i)%8,nx=cx+dx[d],ny=cy+dy[d];if(at(nx,ny)){cx=nx;cy=ny;dir=d;found=true;break}}if(!found)break;pts.push([cx,cy])}while((cx!==sx||cy!==sy)&&++guard<400000);
-  return pts}
-function dpSimplify(pts,eps){if(pts.length<4)return pts;const z=pts[0],e=pts[pts.length-1];if(z[0]===e[0]&&z[1]===e[1]){const p=pts.slice(0,-1);let f=0,fd=-1;p.forEach((q,i)=>{const d=Math.hypot(q[0]-z[0],q[1]-z[1]);if(d>fd){fd=d;f=i}});if(f<2||f>p.length-2)return p;const A=dpOpen(p.slice(0,f+1),eps),B=dpOpen([...p.slice(f),z],eps);return [...A.slice(0,-1),...B.slice(0,-1)]}return dpOpen(pts,eps)}
-function dpOpen(pts,eps){if(pts.length<3)return pts;const keep=new Uint8Array(pts.length);keep[0]=keep[pts.length-1]=1;const st=[[0,pts.length-1]];
-  while(st.length){const[a,b]=st.pop();let mx=0,mi=-1;const[ax,ay]=pts[a],[bx,by]=pts[b],L=Math.hypot(bx-ax,by-ay)||1;for(let i=a+1;i<b;i++){const d=Math.abs((bx-ax)*(ay-pts[i][1])-(ax-pts[i][0])*(by-ay))/L;if(d>mx){mx=d;mi=i}}if(mx>eps&&mi>0){keep[mi]=1;st.push([a,mi],[mi,b])}}
-  return pts.filter((_,i)=>keep[i])}
 function offsetPoly(p,d){const n=p.length;let a=0;for(let i=0;i<n;i++){const q=p[(i+1)%n];a+=p[i][0]*q[1]-q[0]*p[i][1]}const s=a>0?1:-1;
   return p.map((c,i)=>{const pr=p[(i-1+n)%n],nx=p[(i+1)%n];const e1=[c[0]-pr[0],c[1]-pr[1]],e2=[nx[0]-c[0],nx[1]-c[1]];const l1=Math.hypot(...e1)||1,l2=Math.hypot(...e2)||1;
     const n1=[s*e1[1]/l1,-s*e1[0]/l1],n2=[s*e2[1]/l2,-s*e2[0]/l2];let bx=n1[0]+n2[0],by=n1[1]+n2[1];const bl=Math.hypot(bx,by);if(bl<1e-6)return c;bx/=bl;by/=bl;const cs=Math.max(.35,bx*n1[0]+by*n1[1]);return [c[0]+bx*d/cs,c[1]+by*d/cs]})}
@@ -1706,6 +1748,10 @@ document.addEventListener('change',e=>{const k=e.target&&e.target.dataset&&e.tar
   if(k==='planImpCk')planImpCount();
   else if(k==='planRen'){const pl=S.photos.find(x=>x.id===e.target.dataset.id);if(pl){const v=e.target.value.trim().slice(0,60),n=+e.target.dataset.n;upd('photos',pl.id,{sheets:{...(pl.sheets||{}),[n]:v||('Sheet '+n)}})}}
   else if(k==='planSetRen'){const v=e.target.value.trim().slice(0,80);if(v)upd('photos',e.target.dataset.id,{name:v})}});
+/* laptop: with a work zone picked, the Delete key removes it (or just the picked corner); Esc lets go of it */
+document.addEventListener('keydown',e=>{if(!M||M.kind!=='plan'||M.mode!=='zone'||!M.zSel)return;const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
+  if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();const pl=S.photos.find(x=>x.id===M.id),a=plAreas(pl,M.n||1).find(x=>x.id===M.zSel);if(M.zNode!=null&&a&&a.pts.length>3)PLAN_ACT.plzNodeDel();else PLAN_ACT.plzDel()}
+  else if(e.key==='Escape'){e.preventDefault();e.stopPropagation();PLAN_ACT.plzDesel()}},true);
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='plren'){e.preventDefault();PLAN_ACT.planRenSave()}});
 document.addEventListener('submit',e=>{const f=e.target;if(f&&f.dataset&&f.dataset.sub==='planImpGo'){e.preventDefault();e.stopImmediatePropagation();planImpGo(f)}},true);
 document.addEventListener('dragover',e=>{if(V.tab==='project'&&V.ptab==='plans'&&canPlans()&&e.dataTransfer&&[...e.dataTransfer.types].includes('Files')){e.preventDefault();document.body.classList.add('pldrop')}});
@@ -2110,15 +2156,17 @@ const PST={open:['Open','bad'],ready:['Ready to Check','warn'],closed:['Closed',
 function punchTrade(t){const as=M_(t.assignee);return t.trade||(as&&(as.trade||as.company))||t.assigneeText||'No trade set'}
 function scrPunch(){return `<div class="row"><h1 style="flex:1">Punch List</h1></div>${punchArea(null)}`}
 function punchArea(p){
-  const all=vis(S.tasks.filter(t=>t.type==='punch'&&(!p||t.projectId===p.id)),'tasks');
+  const rm=p&&V.punchRoom?V.punchRoom.toLowerCase():'';
+  const all=vis(S.tasks.filter(t=>t.type==='punch'&&(!p||t.projectId===p.id)&&(!rm||(t.zone||'').toLowerCase()===rm)),'tasks');
   const n={open:0,ready:0,closed:0};all.forEach(t=>n[pStatus(t)]++);
   const f=V.punchF||'open',g=V.punchG||'trade';
-  const list=all.filter(t=>f==='all'||pStatus(t)===f).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+  const list=all.filter(t=>(f==='all'||pStatus(t)===f)).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
   const key=t=>g==='zone'?(t.zone||'No zone set'):g==='person'?((M_(t.assignee)||{}).name||t.assigneeText||'Not assigned'):punchTrade(t);
   const groups={};list.forEach(t=>{(groups[key(t)]=groups[key(t)]||[]).push(t)});
   const chip=(k,l)=>`<button class="chip" data-a="punchF" data-f="${k}" aria-pressed="${f===k}">${l}</button>`;
   const pid=p?p.id:'';
-  return `<div class="pstat"><button data-a="punchF" data-f="open" aria-pressed="${f==='open'}"><b>${n.open}</b><span>Open</span></button><button data-a="punchF" data-f="ready" aria-pressed="${f==='ready'}"><b>${n.ready}</b><span>Ready to Check</span></button><button data-a="punchF" data-f="closed" aria-pressed="${f==='closed'}"><b>${n.closed}</b><span>Closed</span></button></div>
+  const roomBar=rm?`<div class="callout info roombar"><span style="flex:1"><b>${esc(V.punchRoom)}</b><br><span class="note">Punch items for this room. Fix one, then tap Fixed: Add Photo.</span></span><button class="btn sm" data-a="punchRoomAll">All Rooms</button></div>`:'';
+  return `${roomBar}<div class="pstat"><button data-a="punchF" data-f="open" aria-pressed="${f==='open'}"><b>${n.open}</b><span>Open</span></button><button data-a="punchF" data-f="ready" aria-pressed="${f==='ready'}"><b>${n.ready}</b><span>Ready to Check</span></button><button data-a="punchF" data-f="closed" aria-pressed="${f==='closed'}"><b>${n.closed}</b><span>Closed</span></button></div>
   <div class="row" style="margin:10px 0"><button class="btn pri" data-a="punchShot" data-pid="${pid}">${I('camera')} Punch Photo</button><button class="btn" data-a="newTask" data-pid="${pid}" data-type="punch">${I('plus')} Punch Item</button>${DESK()?`<button class="btn" data-a="punchImport" data-pid="${pid}">${I('doc')} Import</button><button class="btn" data-a="punchExport" data-pid="${pid}">${I('download')} Export</button>`:''}<span class="sp"></span>${chip('all','Show All')}<label class="pgby"><span class="note">Group by</span><select data-ch="punchG" aria-label="Group by">${[['trade','Trade'],['zone','Work Zone'],['person','Person']].map(([k,l])=>`<option value="${k}" ${g===k?'selected':''}>${l}</option>`).join('')}</select></label></div>
   ${list.length?Object.keys(groups).sort().map(k=>`<div class="pgrp"><div class="pgh"><b>${esc(k)}</b><span class="note">${groups[k].length} item${groups[k].length===1?'':'s'}</span><span class="sp"></span>${f!=='closed'?`<button class="btn sm" data-a="punchText" data-g="${esc(k)}" data-pid="${pid}">${I('share')} Text List</button>`:''}</div><div class="stack">${groups[k].map(punchCard).join('')}</div></div>`).join(''):`<div class="empty">${I('pin2')}<b>${f==='open'?'No open punch items':'Nothing here'}</b><span>Tap Punch Photo to snap the problem and describe it, or drop a pin on any photo.</span></div>`}`;
 }
@@ -2279,6 +2327,7 @@ function renderModal(){
   else if(M.kind==='plan')h=planSheet();
   else if(M.kind==='planImport')h=planImportSheet();
   else if(M.kind==='punchPick')h=punchPickSheet();
+  else if(M.kind==='roomSigns')h=roomSignsSheet();
   else if(M.kind==='member')h=memberSheet();
   else if(M.kind==='checklist')h=checklistSheet();
   else if(M.kind==='pickPhoto')h=pickSheet();
@@ -2489,8 +2538,8 @@ function photoSheet(){
   <div class="stack" style="gap:8px">${pr?`<div><b style="font-size:17px">${esc(pr.name)}</b>${pr.address?`<div class="note">${esc(pr.address)}</div>`:''}</div>`:''}
    <div class="pvwho">${avHtml(p.byName||'?','av',p.by)}<div style="flex:1;min-width:0"><b>${esc(p.byName||'Unknown')}</b><div class="note">${fmtFull(p.takenAt)}${list.length>1&&i>=0?` · ${i+1} of ${list.length}`:''}</div></div>${p.lat!=null?`<a class="btn sm" href="https://www.google.com/maps?q=${+p.lat},${+p.lng}" target="_blank" rel="noopener" aria-label="Show where it was taken">${I('map')}</a>`:''}</div>
    </div>
-  ${p.pending?'<p class="callout">Waiting to upload. It\'s safe on this phone.</p>':''}
-  ${p.by&&ME.id&&p.by===ME.id&&!p.pending?`<label class="card privc"><input type="checkbox" id="ph-priv" data-ch="phPriv" data-id="${p.id}" ${p.private?'checked':''}><span class="t"><b>${I('lock')} Private</b><span class="note">${p.private?'Only you can see this photo. It stays out of share links, reports for others and your team\'s feeds.':'Turn on so only you can see it. Your team, office and share links won\'t.'}</span></span></label>`:''}
+  ${p.pending?'<p class="callout">Waiting to upload. It\'s safe on this phone. You can still add tags, notes and markup; they go up with the photo.</p>':''}
+  ${p.by&&ME.id&&p.by===ME.id?`<label class="card privc"><input type="checkbox" id="ph-priv" data-ch="phPriv" data-id="${p.id}" ${p.private?'checked':''}><span class="t"><b>${I('lock')} Private</b><span class="note">${p.private?'Only you can see this photo. It stays out of share links, reports for others and your team\'s feeds.':'Turn on so only you can see it. Your team, office and share links won\'t.'}</span></span></label>`:''}
   ${p.quality?`<p class="callout">This photo ${p.quality.blurry?'might be blurry':'is very dark'}. It's saved either way; take another if you need a clearer one.</p>`:''}
   ${p.suggest&&!p.suggest.done&&(p.suggest.tags.length||p.suggest.trade||p.suggest.caption)?`<div class="callout info stack" style="gap:6px"><b>${I('sparkle')} AI suggests</b><span>${esc([p.suggest.tags.join(', '),p.suggest.trade&&'Trade: '+p.suggest.trade,p.suggest.caption&&'Note: '+p.suggest.caption].filter(Boolean).join(' · '))}</span><div class="row"><button class="btn sm pri" data-a="aiAccept" data-id="${p.id}">Accept</button><button class="btn sm" data-a="aiDismiss" data-id="${p.id}">Dismiss</button></div></div>`:''}
   <div class="card stack" style="gap:10px"><div class="two"><label class="f"><span class="row" style="justify-content:space-between">Work Zone<button type="button" class="linkb edic" data-a="editList" data-k="zones" aria-label="Edit work zone list" title="Edit work zone list">${I('pen')}</button></span><input type="text" id="ph-zone" list="dl-zones" value="${esc(p.zone||'')}" data-ch="phF" data-id="${p.id}" data-k="zone" placeholder="Building, area or level" autocapitalize="words"></label><label class="f"><span class="row" style="justify-content:space-between">Trade Partner<button type="button" class="linkb edic" data-a="editList" data-k="trades" aria-label="Edit trade partner list" title="Edit trade partner list">${I('pen')}</button></span><input type="text" id="ph-trade" list="dl-trades" value="${esc(p.trade||'')}" data-ch="phF" data-id="${p.id}" data-k="trade" autocapitalize="words"></label></div>
@@ -2798,7 +2847,34 @@ function mkLabel(t,cx,cy,col,k,plain){const x=MK.x,fs=Math.max(18,MK.c.width*.03
 
 /* ---------- reports (PDF) ---------- */
 let jsPdfP=null;
-function loadJsPdf(){if(window.jspdf)return Promise.resolve();return jsPdfP=jsPdfP||new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';s.onload=res;s.onerror=()=>{jsPdfP=null;rej()};document.head.appendChild(s)})}
+/* room signs: one 8.5 x 5.5 page per room with a big room name and a QR code. Scanning it opens that room's punch list. */
+let QRP=null;function loadQr(){if(window.qrcode)return Promise.resolve();return QRP=QRP||new Promise((res,rej)=>{const s=document.createElement('script');s.src='/vend/qr/qrcode.js';s.onload=res;s.onerror=()=>{QRP=null;rej()};document.head.appendChild(s)})}
+const roomUrl=(pid,zone)=>location.origin+'/?job='+encodeURIComponent(pid)+'&room='+encodeURIComponent(zone);
+async function roomSignsPdf(p,rooms){await Promise.all([loadJsPdf(),loadQr()]);const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:[396,612],orientation:'landscape'});
+  const co=coName(p.id),logo=await getLogo();let lg=null;if(logo){try{const c=document.createElement('canvas'),sc=Math.min(1,240/Math.max(logo.naturalWidth,logo.naturalHeight));c.width=Math.round(logo.naturalWidth*sc);c.height=Math.round(logo.naturalHeight*sc);c.getContext('2d').drawImage(logo,0,0,c.width,c.height);lg={d:c.toDataURL('image/png'),w:c.width,h:c.height}}catch(e){}}
+  rooms.forEach((rm,ix)=>{if(ix)doc.addPage([396,612],'landscape');const W=612,H=396,m=30;
+    /* top band: company and job */
+    doc.setFillColor(27,32,36);doc.rect(0,0,W,54,'F');let tx=m;if(lg){const h=30,w=lg.w*h/lg.h;try{doc.addImage(lg.d,'PNG',m,12,w,h);tx=m+w+10}catch(e){}}
+    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(15);doc.text(co,tx,33);doc.setFont('helvetica','normal');doc.setFontSize(11);doc.text(p.name,W-m,33,{align:'right'});
+    doc.setFillColor(242,183,5);doc.rect(0,54,W,5,'F');
+    /* QR code, drawn as squares so it prints sharp */
+    const q=window.qrcode(0,'M');q.addData(roomUrl(p.id,rm.zone));q.make();const n=q.getModuleCount(),qs=250,cell=qs/(n+8),qx=W-m-qs,qy=82;
+    doc.setFillColor(255,255,255);doc.rect(qx,qy,qs,qs,'F');doc.setFillColor(0,0,0);for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))doc.rect(qx+(c+4)*cell,qy+(r+4)*cell,cell+0.15,cell+0.15,'F');
+    doc.setTextColor(90,98,106);doc.setFontSize(10);doc.text('Scan for this room\'s punch list',qx+qs/2,qy+qs+16,{align:'center'});
+    /* room name, as big as it fits */
+    const tw=qx-m-24;doc.setTextColor(27,32,36);doc.setFont('helvetica','bold');let fs=54,lines;do{doc.setFontSize(fs);lines=doc.splitTextToSize(rm.zone,tw);fs-=2}while((lines.length>3||rm.zone.split(/\s+/).some(w=>doc.getTextWidth(w)>tw))&&fs>20);
+    doc.text(lines,m,120);const ly=120+lines.length*fs*1.05;
+    doc.setFont('helvetica','normal');doc.setFontSize(12);doc.setTextColor(90,98,106);if(rm.sheet)doc.text(rm.sheet,m,ly+14);
+    doc.setFontSize(12);doc.setTextColor(27,32,36);doc.text(doc.splitTextToSize('Trade partners: scan with your phone camera to see your open punch items here. When an item is fixed, tap Fixed: Add Photo.',tw),m,H-86);
+    doc.setDrawColor(215,219,213);doc.line(m,H-34,W-m,H-34);doc.setFontSize(9);doc.setTextColor(120,128,136);doc.text('Build Camera',m,H-20);doc.text(p.name+' · '+rm.zone,W-m,H-20,{align:'right'})});
+  return doc.output('blob')}
+function roomSignsSheet(){const p=P(M.pid),sets=S.photos.filter(x=>x.kind==='plan'&&x.projectId===M.pid),sel=M.sel;
+  const groups=sets.flatMap(pl=>planList(pl).map(n=>({pl,n,ars:plAreas(pl,n)}))).filter(g=>g.ars.length);const total=groups.reduce((s,g)=>s+g.ars.length,0),k=sel.size;
+  return sheet('Room Signs',`<p class="note" style="margin:0">One 8.5 × 5.5 sign per room with a QR code. Tape it to the door. Trade partners scan it to see that room's punch list and check items off.</p>
+   ${groups.length?`<div class="row"><b style="flex:1">${k} of ${total} rooms</b><button type="button" class="btn sm" data-a="signAll" data-v="1">Select All</button><button type="button" class="btn sm" data-a="signAll" data-v="0">Clear</button></div>
+   ${groups.map(g=>`<div class="card stack" style="gap:6px"><b>${esc(sheetName(g.pl,g.n))}</b>${g.ars.map(a=>`<label class="signck"><input type="checkbox" data-ch="signCk" data-id="${a.id}" ${sel.has(a.id)?'checked':''}> ${esc(a.zone)}</label>`).join('')}</div>`).join('')}
+   <button class="btn pri" data-a="signMake" ${k?'':'disabled'}>${I('report')} Make ${k} Sign${k===1?'':'s'} (PDF)</button>`:`<div class="empty">${I('map')}<b>No rooms yet</b><span>Open a plan sheet, tap Draw Work Zones, then Find Rooms. Each room gets a sign.</span></div>`}`)}
+function loadJsPdf(){if(window.jspdf)return Promise.resolve();return jsPdfP=jsPdfP||new Promise((res,rej)=>{const s=document.createElement('script');s.src='/vend/jspdf/jspdf.umd.min.js';s.onload=res;s.onerror=()=>{jsPdfP=null;rej()};document.head.appendChild(s)})}
 async function imgData(url,max=1400){const img=await imgFromUrl(url);const sc=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));const c=document.createElement('canvas');c.width=Math.round(img.naturalWidth*sc);c.height=Math.round(img.naturalHeight*sc);c.getContext('2d').drawImage(img,0,0,c.width,c.height);return {d:c.toDataURL('image/jpeg',.82),w:c.width,h:c.height}}
 async function buildPdf(p,opt){
   await loadJsPdf(); const {jsPDF}=window.jspdf; const doc=new jsPDF({unit:'pt',format:'letter'});
@@ -3228,8 +3304,8 @@ const ACT={
   feedF:el=>{V.feedF=el.dataset.f;render()},
   taskF:el=>{V.taskF=el.dataset.f;render()},
   ptab:el=>{V.ptab=el.dataset.t;render();const g=el.dataset.go;if(g)setTimeout(()=>goTo(g),60)},
-  openProject:el=>{V.selMode=false;V.sel=new Set();V.pid=el.dataset.id;V.tab='project';V.ptab='photos';V.pf={zone:'',trade:'',tag:'',by:'',tags:[],q:'',album:''};V.pfOpen=false;V.lastProject=V.pid;saveView();render();scrollTo(0,0)},
-  openProjTab:el=>{V.selMode=false;V.sel=new Set();V.pid=el.dataset.id;V.tab='project';V.ptab=el.dataset.t||'photos';V.pf={zone:'',trade:'',tag:'',by:'',tags:[],q:'',album:''};V.pfOpen=false;V.lastProject=V.pid;saveView();render();scrollTo(0,0)},
+  openProject:el=>{V.punchRoom=null;V.selMode=false;V.sel=new Set();V.pid=el.dataset.id;V.tab='project';V.ptab='photos';V.pf={zone:'',trade:'',tag:'',by:'',tags:[],q:'',album:''};V.pfOpen=false;V.lastProject=V.pid;saveView();render();scrollTo(0,0)},
+  openProjTab:el=>{V.punchRoom=null;V.selMode=false;V.sel=new Set();V.pid=el.dataset.id;V.tab='project';V.ptab=el.dataset.t||'photos';V.pf={zone:'',trade:'',tag:'',by:'',tags:[],q:'',album:''};V.pfOpen=false;V.lastProject=V.pid;saveView();render();scrollTo(0,0)},
   newProject:()=>openModal({kind:'newProject'}),
   capture:el=>{if(M&&M.kind==='cam')return;if(Date.now()-(CAM.tapAt||0)<1200)return;CAM.tapAt=Date.now();afterShot=null;openModal({kind:'capture',pid:el.dataset.pid||(V.tab==='project'?V.pid:'')});if(visProjects().some(p=>p.status!=='Done')){if(CAM.ok&&!bestQ())openCam();else $('#in-photo').click()}},
   pickLib:el=>{afterShot=null;M={kind:'capture',pid:el.dataset.pid,ctx:ctxFor(el.dataset.pid),hidden:true};$('#in-lib').click()},
@@ -3248,11 +3324,11 @@ const ACT={
   ckF:el=>{V.ckF=el.dataset.f;render()},
   daySel:el=>{const d=el.dataset.d,ids=allPhotos().filter(x=>x.projectId===V.pid&&x.kind!=='doc'&&!x.pending&&dayKey(x.takenAt)===d).map(x=>x.id);const all=V.selMode&&ids.every(i=>V.sel.has(i));if(!V.selMode){V.selMode=true;V.sel=new Set()}ids.forEach(i=>all?V.sel.delete(i):V.sel.add(i));render()},
   close:()=>{const m=M;closeModal();if(m&&m.back&&m.back.kind==='plan'&&m.kind!=='plan'){openModal(m.back);return}if(m&&m.kind==='photo'&&m.back&&m.back.kind==='cam')goJob(m.back.cap.pid)},
-  phTag:el=>{const p=PH(el.dataset.id),t=el.dataset.t;if(!p||p.pending)return;if(t==='Portfolio'){const on=!p.portfolio;upd('photos',p.id,{portfolio:on,tags:on?[...new Set([...(p.tags||[]),'Portfolio'])]:(p.tags||[]).filter(x=>x!=='Portfolio')});el.setAttribute('aria-pressed',on);return}const tags=(p.tags||[]).includes(t)?(p.tags||[]).filter(x=>x!==t):[...(p.tags||[]),t];upd('photos',p.id,{tags});el.setAttribute('aria-pressed',tags.includes(t))},
+  phTag:el=>{const p=PH(el.dataset.id),t=el.dataset.t;if(!p)return;if(t==='Portfolio'){const on=!p.portfolio;upd('photos',p.id,{portfolio:on,tags:on?[...new Set([...(p.tags||[]),'Portfolio'])]:(p.tags||[]).filter(x=>x!=='Portfolio')});el.setAttribute('aria-pressed',on);return}const tags=(p.tags||[]).includes(t)?(p.tags||[]).filter(x=>x!==t):[...(p.tags||[]),t];upd('photos',p.id,{tags});el.setAttribute('aria-pressed',tags.includes(t))},
   mention:el=>{const i=$('#cm-text');i.value=(i.value&&!i.value.endsWith(' ')?i.value+' ':i.value)+'@'+el.dataset.n+' ';i.focus()},
   delPhoto:el=>{
     const p=PH(el.dataset.id);closeModal();if(p.pending){delete PEND[p.id];qDrop(p.id);scheduleRender();return}photosUndoable([p.id],'Photo deleted')},
-  markup:el=>{const p=PH(el.dataset.id);if(p.pending){toast('Wait for the upload to finish, then mark it up.');return}openModal({kind:'markup',id:p.id,back:M&&M.back})},
+  markup:el=>{const p=PH(el.dataset.id);if(!p)return;openModal({kind:'markup',id:p.id,back:M&&M.back})},
   capPhoto:el=>{const back=M;openModal({kind:'photo',id:el.dataset.id,back})},
   backCam:()=>{const b=M&&M.back;if(b){M=b;renderModal()}else closeModal()},
   camShutter:()=>{if(Date.now()-(CAM.downAt||0)<900)return;if(CAM.mode==='video'){CAM.rec?recStop():recStart();return}camShoot()},
@@ -3290,7 +3366,7 @@ const ACT={
     if(MK.editOf&&PH(MK.editOf)){const cp=PH(MK.editOf);try{if(AS){const th=await makeThumb(MK.c);const up=await upMedia(blob,th);const old={assetId:cp.assetId,thumbId:cp.thumbId};await upd('photos',cp.id,{...up,thumb:th&&up.thumbId?URL.createObjectURL(th):up.url,mk});if(old.assetId&&old.assetId!==up.assetId)delAsset(old)}else await upd('photos',cp.id,{url:URL.createObjectURL(blob),mk});openModal({kind:'photo',id:cp.id,back:M&&M.back});toast('Markup updated. The original is kept.')}catch(e){el.disabled=false;el.textContent='Save';toast('Couldn\'t save. Check your signal and try again.')}return}
     if(p.markupOf&&PH(p.markupOf))p=PH(p.markupOf);
     const doc=clean({projectId:p.projectId,kind:'photo',takenAt:p.takenAt,createdAt:Date.now(),lat:p.lat,lng:p.lng,gpsSource:p.gpsSource,code:p.code,tags:p.tags||[],zone:p.zone,trade:p.trade,note:p.note,by:ME.id,byName:ME.name,markupOf:p.id,contentType:'image/jpeg',mk});
-    try{if(AS){const up=await upMedia(blob,await makeThumb(MK.c));await put('photos',{...doc,id,...up})}else await put('photos',{...doc,id,url:URL.createObjectURL(blob),localOnly:true});const bk=M&&M.back;if(bk&&bk.shot)bk.shot=bk.shot.map(x=>x===p.id?id:x);openModal({kind:'photo',id,back:bk});haptic('ok');toast('Saved a marked-up copy. The original is kept.')}
+    try{if(AS){/* save on the phone right away and upload in the background, so there's no wait (and it works with no signal) */const th=await makeThumb(MK.c);PEND[id]={...doc,id,url:URL.createObjectURL(blob),...(th?{thumb:URL.createObjectURL(th)}:{}),pending:true};await qSave({id,blob,thumb:th,doc});setTimeout(qRun,50)}else await put('photos',{...doc,id,url:URL.createObjectURL(blob),localOnly:true});const bk=M&&M.back;if(bk&&bk.shot)bk.shot=bk.shot.map(x=>x===p.id?id:x);openModal({kind:'photo',id,back:bk});haptic('ok');toast('Saved a marked-up copy. The original is kept.')}
     catch(e){el.disabled=false;el.textContent='Save Copy';toast('Couldn\'t save. Check your signal and try again.')}},
   takeAfter:el=>{const b=PH(el.dataset.id);afterShot=null;openModal({kind:'capture',pid:b.projectId,lockProject:true,single:true,title:'After Photo',why:'Stand where the before photo was taken and match the angle. The two will pair up for a side-by-side.',beforeOf:b.id,ctx:{tags:['After'],zone:b.zone||'',trade:b.trade||'',note:''}})},
   compare:el=>openModal({kind:'compare',a:el.dataset.a2,b:el.dataset.b2}),
@@ -3308,6 +3384,12 @@ const ACT={
   punchStart:el=>{const pid=el.dataset.pid;const sets=S.photos.filter(x=>x.kind==='plan'&&x.projectId===pid);if(!sets.length){ACT.punchShot(el);return}openModal({kind:'punchPick',pid});setTimeout(planThumbs,0)},
   punchOnSheet:el=>{PLV.key=null;PLV.placed=false;openModal({kind:'plan',id:el.dataset.id,n:+el.dataset.n||1,mode:'pin'})},
   sheetRen:el=>{const bk=M&&M.kind==='punchPick'?{...M}:null;openModal({kind:'sheetRen',id:el.dataset.id,n:+el.dataset.n,back:bk});setTimeout(()=>{const i=$('#sr-name');if(i){i.focus();i.select()}},60)},
+  punchRoomAll:()=>{V.punchRoom=null;render()},
+  signsOpen:el=>{const pid=el.dataset.pid;const ids=S.photos.filter(x=>x.kind==='plan'&&x.projectId===pid).flatMap(pl=>planList(pl).flatMap(n=>plAreas(pl,n).map(a=>a.id)));openModal({kind:'roomSigns',pid,sel:new Set(ids),back:M&&M.kind==='plan'?{...M}:null})},
+  signAll:el=>{const on=el.dataset.v==='1';if(on){S.photos.filter(x=>x.kind==='plan'&&x.projectId===M.pid).forEach(pl=>planList(pl).forEach(n=>plAreas(pl,n).forEach(a=>M.sel.add(a.id))))}else M.sel.clear();renderModal()},
+  signMake:async el=>{if(!DL){toast('Downloads aren\'t available in this view.');return}const p=P(M.pid);const rooms=[];S.photos.filter(x=>x.kind==='plan'&&x.projectId===M.pid).forEach(pl=>planList(pl).forEach(n=>plAreas(pl,n).forEach(a=>{if(M.sel.has(a.id))rooms.push({zone:a.zone,sheet:sheetName(pl,n)})})));
+    const seen=new Set(),list=rooms.filter(r=>{const k=r.zone.toLowerCase();if(seen.has(k))return false;seen.add(k);return true});
+    el.disabled=true;el.textContent='Making signs…';try{const blob=await roomSignsPdf(p,list);await DL.save({filename:`${p.name.replace(/[^\w]+/g,'-')}-Room-Signs.pdf`,data:blob});toast(`${list.length} room sign${list.length===1?'':'s'} saved`)}catch(e){toast(e&&e.code==='declined'?'Download cancelled':'Couldn\'t make the signs. Check your signal and try again.')}el.disabled=false;renderModal()},
   capSkip:()=>{const t=M.skipTask,back=M.back;afterShot=null;openModal({kind:'task',task:{...t},back})},
   pickThis:el=>{const cb=afterShot;afterShot=null;closeModal();cb&&cb(el.dataset.id)},
   pickNew:()=>{const pid=M.pid,why='Photo for checklist item: '+(M.ckTitle||'');const keep=afterShot;openModal({kind:'capture',pid,lockProject:true,single:true,title:'Checklist Photo',why,ctx:{tags:['Inspection'],zone:'',trade:'',note:M.ckTitle||''}});afterShot=keep},
@@ -3379,7 +3461,7 @@ const ACT={
   jobDelOpen:el=>openModal({kind:'delJob',id:el.dataset.id}),
   jobArchive:el=>{const p=P(el.dataset.id);if(!p)return;upd('projects',p.id,{status:el.dataset.v});if(M)closeModal();toast(el.dataset.v==='Done'?p.name+' archived':p.name+' is active again')},
   pinMode:()=>{if(!M||M.kind!=='photo')return;M.pinMode=!M.pinMode;renderModal()},
-  pinAdd:(el,e)=>{if(e.target.closest('.pin'))return;const p=PH(el.dataset.id);if(!p||p.pending){toast('Wait for the photo to finish uploading.');return}const img=el.querySelector('img'),r=img.getBoundingClientRect();const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;if(x<0||x>1||y<0||y>1)return;
+  pinAdd:(el,e)=>{if(e.target.closest('.pin'))return;const p=PH(el.dataset.id);if(!p){return}const img=el.querySelector('img'),r=img.getBoundingClientRect();const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;if(x<0||x>1||y<0||y>1)return;
     const q={id:uid(),x:+x.toFixed(4),y:+y.toFixed(4),tag:'',note:''};M.pinSel=q.id;M.pinMode=false;const q2=[...(p.pins||[]),q];upd('photos',p.id,{pins:q2});renderModal();setTimeout(()=>{const r2=$('#pinrow-'+q.id);if(r2){r2.scrollIntoView({block:'center'});$('#pn-note-'+q.id)?.focus()}},60)},
   pinSel:el=>{M.pinSel=el.dataset.pin;renderModal();setTimeout(()=>$('#pinrow-'+el.dataset.pin)?.scrollIntoView({block:'center'}),40)},
   pinDel:el=>{const p=PH(el.dataset.id);if(!p)return;if(!el.classList.contains('armed')){el.classList.add('armed');el.style.color='var(--bad)';toast('Tap the trash again to remove this pin');setTimeout(()=>{el.classList.remove('armed');el.style.color=''},3000);return}upd('photos',p.id,{pins:(p.pins||[]).filter(q=>q.id!==el.dataset.pin)});renderModal()},
@@ -3400,7 +3482,7 @@ const ACT={
   qNow:()=>{qRun().then(()=>{render()});toast('Uploading…')},
   qDel:el=>{if(!el.classList.contains('armed')){el.classList.add('armed');el.style.color='var(--bad)';toast('Tap the trash again to delete this photo for good. It has not been uploaded.',3200);setTimeout(()=>{el.classList.remove('armed');el.style.color=''},3000);return}const id=el.dataset.id;delete PEND[id];qDrop(id).then(()=>render())},
   dashWk:el=>{V.dashWk=+el.dataset.w;render()},
-  phTagRm:el=>{const p=PH(el.dataset.id);if(!p||p.pending)return;const tags=[...new Set([...(p.tags||[]),...(p.portfolio?['Portfolio']:[])])];tags.splice(+el.dataset.i,1);setPhotoTags(p,tags)},
+  phTagRm:el=>{const p=PH(el.dataset.id);if(!p)return;const tags=[...new Set([...(p.tags||[]),...(p.portfolio?['Portfolio']:[])])];tags.splice(+el.dataset.i,1);setPhotoTags(p,tags)},
   mkRemove:el=>{if(!el.classList.contains('armed')){el.classList.add('armed');el.style.color='var(--bad)';el.innerHTML=I('trash')+' Tap Again to Remove Markup';setTimeout(()=>{if(!el.isConnected)return;el.classList.remove('armed');el.style.color='';el.innerHTML=I('trash')+' Remove Markup'},3000);return}
     const p=PH(el.dataset.id);if(!p||!p.markupOf)return;const orig=p.markupOf;del('photos',p.id);if(AS&&p.assetId&&!allPhotos().some(x=>x.assetId===p.assetId&&x.id!==p.id))delAsset(p);if(PH(orig))openModal({kind:'photo',id:orig,back:M&&M.back});else closeModal();toast('Markup removed. The photo is kept.')},
   punchF:el=>{V.punchF=el.dataset.f;render()},
@@ -3506,8 +3588,9 @@ document.addEventListener('change',async e=>{const el=e.target,k=el.dataset.ch;i
   else if(k==='capF'){M.ctx[el.dataset.k]=el.value}
   else if(k==='capTagSel'){M.ctx.tags=el.value?[el.value]:[]}
   else if(k==='camTagSel'){if(M&&M.cap){M.cap.ctx.tags=el.value?[el.value]:[];setLastZT(M.cap.pid,M.cap.ctx.zone,M.cap.ctx.trade,el.value)}}
-  else if(k==='phPriv'){const p=PH(el.dataset.id);if(p&&!p.pending&&p.by===ME.id){upd('photos',p.id,{private:el.checked});toast(el.checked?'Private. Only you can see this photo.':'Your team can see this photo again.');setTimeout(renderModal,30)}}
-  else if(k==='phF'){const p=PH(el.dataset.id);if(p&&!p.pending)upd('photos',p.id,{[el.dataset.k]:el.value})}
+  else if(k==='phPriv'){const p=PH(el.dataset.id);if(p&&p.by===ME.id){upd('photos',p.id,{private:el.checked});toast(el.checked?'Private. Only you can see this photo.':'Your team can see this photo again.');setTimeout(renderModal,30)}}
+  else if(k==='signCk'){if(el.checked)M.sel.add(el.dataset.id);else M.sel.delete(el.dataset.id);renderModal();return}
+  else if(k==='phF'){const p=PH(el.dataset.id);if(p)upd('photos',p.id,{[el.dataset.k]:el.value})}
   else if(k==='phMove'){upd('photos',el.dataset.id,{projectId:el.value});toast('Moved to '+(P(el.value)?.name||''))}
   else if(k==='taskDone'){const t=S.tasks.find(x=>x.id===el.dataset.id);if(t.type==='punch'&&el.checked&&!t.fixPhotoId){el.checked=false;toast('Add a Fixed photo to close a punch item.',3200);return}upd('tasks',t.id,{done:el.checked,doneAt:el.checked?Date.now():null})}
   else if(k==='ckItem'){const c=S.checklists.find(x=>x.id===el.dataset.id),i=+el.dataset.i,it=c.items[i];if(el.checked&&it.needPhoto&&!it.photoId){el.checked=false;toast('This item needs a photo before it can be checked off.',3200);return}upd('checklists',c.id,{items:c.items.map((x,j)=>j===i?{...x,done:el.checked,doneAt:el.checked?Date.now():null}:x)})}
@@ -3538,7 +3621,7 @@ document.addEventListener('change',async e=>{const el=e.target,k=el.dataset.ch;i
     if(!nw){el.value=old;toast('A tag needs a name. Use the trash to remove it.');return}
     if(nw!==old&&l.some((t,j)=>j!==i&&t.toLowerCase()===nw.toLowerCase())){el.value=old;toast('"'+nw+'" is already on the list.');return}
     if(nw===old)return;l[i]=nw;saveTags(l);const ps=S.photos.filter(p=>(p.tags||[]).includes(old));ps.forEach(p=>upd('photos',p.id,{tags:p.tags.map(t=>t===old?nw:t)}));toast(`Renamed to "${nw}"${ps.length?` on ${ps.length} photo${ps.length===1?'':'s'}`:''}`)}
-  else if(k==='phTagSel'){const p=PH(el.dataset.id);if(!p||p.pending)return;const i=+el.dataset.i,v=el.value;let tags=[...new Set([...(p.tags||[]),...(p.portfolio?['Portfolio']:[])])];
+  else if(k==='phTagSel'){const p=PH(el.dataset.id);if(!p)return;const i=+el.dataset.i,v=el.value;let tags=[...new Set([...(p.tags||[]),...(p.portfolio?['Portfolio']:[])])];
     if(i<0){if(!v)return;if(!tags.includes(v))tags.push(v)}else{if(!v)tags.splice(i,1);else if(tags.includes(v)&&tags[i]!==v)tags.splice(i,1);else tags[i]=v}
     setPhotoTags(p,tags)}
   else if(k==='pinF'){const p=PH(el.dataset.id);if(p)updPin(p,el.dataset.pin,{[el.dataset.k]:el.value.trim()})}
@@ -3725,8 +3808,8 @@ function hookCard(){if(!window.BC)return '';const h=S.settings.find(x=>x.id==='h
   return `<div class="card stack" id="st-hook"><h2>Connect to Other Apps</h2><p class="note" style="margin:0">Send each new photo, task and share link to another app, like Google Drive or Jobber, through Zapier. In Zapier, make a Zap that starts with <b>Webhooks by Zapier → Catch Hook</b>, copy its URL, and paste it here.</p>
    <label class="f">Webhook URL<input type="url" id="hk-url" value="${esc(h.url||'')}" data-ch="hookUrl" placeholder="https://hooks.zapier.com/hooks/catch/…" autocomplete="off" inputmode="url"></label>
    <div class="row"><button class="btn sm" data-a="hkTest" ${h.url?'':'disabled'}>Send a Test</button>${h.url?'<span class="pill good">Connected</span>':''}</div></div>`}
-let DEEP=(()=>{try{const q=new URLSearchParams(location.search);if(q.get('billing')){try{sessionStorage.setItem('bc-billing',q.get('billing'))}catch(_){}history.replaceState(null,'',location.pathname);return{billing:1}}const v=q.get('photo');let j=q.get('job');try{j=j||sessionStorage.getItem('bc-open-job')}catch(_){}return v?{photo:v}:q.get('alerts')?{alerts:1}:j?{job:j}:null}catch(e){return null}})();
-function deepLink(){if(!DEEP)return;if(DEEP.billing){DEEP=null;V.tab='settings';setTimeout(render,0);return}if(DEEP.job){if(!P(DEEP.job))return;const j=DEEP.job;DEEP=null;try{sessionStorage.removeItem('bc-open-job')}catch(_){}history.replaceState(null,'',location.pathname);V.tab='project';V.pid=j;V.ptab='photos';setTimeout(render,0);return}if(DEEP.alerts){DEEP=null;V.tab='alerts';history.replaceState(null,'',location.pathname);return}const p=PH(DEEP.photo);if(!p)return;DEEP=null;history.replaceState(null,'',location.pathname);V.tab='project';V.pid=p.projectId;V.ptab='photos';setTimeout(()=>openModal({kind:'photo',id:p.id}),0)}
+let DEEP=(()=>{try{const q=new URLSearchParams(location.search);if(q.get('billing')){try{sessionStorage.setItem('bc-billing',q.get('billing'))}catch(_){}history.replaceState(null,'',location.pathname);return{billing:1}}const v=q.get('photo');let j=q.get('job'),rm=q.get('room');try{if(j&&rm){sessionStorage.setItem('bc-open-job',j);sessionStorage.setItem('bc-open-room',rm)}j=j||sessionStorage.getItem('bc-open-job');rm=rm||sessionStorage.getItem('bc-open-room')}catch(_){}return v?{photo:v}:q.get('alerts')?{alerts:1}:j?{job:j,room:rm||''}:null}catch(e){return null}})();
+function deepLink(){if(!DEEP)return;if(DEEP.billing){DEEP=null;V.tab='settings';setTimeout(render,0);return}if(DEEP.job){if(!P(DEEP.job))return;const j=DEEP.job,rm=DEEP.room;DEEP=null;try{sessionStorage.removeItem('bc-open-job');sessionStorage.removeItem('bc-open-room')}catch(_){}history.replaceState(null,'',location.pathname);V.tab='project';V.pid=j;V.ptab=rm?'punch':'photos';if(rm){V.punchRoom=rm;V.punchF='open'}setTimeout(render,0);return}if(DEEP.alerts){DEEP=null;V.tab='alerts';history.replaceState(null,'',location.pathname);return}const p=PH(DEEP.photo);if(!p)return;DEEP=null;history.replaceState(null,'',location.pathname);V.tab='project';V.pid=p.projectId;V.ptab='photos';setTimeout(()=>openModal({kind:'photo',id:p.id}),0)}
 function projAlbums(p){if(!p)return [];return [...new Set([...(p.albums||[]),...allPhotos().filter(x=>x.projectId===p.id).flatMap(x=>x.albums||[])])].sort()}
 function pinsCard(p){const pins=p.pins||[];if(!pins.length&&!M.pinMode)return '';
   return `<div class="card" id="pincard"><span class="pvsec">${I('pin2')} Pins<span class="sp"></span><button type="button" class="linkb" data-a="pinMode">${M.pinMode?'Done adding':'Add a pin'}</button></span>${pins.map((q,i)=>{const t=q.taskId&&S.tasks.find(x=>x.id===q.taskId);return `<div class="pinrow" id="pinrow-${q.id}"><span class="num">${i+1}</span><div class="flds">

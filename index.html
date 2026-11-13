@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="42f24706bf">
+<meta name="bc-ver" content="aa78f78d73">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-Un89G+9pTWPk9NkkOksDxW9+EBi/JshVBZmw11RKUcw=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-CQfBhb9S6ZK/KorfdXHplzdmwaA6QvTuNpDuBvJ2zWA=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -1849,7 +1849,13 @@ document.addEventListener('pointerdown',e=>{if(M&&M.kind==='plan')plDown(e)});
 document.addEventListener('pointermove',e=>{if(M&&M.kind==='plan')plMove(e)});
 document.addEventListener('pointerup',plUp);document.addEventListener('pointercancel',plUp);
 document.addEventListener('wheel',e=>{if(!M||M.kind!=='plan'||!e.target.closest||!e.target.closest('#plw'))return;e.preventDefault();plZoomAt(PLV.z*Math.exp(-e.deltaY*(e.ctrlKey?.01:.0018)),e.clientX,e.clientY)},{passive:false});
-document.addEventListener('dblclick',e=>{if(!M||M.kind!=='plan'||!e.target.closest||!e.target.closest('#plw')||e.target.closest('.plpin'))return;plZoomAt(PLV.z>2.5?1:PLV.z*2.5,e.clientX,e.clientY)});
+/* double-click a room's border: add a corner there to drag */
+function plBorderAt(cx,cy){const pl=S.photos.find(x=>x.id===M.id);if(!pl)return null;const p=plPoint(cx,cy),sx=PLV.W*PLV.z,sy=PLV.H*PLV.z;let best=null;
+  for(const a of plAreas(pl,M.n||1)){const P=a.pts,n=P.length;for(let i=0;i<n;i++){const A=P[i],B=P[(i+1)%n],ax=A[0]*sx,ay=A[1]*sy,bx=B[0]*sx,by=B[1]*sy,px=p.x*sx,py=p.y*sy,dx=bx-ax,dy=by-ay,L=dx*dx+dy*dy||1,t=Math.max(0,Math.min(1,((px-ax)*dx+(py-ay)*dy)/L)),d=Math.hypot(ax+dx*t-px,ay+dy*t-py);
+    if(d<=12&&(!best||(a.id===M.zSel&&best.a.id!==M.zSel)||d<best.d))best={a,i,t,d,q:[+(A[0]+(B[0]-A[0])*t).toFixed(4),+(A[1]+(B[1]-A[1])*t).toFixed(4)]}}}return best}
+document.addEventListener('dblclick',async e=>{if(!M||M.kind!=='plan'||!e.target.closest||!e.target.closest('#plw')||e.target.closest('.plpin'))return;
+  if(canPlans()&&(M.zDraw||[]).length<=2){const h=plBorderAt(e.clientX,e.clientY);if(h&&h.t>0.02&&h.t<0.98){const pl=S.photos.find(x=>x.id===M.id),n=M.n||1;const pts=h.a.pts.map(p=>[...p]);pts.splice(h.i+1,0,h.q);M.mode='zone';M.zDraw=null;M.zPick=false;M.zList=false;M.zSel=h.a.id;M.zNode=h.i+1;await planAreasPut(pl,n,plAreas(pl,n).map(a=>a.id===h.a.id?{...a,pts,auto:false}:a));planBar();planPins();toast('Corner added. Drag it to shape the room.');return}}
+  plZoomAt(PLV.z>2.5?1:PLV.z*2.5,e.clientX,e.clientY)});
 addEventListener('resize',()=>{if(M&&M.kind==='plan'){PLV.placed=false;planInit()}});
 document.addEventListener('click',e=>{if(PLG.moved&&e.target.closest&&e.target.closest('#plw')){PLG.moved=false;e.stopPropagation();e.preventDefault()}},true);
 document.addEventListener('change',e=>{const k=e.target&&e.target.dataset&&e.target.dataset.ch;if(!k)return;

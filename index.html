@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="3eaf7b393b">
+<meta name="bc-ver" content="27eb9a1999">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-N1kz7Be8D5/zBTNn57DYQVC9ungE0pVj+EF0q83J+Ug=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-XWSv459fwVLI29CZEl3SHy42uCr43YxQKTPC+F8zNk0=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -1587,7 +1587,7 @@ function zrInputs(room,zone){return `<label class="f">Room Name<input type="text
 const zrVal=()=>{const r=$('#plzroom'),z=$('#plzname');return {room:titleCase((r&&r.value||'').trim()).slice(0,60),zone:titleCase((z&&z.value||'').trim()).slice(0,60)}};
 const ROOM_NAMES=['Classroom','Corridor','Restroom','Boys Restroom','Girls Restroom','Janitor Closet','Storage','Closet','Mechanical','Electrical','Office','Work Room','Stair','Elevator','Vestibule','Lobby','Gym','Cafeteria','Kitchen','Library','Lab','Conference Room','Nurse','Locker Room','Data Room'];
 function projRooms(pid){const r=new Set();S.photos.filter(x=>x.kind==='plan'&&x.projectId===pid).forEach(pl=>planList(pl).forEach(n=>plAreas(pl,n).forEach(a=>{if(aRoom(a))r.add(aRoom(a))})));return [...r].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}))}
-function zSplit(z){const m=String(z||'').match(/^(.*?)\s*\b([A-Z]{0,2}-?\d{2,4}[A-Z]?(?:-\d{1,2})?)$/i);if(!m)return{name:String(z||''),num:''};const nm=m[1].trim();return{name:/^(room|rm\.?|area)$/i.test(nm)?'':nm,num:m[2].toUpperCase()}}
+function zSplit(z){const m=String(z||'').match(/^(.*?)\s*\b([A-Z]{0,3}-?\d{1,4}[A-Z]?(?:-\d{1,3})?)$/i);if(!m)return{name:String(z||''),num:''};const nm=m[1].trim();return{name:/^(room|rm\.?|area)$/i.test(nm)?'':nm,num:m[2].toUpperCase()}}
 document.addEventListener('focusin',e=>{const id=e.target&&e.target.dataset&&e.target.dataset.zid;if(!id)return;document.querySelectorAll('.plareas polygon').forEach(p=>p.classList.toggle('sel',p.dataset.id===id))});
 function planBar(){const b=$('#plbar'),h=$('#plhint');if(b){b.innerHTML=plToolsHtml();b.classList.toggle('z',M&&M.mode==='zone')}if(h)h.textContent=planHint();planPins()}
 /* Find Rooms: read the sheet's walls, close doorways, and outline every room that has a room number printed in it.
@@ -1603,14 +1603,14 @@ async function planFindRooms(pl,n,strength,dark){
     const rc=vp.convertToViewportRectangle([tr[4]-h*.15,tr[5]-h*.3,tr[4]+w+h*.15,tr[5]+h*1.05]);const xa=Math.max(0,Math.floor(Math.min(rc[0],rc[2]))-2),xb=Math.min(W-1,Math.ceil(Math.max(rc[0],rc[2]))+2),ya=Math.max(0,Math.floor(Math.min(rc[1],rc[3]))-2),yb=Math.min(H-1,Math.ceil(Math.max(rc[1],rc[3]))+2);
     if((xb-xa)*(yb-ya)>N*0.01)continue;for(let yy=ya;yy<=yb;yy++)wall.fill(0,yy*W+xa,yy*W+xb+1);if(s.length<=40)words.push({s,x:(xa+xb)>>1,y:(ya+yb)>>1})}
   dashStrip(wall,W,H);
-  const NUM=/^(?:(?:RM|ROOM)\.?\s*)?([A-Z]{0,2}-?\d{2,4}[A-Z]?(?:-\d{1,2})?)$/i,TAILN=/^([A-Za-z][A-Za-z .&/-]{2,30}?)\s+(?:RM\.?\s*|ROOM\s*)?([A-Z]{0,2}-?\d{2,4}[A-Z]?(?:-\d{1,2})?)$/i;
+  const NUM=/^(?:(?:RM|ROOM)\.?\s*)?([A-Z]{0,3}-?\d{1,4}[A-Z]?(?:-\d{1,3})?)$/i,TAILN=/^([A-Za-z][A-Za-z .&/-]{2,30}?)\s+(?:RM\.?\s*|ROOM\s*)?([A-Z]{0,3}-?\d{1,4}[A-Z]?(?:-\d{1,3})?)$/i;
   const NAMEOK=s=>/^[A-Za-z][A-Za-z .&/'-]{2,29}$/.test(s)&&!/^(EX|SIM|TYP|NIC|EQ|ROOM NAME|SCALE|NORTH|PLAN|LEVEL)\b/i.test(s);
   const labels=[];for(const w of words){let m=w.s.match(NUM);if(m){if((m[1].match(/\d/g)||[]).length>=3)labels.push({num:m[1].toUpperCase(),x:w.x,y:w.y});continue}m=w.s.match(TAILN);if(m&&(m[2].match(/\d/g)||[]).length>=3)labels.push({num:m[2].toUpperCase(),name:m[1].trim(),x:w.x,y:w.y})}
   /* rooms with no number printed (closets, storage, stairs, restrooms): use the room word itself */
   const RW=/^(CLOSET|STOR(AGE|\.)?|JAN(ITOR|\.)?( CLOSET| CLO\.?)?|CUSTODIAL|MECH(ANICAL|\.)?( ROOM| RM\.?)?|ELEC(TRICAL|\.)?( ROOM| RM\.?| CLOSET)?|IDF|MDF|DATA( ROOM)?|TEL(ECOM|E)?( ROOM)?|RESTROOMS?|TOILET|WOMEN'?S?|MEN'?S?|BOYS|GIRLS|UNISEX|FAMILY|STAIRS?( \w+)?|ELEV(ATOR|\.)?|VEST(IBULE|\.)?|LOBBY|CORRIDOR|HALL(WAY)?|OFFICE|CONF(ERENCE|\.)?( ROOM)?|BREAK( ROOM)?|KITCHEN|LOUNGE|SHOWERS?|LOCKERS?( ROOM)?|MACHINE( ROOM)?|RISER|SUPPLY|LAB|GYM|CAFETERIA|LIBRARY|NURSE|RECEPTION|WAITING|ENTRY|FOYER|COPY|MAIL|PANTRY|SERVER|PUMP( ROOM)?|SPRINKLER( ROOM)?|FIRE RISER|AUDITORIUM|STAGE|CLASSROOM|[A-Z]+ ?ROOM)$/i;
   for(const w of words){if(!RW.test(w.s))continue;if(labels.some(l=>Math.abs(l.x-w.x)<90&&Math.abs(l.y-w.y)<45))continue;labels.push({num:'',name:w.s,x:w.x,y:w.y,key:'n'+w.x+'_'+w.y})}
   const r0=Math.max(2,Math.round(Math.max(W,H)*0.0072*(strength||1)));const out=[];
-  const seen=new Set();const rooms=[],pend=[];
+  const seen=new Set();const rooms=[],pend=[];const taken=()=>rooms.map(rm=>{const xs=rm.poly.map(p=>p[0]),ys=rm.poly.map(p=>p[1]);return [Math.min(...xs)+2,Math.min(...ys)+2,Math.max(...xs)-2,Math.max(...ys)-2]});
   /* try thick walls first (closes wide doors), then thinner for small rooms */
   /* thick walls first (closes wide doors), then thinner for small rooms, then extra thick for corridors whose ends open through wide double doors */
   const RS=[r0,Math.round(r0*0.6),Math.max(2,Math.round(r0*0.35)),Math.round(r0*1.8),Math.round(r0*2.6)];for(let ri=0;ri<RS.length;ri++){const r=RS[ri],last=ri>=2;
@@ -1622,7 +1622,7 @@ async function planFindRooms(pl,n,strength,dark){
       for(const [L,lsAll] of byC){const k=comps[L];if(!ok(k))continue;const numd=lsAll.filter(l=>l.num);
         if(!numd.length){if(ri>=3&&/CORR|HALL/i.test(lsAll[0].name))continue;if(lsAll.length>1&&!last&&new Set(lsAll.map(l=>l.name.toUpperCase())).size>1)continue;const nl=lsAll[0];
           /* a closet word sitting in a big open space means the closet door didn't close yet: wait for thinner walls */
-          if(SMALLW.test(nl.name)&&k.cnt>N*0.012)continue;const poly=rectiOutline((x,y)=>lab[y*W+x]===L,W,H,k,r);if(!poly)continue;lsAll.forEach(l=>l.done=true);rooms.push({poly,zone:roomName(nl.name),ri});continue}
+          if(SMALLW.test(nl.name)&&k.cnt>N*0.012)continue;const poly=cutToLabel(rectiOutline((x,y)=>lab[y*W+x]===L,W,H,k,r),(x,y)=>lab[y*W+x]===L,k,nl,W,H,taken(),nl.name);if(!poly)continue;lsAll.forEach(l=>l.done=true);rooms.push({poly,zone:roomName(nl.name),ri});continue}
         const words0=lsAll.filter(l=>!l.num);let ls=numd;const nums=new Set(ls.map(l=>l.num));
         /* two room numbers in one space: wait for thinner walls to split them; on the last try give it to the number nearest the middle */
         if(nums.size>1&&!last){if(!pend.some(p=>p.ls.some(l=>ls.includes(l)))){const bw=k.x1-k.x0+1,bh=k.y1-k.y0+1,m=new Uint8Array(bw*bh);for(let y=k.y0;y<=k.y1;y++)for(let x=k.x0;x<=k.x1;x++)if(lab[y*W+x]===L)m[(y-k.y0)*bw+x-k.x0]=1;pend.push({k,r,m,bw,ls:[...ls]})}continue}
@@ -1631,7 +1631,7 @@ async function planFindRooms(pl,n,strength,dark){
         const inRoom=words.filter(w=>w.x>=k.x0-r&&w.x<=k.x1+r&&w.y>=k.y0-r&&w.y<=k.y1+r&&lab[Math.min(H-1,Math.max(0,w.y))*W+Math.min(W-1,Math.max(0,w.x))]!==-1);
         const nl=ls[0];let name=nl.name||'';if(!name){const cand=inRoom.filter(w=>NAMEOK(w.s)&&Math.abs(w.x-nl.x)<(k.x1-k.x0)&&Math.abs(w.y-nl.y)<(k.y1-k.y0));cand.sort((a,b)=>(Math.abs(a.x-nl.x)+Math.abs(a.y-nl.y)+(a.y>nl.y?60:0))-(Math.abs(b.x-nl.x)+Math.abs(b.y-nl.y)+(b.y>nl.y?60:0)));name=cand.length?cand[0].s:''}
         if((nl.num.match(/\d/g)||[]).length<3)continue; /* short codes like B11 are grid or column marks, not rooms */
-        const poly=rectiOutline((x,y)=>lab[y*W+x]===L,W,H,k,r);if(!poly)continue;ls.forEach(l=>l.done=true);if(nums.size===1)words0.forEach(l=>l.done=true);seen.add(nl.num);
+        const poly=cutToLabel(rectiOutline((x,y)=>lab[y*W+x]===L,W,H,k,r),(x,y)=>lab[y*W+x]===L,k,nl,W,H,taken(),name);if(!poly)continue;ls.forEach(l=>l.done=true);if(nums.size===1)words0.forEach(l=>l.done=true);seen.add(nl.num);
         rooms.push({poly,zone:(name?roomName(name)+' '+nl.num:'Room '+nl.num),ri})}}
     else{/* no printed room numbers (a scanned sheet): keep every closed space of room size */
       let i=0;for(let L=1;L<comps.length;L++){const k=comps[L];if(!ok(k)||k.cnt<N*0.0006||k.cnt/((k.x1-k.x0+1)*(k.y1-k.y0+1))<0.35)continue;const poly=rectiOutline((x,y)=>lab[y*W+x]===L,W,H,k,r);if(poly)rooms.push({poly,zone:'Area '+(++i)})}break}}
@@ -1697,6 +1697,25 @@ function findCorridors(rooms,wall,W,H,r0,labels){const box=p=>{const xs=p.map(q=
       const inL=labels.filter(l=>l.x>=bx.x0&&l.x<=bx.x1&&l.y>=bx.y0&&l.y<=bx.y1);const nm=inL.find(l=>l.name&&/CORR|HALL/i.test(l.name)),nu=inL.find(l=>l.num&&!l.done);inL.forEach(l=>l.done=true);
       out.push({poly:pts,zone:(nm?roomName(nm.name):'Corridor')+(nu?' '+nu.num:''),ri:7});B.push(bx)}}
   return out}
+/* one room name = one room. If the shape found for a label wraps around a wall into the space next door
+   through a narrow gap, cut it back to the box around the label. Real L-shaped rooms open wide into their other leg and stay. */
+function cutToLabel(poly,inside0,k,l,W,H,taken,name){if(!poly||!l)return poly;if(/STAIR|ELEV/i.test(name||l.name||''))return poly;
+  /* space already given to rooms found before this one doesn't count */
+  const tk=(taken||[]).filter(b=>b[0]<=k.x1&&b[2]>=k.x0&&b[1]<=k.y1&&b[3]>=k.y0);const inside=tk.length?(x,y)=>inside0(x,y)&&!tk.some(b=>x>=b[0]&&x<=b[2]&&y>=b[1]&&y<=b[3]):inside0;
+  if(poly.length<=4&&!tk.length)return poly;let x0=Math.round(l.x),x1=x0,y0=Math.round(l.y),y1=y0;
+  if(x0<k.x0||x0>k.x1||y0<k.y0||y0>k.y1||!inside(x0,y0))return poly;
+  let cnt=0;for(let y=k.y0;y<=k.y1;y+=2)for(let x=k.x0;x<=k.x1;x+=2)if(inside(x,y))cnt+=4;
+  /* grow a box from the label; thin door swing lines don't stop it */
+  const col=(x,a,b)=>{let c=0,t=0;for(let y=a;y<=b;y+=2){t++;if(inside(x,y))c++}return c>=t*0.85};const row=(y,a,b)=>{let c=0,t=0;for(let x=a;x<=b;x+=2){t++;if(inside(x,y))c++}return c>=t*0.85};
+  let grew=true;while(grew){grew=false;if(x0>k.x0&&col(x0-1,y0,y1)){x0--;grew=true}if(x1<k.x1&&col(x1+1,y0,y1)){x1++;grew=true}if(y0>k.y0&&row(y0-1,x0,x1)){y0--;grew=true}if(y1<k.y1&&row(y1+1,x0,x1)){y1++;grew=true}}
+  const box=[[x0,y0],[x1+1,y0],[x1+1,y1+1],[x0,y1+1]],ra=(x1-x0+1)*(y1-y0+1);if(ra<cnt*0.15)return (k.x1-k.x0)*(k.y1-k.y0)>ra*25?null:poly; /* label sits at the edge of a much bigger space (a corridor): not this room */
+  if(ra>=cnt*0.8)return tk.length?box:poly;
+  /* how wide is the way out of this box into the rest of the shape */
+  const nk=[0,0,0,0];for(let x=x0;x<=x1;x++){if(inside(x,y0-2))nk[0]++;if(inside(x,y1+2))nk[1]++}for(let y=y0;y<=y1;y++){if(inside(x0-2,y))nk[2]++;if(inside(x1+2,y))nk[3]++}const neck=Math.max(...nk);
+  /* the rest of the shape outside the box: if the gap into it is nearly as wide as it is, it's another leg of the same room */
+  let a=1e9,b=-1,c=1e9,d=-1;for(let y=k.y0;y<=k.y1;y+=2)for(let x=k.x0;x<=k.x1;x+=2){if(x>=x0&&x<=x1&&y>=y0&&y<=y1)continue;if(inside(x,y)){if(x<a)a=x;if(x>b)b=x;if(y<c)c=y;if(y>d)d=y}}
+  if(b<0)return tk.length?box:poly;const rest=Math.min(b-a,d-c);if(neck>=rest*0.7)return poly;
+  return box}
 function snapWalls(poly,wall,W,H,r){if(!poly||poly.length<4)return poly;const P=poly.map(p=>[Math.round(p[0]),Math.round(p[1])]),n=P.length,maxOut=Math.round(Math.max(W,H)*0.022);
   const isW=(x,y)=>x>=0&&y>=0&&x<W&&y<H&&wall[y*W+x];
   for(let i=0;i<n;i++){const a=P[i],b=P[(i+1)%n],hz=a[1]===b[1],vt=a[0]===b[0];if(!hz&&!vt)continue;

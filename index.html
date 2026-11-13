@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="8836f19149">
+<meta name="bc-ver" content="3eaf7b393b">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-ugPRC3wXGnMj4EaRfIcj/idd17ESku16Cg8gZQ6QvFo=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-N1kz7Be8D5/zBTNn57DYQVC9ungE0pVj+EF0q83J+Ug=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -1612,16 +1612,17 @@ async function planFindRooms(pl,n,strength,dark){
   const r0=Math.max(2,Math.round(Math.max(W,H)*0.0072*(strength||1)));const out=[];
   const seen=new Set();const rooms=[],pend=[];
   /* try thick walls first (closes wide doors), then thinner for small rooms */
-  const RS=[r0,Math.round(r0*0.6),Math.max(2,Math.round(r0*0.35))];for(const r of RS){const last=r===RS[RS.length-1];
+  /* thick walls first (closes wide doors), then thinner for small rooms, then extra thick for corridors whose ends open through wide double doors */
+  const RS=[r0,Math.round(r0*0.6),Math.max(2,Math.round(r0*0.35)),Math.round(r0*1.8),Math.round(r0*2.6)];for(let ri=0;ri<RS.length;ri++){const r=RS[ri],last=ri>=2;
     const todo=labels.filter(l=>!l.done);if(!todo.length&&labels.length)break;
     const {lab,comps}=roomComps(wall,W,H,r);
-    const ok=k=>k&&!k.edge&&k.cnt>=N*0.00012&&k.cnt<=N*0.45&&Math.min(k.x1-k.x0,k.y1-k.y0)>r*1.5;
+    const ok=k=>k&&!k.edge&&k.cnt>=N*0.00012&&k.cnt<=N*(ri>=3?0.02:0.45)&&Math.min(k.x1-k.x0,k.y1-k.y0)>r*1.5;
     const at=(l)=>{for(let rad=0;rad<=r*2+6;rad+=2)for(let a=0;a<8;a++){const xx=Math.round(l.x+Math.cos(a*Math.PI/4)*rad),yy=Math.round(l.y+Math.sin(a*Math.PI/4)*rad);if(xx<0||yy<0||xx>=W||yy>=H)continue;const L=lab[yy*W+xx];if(L)return L}return 0};
     if(labels.length){const byC=new Map();for(const l of todo){const L=at(l);if(!L)continue;if(!byC.has(L))byC.set(L,[]);byC.get(L).push(l)}
       for(const [L,lsAll] of byC){const k=comps[L];if(!ok(k))continue;const numd=lsAll.filter(l=>l.num);
-        if(!numd.length){if(lsAll.length>1&&!last&&new Set(lsAll.map(l=>l.name.toUpperCase())).size>1)continue;const nl=lsAll[0];
+        if(!numd.length){if(ri>=3&&/CORR|HALL/i.test(lsAll[0].name))continue;if(lsAll.length>1&&!last&&new Set(lsAll.map(l=>l.name.toUpperCase())).size>1)continue;const nl=lsAll[0];
           /* a closet word sitting in a big open space means the closet door didn't close yet: wait for thinner walls */
-          if(SMALLW.test(nl.name)&&k.cnt>N*0.012)continue;const poly=rectiOutline((x,y)=>lab[y*W+x]===L,W,H,k,r);if(!poly)continue;lsAll.forEach(l=>l.done=true);rooms.push({poly,zone:roomName(nl.name)});continue}
+          if(SMALLW.test(nl.name)&&k.cnt>N*0.012)continue;const poly=rectiOutline((x,y)=>lab[y*W+x]===L,W,H,k,r);if(!poly)continue;lsAll.forEach(l=>l.done=true);rooms.push({poly,zone:roomName(nl.name),ri});continue}
         const words0=lsAll.filter(l=>!l.num);let ls=numd;const nums=new Set(ls.map(l=>l.num));
         /* two room numbers in one space: wait for thinner walls to split them; on the last try give it to the number nearest the middle */
         if(nums.size>1&&!last){if(!pend.some(p=>p.ls.some(l=>ls.includes(l)))){const bw=k.x1-k.x0+1,bh=k.y1-k.y0+1,m=new Uint8Array(bw*bh);for(let y=k.y0;y<=k.y1;y++)for(let x=k.x0;x<=k.x1;x++)if(lab[y*W+x]===L)m[(y-k.y0)*bw+x-k.x0]=1;pend.push({k,r,m,bw,ls:[...ls]})}continue}
@@ -1631,7 +1632,7 @@ async function planFindRooms(pl,n,strength,dark){
         const nl=ls[0];let name=nl.name||'';if(!name){const cand=inRoom.filter(w=>NAMEOK(w.s)&&Math.abs(w.x-nl.x)<(k.x1-k.x0)&&Math.abs(w.y-nl.y)<(k.y1-k.y0));cand.sort((a,b)=>(Math.abs(a.x-nl.x)+Math.abs(a.y-nl.y)+(a.y>nl.y?60:0))-(Math.abs(b.x-nl.x)+Math.abs(b.y-nl.y)+(b.y>nl.y?60:0)));name=cand.length?cand[0].s:''}
         if((nl.num.match(/\d/g)||[]).length<3)continue; /* short codes like B11 are grid or column marks, not rooms */
         const poly=rectiOutline((x,y)=>lab[y*W+x]===L,W,H,k,r);if(!poly)continue;ls.forEach(l=>l.done=true);if(nums.size===1)words0.forEach(l=>l.done=true);seen.add(nl.num);
-        rooms.push({poly,zone:(name?roomName(name)+' '+nl.num:'Room '+nl.num)})}}
+        rooms.push({poly,zone:(name?roomName(name)+' '+nl.num:'Room '+nl.num),ri})}}
     else{/* no printed room numbers (a scanned sheet): keep every closed space of room size */
       let i=0;for(let L=1;L<comps.length;L++){const k=comps[L];if(!ok(k)||k.cnt<N*0.0006||k.cnt/((k.x1-k.x0+1)*(k.y1-k.y0+1))<0.35)continue;const poly=rectiOutline((x,y)=>lab[y*W+x]===L,W,H,k,r);if(poly)rooms.push({poly,zone:'Area '+(++i)})}break}}
   /* rooms that only ever showed up sharing a space with another number (stairs, mech rooms off a corridor): split that space between the numbers, each part going to the nearest number */
@@ -1640,7 +1641,10 @@ async function planFindRooms(pl,n,strength,dark){
     nums.forEach((nu,i)=>{if(seen.has(nu))return;const poly=rectiOutline((x,y)=>x>=k.x0&&y>=k.y0&&x<=k.x1&&y<=k.y1&&m[(y-k.y0)*bw+x-k.x0]&&own(x,y)===i,W,H,k,p.r);if(!poly)return;const nl=pts[i][0];
       const cand=words.filter(w=>NAMEOK(w.s)&&Math.abs(w.x-nl.x)<120&&Math.abs(w.y-nl.y)<80).sort((a,b)=>(Math.abs(a.x-nl.x)+Math.abs(a.y-nl.y)+(a.y>nl.y?60:0))-(Math.abs(b.x-nl.x)+Math.abs(b.y-nl.y)+(b.y>nl.y?60:0)));const name=nl.name||(cand[0]&&cand[0].s)||'';
       if((nu.match(/\d/g)||[]).length<3)return;pts[i].forEach(l=>l.done=true);seen.add(nu);rooms.push({poly,zone:name?roomName(name)+' '+nu:'Room '+nu})})}
+  /* a room found on a late pass that lands on a room already found is a stray label: drop it */
+  {const bx=p=>{const xs=p.map(q=>q[0]),ys=p.map(q=>q[1]);return [Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys)]};const keep=[];for(const rm of rooms){const a=bx(rm.poly),ar=(a[2]-a[0])*(a[3]-a[1]);if(rm.ri>=3&&keep.some(k=>{const b=bx(k.poly),ix=Math.min(a[2],b[2])-Math.max(a[0],b[0]),iy=Math.min(a[3],b[3])-Math.max(a[1],b[1]);return ix>0&&iy>0&&ix*iy>Math.min(ar,(b[2]-b[0])*(b[3]-b[1]))*0.5}))continue;keep.push(rm)}rooms.length=0;rooms.push(...keep)}
   for(const rm of rooms)rm.poly=snapWalls(rm.poly,wall,W,H,r0);
+  for(const c of findCorridors(rooms,wall,W,H,r0,labels))rooms.push(c);
   for(const rm of rooms)out.push({id:uid(),room:rm.zone.slice(0,60),zone:'',auto:true,pts:rm.poly.map(p=>[+(Math.min(1,Math.max(0,p[0]/W))).toFixed(4),+(Math.min(1,Math.max(0,p[1]/H))).toFixed(4)])});
   return out}
 const SMALLW=/^(CLOSET|STOR|JAN|CUSTODIAL|MECH|ELEC|IDF|MDF|DATA|TEL|RESTROOM|TOILET|WOMEN|MEN|BOYS|GIRLS|UNISEX|FAMILY|RISER|SUPPLY|PUMP|SPRINKLER|FIRE RISER|SHOWER|COPY|MAIL|PANTRY|SERVER|ELEV)/i;
@@ -1675,14 +1679,34 @@ function squareUp(fill,nx,ny,q){const tot=fill.reduce((a,b)=>a+b,0);if(!tot)retu
     while(st.length){const v=st.pop();cells.push(v);const ii=v%nx,jj=(v/nx)|0;if(ii<a)a=ii;if(ii>b)b=ii;if(jj<c)c=jj;if(jj>d)d=jj;for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const xi=ii+dx,yj=jj+dy;if(xi<x0||xi>x1||yj<y0||yj>y1)continue;const u=yj*nx+xi;if(!fill[u]&&!seen[u]){seen[u]=1;st.push(u)}}}
     const w=b-a+1,h=d-c+1,edge=a===x0||b===x1||c===y0||d===y1,hole=!edge;if(hole||(w<=lim&&h<=lim)||(Math.min(w,h)<=Math.max(1,q>>1)&&Math.max(w,h)<=lim*2))cells.forEach(v=>fill[v]=1)}}
 /* slide each straight side of a room out to the face of its wall, stepping over door swings and openings */
-function snapWalls(poly,wall,W,H,r){if(!poly||poly.length<4)return poly;const P=poly.map(p=>[Math.round(p[0]),Math.round(p[1])]),n=P.length,maxOut=Math.round(Math.max(W,H)*0.022),back=Math.round(r*3);
+/* corridors: the open strip between two rows of rooms. Many sheets don't label every hallway, so find them from the rooms on each side. */
+function findCorridors(rooms,wall,W,H,r0,labels){const box=p=>{const xs=p.map(q=>q[0]),ys=p.map(q=>q[1]);return {x0:Math.min(...xs),x1:Math.max(...xs),y0:Math.min(...ys),y1:Math.max(...ys)}};
+  const B=rooms.map(rm=>box(rm.poly)),minG=r0*2,maxG=r0*8,out=[];const isW=(x,y)=>x>=0&&y>=0&&x<W&&y<H&&wall[y*W+x];
+  for(const hz of [true,false]){/* hz: rooms above and below, corridor runs left-right */
+    const A=hz?B:B.map(b=>({x0:b.y0,x1:b.y1,y0:b.x0,y1:b.x1})),c=[];
+    for(const a of A)for(const b of A){const g=b.y0-a.y1;if(g<minG||g>maxG)continue;const ov=Math.min(a.x1,b.x1)-Math.max(a.x0,b.x0);if(ov<Math.min(a.x1-a.x0,b.x1-b.x0)*0.4)continue;c.push({a:a.y1,b:b.y0,x0:Math.max(a.x0,b.x0),x1:Math.min(a.x1,b.x1)})}
+    /* merge pieces of the same hallway */
+    const bands=[];for(const q of c.sort((p,q)=>p.a-q.a)){const m=bands.find(z=>Math.abs(z.a-q.a)<r0*1.5&&Math.abs(z.b-q.b)<r0*1.5&&q.x0<=z.x1+maxG&&q.x1>=z.x0-maxG);if(m){m.x0=Math.min(m.x0,q.x0);m.x1=Math.max(m.x1,q.x1);m.a=Math.max(m.a,q.a);m.b=Math.min(m.b,q.b);m.n++}else bands.push({...q,n:1})}
+    for(const z of bands){if(z.x1-z.x0<maxG*1.5)continue;/* stretch the ends out to the rooms that line it */for(const a of A){if((Math.abs(a.y1-z.a)<r0*1.5||Math.abs(a.y0-z.b)<r0*1.5)&&a.x1>z.x0-maxG&&a.x0<z.x1+maxG){z.x0=Math.min(z.x0,a.x0);z.x1=Math.max(z.x1,a.x1)}}
+      /* step off the wall lines on each side */
+      const fr=(yy)=>{let k=0,m=0;for(let u=z.x0+(z.x1-z.x0)*0.05;u<=z.x1-(z.x1-z.x0)*0.05;u+=4){m++;const X=hz?Math.round(u):Math.round(yy),Y=hz?Math.round(yy):Math.round(u);if(isW(X,Y))k++}return m?k/m:0};
+      const off=(y,d)=>{let t=y;for(let i=0;i<r0;i++,t+=d)if(fr(t)>=0.3){while(Math.abs(t-y)<maxG/2&&fr(t)>=0.3)t+=d;return t}return y};let y0=off(z.a,1),y1=off(z.b,-1);if(y1-y0<r0)continue;
+      const pts=hz?[[z.x0,y0],[z.x1,y0],[z.x1,y1],[z.x0,y1]]:[[y0,z.x0],[y1,z.x0],[y1,z.x1],[y0,z.x1]];const bx=box(pts);
+      /* skip if it lands on a room already found (a corridor that was labeled and found already) */
+      if(B.some(b=>{const ix=Math.min(b.x1,bx.x1)-Math.max(b.x0,bx.x0),iy=Math.min(b.y1,bx.y1)-Math.max(b.y0,bx.y0);return ix>0&&iy>0&&ix*iy>(bx.x1-bx.x0)*(bx.y1-bx.y0)*0.3}))continue;
+      const inL=labels.filter(l=>l.x>=bx.x0&&l.x<=bx.x1&&l.y>=bx.y0&&l.y<=bx.y1);const nm=inL.find(l=>l.name&&/CORR|HALL/i.test(l.name)),nu=inL.find(l=>l.num&&!l.done);inL.forEach(l=>l.done=true);
+      out.push({poly:pts,zone:(nm?roomName(nm.name):'Corridor')+(nu?' '+nu.num:''),ri:7});B.push(bx)}}
+  return out}
+function snapWalls(poly,wall,W,H,r){if(!poly||poly.length<4)return poly;const P=poly.map(p=>[Math.round(p[0]),Math.round(p[1])]),n=P.length,maxOut=Math.round(Math.max(W,H)*0.022);
   const isW=(x,y)=>x>=0&&y>=0&&x<W&&y<H&&wall[y*W+x];
   for(let i=0;i<n;i++){const a=P[i],b=P[(i+1)%n],hz=a[1]===b[1],vt=a[0]===b[0];if(!hz&&!vt)continue;
     const len=hz?Math.abs(b[0]-a[0]):Math.abs(b[1]-a[1]);if(len<6)continue;
     const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,dx=hz?0:1,dy=hz?1:0;const out=inPoly(mx+dx*3,my+dy*3,P)?-1:1;
     const lo=hz?Math.min(a[0],b[0]):Math.min(a[1],b[1]),s0=lo+len*0.08,s1=lo+len*0.92,st=Math.max(1,len/60);
     const frac=t=>{let c=0,m=0;for(let u=s0;u<=s1;u+=st){m++;const x=hz?Math.round(u):Math.round(mx+out*t),y=hz?Math.round(my+out*t):Math.round(u);if(isW(x,y))c++}return c/m};
-    let best=null;for(let t=-back;t<=maxOut;t++){if(frac(t)>=0.4){best=t-1;break}}
+    /* start a little inside the room (never more than a quarter of its width), step past any wall line we start on, then stop at the first wall face */
+    const xs=P.map(p=>p[0]),ys=P.map(p=>p[1]),span=hz?Math.max(...ys)-Math.min(...ys):Math.max(...xs)-Math.min(...xs),back=Math.round(Math.min(r*1.5,span*0.25));
+    let t=-back;while(t<=maxOut&&frac(t)>=0.4)t++;let best=null;for(;t<=maxOut;t++){if(frac(t)>=0.4){best=t-1;break}}
     if(best==null||best===0)continue;if(hz){a[1]+=out*best;b[1]+=out*best}else{a[0]+=out*best;b[0]+=out*best}}
   return P}
 function rectiOutline(inside,W,H,k,r){const g=Math.max(3,Math.round(r*0.6)),cx=k.x0,cy=k.y0,nx=Math.ceil((k.x1-k.x0+1)/g),ny=Math.ceil((k.y1-k.y0+1)/g);

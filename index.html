@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="c517342d3c">
+<meta name="bc-ver" content="42f24706bf">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-lkXKi7HeoDaC4Tfo69GdXY/xZptnoYiANJpvnby9H/0=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-Un89G+9pTWPk9NkkOksDxW9+EBi/JshVBZmw11RKUcw=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -1573,7 +1573,7 @@ function planHits(pl,n,x,y){return plAreas(pl,n).filter(a=>a.pts&&a.pts.length>2
 function planZoneAt(pl,n,x,y){const h=planHits(pl,n,x,y).find(a=>aZone(a));return h?aZone(h):''}
 function planRoomAt(pl,n,x,y){const h=planHits(pl,n,x,y).find(a=>aRoom(a));return h?aRoom(h):''}
 function planHint(){const m=M&&M.mode||'';if(m==='pin')return 'Tap the spot that needs fixing.';if(m==='photo')return 'Tap where you\'re standing.';
-  if(m==='zone'){if(M.zSel)return 'Drag the yellow corners to fit the room. Change the name or delete it.';if(M.zPick)return 'Name this area with its work zone.';const k=(M.zDraw||[]).length;return k?(k<3?'Keep tapping corners. 3 or more make an area.':'Tap more corners, or tap Finish.'):'Tap Find Rooms, or tap the corners of a room. Tap any area to change it.'}
+  if(m==='zone'){if(M.zSel)return 'Drag the yellow corners to fit the room. Change the name or delete it.'+(DESK()?' Hold Shift to keep lines straight.':'');if(M.zPick)return 'Name this area with its work zone.';const k=(M.zDraw||[]).length;return k?(k<3?'Keep tapping corners. 3 or more make an area.':'Tap more corners, or tap Finish.')+(DESK()?' Hold Shift for straight lines.':''):'Tap Find Rooms, or tap the corners of a room. Tap any area to change it.'}
   return DESK()?'Scroll to zoom, drag to move. Press and hold a spot to add a punch item.':'Pinch to zoom. Long-press a spot to add a punch item.'}
 function plToolsHtml(){const m=M&&M.mode||'';
   if(m==='zone'){const pl=S.photos.find(x=>x.id===M.id),n=M.n||1;
@@ -1813,7 +1813,7 @@ function plZoomAt(nz,cx,cy){const st=PLV,r=st.el.getBoundingClientRect();nz=Math
 function plPlace(cx,cy){const p=plPoint(cx,cy);if(p.x<0||p.x>1||p.y<0||p.y>1)return;const pl=S.photos.find(x=>x.id===M.id);if(!pl)return;const n=M.n||1;
   const at={planId:pl.id,planPage:n,px:+p.x.toFixed(4),py:+p.y.toFixed(4)},back={kind:'plan',id:pl.id,n};
   if(M.mode==='zone'){if(!(M.zDraw||[]).length&&!M.zPick){const hit=plAreas(pl,n).filter(a=>inPoly(p.x,p.y,a.pts)).sort((a,b)=>polyArea(a.pts)-polyArea(b.pts))[0];if(hit){M.zSel=hit.id;M.zNode=null;planBar();return}}
-    if(M.zSel){M.zSel=null;planBar();return}if(M.zPick)return;M.zDraw=[...(M.zDraw||[]),[+p.x.toFixed(4),+p.y.toFixed(4)]];planBar();return}
+    if(M.zSel){M.zSel=null;planBar();return}if(M.zPick)return;let q=[p.x,p.y];const dz=M.zDraw||[];if(SHF.on&&dz.length){const L=dz[dz.length-1];q=Math.abs(q[0]-L[0])*PLV.W>=Math.abs(q[1]-L[1])*PLV.H?[q[0],L[1]]:[L[0],q[1]];if(dz.length>=2){const F=dz[0];if(Math.abs(q[0]-F[0])*PLV.W<30)q[0]=F[0];if(Math.abs(q[1]-F[1])*PLV.H<30)q[1]=F[1]}}M.zDraw=[...dz,[+q[0].toFixed(4),+q[1].toFixed(4)]];planBar();return}
   const za=planZoneAt(pl,n,p.x,p.y),ra=planRoomAt(pl,n,p.x,p.y),where=[ra,za].filter(Boolean).join(' · ');
   if(M.mode==='photo'){M.mode='';const pid=pl.projectId,cx=ctxFor(pid);openModal({kind:'capture',pid,lockProject:true,title:'Photo on '+sheetName(pl,n),why:where?`${where}. Take the photo; it's pinned where you tapped.`:'Pick the room, then take the photo. It\'s pinned where you tapped.',ctx:{...cx,...(za?{zone:za}:{}),plan:at},back});return}
   M.mode='';M.drop={x:at.px,y:at.py};planPins();const z=za||lastZT(pl.projectId).zone||'';
@@ -1822,16 +1822,18 @@ function plPlace(cx,cy){const p=plPoint(cx,cy);if(p.x<0||p.x>1||p.y<0||p.y>1)ret
   afterShot=id=>{const ph=PH(id);setTimeout(()=>openModal({kind:'task',task:{...task,photoId:id,zone:za||(ph&&ph.zone)||z,trade:(ph&&ph.trade)||''},back}),300)};
   setTimeout(()=>openModal({kind:'capture',pid:pl.projectId,lockProject:true,single:true,title:'Punch Photo',why:'Pin dropped on '+sheetName(pl,n)+(where?' in '+where:'')+'. Take a photo of the problem, then pick what needs fixing and who fixes it.',ctx:{tags:['Punch'],zone:z,trade:'',note:''},skipTask:task,back}),180)}
 const PLZ={i:-1};
+/* Shift held: straight lines (level or plumb) when drawing rooms or moving corners */
+const SHF={on:false};['keydown','keyup'].forEach(t=>document.addEventListener(t,e=>{SHF.on=!!e.shiftKey}));window.addEventListener('blur',()=>{SHF.on=false});['pointerdown','pointermove'].forEach(t=>document.addEventListener(t,e=>{SHF.on=!!e.shiftKey},true));
 function plDown(e){const w=e.target.closest&&e.target.closest('#plw');const h=e.target.closest&&e.target.closest('.plzh');
   const mh=e.target.closest&&e.target.closest('.plzm');
   if((h||mh)&&M.zSel){const pl=S.photos.find(x=>x.id===M.id),a=plAreas(pl,M.n||1).find(x=>x.id===M.zSel);if(a){M.zLive=a.pts.map(p=>[...p]);
     /* middle dot: drag to slide the whole side straight across; tap to add a corner there */
-    if(mh){const i=+mh.dataset.i;PLZ.edge=i;PLZ.orig=M.zLive.map(p=>[...p]);PLZ.p0=plPoint(e.clientX,e.clientY);PLZ.i=i;PLZ.added=false}else{PLZ.edge=-1;PLZ.i=+h.dataset.i;PLZ.added=false}
+    if(mh){const i=+mh.dataset.i;PLZ.edge=i;PLZ.orig=M.zLive.map(p=>[...p]);PLZ.p0=plPoint(e.clientX,e.clientY);PLZ.i=i;PLZ.added=false}else{PLZ.edge=-1;PLZ.i=+h.dataset.i;PLZ.added=false;PLZ.st=[...M.zLive[PLZ.i]]}
     PLZ.id=e.pointerId;PLZ.x=e.clientX;PLZ.y=e.clientY;PLZ.moved=false;M.zNode=PLZ.i;try{(h||mh).setPointerCapture(e.pointerId)}catch(_){}e.preventDefault();planPins();return}}
   if(!w||e.target.closest('.plpin'))return;PLG.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});try{w.setPointerCapture(e.pointerId)}catch(_){}
   const st=PLV;PLG.start={z:st.z,tx:st.tx,ty:st.ty,pts:[...PLG.pts.values()].map(p=>({...p}))};PLG.moved=false;clearTimeout(PLG.lp);
   if(PLG.pts.size===1&&M.mode!=='zone'){const x=e.clientX,y=e.clientY;PLG.lp=setTimeout(()=>{if(!PLG.moved&&PLG.pts.size===1){PLG.moved=true;haptic('ok');plPlace(x,y)}},550)}}
-function plMove(e){if(PLZ.i>=0&&e.pointerId===PLZ.id){if(!PLZ.moved&&Math.hypot(e.clientX-PLZ.x,e.clientY-PLZ.y)<5)return;PLZ.moved=true;const p=plPoint(e.clientX,e.clientY);if(PLZ.edge>=0){const o=PLZ.orig,i=PLZ.edge,j=(i+1)%o.length,ex=o[j][0]-o[i][0],ey=o[j][1]-o[i][1],L=Math.hypot(ex,ey)||1,nx=-ey/L,ny=ex/L,d=(p.x-PLZ.p0.x)*nx+(p.y-PLZ.p0.y)*ny;const mv=q=>[+Math.min(1,Math.max(0,q[0]+nx*d)).toFixed(4),+Math.min(1,Math.max(0,q[1]+ny*d)).toFixed(4)];M.zLive=o.map((q,k)=>k===i||k===j?mv(q):[...q]);planPins();return}M.zLive[PLZ.i]=[+Math.min(1,Math.max(0,p.x)).toFixed(4),+Math.min(1,Math.max(0,p.y)).toFixed(4)];planPins();return}
+function plMove(e){if(PLZ.i>=0&&e.pointerId===PLZ.id){if(!PLZ.moved&&Math.hypot(e.clientX-PLZ.x,e.clientY-PLZ.y)<5)return;PLZ.moved=true;const p=plPoint(e.clientX,e.clientY);if(PLZ.edge>=0){const o=PLZ.orig,i=PLZ.edge,j=(i+1)%o.length,ex=o[j][0]-o[i][0],ey=o[j][1]-o[i][1],L=Math.hypot(ex,ey)||1,nx=-ey/L,ny=ex/L,d=(p.x-PLZ.p0.x)*nx+(p.y-PLZ.p0.y)*ny;const mv=q=>[+Math.min(1,Math.max(0,q[0]+nx*d)).toFixed(4),+Math.min(1,Math.max(0,q[1]+ny*d)).toFixed(4)];M.zLive=o.map((q,k)=>k===i||k===j?mv(q):[...q]);planPins();return}if(SHF.on&&PLZ.st){const s0=PLZ.st;if(Math.abs(p.x-s0[0])*PLV.W>=Math.abs(p.y-s0[1])*PLV.H)p.y=s0[1];else p.x=s0[0]}M.zLive[PLZ.i]=[+Math.min(1,Math.max(0,p.x)).toFixed(4),+Math.min(1,Math.max(0,p.y)).toFixed(4)];planPins();return}
   if(!PLG.pts.has(e.pointerId))return;PLG.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});const st=PLV,s=PLG.start,pts=[...PLG.pts.values()];
   if(pts.length===1&&s.pts.length===1){const dx=pts[0].x-s.pts[0].x,dy=pts[0].y-s.pts[0].y;if(Math.hypot(dx,dy)>8)PLG.moved=true;if(PLG.moved){clearTimeout(PLG.lp);st.tx=s.tx+dx;st.ty=s.ty+dy;planApply()}}
   else if(pts.length>=2&&s.pts.length>=2){clearTimeout(PLG.lp);PLG.moved=true;const d0=Math.hypot(s.pts[0].x-s.pts[1].x,s.pts[0].y-s.pts[1].y)||1,d1=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);

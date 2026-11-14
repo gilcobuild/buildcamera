@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="bc-ver" content="30a97d28aa">
+<meta name="bc-ver" content="8417a5e3c7">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-NcjTBgSpMFt9WnryfsTAlEfllG48fiisGmh7VQk8D0M=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-V8rkA6X0SUyNHExfogSVMfnlKEhe+Lau1IYJ0zLHUo4=' 'sha256-lAs4lxl3VxWvUUeUC89HBWddCIRhsjgzXVLy5zFSUaU=' 'sha256-Fs5+8Tk3D7nzbP+fJNucV5xrXLyoBKwb1I8v2GCJRv0=' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' blob: data: https://zrdgebzujpsatzxcvryi.supabase.co wss://zrdgebzujpsatzxcvryi.supabase.co https://api.pwnedpasswords.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Build Camera</title>
@@ -1317,7 +1317,7 @@ async function stampImage(file,info,isDoc){
   const gps=info.lat!=null?`${Math.abs(info.lat).toFixed(6)}° ${info.lat>=0?'N':'S'} ${Math.abs(info.lng).toFixed(6)}° ${info.lng>=0?'E':'W'}`:'GPS not available';
   const job=info.project||'Jobsite';
   const face='-apple-system,"SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif';
-  const rows=[[info.company||coName(),`700 ${Math.round(fs*.78)}px ${face}`],[job,`700 ${fs}px ${face}`],[when,`600 ${fs}px ${face}`],[gps,`600 ${Math.round(fs*.7)}px ${face}`]];
+  const rows=[...(info.brandLater?[]:[[info.company||coName(),`700 ${Math.round(fs*.78)}px ${face}`]]),[job,`700 ${fs}px ${face}`],[when,`600 ${fs}px ${face}`],[gps,`600 ${Math.round(fs*.7)}px ${face}`]];
   x.textAlign='right';x.textBaseline='alphabetic';
   const maxW=W*.72; const fit=(t)=>{let s2=t;while(s2.length>4&&x.measureText(s2).width>maxW)s2=s2.slice(0,-2);return s2===t?t:s2+'…'};
   let yb=H-pad; const out=[];
@@ -1344,9 +1344,9 @@ async function processFile(file,ctx){
   const code=await makeCode([pid,takenAt,lat,lng,file.size].join('|'));
   let blob=file,thumb=null;
   let qual=null;
-  if(kind==='photo'||kind==='doc'){const r=await stampImage(file,{takenAt,project:pr?.name,jobNumber:pr?.jobNumber,address:pr?.address,lat,lng,gpsSource,zone:ctx.zone,trade:ctx.trade,code,company:coName(pid),logo:await getLogo()},kind==='doc');blob=r.blob;thumb=r.thumb;qual=r.q&&(r.q.blurry||r.q.dark)?r.q:null}
+  if(kind==='photo'||kind==='doc'){const r=await stampImage(file,{takenAt,project:pr?.name,jobNumber:pr?.jobNumber,address:pr?.address,lat,lng,gpsSource,zone:ctx.zone,trade:ctx.trade,code,brandLater:true},kind==='doc');blob=r.blob;thumb=r.thumb;qual=r.q&&(r.q.blurry||r.q.dark)?r.q:null}
   const id=uid();
-  const doc=clean({projectId:pid||null,kind,takenAt,createdAt:Date.now(),lat,lng,gpsSource,code,tags:ctx.tags||[],zone:ctx.zone||'',trade:ctx.trade||'',note:ctx.note||'',by:ME.id,byName:ME.name,beforeOf:ctx.beforeOf||null,markupOf:ctx.markupOf||null,portfolio:(ctx.tags||[]).includes('Portfolio'),tpTask:ctx.tpTask||'',private:ctx.private?true:undefined,contentType:blob.type||file.type,quality:qual,...(ctx.plan||{})});
+  const doc=clean({...((kind==='photo'||kind==='doc')?{brandAt:'share',company:ctx.company||''}:{}),projectId:pid||null,kind,takenAt,createdAt:Date.now(),lat,lng,gpsSource,code,tags:ctx.tags||[],zone:ctx.zone||'',trade:ctx.trade||'',note:ctx.note||'',by:ME.id,byName:ME.name,beforeOf:ctx.beforeOf||null,markupOf:ctx.markupOf||null,portfolio:(ctx.tags||[]).includes('Portfolio'),tpTask:ctx.tpTask||'',private:ctx.private?true:undefined,contentType:blob.type||file.type,quality:qual,...(ctx.plan||{})});
   PEND[id]={...doc,id,url:URL.createObjectURL(blob),...(thumb?{thumb:URL.createObjectURL(thumb)}:{}),pending:true}; scheduleRender(); if(ctx.onAdd)ctx.onAdd(id);
   if(AS&&(OFFLINE()||navigator.onLine===false)){await qSave({id,blob,thumb,doc:{...doc,...pendEdits(id)}})}
   else if(AS){
@@ -2168,6 +2168,7 @@ function ptInfo0(p){
    ${addrBlock('pi',p)}
    ${lastGps?`<button type="button" class="btn sm" data-a="gpsFromPhoto" data-id="${p.id}">${I('pin')} Use GPS From Latest Photo</button>`:''}
    <label class="f">Company Name on This Job<input type="text" id="pi-co" name="companyName" list="dl-co" value="${esc(p.companyName||'')}" placeholder="${esc(SET().name||DEFCO())}" autocapitalize="words"><datalist id="dl-co">${companyNames().map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label><p class="note" style="margin-top:-6px">Shows on this job's photo stamps, PDF reports, review requests and social posts. Leave blank to use ${esc(SET().name||DEFCO())}.</p>
+   ${(()=>{const u=logoUrlFor(p.id),n=coName(p.id),def=coKey(n)===coKey(SET().name||DEFCO());return `<div class="row" style="gap:10px;align-items:center">${u?`<img src="${esc(u)}" alt="Logo" style="height:40px;width:auto;max-width:120px;background:#fff;border-radius:6px;padding:4px;border:1px solid var(--line)">`:'<span class="note">No logo for this company yet.</span>'}${canInvite()?(def?`<button type="button" class="btn sm" data-a="logoPick" ${AS?'':'disabled'}>${u?'Replace':'Upload'} Logo</button>`:`<button type="button" class="btn sm" data-a="coLogoPick" data-co="${esc(n)}" ${AS?'':'disabled'}>${u?'Replace':'Upload'} ${esc(n)} Logo</button>`):''}</div>`})()}
    <label class="f">Work Zones<select id="pi-zon" name="useZones"><option value="1" ${zonesOn(p.id)?'selected':''}>Yes, use work zones on this job</option><option value="0" ${zonesOn(p.id)?'':'selected'}>No, tags are enough</option></select></label>
    <label class="f">Auto-File Distance<select id="pi-rad" name="radius">${[[150,'500 ft'],[300,'1,000 ft'],[600,'2,000 ft'],[1200,'3/4 mile (default)'],[2500,'1.5 miles']].map(([v,l])=>`<option value="${v}" ${(p.radius||1200)==v?'selected':''}>${l}</option>`).join('')}</select></label>${p.boundary&&p.boundary.length>=3?'<p class="note">This job has a drawn boundary, so only photos inside it file here.</p>':''}
    <div class="two"><label class="f">Customer<input type="text" id="pi-cust" name="customer" value="${esc(p.customer||'')}" autocapitalize="words"></label><label class="f">Customer Phone<input type="tel" id="pi-phone" name="phone" value="${esc(p.phone||'')}"></label></div>
@@ -2357,7 +2358,7 @@ function ptReports(p){
    <div class="two"><label class="f">Photos Per Page<select id="rp-per" name="per"><option value="2">2 (large)</option><option value="4">4 (compact)</option></select></label><label class="f">Include<select id="rp-inc" name="inc"><option value="all">Notes and comments</option><option value="notes">Notes only</option><option value="none">Photos only</option></select></label></div>
    <button class="btn pri" type="submit" ${DL?'':'disabled'}>${I('report')} Make PDF</button>
    ${DL?'<p class="note">You\'ll be asked to confirm the download. Send the PDF to the owner, adjuster or inspector.</p>':'<p class="callout">Downloads aren\'t available in this view.</p>'}
-   <div class="stack" style="border-top:1px solid var(--line);padding-top:12px"><b>Weekly Update Message</b><p class="note">Goes on the first page of the Weekly Update PDF, and you can copy it into an email or text.</p><textarea id="wk-text" name="weekly" style="min-height:140px" placeholder="Tap Draft With AI for a summary of the dates above.">${esc(V.wkText||'')}</textarea><div class="row"><button type="button" class="btn" data-a="aiWeekly" data-pid="${p.id}" ${SAMPLE?'':'disabled'}>${I('sparkle')} Draft With AI</button><button type="button" class="btn" data-a="copy" data-src="#wk-text">${I('copy')} Copy</button></div></div></form>
+   <div class="stack" style="border-top:1px solid var(--line);padding-top:12px"><b>Weekly Update Message</b><p class="note">Goes on the first page of the Weekly Update PDF, and you can copy it into an email or text.</p><textarea id="wk-text" name="weekly" style="min-height:140px" placeholder="Tap Draft With AI for a summary of the dates above.">${esc(V.wkText||'')}</textarea><div class="row"><button type="button" class="btn" data-a="aiWeekly" data-pid="${p.id}" ${SAMPLE?'':'disabled'}>${I('sparkle')} Draft With AI</button><button type="button" class="btn" data-a="copy" data-src="#wk-text">${I('copy')} Copy</button></div></div>${brandPick()}</form>
    <div class="card stack"><h2>Export Photos</h2><p class="note">Download the original photos in folders by album, tag, date or Work Zone, with a spreadsheet listing every photo.</p><button class="btn" data-a="exportOpen" data-pid="${p.id}" ${DL?'':'disabled'}>${I('download')} Export Photos…</button></div>`;
 }
 
@@ -2495,7 +2496,7 @@ function captureBody(){
   if(!M.ztInit){const d=lastZT(pid);if(!c.zone)c.zone=d.zone;if(!c.trade)c.trade=d.trade;if(!c.tags.length&&d.tag)c.tags=[d.tag];M.ztInit=true}
   if(!ps.length&&!M.lockProject)return `<div class="empty">${I('folder')}<b>Add a Project first</b><span>Photos need a job to file into.</span><button class="btn pri" data-a="newProject">${I('plus')} New Project</button></div>`;
   return `${M.lockProject?`<p class="callout info">${esc(M.why||'')}</p>${M.skipTask?`<button type="button" class="linkb" data-a="capSkip" style="justify-self:start">Skip the photo</button>`:''}`:`<label class="f">Project<select id="cap-p" data-ch="capP">${ps.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><p class="note">If the photo has its own GPS and it's near a different job, it files to that job instead.</p>`}
-  <div class="two"><label class="f"${zHide(zPidNow())}><span class="row" style="justify-content:space-between">Work Zone<button type="button" class="linkb edic" data-a="editList" data-k="zones" aria-label="Edit work zone list" title="Edit work zone list">${I('pen')}</button></span><input type="text" id="cap-zone" list="dl-zones" value="${esc(c.zone)}" data-ch="capF" data-k="zone" placeholder="Building B, Level 2" autocapitalize="words"></label><label class="f"><span class="row" style="justify-content:space-between">Trade Partner<button type="button" class="linkb edic" data-a="editList" data-k="trades" aria-label="Edit trade partner list" title="Edit trade partner list">${I('pen')}</button></span><input type="text" id="cap-trade" list="dl-trades" value="${esc(c.trade)}" data-ch="capF" data-k="trade" placeholder="Drywall" autocapitalize="words"></label></div>
+  <div class="two"><label class="f"${zHide(zPidNow())}><span class="row" style="justify-content:space-between">Work Zone<button type="button" class="linkb edic" data-a="editList" data-k="zones" aria-label="Edit work zone list" title="Edit work zone list">${I('pen')}</button></span><input type="text" id="cap-zone" list="dl-zones" value="${esc(c.zone)}" data-ch="capF" data-k="zone" placeholder="Building B, Level 2" autocapitalize="words"></label><label class="f"><span class="row" style="justify-content:space-between">Trade Partner<button type="button" class="linkb edic" data-a="editList" data-k="trades" aria-label="Edit trade partner list" title="Edit trade partner list">${I('pen')}</button></span><input type="text" id="cap-trade" list="dl-trades" value="${esc(c.trade)}" data-ch="capF" data-k="trade" placeholder="Drywall" autocapitalize="words"></label></div>${companyNames().length>1?`<label class="f">Company on Photo<select id="cap-co" data-ch="capF" data-k="company">${companyNames().map(n=>`<option value="${esc(n===coName(zPidNow())?'':n)}" ${(c.company||'')===(n===coName(zPidNow())?'':n)?'selected':''}>${esc(n)}${n===coName(zPidNow())?' (this job)':''}</option>`).join('')}</select></label>`:''}
   <label class="f"><span class="row" style="justify-content:space-between">Tag<button type="button" class="linkb edic" data-a="editTags" aria-label="Edit tag list" title="Edit tag list">${I('pen')}</button></span><select id="cap-tag" data-ch="capTagSel"><option value="">No tag</option>${tagList().map(t=>`<option ${c.tags[0]===t?'selected':''}>${esc(t)}</option>`).join('')}</select></label>
   ${c.zone||c.trade||c.tags.length?'<p class="note" style="margin-top:-6px">Work Zone, Trade Partner and Tag carry over from your last photo on this job. Change them any time.</p>':''}
   <label class="f">Note<input type="text" id="cap-note" value="${esc(c.note)}" data-ch="capF" data-k="note" placeholder="What does this show?"></label>
@@ -2672,7 +2673,7 @@ function photoSheet(){
   ${p.by&&ME.id&&p.by===ME.id?`<label class="card privc"><input type="checkbox" id="ph-priv" data-ch="phPriv" data-id="${p.id}" ${p.private?'checked':''}><span class="t"><b>${I('lock')} Private</b><span class="note">${p.private?'Only you can see this photo. It stays out of share links, reports for others and your team\'s feeds.':'Turn on so only you can see it. Your team, office and share links won\'t.'}</span></span></label>`:''}
   ${p.quality?`<p class="callout">This photo ${p.quality.blurry?'might be blurry':'is very dark'}. It's saved either way; take another if you need a clearer one.</p>`:''}
   ${p.suggest&&!p.suggest.done&&(p.suggest.tags.length||p.suggest.trade||p.suggest.caption)?`<div class="callout info stack" style="gap:6px"><b>${I('sparkle')} AI suggests</b><span>${esc([p.suggest.tags.join(', '),p.suggest.trade&&'Trade: '+p.suggest.trade,p.suggest.caption&&'Note: '+p.suggest.caption].filter(Boolean).join(' · '))}</span><div class="row"><button class="btn sm pri" data-a="aiAccept" data-id="${p.id}">Accept</button><button class="btn sm" data-a="aiDismiss" data-id="${p.id}">Dismiss</button></div></div>`:''}
-  <div class="card stack" style="gap:10px"><div class="two"><label class="f"${zHide(p.projectId)}><span class="row" style="justify-content:space-between">Work Zone<button type="button" class="linkb edic" data-a="editList" data-k="zones" aria-label="Edit work zone list" title="Edit work zone list">${I('pen')}</button></span><input type="text" id="ph-zone" list="dl-zones" value="${esc(p.zone||'')}" data-ch="phF" data-id="${p.id}" data-k="zone" placeholder="Building, area or level" autocapitalize="words"></label><label class="f"><span class="row" style="justify-content:space-between">Trade Partner<button type="button" class="linkb edic" data-a="editList" data-k="trades" aria-label="Edit trade partner list" title="Edit trade partner list">${I('pen')}</button></span><input type="text" id="ph-trade" list="dl-trades" value="${esc(p.trade||'')}" data-ch="phF" data-id="${p.id}" data-k="trade" autocapitalize="words"></label></div>
+  <div class="card stack" style="gap:10px"><div class="two"><label class="f"${zHide(p.projectId)}><span class="row" style="justify-content:space-between">Work Zone<button type="button" class="linkb edic" data-a="editList" data-k="zones" aria-label="Edit work zone list" title="Edit work zone list">${I('pen')}</button></span><input type="text" id="ph-zone" list="dl-zones" value="${esc(p.zone||'')}" data-ch="phF" data-id="${p.id}" data-k="zone" placeholder="Building, area or level" autocapitalize="words"></label><label class="f"><span class="row" style="justify-content:space-between">Trade Partner<button type="button" class="linkb edic" data-a="editList" data-k="trades" aria-label="Edit trade partner list" title="Edit trade partner list">${I('pen')}</button></span><input type="text" id="ph-trade" list="dl-trades" value="${esc(p.trade||'')}" data-ch="phF" data-id="${p.id}" data-k="trade" autocapitalize="words"></label></div>${p.brandAt==='share'&&companyNames().length>1?`<label class="f">Company on Photo<select id="ph-co" data-ch="phF" data-id="${p.id}" data-k="company">${companyNames().map(n=>`<option value="${esc(n===coName(p.projectId)?'':n)}" ${(p.company||'')===(n===coName(p.projectId)?'':n)?'selected':''}>${esc(n)}${n===coName(p.projectId)?' (this job)':''}</option>`).join('')}</select><span class="note">The logo goes on when you share or save the photo.</span></label>`:''}
    <div class="fg2"><span class="pvsec">${I('tag')} Tags<span class="sp"></span><button type="button" class="linkb edic" data-a="editTags" aria-label="Edit tag list" title="Edit tag list">${I('pen')}</button></span>
    ${ptags.map((t,i)=>`<div class="row" style="gap:6px;flex-wrap:nowrap"><select id="ph-tag-${i}" data-ch="phTagSel" data-id="${p.id}" data-i="${i}" aria-label="Tag ${i+1}" style="flex:1">${[...new Set([t,...tagList()])].map(o=>`<option ${o===t?'selected':''}>${esc(o)}</option>`).join('')}</select><button type="button" class="ib" data-a="phTagRm" data-id="${p.id}" data-i="${i}" aria-label="Remove tag ${esc(t)}">${I('x')}</button></div>`).join('')}
    <select id="ph-tag-add" data-ch="phTagSel" data-id="${p.id}" data-i="-1" aria-label="Add a tag"><option value="">${ptags.length?'+ Add another tag':'+ Add a tag'}</option>${tagList().filter(o=>!ptags.includes(o)).map(o=>`<option>${esc(o)}</option>`).join('')}</select></div></div>
@@ -2982,7 +2983,7 @@ let jsPdfP=null;
 let QRP=null;function loadQr(){if(window.qrcode)return Promise.resolve();return QRP=QRP||new Promise((res,rej)=>{const s=document.createElement('script');s.src='/vend/qr/qrcode.js';s.onload=res;s.onerror=()=>{QRP=null;rej()};document.head.appendChild(s)})}
 const roomUrl=(pid,zone)=>location.origin+'/?job='+encodeURIComponent(pid)+'&room='+encodeURIComponent(zone);
 async function roomSignsPdf(p,rooms){await Promise.all([loadJsPdf(),loadQr()]);const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:[396,612],orientation:'landscape'});
-  const co=coName(p.id),logo=await getLogo();let lg=null;if(logo){try{const c=document.createElement('canvas'),sc=Math.min(1,240/Math.max(logo.naturalWidth,logo.naturalHeight));c.width=Math.round(logo.naturalWidth*sc);c.height=Math.round(logo.naturalHeight*sc);c.getContext('2d').drawImage(logo,0,0,c.width,c.height);lg={d:c.toDataURL('image/png'),w:c.width,h:c.height}}catch(e){}}
+  const co=coName(p.id),logo=await getLogo(p.id);let lg=null;if(logo){try{const c=document.createElement('canvas'),sc=Math.min(1,240/Math.max(logo.naturalWidth,logo.naturalHeight));c.width=Math.round(logo.naturalWidth*sc);c.height=Math.round(logo.naturalHeight*sc);c.getContext('2d').drawImage(logo,0,0,c.width,c.height);lg={d:c.toDataURL('image/png'),w:c.width,h:c.height}}catch(e){}}
   rooms.forEach((rm,ix)=>{if(ix)doc.addPage([396,612],'landscape');const W=612,H=396,m=30;
     /* top band: company and job */
     doc.setFillColor(27,32,36);doc.rect(0,0,W,54,'F');let tx=m;if(lg){const h=30,w=lg.w*h/lg.h;try{doc.addImage(lg.d,'PNG',m,12,w,h);tx=m+w+10}catch(e){}}
@@ -3014,7 +3015,7 @@ async function buildPdf(p,opt){
   if(opt.only){const o=new Set(opt.only);ps=ps.filter(x=>o.has(x.id))}
   else if(tpl.tags.length)ps=ps.filter(x=>(x.tags||[]).some(t=>tpl.tags.includes(t)));
   let pairs=null; if(opt.tpl==='beforeafter'){pairs=[];ps.filter(x=>!x.beforeOf).forEach(b=>{const a=allPhotos().find(y=>y.beforeOf===b.id&&!y.pending);if(a)pairs.push([b,a])})}
-  const lg=await logoPng(90).catch(()=>null);const hx=lg?m+Math.min(110,46*lg.w/lg.h)+12:m;
+  const lg=await logoPng(90,p.id).catch(()=>null);const hx=lg?m+Math.min(110,46*lg.w/lg.h)+12:m;
   const head=(n)=>{doc.setFillColor(27,32,36);doc.rect(0,0,W,58,'F');doc.setFillColor(242,183,5);doc.rect(0,0,8,58,'F');if(lg){const lh=46,lw=Math.min(110,lh*lg.w/lg.h);doc.addImage(lg.d,'PNG',m,6,lw,lh)}doc.setTextColor(242,183,5);doc.setFont('helvetica','bold');doc.setFontSize(15);doc.text(coName(p.id).toUpperCase(),hx,26);doc.setTextColor(255,255,255);doc.setFontSize(11);doc.text(tpl.n+(p.jobNumber?'  ·  Job #'+p.jobNumber:''),hx,44);doc.setFont('helvetica','normal');doc.setFontSize(9);doc.text(p.name,W-m,26,{align:'right'});doc.text(from===to?from:from+' to '+to,W-m,40,{align:'right'});if(p.address)doc.text(p.address,W-m,52,{align:'right'});doc.setTextColor(27,32,36)};
   const foot=()=>{const n=doc.getNumberOfPages();for(let i=1;i<=n;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(110,118,125);doc.text(`Prepared by ${ME.name} with Build Camera · ${fmtFull(Date.now())}`,m,H-20);doc.text(`Page ${i} of ${n}`,W-m,H-20,{align:'right'})}};
   head(); let y=82;
@@ -3041,7 +3042,7 @@ async function buildPdf(p,opt){
   for(const it of items){
     if(slot>=perPage){doc.addPage();head();slot=0}
     const ppc=pairs?1:cols, c0=slot%ppc, r0=Math.floor(slot/ppc), x0=m+c0*(cw+14), y0=74+r0*(ch+16), bw=pairs?W-m*2:cw;
-    try{const im=await imgData(it.p.url);const s=Math.min(bw/im.w,imgH/im.h),iw=im.w*s,ih=im.h*s,ix=x0+(bw-iw)/2;doc.addImage(im.d,'JPEG',ix,y0,iw,ih);
+    try{let iu=it.p.url,ob=null;if(it.p.brandAt==='share'){ob=URL.createObjectURL(await photoBlob(it.p));iu=ob}const im=await imgData(iu);if(ob)URL.revokeObjectURL(ob);const s=Math.min(bw/im.w,imgH/im.h),iw=im.w*s,ih=im.h*s,ix=x0+(bw-iw)/2;doc.addImage(im.d,'JPEG',ix,y0,iw,ih);
       (it.p.pins||[]).forEach((q,j)=>{const cx=ix+q.x*iw,cy=y0+q.y*ih;doc.setFillColor(242,183,5);doc.setDrawColor(255,255,255);doc.setLineWidth(1.2);doc.circle(cx,cy,7,'FD');doc.setTextColor(27,32,36);doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.text(String(j+1),cx,cy+2.6,{align:'center'})});doc.setTextColor(0,0,0);doc.setFont('helvetica','normal')}catch(e){doc.setDrawColor(200);doc.rect(x0,y0,bw,imgH);doc.text('Photo unavailable',x0+10,y0+20)}
     let ty=y0+imgH+12; doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.text(`${it.lab?it.lab+' · ':''}${fmtFull(it.p.takenAt)}  ·  ${it.p.code||''}`,x0,ty);ty+=11;doc.setFont('helvetica','normal');
     const meta=[it.p.lat!=null?'GPS '+fmtGps(it.p.lat,it.p.lng).replace(/°/g,''):'',it.p.zone,it.p.trade,(it.p.tags||[]).join(', '),(it.p.pins||[]).length?'Pins: '+it.p.pins.map((q,j)=>(j+1)+' '+[q.tag,q.note].filter(Boolean).join(': ')).join('; '):''].filter(Boolean).join('  ·  ');doc.text(doc.splitTextToSize(meta,bw),x0,ty);ty+=11;
@@ -3107,8 +3108,34 @@ function quality(src,W,H){try{const s=256/Math.max(W,H),w=Math.max(8,Math.round(
 
 /* company logo */
 const LOGO={url:null,img:null};
-async function getLogo(){const u=SET().logoUrl;if(!u)return null;if(LOGO.url===u&&LOGO.img)return LOGO.img;try{LOGO.img=await imgFromUrl(u);LOGO.url=u;return LOGO.img}catch(e){return null}}
-async function logoPng(h=120){const img=await getLogo();if(!img)return null;const s=h/img.naturalHeight,w=Math.round(img.naturalWidth*s);const c=document.createElement('canvas');c.width=w+24;c.height=h+24;const x=c.getContext('2d');x.fillStyle='#ffffff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,12,12,w,h);return {d:c.toDataURL('image/png'),w:c.width,h:c.height}}
+/* each company has its own logo. A job uses the logo of its company; the default company uses the Settings logo. */
+const coKey=n=>String(n||'').trim().toLowerCase();
+const coLogos=()=>{const t=(S.settings||[]).find(x=>x.id==='cologos');return t&&t.map&&typeof t.map==='object'?t.map:{}};
+function logoUrlFor(pid){const n=coName(pid),own=coLogos()[coKey(n)];if(own)return own;return coKey(n)===coKey(SET().name||DEFCO())?SET().logoUrl||null:null}
+const LOGOS={};
+/* the company name and logo go on a photo when it leaves the app (share, save, zip, report), so the company can still be changed per photo */
+const photoCo=p=>(p&&p.company)||coName(p&&p.projectId);
+/* which logos to put on when sharing: the company picked on the share screen (one, or several side by side for a joint venture), otherwise each photo's own company */
+function shareNames(p){const a=(V.shareAs||[]).filter(n=>companyNames().some(c=>coKey(c)===coKey(n)));return a.length?a:[photoCo(p)]}
+async function brandBlob(p,blob){if(!p||p.brandAt!=='share'||!blob||!/^image\//.test(blob.type||'image/jpeg'))return blob;
+  try{const u=URL.createObjectURL(blob),img=await loadImg(u);URL.revokeObjectURL(u);const W=img.naturalWidth,H=img.naturalHeight,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.drawImage(img,0,0);
+    const fs=Math.max(14,Math.round(Math.max(W,H)*.0147)),pad=Math.round(fs*1.1),face='-apple-system,"Helvetica Neue",Helvetica,Arial,sans-serif',names=shareNames(p).filter(Boolean);
+    const items=await Promise.all(names.map(async n=>({n,logo:await getLogoByName(n)})));
+    if(items.length===1&&!items[0].logo){const co=items[0].n;x.font=`700 ${Math.round(fs*1.05)}px ${face}`;x.textAlign='left';x.textBaseline='alphabetic';x.shadowColor='rgba(0,0,0,1)';x.shadowBlur=Math.max(7,fs*.8);x.fillStyle='rgba(0,0,0,.75)';x.fillText(co,pad,H-pad);x.shadowBlur=0;x.lineJoin='round';x.strokeStyle='rgba(0,0,0,.65)';x.lineWidth=Math.max(1.5,fs*.08);x.strokeText(co,pad,H-pad);x.fillStyle='#ffffff';x.fillText(co,pad,H-pad)}
+    else if(items.length){/* logos side by side on one white strip; a company with no logo shows its name */
+      let lh=fs*2.6;const gap=fs*.9;x.font=`700 ${Math.round(lh*.38)}px ${face}`;const wOf=it=>it.logo?Math.min(W*.22,it.logo.naturalWidth*lh/it.logo.naturalHeight):x.measureText(it.n).width;
+      let tot=items.reduce((a,it)=>a+wOf(it),0)+gap*(items.length-1);if(tot>W*.62){const k=W*.62/tot;lh*=k;x.font=`700 ${Math.round(lh*.38)}px ${face}`;tot=items.reduce((a,it)=>a+wOf(it),0)+gap*k*(items.length-1)}
+      const g=gap*Math.min(1,lh/(fs*2.6));x.globalAlpha=.94;x.fillStyle='#ffffff';x.fillRect(pad-fs*.3,H-pad-lh-fs*.3,tot+fs*.6,lh+fs*.6);x.globalAlpha=1;let cx=pad;
+      items.forEach((it,i)=>{const w=wOf(it);if(it.logo)x.drawImage(it.logo,cx,H-pad-lh,w,lh);else{x.fillStyle='#1b2024';x.textAlign='left';x.textBaseline='middle';x.fillText(it.n,cx,H-pad-lh/2)}cx+=w;if(i<items.length-1){x.fillStyle='rgba(0,0,0,.25)';x.fillRect(cx+g/2-1,H-pad-lh*.85,2,lh*.7);cx+=g}})}
+    const out=await new Promise(r=>c.toBlob(r,'image/jpeg',.9));c.width=c.height=0;return out||blob}catch(e){return blob}}
+function brandPick(){const cs=companyNames();if(cs.length<2)return '';const on=new Set((V.shareAs||[]).map(coKey));
+  return `<div class="f brandpick"><span>Logo on Photos</span><div class="row" style="gap:6px;flex-wrap:wrap"><button type="button" class="chip" data-a="brandAs" data-v="" aria-pressed="${!on.size}">Each photo's own company</button>${cs.map(n=>`<button type="button" class="chip" data-a="brandAs" data-v="${esc(n)}" aria-pressed="${on.has(coKey(n))}">${esc(n)}</button>`).join('')}</div><span class="note">Pick one company, or pick 2 or more to show their logos side by side as a joint venture.</span></div>`}
+async function photoBlob(p){const b=await (await fetch(p.url)).blob();return brandBlob(p,b)}
+async function getLogoByName(n){const u=coLogos()[coKey(n)]||(coKey(n)===coKey(SET().name||DEFCO())?SET().logoUrl:null);if(!u)return null;if(LOGOS[u])return LOGOS[u];try{LOGOS[u]=await imgFromUrl(u);return LOGOS[u]}catch(e){return null}}
+async function getLogo(pid){const u=logoUrlFor(pid);if(!u)return null;if(LOGOS[u])return LOGOS[u];try{LOGOS[u]=await imgFromUrl(u);return LOGOS[u]}catch(e){return null}}
+function coLogoRows(){const def=coKey(SET().name||DEFCO()),names=companyNames().filter(n=>coKey(n)!==def);if(!names.length)return '<p class="note" style="margin:0">Type a different company name on a job (Job Info) and it shows here so you can give it its own logo.</p>';const L=coLogos();
+  return names.map(n=>{const u=L[coKey(n)];return `<div class="row" style="gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--line)">${u?`<img src="${esc(u)}" alt="${esc(n)} logo" style="height:40px;width:auto;max-width:120px;background:#fff;border-radius:6px;padding:4px;border:1px solid var(--line)">`:'<span class="note" style="width:80px">No logo</span>'}<b style="flex:1;min-width:120px">${esc(n)}</b><button class="btn sm" data-a="coLogoPick" data-co="${esc(n)}" ${AS?'':'disabled'}>${u?'Replace':'Upload'}</button>${u?`<button class="btn sm" data-a="coLogoClear" data-co="${esc(n)}">Remove</button>`:''}</div>`}).join('')}
+async function logoPng(h=120,pid){const img=await getLogo(pid);if(!img)return null;const s=h/img.naturalHeight,w=Math.round(img.naturalWidth*s);const c=document.createElement('canvas');c.width=w+24;c.height=h+24;const x=c.getContext('2d');x.fillStyle='#ffffff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,12,12,w,h);return {d:c.toDataURL('image/png'),w:c.width,h:c.height}}
 
 /* TomTom address search */
 const AC={};let acSeq=0,acT=null;
@@ -3244,7 +3271,7 @@ function scrSettingsRaw(){
   ${featCard()}${listCard('zones','Work Zone List')}${listCard('trades','Trade Partner List')}${plCard()}
   <div class="card stack"><h2>Company</h2><label class="f">Default Company Name<input type="text" id="st-name" value="${esc(coName())}" data-ch="setName" autocapitalize="words"></label>
    <div class="row">${s.logoUrl?`<img src="${esc(s.logoUrl)}" alt="Company logo" style="height:56px;width:auto;background:#fff;border-radius:8px;padding:6px;border:1px solid var(--line)">`:'<span class="note">No logo yet. Photos and PDFs use the company name.</span>'}</div>
-   <div class="row"><button class="btn pri" data-a="logoPick" ${AS?'':'disabled'}>${I('img')} ${s.logoUrl?'Replace':'Upload'} Logo</button>${s.logoUrl?'<button class="btn" data-a="logoClear">Remove Logo</button>':''}</div><p class="note">The logo goes on every new photo stamp, every PDF report and the before and after reel. A PNG with a clear background looks best.</p></div>
+   <div class="row"><button class="btn pri" data-a="logoPick" ${AS?'':'disabled'}>${I('img')} ${s.logoUrl?'Replace':'Upload'} Logo</button>${s.logoUrl?'<button class="btn" data-a="logoClear">Remove Logo</button>':''}</div><p class="note">The logo goes on every new photo stamp, every PDF report and the before and after reel. A PNG with a clear background looks best.</p><h3 style="margin:10px 0 0">Other Companies</h3><p class="note" style="margin:0">Jobs under another company name use that company's logo on photos, reports and signs.</p><div id="co-logos">${coLogoRows()}</div></div>
   <div class="card stack"><h2>AI Help</h2><label class="row"><input type="checkbox" id="st-ai" data-ch="setAI" ${aiAutoTag()?'checked':''} style="width:22px;height:22px;accent-color:var(--accent)">Suggest tags and trade after each photo</label><p class="note">Suggestions show on the photo for you to accept. Nothing changes until you tap Accept.</p></div>
   ${MCP?`<div class="card stack"><h2>Address Search</h2><p class="note">${MCP&&!TT_OFF?'TomTom Maps is set up for address search and nearest-address lookups. The first search asks you to allow it.':'Address search uses the TomTom Maps connector. Connect it in claude.ai to search any address as you type.'}</p></div>`:''}</div>`;
 }
@@ -3293,7 +3320,7 @@ async function zipAll(p){
   const ps=allPhotos().filter(x=>x.projectId===p.id&&!x.pending).sort((a,b)=>a.takenAt-b.takenAt);if(!ps.length){toast('No photos on this job yet.');return}
   openModal({kind:'busy',title:'Packing Photos',msg:'Gathering '+ps.length+' files…'});
   try{await loadZip();const z=new JSZip();let n=0;const used=new Set();
-    for(const x of ps){try{const b=await (await fetch(x.url)).blob();const d=new Date(x.takenAt);const ext=EXT[(b.type||x.contentType||'').split(';')[0]]||(x.kind==='video'?'mp4':'jpg');
+    for(const x of ps){try{const b=x.kind==='video'?await (await fetch(x.url)).blob():await photoBlob(x);const d=new Date(x.takenAt);const ext=EXT[(b.type||x.contentType||'').split(';')[0]]||(x.kind==='video'?'mp4':'jpg');
       let base=`${dayKey(x.takenAt)}_${pad(d.getHours())}${pad(d.getMinutes())}${x.zone?'_'+x.zone.replace(/[^\w]+/g,'-'):''}_${(x.code||x.id).replace(/[^\w-]/g,'')}${x.markupOf?'_markup':''}`;let nm=base,i=2;while(used.has(nm))nm=base+'_'+i++;used.add(nm);
       z.folder(x.kind==='doc'?'Documents':x.markupOf?'Marked Up':x.kind==='video'?'Videos':'Photos').file(nm+'.'+ext,b);n++;const m=$('#busymsg');if(m)m.textContent=n+' of '+ps.length}catch(e){}}
     const blob=await z.generateAsync({type:'blob'});closeModal();await DL.save({filename:`${p.name.replace(/[^\w]+/g,'-')}-All-Photos.zip`,data:blob});toast(n+' files saved')}
@@ -3316,7 +3343,7 @@ async function aiSocial(){
 }
 function coverDraw(x,img,X,Y,W,H){const s=Math.max(W/img.naturalWidth,H/img.naturalHeight),w=img.naturalWidth*s,h=img.naturalHeight*s;x.save();x.beginPath();x.rect(X,Y,W,H);x.clip();x.drawImage(img,X+(W-w)/2,Y+(H-h)/2,w,h);x.restore()}
 async function baImage(a,b){
-  const [ia,ib,lg]=await Promise.all([imgFromUrl(a.url),imgFromUrl(b.url),getLogo()]);const c=document.createElement('canvas');c.width=1080;c.height=1350;const x=c.getContext('2d');
+  const [ia,ib,lg]=await Promise.all([imgFromUrl(a.url),imgFromUrl(b.url),getLogoByName(photoCo(b))]);const c=document.createElement('canvas');c.width=1080;c.height=1350;const x=c.getContext('2d');
   x.fillStyle='#1b2024';x.fillRect(0,0,1080,1350);coverDraw(x,ia,0,0,1080,600);coverDraw(x,ib,0,610,1080,600);
   const tag=(t,y)=>{x.font='700 54px "Archivo Narrow","Arial Narrow",Arial';x.fillStyle='rgba(0,0,0,.65)';const w=x.measureText(t).width;x.fillRect(28,y,w+40,76);x.fillStyle='#f2b705';x.textBaseline='middle';x.fillText(t,48,y+40)};tag('BEFORE',28);tag('AFTER',638);
   x.fillStyle='#1b2024';x.fillRect(0,1210,1080,140);x.fillStyle='#f2b705';x.fillRect(0,1210,14,140);
@@ -3326,7 +3353,7 @@ async function baImage(a,b){
 }
 async function makeReel(a,b,msg){
   if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream){toast('This phone can\'t make videos in this view. Try it on a computer.',3800);return null}
-  const [ia,ib,lg]=await Promise.all([imgFromUrl(a.url),imgFromUrl(b.url),getLogo()]);
+  const [ia,ib,lg]=await Promise.all([imgFromUrl(a.url),imgFromUrl(b.url),getLogoByName(photoCo(b))]);
   const c=document.createElement('canvas');c.width=720;c.height=1280;const x=c.getContext('2d');
   const types=['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm'],mt=types.find(t=>{try{return MediaRecorder.isTypeSupported(t)}catch(e){return false}})||'';
   const st=c.captureStream(30),rec=new MediaRecorder(st,mt?{mimeType:mt,videoBitsPerSecond:5e6}:undefined),chunks=[];rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};const done=new Promise(r=>rec.onstop=r);
@@ -3377,6 +3404,7 @@ function sendSheet(){
   ${n>1?`<p class="note" style="margin:-4px 0 0">${n} photos go out together as one group, oldest first. ${n>=4?'Messages shows them as a stack you can swipe through.':'Messages shows 2 or 3 photos side by side. It only stacks them when you send 4 or more.'} Swipe here to check them.</p>`:''}
   ${phones.length?`<label class="f">Send To<select id="sx-to" data-ch="sxTo"><option value="">Pick someone</option>${phones.map(x=>`<option value="${esc(x.phone)}">${esc(x.name)} · ${esc(x.phone)}</option>`).join('')}</select></label>`:'<p class="note">Add phone numbers in Job Info or Team to pick who to send to.</p>'}
   <label class="f">Message<textarea id="sx-msg">${esc(M.msg||sendMsgText(ids))}</textarea></label>
+  ${brandPick()}
   <button class="btn stamp wide" data-a="sxShare">${I('share')} Open in Messages</button>
   <div class="row"><button class="btn" data-a="sxSave" ${DL?'':'disabled'}>${I('img')} Save ${ps.length>1?ps.length+' Photos':'Photo'} to Phone</button><button class="btn" data-a="copy" data-src="#sx-msg">${I('copy')} Copy Message</button></div>
   <p class="note" id="sx-note">If Messages doesn't open from here, tap Save to Phone, then attach the photos from your camera roll and paste the message.</p>`);
@@ -3384,7 +3412,7 @@ function sendSheet(){
 async function sxShare(){
   const ids=M.ids,msg=$('#sx-msg').value,to=$('#sx-to')?.value||'';
   try{if(navigator.canShare){toast(ids.length>1?'Getting '+ids.length+' photos ready…':'Getting the photo ready…');const files=[];
-    for(const [i,id] of ids.entries()){const p=PH(id);const raw=await (await fetch(p.url)).blob();const ty=/^image\/(jpeg|png|heic|webp)/.test(raw.type)?raw.type.split(';')[0]:'image/jpeg';const ext=ty==='image/png'?'png':ty==='image/webp'?'webp':ty==='image/heic'?'heic':'jpg';
+    for(const [i,id] of ids.entries()){const p=PH(id);const raw=await photoBlob(p);const ty=/^image\/(jpeg|png|heic|webp)/.test(raw.type)?raw.type.split(';')[0]:'image/jpeg';const ext=ty==='image/png'?'png':ty==='image/webp'?'webp':ty==='image/heic'?'heic':'jpg';
       files.push(new File([raw],`${(P(p.projectId)?.name||'Photo').replace(/[^\w]+/g,'-').slice(0,40)}-${String(i+1).padStart(2,'0')}.${ext}`,{type:ty,lastModified:p.takenAt||Date.now()}))}
     if(navigator.canShare({files})){try{await navigator.clipboard.writeText(msg)}catch(e){}await navigator.share({files,text:msg});toast(files.length>1?files.length+' photos sent as one group':'Sent to the share sheet');return}}}catch(e){if(e&&e.name==='AbortError')return}
   const body=encodeURIComponent(msg);const href=`sms:${to.replace(/[^\d+]/g,'')}${/iPhone|iPad|Mac/.test(navigator.userAgent)?'&':'?'}body=${body}`;
@@ -3394,7 +3422,7 @@ async function sxShare(){
 }
 async function sxSave(){
   const ids=M.ids.slice(0,12);let ok=0;
-  for(const id of ids){const p=PH(id);try{const b=await (await fetch(p.url)).blob();const ext=EXT[(b.type||'').split(';')[0]]||'jpg';await DL.save({filename:`${(P(p.projectId)?.name||'Photo').replace(/[^\w]+/g,'-')}-${dayKey(p.takenAt)}-${(p.code||p.id).replace(/[^\w-]/g,'')}.${ext}`,data:b});ok++}catch(e){if(e&&e.code==='declined')break}}
+  for(const id of ids){const p=PH(id);try{const b=await photoBlob(p);const ext=EXT[(b.type||'').split(';')[0]]||'jpg';await DL.save({filename:`${(P(p.projectId)?.name||'Photo').replace(/[^\w]+/g,'-')}-${dayKey(p.takenAt)}-${(p.code||p.id).replace(/[^\w-]/g,'')}.${ext}`,data:b});ok++}catch(e){if(e&&e.code==='declined')break}}
   toast(ok?ok+' saved to your phone':'Nothing saved',3000);if(M.ids.length>12)toast('Saved the first 12. Select fewer to save the rest.',4000);
 }
 
@@ -3556,8 +3584,11 @@ const ACT={
   copyText:el=>{const t=el.dataset.t;try{navigator.clipboard.writeText(t).then(()=>toast('Copied '+t),()=>toast(t,5000))}catch(e){toast(t,5000)}},
   alRead:el=>upd('alerts',el.dataset.id,{read:true}),
   alCopy:el=>{const a=S.alerts.find(x=>x.id===el.dataset.id),m=M_(a.to);const t=a.text+(a.photoId?' (open Build Camera to see the photo)':'');try{navigator.clipboard.writeText(t).then(()=>toast(m?.phone?'Copied. Text it to '+m.phone:'Copied'),()=>toast(t,5000))}catch(e){toast(t,5000)}},
-  logoPick:()=>$('#in-logo').click(),
-  logoClear:()=>{put('settings',{...SET(),id:'company',logoUrl:null,logoAsset:null});LOGO.url=null;toast('Logo removed')},
+  logoPick:()=>{V.coLogoFor=null;$('#in-logo').click()},
+  brandAs:el=>{const v=el.dataset.v;let a=[...(V.shareAs||[])];if(!v)a=[];else{const k=coKey(v);a=a.some(n=>coKey(n)===k)?a.filter(n=>coKey(n)!==k):[...a,v]}V.shareAs=a;document.querySelectorAll('[data-a=brandAs]').forEach(b=>{const bv=b.dataset.v;b.setAttribute('aria-pressed',String(bv?a.some(n=>coKey(n)===coKey(bv)):!a.length))})},
+  coLogoPick:el=>{V.coLogoFor=el.dataset.co;$('#in-logo').click()},
+  coLogoClear:async el=>{const m={...coLogos()};delete m[coKey(el.dataset.co)];await put('settings',{id:'cologos',map:m});toast('Logo removed');render()},
+  logoClear:()=>{put('settings',{...SET(),id:'company',logoUrl:null,logoAsset:null});toast('Logo removed')},
   aiAccept:el=>{const p=PH(el.dataset.id),s=p.suggest;const patch={tags:[...new Set([...(p.tags||[]),...s.tags])],suggest:{...s,done:true}};if(s.trade&&!p.trade)patch.trade=s.trade;if(s.caption&&!p.note)patch.note=s.caption;upd('photos',p.id,patch).then(()=>renderModal());renderModal()},
   aiDismiss:el=>{const p=PH(el.dataset.id);upd('photos',p.id,{suggest:{...p.suggest,done:true}});setTimeout(renderModal,30)},
   aiSuggest:async el=>{el.disabled=true;el.textContent='Looking…';const p=PH(el.dataset.id);await aiTag(p.id,p.url,true);el.disabled=false;el.innerHTML=I('sparkle')+' Suggest Tags'},
@@ -3835,7 +3866,8 @@ document.addEventListener('submit',async e=>{const f=e.target,k=f.dataset.sub;if
 /* file inputs */
 async function handleFiles(files,kind){
   if(!files.length)return;
-  if(kind==='logo'){const f=files[0];if(!AS){toast('Uploads aren\'t available here.');return}toast('Uploading logo…');try{const up=await AS.upload(f);await put('settings',{...SET(),id:'company',logoUrl:up.url,logoAsset:up.id});LOGO.url=null;toast('Logo saved. New photos and PDFs will use it.')}catch(e){toast('Couldn\'t upload the logo. Try a PNG or JPG under 5 MB.')}return}
+  if(kind==='logo'&&V.coLogoFor){const f=files[0],co=V.coLogoFor;V.coLogoFor=null;if(!AS){toast('Uploads aren\'t available here.');return}toast('Uploading logo…');try{const up=await AS.upload(f);await put('settings',{id:'cologos',map:{...coLogos(),[coKey(co)]:up.url}});toast(co+' logo saved. New photos and PDFs on its jobs will use it.');render()}catch(e){toast('Couldn\'t upload the logo. Try a PNG or JPG under 5 MB.')}return}
+  if(kind==='logo'){const f=files[0];if(!AS){toast('Uploads aren\'t available here.');return}toast('Uploading logo…');try{const up=await AS.upload(f);await put('settings',{...SET(),id:'company',logoUrl:up.url,logoAsset:up.id});toast('Logo saved. New photos and PDFs will use it.')}catch(e){toast('Couldn\'t upload the logo. Try a PNG or JPG under 5 MB.')}return}
   if(kind==='avatar'){try{toast('Saving your photo…');const blob=await avCrop(files[0]);let url;if(AS){const up=await AS.upload(blob);url=up.url}else url=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(blob)});
     const cur=S.settings.find(x=>x.id==='avatars')||{id:'avatars',map:{}};const map={...(cur.map||{})};if(ME.id)map['id:'+ME.id]=url;map['n:'+ME.name]=url;await put('settings',{id:'avatars',map});toast('Your photo is set. It shows on the photos you take.')}catch(e){toast('Couldn\'t use that photo. Try another one.')}return}
   if(kind==='csv'&&M&&M.kind==='pimport'){const t=await files[0].text();M.text=t;M.rows=pMapRows(parseRows(t),M.pid);if(!M.rows.length)toast('No punch items found in that file.');renderModal();return}
@@ -3958,7 +3990,7 @@ function cloneInto(fromId,toId){const src=P(fromId);if(!src)return;
   S.members.filter(m=>(m.projects||[]).includes(fromId)).forEach(m=>ps.push(upd('members',m.id,{projects:[...new Set([...(m.projects||[]),toId])]})));
   return Promise.all(ps)}
 function exportSheet(){const p=P(M.pid);const n=allPhotos().filter(x=>x.projectId===p.id&&!x.pending).length;const o=(v,l,d,c)=>`<label class="li"><input type="radio" name="by" value="${v}" ${c?'checked':''} style="width:20px;height:20px;accent-color:var(--accent)"><span class="t"><b>${l}</b><span>${d}</span></span></label>`;
-  return sheet('Export Photos',`<form class="stack" data-sub="exportGo" data-pid="${p.id}"><p class="note" style="margin:0">${n} files on ${esc(p.name)}. Photos go into folders, with a spreadsheet (index.csv) listing each one's date, Work Zone, trade, tags, albums, pins, description, GPS and proof code.</p>
+  return sheet('Export Photos',`<form class="stack" data-sub="exportGo" data-pid="${p.id}"><p class="note" style="margin:0">${n} files on ${esc(p.name)}. Photos go into folders, with a spreadsheet (index.csv) listing each one's date, Work Zone, trade, tags, albums, pins, description, GPS and proof code.</p>${brandPick()}
    <fieldset class="exopt" style="border:0;padding:0;margin:0"><legend class="note" style="margin-bottom:6px">Folders By</legend>${o('album','Album','A folder per album; photos in no album go in "No Album"',1)}${o('tag','Tag','A photo with two tags goes in both folders')}${o('date','Date','A folder per day')}${o('zone','Work Zone','A folder per building, area or level')}${o('type','Type','Photos, Videos, Documents, Marked Up')}</fieldset>
    <div class="two"><label class="f">From<input type="date" id="ex-from" name="from"></label><label class="f">To<input type="date" id="ex-to" name="to"></label></div><p class="note" style="margin-top:-6px">Leave the dates blank for every photo.</p>
    <button class="btn pri" type="submit" ${DL?'':'disabled'}>${I('download')} Make the Download</button></form>`)}
@@ -3971,7 +4003,7 @@ async function exportGo(p,o){
   const folders=x=>{if(o.by==='album')return (x.albums||[]).length?x.albums:['No Album'];if(o.by==='tag')return (x.tags||[]).length?x.tags:['No Tag'];if(o.by==='date')return [dayKey(x.takenAt)];if(o.by==='zone')return [x.zone||'No Work Zone'];return [x.kind==='doc'?'Documents':x.markupOf?'Marked Up':x.kind==='video'?'Videos':'Photos']};
   openModal({kind:'busy',title:'Packing Photos',msg:'Gathering '+ps.length+' files…'});
   try{await loadZip();const z=new JSZip();let n=0;const used=new Set();const rows=[['File','Folder','Date','Time','Project','Work Zone','Trade Partner','Tags','Albums','Pins','Description','Taken By','Latitude','Longitude','GPS Source','Proof Code']];
-    for(const x of ps){try{const b=await (await fetch(x.url)).blob();const d=new Date(x.takenAt);const ext=EXT[(b.type||x.contentType||'').split(';')[0]]||(x.kind==='video'?'mp4':'jpg');
+    for(const x of ps){try{const b=x.kind==='video'?await (await fetch(x.url)).blob():await photoBlob(x);const d=new Date(x.takenAt);const ext=EXT[(b.type||x.contentType||'').split(';')[0]]||(x.kind==='video'?'mp4':'jpg');
       let base=`${dayKey(x.takenAt)}_${pad(d.getHours())}${pad(d.getMinutes())}${x.zone?'_'+x.zone.replace(/[^\w]+/g,'-'):''}_${(x.code||x.id).replace(/[^\w-]/g,'')}${x.markupOf?'_markup':''}`;let nm=base,i=2;while(used.has(nm))nm=base+'_'+i++;used.add(nm);
       const fs=folders(x).map(clean_);fs.forEach(f=>z.folder(f).file(nm+'.'+ext,b));
       rows.push([nm+'.'+ext,fs.join(' | '),dayKey(x.takenAt),fmtTime(x.takenAt),p.name,x.zone||'',x.trade||'',(x.tags||[]).join(', '),(x.albums||[]).join(', '),(x.pins||[]).map((q,j)=>(j+1)+'. '+[q.tag,q.note].filter(Boolean).join(': ')).join('; '),x.note||'',x.byName||'',x.lat??'',x.lng??'',x.gpsSource||'',x.code||'']);
